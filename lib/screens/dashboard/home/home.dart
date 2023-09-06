@@ -279,39 +279,6 @@ class _HomeState extends State<Home> {
                               color: const Color(0x99000000),
                             ),
                           ),
-                          trailing: InkWell(
-                            child: IconButton(
-                              onPressed: (){showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text('Confirm Delete'),
-                                    content: const Text('Are you sure you want to delete this item?'),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        child: const Text('Cancel'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                      OutlinedButton(
-                                        style: ButtonStyle(
-                                            side: MaterialStatePropertyAll(BorderSide(color: Theme.of(context).primaryColor))
-                                        ),
-                                        onPressed: () {
-                                          value.delete(room.roomId!);
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: const Text('Delete'),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                              },
-                              icon: Icon(Icons.delete,color: const Color(0xff9e26bc),size: 16*a),
-                            ),
-                          ),
                         ),
                       );
                     };

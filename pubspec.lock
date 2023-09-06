@@ -709,6 +709,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  zego_express_engine:
+    dependency: "direct main"
+    description:
+      name: zego_express_engine
+      sha256: "3cba66a7924640022ac781230d552e93f7062a295915fffd7b4f4af132d7b252"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.8.1"
 sdks:
   dart: ">=3.0.2 <4.0.0"
   flutter: ">=3.10.0"
