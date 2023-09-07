@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import '../../../provider/rooms_provider.dart';
-import '../../rooms/room_svip_5.dart';
+import '../../rooms/live_room.dart';
 import 'create_room.dart';
 import 'party.dart';
 import 'ranking.dart';
@@ -244,7 +244,7 @@ class _HomeState extends State<Home> {
                         ),
                         child: ListTile(
                           onTap: () {
-                            Get.to(() => const RoomSVIP5());
+                            Get.to(() => LiveRoom(room: room));
                           },
                           leading:room.images!.isEmpty
                               ? CircleAvatar(
@@ -332,114 +332,135 @@ class _HomeState extends State<Home> {
                               Container(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 18 * a, vertical: 8 * a),
-                                child: Column(
-                                  children: [
-                                    for (Map club in roomList.take(3))
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Expanded(
-                                            child: ListTile(
-                                              dense: true,
-                                              contentPadding: EdgeInsets.zero,
-                                              leading: Image.asset(
-                                                club["image"],
-                                                fit: BoxFit.contain,
-                                                width: 64 * a,
-                                                height: 64 * a,
-                                              ),
-                                              title: Text(
-                                                club["name"],
-                                                style: SafeGoogleFont(
-                                                  'Poppins',
-                                                  fontSize: 16 * b,
-                                                  fontWeight: FontWeight.w400,
-                                                  height: 1.5 * b / a,
-                                                  letterSpacing: 0.64 * a,
-                                                  color:
-                                                      const Color(0xff000000),
-                                                ),
-                                              ),
-                                              subtitle: Text(
-                                                club["about"],
-                                                overflow: TextOverflow.ellipsis,
-                                                style: SafeGoogleFont(
-                                                  'Poppins',
-                                                  fontSize: 12 * b,
-                                                  fontWeight: FontWeight.w400,
-                                                  height: 1.5 * b / a,
-                                                  letterSpacing: 0.48 * a,
-                                                  color:
-                                                      const Color(0x99000000),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 10.0),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              children: [
-                                                Container(
-                                                  margin: EdgeInsets.fromLTRB(
-                                                      0 * a,
-                                                      0 * a,
-                                                      1 * a,
-                                                      4 * a),
-                                                  width: 3 * a,
-                                                  height: 15 * a,
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                    color: Color(0xffff9933),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  margin: EdgeInsets.fromLTRB(
-                                                      0 * a,
-                                                      0 * a,
-                                                      1 * a,
-                                                      4 * a),
-                                                  width: 3 * a,
-                                                  height: 19 * a,
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                    color: Color(0xffff9933),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  margin: EdgeInsets.fromLTRB(
-                                                      0 * a,
-                                                      0 * a,
-                                                      5 * a,
-                                                      4 * a),
-                                                  width: 3 * a,
-                                                  height: 15 * a,
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                    color: Color(0xffff9933),
-                                                  ),
-                                                ),
-                                                Text(
-                                                  club["rank"],
-                                                  style: SafeGoogleFont(
-                                                    'Poppins',
-                                                    fontSize: 12 * b,
-                                                    fontWeight: FontWeight.w400,
-                                                    height: 1.5 * b / a,
-                                                    letterSpacing: 0.48 * a,
-                                                    color:
-                                                        const Color(0xff000000),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                  ],
+                                child:
+                                Consumer<RoomsProvider>(
+                                  builder: (context, value, child) => FutureBuilder(
+                                    future: value.getAllRecent(),
+                                    builder: (context, snapshot) {
+                                      switch (snapshot.connectionState) {
+                                        case ConnectionState.none:
+                                          return const Text('none...');
+                                        case ConnectionState.active:
+                                          return const Text('active...');
+                                        case ConnectionState.waiting:
+                                          return const Center(child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              CircularProgressIndicator(),
+                                              SizedBox(height: 18),
+                                              Text('Loading'),
+                                            ],
+                                          ));
+                                        case ConnectionState.done:
+                                          if (snapshot.hasError) {
+                                            return Text('Error: ${snapshot.error}');
+                                          } else if((snapshot.data?.data?.length??0) == 0){
+                                            return const Center(child: Text('No Recent Rooms!'));
+                                          } else {
+                                            return ListView(
+                                              children: List.generate(snapshot.data?.data?.length??0, (i) {
+                                                int index = snapshot.data!.data!.length - i -1;
+                                                final room = snapshot.data!.data![index];
+                                                return Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                                  children: [
+                                                    Expanded(
+                                                      child: ListTile(
+                                                        onTap: (){
+                                                          value.joinRoom(room);
+                                                        },
+                                                        dense: true,
+                                                        contentPadding: EdgeInsets.zero,
+                                                        leading: room.images!.isEmpty? Image.asset(
+                                                          "assets/logo_greystyle.png",
+                                                          fit: BoxFit.contain,
+                                                          width: 64 * a,
+                                                          height: 64 * a,
+                                                        ) : Image.network(
+                                                          room.images!.first,
+                                                          fit: BoxFit.contain,
+                                                          width: 64 * a,
+                                                          height: 64 * a,
+                                                        ),
+                                                        title: Text(
+                                                          room.name.toString(),
+                                                          style: SafeGoogleFont(
+                                                            'Poppins',
+                                                            fontSize: 16 * b,
+                                                            fontWeight: FontWeight.w400,
+                                                            height: 1.5 * b / a,
+                                                            letterSpacing: 0.64 * a,
+                                                            color: const Color(0xff000000),
+                                                          ),
+                                                        ),
+                                                        subtitle: Text(
+                                                          room.announcement==''?'Welcome to my room!':room.announcement!,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          style: SafeGoogleFont(
+                                                            'Poppins',
+                                                            fontSize: 12 * b,
+                                                            fontWeight: FontWeight.w400,
+                                                            height: 1.5 * b / a,
+                                                            letterSpacing: 0.48 * a,
+                                                            color: const Color(0x99000000),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(bottom: 10.0),
+                                                      child: Row(
+                                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                                        children: [
+                                                          Container(
+                                                            margin: EdgeInsets.fromLTRB(
+                                                                0 * a, 0 * a, 1 * a, 4 * a),
+                                                            width: 3 * a,
+                                                            height: 15 * a,
+                                                            decoration: const BoxDecoration(
+                                                              color: Color(0xffff9933),
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            margin: EdgeInsets.fromLTRB(
+                                                                0 * a, 0 * a, 1 * a, 4 * a),
+                                                            width: 3 * a,
+                                                            height: 19 * a,
+                                                            decoration: const BoxDecoration(
+                                                              color: Color(0xffff9933),
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            margin: EdgeInsets.fromLTRB(
+                                                                0 * a, 0 * a, 5 * a, 4 * a),
+                                                            width: 3 * a,
+                                                            height: 15 * a,
+                                                            decoration: const BoxDecoration(
+                                                              color: Color(0xffff9933),
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            room.members?.length.toString()??'0',
+                                                            style: SafeGoogleFont(
+                                                              'Poppins',
+                                                              fontSize: 12 * b,
+                                                              fontWeight: FontWeight.w400,
+                                                              height: 1.5 * b / a,
+                                                              letterSpacing: 0.48 * a,
+                                                              color: const Color(0xff000000),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+                                              })
+                                            );
+                                          }
+                                      }
+                                    },
+                                  ),
                                 ),
                               ),
                               Container(
@@ -470,104 +491,105 @@ class _HomeState extends State<Home> {
                                           } else if((snapshot.data?.data?.length??0) == 0){
                                             return const Center(child: Text('No Data Found!'));
                                           } else {
-                                            return Expanded(
-                                              child: ListView.builder(
-                                                itemCount: snapshot.data?.data?.length??0,
-                                                itemBuilder: (context, index) {
-                                                  final club = snapshot.data!.data![index];
-                                                  return Row(
-                                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                                    children: [
-                                                      Expanded(
-                                                        child: ListTile(
-                                                          dense: true,
-                                                          contentPadding: EdgeInsets.zero,
-                                                          leading: club.images!.isEmpty? Image.asset(
-                                                            "assets/logo_greystyle.png",
-                                                            fit: BoxFit.contain,
-                                                            width: 64 * a,
-                                                            height: 64 * a,
-                                                          ) : Image.network(
-                                                            club.images!.first,
-                                                            fit: BoxFit.contain,
-                                                            width: 64 * a,
-                                                            height: 64 * a,
+                                            return ListView.builder(
+                                              itemCount: snapshot.data?.data?.length??0,
+                                              itemBuilder: (context, index) {
+                                                final room = snapshot.data!.data![index];
+                                                return Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                                  children: [
+                                                    Expanded(
+                                                      child: ListTile(
+                                                        onTap: (){
+                                                          value.joinRoom(room);
+                                                        },
+                                                        dense: true,
+                                                        contentPadding: EdgeInsets.zero,
+                                                        leading: room.images!.isEmpty? Image.asset(
+                                                          "assets/logo_greystyle.png",
+                                                          fit: BoxFit.contain,
+                                                          width: 64 * a,
+                                                          height: 64 * a,
+                                                        ) : Image.network(
+                                                          room.images!.first,
+                                                          fit: BoxFit.contain,
+                                                          width: 64 * a,
+                                                          height: 64 * a,
+                                                        ),
+                                                        title: Text(
+                                                          room.name.toString(),
+                                                          style: SafeGoogleFont(
+                                                            'Poppins',
+                                                            fontSize: 16 * b,
+                                                            fontWeight: FontWeight.w400,
+                                                            height: 1.5 * b / a,
+                                                            letterSpacing: 0.64 * a,
+                                                            color: const Color(0xff000000),
                                                           ),
-                                                          title: Text(
-                                                            club.name.toString(),
-                                                            style: SafeGoogleFont(
-                                                              'Poppins',
-                                                              fontSize: 16 * b,
-                                                              fontWeight: FontWeight.w400,
-                                                              height: 1.5 * b / a,
-                                                              letterSpacing: 0.64 * a,
-                                                              color: const Color(0xff000000),
+                                                        ),
+                                                        subtitle: Text(
+                                                          room.announcement==''?'Welcome to my room!':room.announcement!,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          style: SafeGoogleFont(
+                                                            'Poppins',
+                                                            fontSize: 12 * b,
+                                                            fontWeight: FontWeight.w400,
+                                                            height: 1.5 * b / a,
+                                                            letterSpacing: 0.48 * a,
+                                                            color: const Color(0x99000000),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(bottom: 10.0),
+                                                      child: Row(
+                                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                                        children: [
+                                                          Container(
+                                                            margin: EdgeInsets.fromLTRB(
+                                                                0 * a, 0 * a, 1 * a, 4 * a),
+                                                            width: 3 * a,
+                                                            height: 15 * a,
+                                                            decoration: const BoxDecoration(
+                                                              color: Color(0xffff9933),
                                                             ),
                                                           ),
-                                                          subtitle: Text(
-                                                            club.announcement==''?'Welcome to my room!':club.announcement!,
-                                                            overflow: TextOverflow.ellipsis,
+                                                          Container(
+                                                            margin: EdgeInsets.fromLTRB(
+                                                                0 * a, 0 * a, 1 * a, 4 * a),
+                                                            width: 3 * a,
+                                                            height: 19 * a,
+                                                            decoration: const BoxDecoration(
+                                                              color: Color(0xffff9933),
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            margin: EdgeInsets.fromLTRB(
+                                                                0 * a, 0 * a, 5 * a, 4 * a),
+                                                            width: 3 * a,
+                                                            height: 15 * a,
+                                                            decoration: const BoxDecoration(
+                                                              color: Color(0xffff9933),
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            room.members?.length.toString()??'0',
                                                             style: SafeGoogleFont(
                                                               'Poppins',
                                                               fontSize: 12 * b,
                                                               fontWeight: FontWeight.w400,
                                                               height: 1.5 * b / a,
                                                               letterSpacing: 0.48 * a,
-                                                              color: const Color(0x99000000),
+                                                              color: const Color(0xff000000),
                                                             ),
-                                                          ),
-                                                        ),
+                                                          )
+                                                        ],
                                                       ),
-                                                      Padding(
-                                                        padding: const EdgeInsets.only(bottom: 10.0),
-                                                        child: Row(
-                                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                                          children: [
-                                                            Container(
-                                                              margin: EdgeInsets.fromLTRB(
-                                                                  0 * a, 0 * a, 1 * a, 4 * a),
-                                                              width: 3 * a,
-                                                              height: 15 * a,
-                                                              decoration: const BoxDecoration(
-                                                                color: Color(0xffff9933),
-                                                              ),
-                                                            ),
-                                                            Container(
-                                                              margin: EdgeInsets.fromLTRB(
-                                                                  0 * a, 0 * a, 1 * a, 4 * a),
-                                                              width: 3 * a,
-                                                              height: 19 * a,
-                                                              decoration: const BoxDecoration(
-                                                                color: Color(0xffff9933),
-                                                              ),
-                                                            ),
-                                                            Container(
-                                                              margin: EdgeInsets.fromLTRB(
-                                                                  0 * a, 0 * a, 5 * a, 4 * a),
-                                                              width: 3 * a,
-                                                              height: 15 * a,
-                                                              decoration: const BoxDecoration(
-                                                                color: Color(0xffff9933),
-                                                              ),
-                                                            ),
-                                                            Text(
-                                                              club.members?.length.toString()??'0',
-                                                              style: SafeGoogleFont(
-                                                                'Poppins',
-                                                                fontSize: 12 * b,
-                                                                fontWeight: FontWeight.w400,
-                                                                height: 1.5 * b / a,
-                                                                letterSpacing: 0.48 * a,
-                                                                color: const Color(0xff000000),
-                                                              ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              ),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
                                             );
                                           }
                                       }
@@ -578,114 +600,135 @@ class _HomeState extends State<Home> {
                               Container(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 18 * a, vertical: 8 * a),
-                                child: Column(
-                                  children: [
-                                    for (Map club in roomList.take(5))
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Expanded(
-                                            child: ListTile(
-                                              dense: true,
-                                              contentPadding: EdgeInsets.zero,
-                                              leading: Image.asset(
-                                                club["image"],
-                                                fit: BoxFit.contain,
-                                                width: 64 * a,
-                                                height: 64 * a,
-                                              ),
-                                              title: Text(
-                                                club["name"],
-                                                style: SafeGoogleFont(
-                                                  'Poppins',
-                                                  fontSize: 16 * b,
-                                                  fontWeight: FontWeight.w400,
-                                                  height: 1.5 * b / a,
-                                                  letterSpacing: 0.64 * a,
-                                                  color:
-                                                      const Color(0xff000000),
-                                                ),
-                                              ),
-                                              subtitle: Text(
-                                                club["about"],
-                                                overflow: TextOverflow.ellipsis,
-                                                style: SafeGoogleFont(
-                                                  'Poppins',
-                                                  fontSize: 12 * b,
-                                                  fontWeight: FontWeight.w400,
-                                                  height: 1.5 * b / a,
-                                                  letterSpacing: 0.48 * a,
-                                                  color:
-                                                      const Color(0x99000000),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 10.0),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              children: [
-                                                Container(
-                                                  margin: EdgeInsets.fromLTRB(
-                                                      0 * a,
-                                                      0 * a,
-                                                      1 * a,
-                                                      4 * a),
-                                                  width: 3 * a,
-                                                  height: 15 * a,
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                    color: Color(0xffff9933),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  margin: EdgeInsets.fromLTRB(
-                                                      0 * a,
-                                                      0 * a,
-                                                      1 * a,
-                                                      4 * a),
-                                                  width: 3 * a,
-                                                  height: 19 * a,
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                    color: Color(0xffff9933),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  margin: EdgeInsets.fromLTRB(
-                                                      0 * a,
-                                                      0 * a,
-                                                      5 * a,
-                                                      4 * a),
-                                                  width: 3 * a,
-                                                  height: 15 * a,
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                    color: Color(0xffff9933),
-                                                  ),
-                                                ),
-                                                Text(
-                                                  club["rank"],
-                                                  style: SafeGoogleFont(
-                                                    'Poppins',
-                                                    fontSize: 12 * b,
-                                                    fontWeight: FontWeight.w400,
-                                                    height: 1.5 * b / a,
-                                                    letterSpacing: 0.48 * a,
-                                                    color:
-                                                        const Color(0xff000000),
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                  ],
+                                child:
+                                Consumer<RoomsProvider>(
+                                  builder: (context, value, child) => FutureBuilder(
+                                    future: value.getAllGroups(),
+                                    builder: (context, snapshot) {
+                                      switch (snapshot.connectionState) {
+                                        case ConnectionState.none:
+                                          return const Text('none...');
+                                        case ConnectionState.active:
+                                          return const Text('active...');
+                                        case ConnectionState.waiting:
+                                          return const Center(child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              CircularProgressIndicator(),
+                                              SizedBox(height: 18),
+                                              Text('Loading'),
+                                            ],
+                                          ));
+                                        case ConnectionState.done:
+                                          if (snapshot.hasError) {
+                                            return Text('Error: ${snapshot.error}');
+                                          } else if((snapshot.data?.data?.length??0) == 0){
+                                            return const Center(child: Text('No Data Found!'));
+                                          } else {
+                                            return ListView.builder(
+                                              itemCount: snapshot.data?.data?.length??0,
+                                              itemBuilder: (context, index) {
+                                                final room = snapshot.data!.data![index];
+                                                return Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                                  children: [
+                                                    Expanded(
+                                                      child: ListTile(
+                                                        onTap: (){
+                                                          value.joinRoom(room);
+                                                        },
+                                                        dense: true,
+                                                        contentPadding: EdgeInsets.zero,
+                                                        leading: room.images!.isEmpty? Image.asset(
+                                                          "assets/logo_greystyle.png",
+                                                          fit: BoxFit.contain,
+                                                          width: 64 * a,
+                                                          height: 64 * a,
+                                                        ) : Image.network(
+                                                          room.images!.first,
+                                                          fit: BoxFit.contain,
+                                                          width: 64 * a,
+                                                          height: 64 * a,
+                                                        ),
+                                                        title: Text(
+                                                          room.name.toString(),
+                                                          style: SafeGoogleFont(
+                                                            'Poppins',
+                                                            fontSize: 16 * b,
+                                                            fontWeight: FontWeight.w400,
+                                                            height: 1.5 * b / a,
+                                                            letterSpacing: 0.64 * a,
+                                                            color: const Color(0xff000000),
+                                                          ),
+                                                        ),
+                                                        subtitle: Text(
+                                                          room.announcement==''?'Welcome to my room!':room.announcement!,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          style: SafeGoogleFont(
+                                                            'Poppins',
+                                                            fontSize: 12 * b,
+                                                            fontWeight: FontWeight.w400,
+                                                            height: 1.5 * b / a,
+                                                            letterSpacing: 0.48 * a,
+                                                            color: const Color(0x99000000),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets.only(bottom: 10.0),
+                                                      child: Row(
+                                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                                        children: [
+                                                          Container(
+                                                            margin: EdgeInsets.fromLTRB(
+                                                                0 * a, 0 * a, 1 * a, 4 * a),
+                                                            width: 3 * a,
+                                                            height: 15 * a,
+                                                            decoration: const BoxDecoration(
+                                                              color: Color(0xffff9933),
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            margin: EdgeInsets.fromLTRB(
+                                                                0 * a, 0 * a, 1 * a, 4 * a),
+                                                            width: 3 * a,
+                                                            height: 19 * a,
+                                                            decoration: const BoxDecoration(
+                                                              color: Color(0xffff9933),
+                                                            ),
+                                                          ),
+                                                          Container(
+                                                            margin: EdgeInsets.fromLTRB(
+                                                                0 * a, 0 * a, 5 * a, 4 * a),
+                                                            width: 3 * a,
+                                                            height: 15 * a,
+                                                            decoration: const BoxDecoration(
+                                                              color: Color(0xffff9933),
+                                                            ),
+                                                          ),
+                                                          Text(
+                                                            room.members?.length.toString()??'0',
+                                                            style: SafeGoogleFont(
+                                                              'Poppins',
+                                                              fontSize: 12 * b,
+                                                              fontWeight: FontWeight.w400,
+                                                              height: 1.5 * b / a,
+                                                              letterSpacing: 0.48 * a,
+                                                              color: const Color(0xff000000),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          }
+                                      }
+                                    },
+                                  ),
                                 ),
                               ),
                             ]),
@@ -818,27 +861,30 @@ class _HomeState extends State<Home> {
                                       return ListView.builder(
                                         itemCount: snapshot.data?.data?.length??0,
                                         itemBuilder: (context, index) {
-                                          final club = snapshot.data!.data![index];
+                                          final room = snapshot.data!.data![index];
                                           return Row(
                                             crossAxisAlignment: CrossAxisAlignment.end,
                                             children: [
                                               Expanded(
                                                 child: ListTile(
+                                                  onTap: (){
+                                                    value.joinRoom(room);
+                                                  },
                                                   dense: true,
                                                   contentPadding: EdgeInsets.zero,
-                                                  leading: club.images!.isEmpty? Image.asset(
+                                                  leading: room.images!.isEmpty? Image.asset(
                                                     "assets/logo_greystyle.png",
                                                     fit: BoxFit.contain,
                                                     width: 64 * a,
                                                     height: 64 * a,
                                                   ) : Image.network(
-                                                    club.images!.first,
+                                                    room.images!.first,
                                                     fit: BoxFit.contain,
                                                     width: 64 * a,
                                                     height: 64 * a,
                                                   ),
                                                   title: Text(
-                                                    club.name.toString(),
+                                                    room.name.toString(),
                                                     style: SafeGoogleFont(
                                                       'Poppins',
                                                       fontSize: 16 * b,
@@ -849,7 +895,7 @@ class _HomeState extends State<Home> {
                                                     ),
                                                   ),
                                                   subtitle: Text(
-                                                    club.announcement==''?'Welcome to my room!':club.announcement!,
+                                                    room.announcement==''?'Welcome to my room!':room.announcement!,
                                                     overflow: TextOverflow.ellipsis,
                                                     style: SafeGoogleFont(
                                                       'Poppins',
@@ -895,7 +941,7 @@ class _HomeState extends State<Home> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      club.members?.length.toString()??'0',
+                                                      room.members?.length.toString()??'0',
                                                       style: SafeGoogleFont(
                                                         'Poppins',
                                                         fontSize: 12 * b,
@@ -952,27 +998,30 @@ class _HomeState extends State<Home> {
                             return ListView.builder(
                               itemCount: snapshot.data?.data?.length??0,
                                 itemBuilder: (context, index) {
-                                final club = snapshot.data!.data![index];
+                                final room = snapshot.data!.data![index];
                                   return Row(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Expanded(
                                         child: ListTile(
+                                          onTap: (){
+                                            value.joinRoom(room);
+                                          },
                                           dense: true,
                                           contentPadding: EdgeInsets.zero,
-                                          leading: club.images!.isEmpty? Image.asset(
+                                          leading: room.images!.isEmpty? Image.asset(
                                             "assets/logo_greystyle.png",
                                             fit: BoxFit.contain,
                                             width: 64 * a,
                                             height: 64 * a,
                                           ) : Image.network(
-                                            club.images!.first,
+                                            room.images!.first,
                                             fit: BoxFit.contain,
                                             width: 64 * a,
                                             height: 64 * a,
                                           ),
                                           title: Text(
-                                            club.name.toString(),
+                                            room.name.toString(),
                                             style: SafeGoogleFont(
                                               'Poppins',
                                               fontSize: 16 * b,
@@ -983,7 +1032,7 @@ class _HomeState extends State<Home> {
                                             ),
                                           ),
                                           subtitle: Text(
-                                            club.announcement==''?'Welcome to my room!':club.announcement!,
+                                            room.announcement==''?'Welcome to my room!':room.announcement!,
                                             overflow: TextOverflow.ellipsis,
                                             style: SafeGoogleFont(
                                               'Poppins',
@@ -1029,7 +1078,7 @@ class _HomeState extends State<Home> {
                                               ),
                                             ),
                                             Text(
-                                              club.members?.length.toString()??'0',
+                                              room.members?.length.toString()??'0',
                                               style: SafeGoogleFont(
                                                 'Poppins',
                                                 fontSize: 12 * b,

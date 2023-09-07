@@ -520,6 +520,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.6"
+  permission_handler:
+    dependency: "direct main"
+    description:
+      name: permission_handler
+      sha256: "06ddb3f815eb7d54c758e7abdfe0a06fd9209ece1af60ec419920a17ffeb1ba6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "8.1.2"
+  permission_handler_platform_interface:
+    dependency: transitive
+    description:
+      name: permission_handler_platform_interface
+      sha256: f2343e9fa9c22ae4fd92d4732755bfe452214e7189afcc097380950cf567b4b2
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.11.5"
   photo_view:
     dependency: "direct main"
     description:

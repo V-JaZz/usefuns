@@ -1,14 +1,17 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:live_app/data/model/response/rooms_model.dart';
 import 'package:live_app/provider/rooms_provider.dart';
 import 'package:live_app/utils/common_widgets.dart';
 
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
-import '../../rooms/room_svip_5.dart';
+import '../../rooms/live_room.dart';
 
 class CreateRoom extends StatefulWidget {
   const CreateRoom({Key? key}) : super(key: key);
@@ -21,8 +24,7 @@ class _CreateRoomState extends State<CreateRoom> {
   final TextEditingController textEditingController = TextEditingController();
   File? pickedImage;
   String? imagePaths;
-
-
+  String? croppedImagePaths;
 
   Future pickImage(ImageSource source) async {
     try {
@@ -34,9 +36,34 @@ class _CreateRoomState extends State<CreateRoom> {
         }
       });
       if (pickedImage == null) return null;
-      setState(() {});
+      await ImageCropper().cropImage(
+        sourcePath: imagePaths!,
+        aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+        uiSettings: [
+          AndroidUiSettings(
+              toolbarTitle: 'Cropper',
+              toolbarColor: const Color(0x339E26BC),
+              toolbarWidgetColor: Colors.black,
+              // toolbarWidgetColor: const Color(0xff9e26bc),
+              initAspectRatio: CropAspectRatioPreset.original,
+              statusBarColor: const Color(0x339E26BC),
+              activeControlsWidgetColor: const Color(0xff9e26bc)
+          ),
+          IOSUiSettings(
+            title: 'Cropper',
+          ),
+          WebUiSettings(
+            context: context,
+          ),
+        ],
+      ).then((croppedImage) {
+        croppedImagePaths = croppedImage?.path;
+        setState(() {});
+        return null;
+      });
+
     } on Exception catch (e) {
-      return const Text('Uploding Faild');
+      return const Text('Adding Failed');
     }
   }
 
@@ -129,7 +156,7 @@ class _CreateRoomState extends State<CreateRoom> {
                     width: 109 * a,
                   )
                       :Image(
-                    image: FileImage(File(imagePaths!)),
+                    image: FileImage(File(croppedImagePaths??imagePaths!)),
                     height: 109 * a,
                     width: 109 * a,
                     fit: BoxFit.cover,
@@ -170,9 +197,25 @@ class _CreateRoomState extends State<CreateRoom> {
                     if(textEditingController.text.isEmpty){
                       showCustomSnackBar('Enter Room Name!', context);
                     }else if(!value.creatingRoom){
-                      value.create(textEditingController.text, imagePaths).then((value) {
+                      value.create(textEditingController.text, croppedImagePaths??imagePaths).then((value) {
                         if(value.status==1){
-                          Get.off(() => const RoomSVIP5());
+                          Get.off(() => LiveRoom(room: Room(
+                            announcement: value.data?.announcement,
+                            members: value.data?.members,
+                            lastmembers: value.data?.lastmembers,
+                            subscribers: value.data?.subscribers,
+                            images: value.data?.images,
+                            noOfSeats: value.data?.noOfSeats,
+                            isLocked: value.data?.isLocked,
+                            isActive: value.data?.isActive,
+                            id: value.data?.id,
+                            roomId: value.data?.roomId,
+                            userId: value.data?.userId,
+                            name: value.data?.name,
+                            createdAt: value.data?.createdAt,
+                            updatedAt: value.data?.updatedAt,
+                            v: value.data?.v,
+                          )));
                         }else{
                           showCustomSnackBar(value.message, context);
                         }

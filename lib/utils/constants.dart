@@ -6,5 +6,6 @@ class Constants {
   static String userId = 'USER_ID';
   static String token = 'TOKEN';
   static String language = 'LANGUAGE';
+  static String recentRooms = 'RECENT_ROOMS';
 
 }
