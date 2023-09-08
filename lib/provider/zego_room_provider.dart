@@ -3,28 +3,46 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:live_app/provider/user_data_provider.dart';
+import 'package:provider/provider.dart';
 import '../data/datasource/local/sharedpreferences/storage_service.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
+import '../data/model/response/rooms_model.dart';
 import '../utils/zego_config.dart';
 
-class ZegoProvider with ChangeNotifier {
+class ZegoRoomProvider with ChangeNotifier {
   final storageService = StorageService();
-
+  Room? room;
   int _previewViewID = -1;
   int _playViewID = -1;
   Widget? _previewViewWidget;
   Widget? _playViewWidget;
+
+  bool isMicOn = false;
+  bool isSoundOn = false;
+
   static const double viewRatio = 3.0 / 4.0;
   final String _roomID = 'QuickStartRoom-1';
-  List<ZegoUser>? roomUsersList;
-  List<ZegoStream>? roomStreamList;
+
+  List<ZegoUser> roomUsersList = [];
+  List<ZegoStream> roomStreamList = [];
+
+  int activeCount = 1;
 
   ZegoMediaPlayer? mediaPlayer;
-
   bool _isEngineActive = false;
   ZegoRoomState _roomState = ZegoRoomState.Disconnected;
-  ZegoPublisherState _publisherState = ZegoPublisherState.NoPublish;
+
+  ZegoRoomState get roomState => _roomState;
+
+  set roomState(ZegoRoomState value) {
+    _roomState = value;
+    notifyListeners();
+  }
+
+  ZegoPublisherState publisherState = ZegoPublisherState.NoPublish;
   ZegoPlayerState _playerState = ZegoPlayerState.NoPlay;
 
   final TextEditingController _publishingStreamIDController = TextEditingController();
@@ -115,8 +133,11 @@ class ZegoProvider with ChangeNotifier {
   }
 
   void startPublishingStream() {
+    final user = Provider.of<UserDataProvider>(Get.context!).userData;
+    if(user!.data!.images!.isNotEmpty)ZegoExpressEngine.instance.setStreamExtraInfo(user.data?.images?.first??'');
     ZegoExpressEngine.instance.startPublishingStream(ZegoConfig.instance.streamID);
     log('📤 Start publishing stream, streamID: ${ZegoConfig.instance.streamID}');
+    roomStreamList.add(ZegoStream(ZegoUser(ZegoConfig.instance.userID,ZegoConfig.instance.userName), ZegoConfig.instance.streamID, user.data?.images?.first??''));
   }
 
   void stopPublishingStream() {
@@ -174,7 +195,7 @@ class ZegoProvider with ChangeNotifier {
 
       _isEngineActive = false;
       _roomState = ZegoRoomState.Disconnected;
-      _publisherState = ZegoPublisherState.NoPublish;
+      publisherState = ZegoPublisherState.NoPublish;
       _playerState = ZegoPlayerState.NoPlay;
   }
 
@@ -185,7 +206,7 @@ class ZegoProvider with ChangeNotifier {
         int errorCode, Map<String, dynamic> extendedData) {
       log(
           '🚩 🚪 Room state update, state: $state, errorCode: $errorCode, roomID: $roomID');
-      _roomState = state;
+      roomState = state;
     };
 
     ZegoExpressEngine.onPublisherStateUpdate = (String streamID,
@@ -194,7 +215,7 @@ class ZegoProvider with ChangeNotifier {
         Map<String, dynamic> extendedData) {
       log(
           '🚩 📤 Publisher state update, state: $state, errorCode: $errorCode, streamID: $streamID');
-      _publisherState = state;
+      publisherState = state;
     };
 
     ZegoExpressEngine.onPlayerStateUpdate = (String streamID,
@@ -208,27 +229,38 @@ class ZegoProvider with ChangeNotifier {
 
     ZegoExpressEngine.onRoomUserUpdate = (roomID, updateType, userList) {
       roomUsersList = userList;
+      notifyListeners();
       for (var e in userList) {
         var userID = e.userID;
         var userName = e.userName;
         log(
-            '🚩 🚪 Room user update, roomID: $roomID, updateType: $updateType userID: $userID userName: $userName');
+            '🚩 🚩 🚩 🚪 Room user update, roomID: $roomID, updateType: $updateType userID: $userID userName: $userName');
       }
+    };
+
+    ZegoExpressEngine.onRoomOnlineUserCountUpdate = (roomID, count) {
+      activeCount = count;
+      notifyListeners();
     };
 
     ZegoExpressEngine.onRoomStreamUpdate =
     ((roomID, updateType, streamList, extendedData) {
-      roomStreamList = streamList;
+      roomStreamList.addAll(streamList) ;
+      notifyListeners();
       for (var stream in streamList) {
         var streamID = stream.streamID;
-        log(
-            '🚩 🚪 Room stream update, roomID: $roomID, updateType: $updateType streamID:$streamID');
+        log('🚩 🚪 Room stream update, roomID: $roomID, updateType: $updateType streamID:$streamID');
 
-        if (updateType == ZegoPlayerState.NoPlay) {
-          stopPlayingStream(_playingStreamIDController.text.trim());
+        if (updateType == ZegoUpdateType.Add) {
+          startPlayingStream(streamID);
+        }else if(updateType == ZegoUpdateType.Delete){
+          roomStreamList.removeWhere((element) => element.streamID == streamID);
+          notifyListeners();
         }
       }
     });
+
+
   }
 
   void clearZegoEventCallback() {
@@ -273,5 +305,20 @@ class ZegoProvider with ChangeNotifier {
     // after [stopPlayingStream] to release resource and avoid memory leaks
     ZegoExpressEngine.instance.destroyCanvasView(_playViewID);
     _playViewWidget = null;
+  }
+
+  void init() async {
+    isMicOn = !await ZegoExpressEngine.instance.isMicrophoneMuted();
+    isSoundOn = !await ZegoExpressEngine.instance.isSpeakerMuted();
+  }
+  void muteMicrophone(bool b){
+    isMicOn = !b;
+    notifyListeners();
+    ZegoExpressEngine.instance.muteMicrophone(b);
+  }
+  void muteAudio(bool b){
+    isSoundOn = !b;
+    notifyListeners();
+    ZegoExpressEngine.instance.muteSpeaker(b);
   }
 }

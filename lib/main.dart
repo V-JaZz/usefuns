@@ -4,7 +4,7 @@ import 'package:live_app/provider/auth_provider.dart';
 import 'package:live_app/provider/moments_provider.dart';
 import 'package:live_app/provider/rooms_provider.dart';
 import 'package:live_app/provider/user_data_provider.dart';
-import 'package:live_app/provider/zego_provider.dart';
+import 'package:live_app/provider/zego_room_provider.dart';
 import 'package:live_app/screens/club/club_page.dart';
 import 'package:live_app/screens/club/special_id_page.dart';
 import 'package:live_app/screens/splash_screen.dart';
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => UserDataProvider()),
         ChangeNotifierProvider(create: (context) => MomentsProvider()),
         ChangeNotifierProvider(create: (context) => RoomsProvider()),
-        ChangeNotifierProvider(create: (context) => ZegoProvider()),
+        ChangeNotifierProvider(create: (context) => ZegoRoomProvider()),
       ],
       child: GetMaterialApp(
         title: 'Flutter Live App',

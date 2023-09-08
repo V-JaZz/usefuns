@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import '../../../provider/rooms_provider.dart';
+import '../../../provider/zego_room_provider.dart';
 import '../../rooms/live_room.dart';
 import 'create_room.dart';
 import 'party.dart';
@@ -244,7 +245,9 @@ class _HomeState extends State<Home> {
                         ),
                         child: ListTile(
                           onTap: () {
-                            Get.to(() => LiveRoom(room: room));
+                            final provider = Provider.of<ZegoRoomProvider>(context,listen: false);
+                            provider.room = room;
+                            Get.to(() => const LiveRoom());
                           },
                           leading:room.images!.isEmpty
                               ? CircleAvatar(
