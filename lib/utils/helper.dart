@@ -29,3 +29,39 @@ class AgeCalculator {
     return age;
   }
 }
+class FixedLengthQueue<T> {
+  final int maxLength;
+  final List<T> _queue = [];
+
+  FixedLengthQueue(this.maxLength);
+
+  void enqueue(T item) {
+    if (_queue.length >= maxLength) {
+      _queue.removeAt(0); // Remove the oldest item
+    }
+    _queue.add(item);
+  }
+
+  T? dequeue() {
+    if (_queue.isNotEmpty) {
+      return _queue.removeAt(0);
+    }
+    return null;
+  }
+
+  T? elementAt(int index) {
+    if (index >= 0 && index < _queue.length) {
+      return _queue[index];
+    }
+    return null;
+  }
+
+  T? operator [](int index) {
+    if (index >= 0 && index < _queue.length) {
+      return _queue[index];
+    }
+    return null;
+  }
+
+  int get length => _queue.length;
+}

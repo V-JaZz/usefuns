@@ -10,6 +10,7 @@ import '../data/datasource/local/sharedpreferences/storage_service.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 import '../data/model/response/rooms_model.dart';
+import '../utils/helper.dart';
 import '../utils/zego_config.dart';
 
 class ZegoRoomProvider with ChangeNotifier {
@@ -28,12 +29,15 @@ class ZegoRoomProvider with ChangeNotifier {
 
   List<ZegoUser> roomUsersList = [];
   List<ZegoStream> roomStreamList = [];
+  FixedLengthQueue? broadcastMessageList = FixedLengthQueue<ZegoBroadcastMessageInfo>(10);
+  final scrollController = ScrollController();
 
   int activeCount = 1;
 
   ZegoMediaPlayer? mediaPlayer;
   bool _isEngineActive = false;
   ZegoRoomState _roomState = ZegoRoomState.Disconnected;
+  ZegoRealTimeSequentialDataManager? _zegoRealTimeSequentialDataManager;
 
   ZegoRoomState get roomState => _roomState;
 
@@ -142,6 +146,7 @@ class ZegoRoomProvider with ChangeNotifier {
 
   void stopPublishingStream() {
     ZegoExpressEngine.instance.stopPublishingStream();
+    roomStreamList.removeWhere((element) => element.streamID == ZegoConfig.instance.streamID);
   }
 
   // MARK: - Step 4: StartPlayingStream
@@ -206,7 +211,13 @@ class ZegoRoomProvider with ChangeNotifier {
         int errorCode, Map<String, dynamic> extendedData) {
       log(
           '🚩 🚪 Room state update, state: $state, errorCode: $errorCode, roomID: $roomID');
-      roomState = state;
+      _roomState = state;
+    };
+
+    ZegoExpressEngine.onRoomStateChanged = (roomID, reason, errorCode, extendedData) {
+
+      log(
+          '🚩 🚩 🚩 Room state changed, reason: $reason, errorCode: $errorCode, roomID: $roomID');
     };
 
     ZegoExpressEngine.onPublisherStateUpdate = (String streamID,
@@ -228,13 +239,12 @@ class ZegoRoomProvider with ChangeNotifier {
     };
 
     ZegoExpressEngine.onRoomUserUpdate = (roomID, updateType, userList) {
-      roomUsersList = userList;
-      notifyListeners();
+      print('onRoomUserUpdate');
       for (var e in userList) {
         var userID = e.userID;
         var userName = e.userName;
         log(
-            '🚩 🚩 🚩 🚪 Room user update, roomID: $roomID, updateType: $updateType userID: $userID userName: $userName');
+            '🚩 🚪 Room user update, roomID: $roomID, updateType: $updateType userID: $userID userName: $userName');
       }
     };
 
@@ -254,13 +264,22 @@ class ZegoRoomProvider with ChangeNotifier {
         if (updateType == ZegoUpdateType.Add) {
           startPlayingStream(streamID);
         }else if(updateType == ZegoUpdateType.Delete){
+          if(streamID == ZegoConfig.instance.streamID) roomStreamList.removeWhere((element) => element.streamID == streamID);
           roomStreamList.removeWhere((element) => element.streamID == streamID);
           notifyListeners();
         }
       }
     });
-
-
+    ZegoExpressEngine.onIMRecvBroadcastMessage = (roomID, messageList) {
+      print('🚪🚪 onIMRecvBroadcastMessage');
+      for (var m in messageList) {
+        log(
+            '🚩  Broadcast message: ${m.message}, userName: ${m.fromUser.userName}');
+        broadcastMessageList?.enqueue(m);
+      }
+      scrollController.jumpTo(scrollController.position.maxScrollExtent);
+      notifyListeners();
+    };
   }
 
   void clearZegoEventCallback() {
@@ -310,15 +329,23 @@ class ZegoRoomProvider with ChangeNotifier {
   void init() async {
     isMicOn = !await ZegoExpressEngine.instance.isMicrophoneMuted();
     isSoundOn = !await ZegoExpressEngine.instance.isSpeakerMuted();
+    _zegoRealTimeSequentialDataManager = await ZegoExpressEngine.instance.createRealTimeSequentialDataManager(_roomID);
+    _zegoRealTimeSequentialDataManager?.startBroadcasting(ZegoConfig.instance.streamID);
   }
+
   void muteMicrophone(bool b){
     isMicOn = !b;
     notifyListeners();
     ZegoExpressEngine.instance.muteMicrophone(b);
   }
+
   void muteAudio(bool b){
     isSoundOn = !b;
     notifyListeners();
     ZegoExpressEngine.instance.muteSpeaker(b);
+  }
+
+  void sendBroadcastMessage(String message) {
+    ZegoExpressEngine.instance.sendBroadcastMessage(_roomID, message);
   }
 }
