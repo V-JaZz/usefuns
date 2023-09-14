@@ -38,7 +38,7 @@ class Data {
   String? announcement;
   List<dynamic>? members;
   List<dynamic>? lastmembers;
-  List<Subscriber>? subscribers;
+  List<Member>? subscribers;
   List<String>? images;
   int? noOfSeats;
   bool? isLocked;
@@ -73,7 +73,7 @@ class Data {
     announcement: json["announcement"],
     members: json["members"] == null ? [] : List<dynamic>.from(json["members"]!.map((x) => x)),
     lastmembers: json["lastmembers"] == null ? [] : List<dynamic>.from(json["lastmembers"]!.map((x) => x)),
-    subscribers: json["subscribers"] == null ? [] : List<Subscriber>.from(json["subscribers"]!.map((x) => Subscriber.fromJson(x))),
+    subscribers: json["subscribers"] == null ? [] : List<Member>.from(json["subscribers"]!.map((x) => Member.fromJson(x))),
     images: json["images"] == null ? [] : List<String>.from(json["images"]!.map((x) => x)),
     noOfSeats: json["no_of_seats"],
     isLocked: json["is_locked"],

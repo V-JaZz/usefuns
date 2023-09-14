@@ -49,6 +49,13 @@ class FixedLengthQueue<T> {
     return null;
   }
 
+  T? clear() {
+    while (_queue.isNotEmpty) {
+      _queue.removeAt(0);
+    }
+    return null;
+  }
+
   T? elementAt(int index) {
     if (index >= 0 && index < _queue.length) {
       return _queue[index];

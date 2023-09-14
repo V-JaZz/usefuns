@@ -247,6 +247,7 @@ class _HomeState extends State<Home> {
                           onTap: () {
                             final provider = Provider.of<ZegoRoomProvider>(context,listen: false);
                             provider.room = room;
+                            provider.roomID = room.roomId!;
                             Get.to(() => const LiveRoom());
                           },
                           leading:room.images!.isEmpty
