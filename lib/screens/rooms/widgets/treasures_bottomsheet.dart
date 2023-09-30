@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:live_app/provider/zego_room_provider.dart';
 
 import 'package:live_app/utils/utils_assets.dart';
+import 'package:provider/provider.dart';
 
 class Treasures extends StatefulWidget {
   const Treasures({Key? key}) : super(key: key);
@@ -125,11 +127,16 @@ class _TreasuresState extends State<Treasures> {
   ];
   int selectedBox = 0;
   @override
+  void initState() {
+    selectedBox = Provider.of<ZegoRoomProvider>(context,listen: false).room?.treasureBoxLevel??0;
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
     double b = a * 0.97;
-    return Container(
+    return SizedBox(
       height: 600 * a,
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -251,6 +258,31 @@ class _TreasuresState extends State<Treasures> {
             ),
           ),
           Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Consumer<ZegoRoomProvider>(
+                    builder: (context, p, child) => LinearProgressIndicator(
+                      value: setValue(selectedBox,p.room?.usedDaimonds??0), // Set the progress value (0.0 to 1.0)
+                      backgroundColor: Colors.white38, // Optional: Background color
+                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue), // Optional: Progress color
+                    ),
+                  ),
+                ),
+                Container(
+                    decoration: const BoxDecoration(
+                        color: Colors.blue,
+                        shape: BoxShape.circle
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.all(3.0),
+                      child: Icon(Icons.key,color: Colors.white),
+                    ))
+              ],
+            ),
+          ),
+          Padding(
             padding: EdgeInsets.all(8 * a),
             child: Text(
               'Send gifts to open the treasure box',
@@ -325,12 +357,6 @@ class _TreasuresState extends State<Treasures> {
               ),
             ],
           ),
-          // Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-          //   iconTextRow(100, 'assets/treas/car.png', 'Bike'),
-          //   iconTextRow(50, 'assets/2.png', 'Frame'),
-          //   iconTextRow(70, '', 'no'),
-          //   iconTextRow(80, 'assets/abc.png', ''),
-          // ]),
         ],
       ),
     );
@@ -367,7 +393,7 @@ class _TreasuresState extends State<Treasures> {
                   txt,
                   textAlign: TextAlign.left,
                   style: SafeGoogleFont(
-                      color: Color.fromRGBO(255, 255, 255, 1),
+                      color: const Color.fromRGBO(255, 255, 255, 1),
                       'Roboto',
                       fontSize: 16 * a,
                       fontWeight: FontWeight.normal,
@@ -379,7 +405,7 @@ class _TreasuresState extends State<Treasures> {
                     Container(
                         width: 11 * a,
                         height: 6.523255825042725 * a,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           image: DecorationImage(
                               image: AssetImage('assets/diamond.png'),
                               fit: BoxFit.fitWidth),
@@ -388,7 +414,7 @@ class _TreasuresState extends State<Treasures> {
                       '2000',
                       textAlign: TextAlign.left,
                       style: SafeGoogleFont(
-                          color: Color.fromRGBO(255, 255, 255, 1),
+                          color: const Color.fromRGBO(255, 255, 255, 1),
                           'Roboto',
                           fontSize: 16 * a,
                           fontWeight: FontWeight.normal,
@@ -437,7 +463,7 @@ class _TreasuresState extends State<Treasures> {
                     Container(
                         width: 11 * a,
                         height: 6.523255825042725 * a,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           image: DecorationImage(
                               image: AssetImage('assets/diamond.png'),
                               fit: BoxFit.fitWidth),
@@ -446,7 +472,7 @@ class _TreasuresState extends State<Treasures> {
                       '2000',
                       textAlign: TextAlign.left,
                       style: SafeGoogleFont(
-                          color: Color.fromRGBO(255, 255, 255, 1),
+                          color: const Color.fromRGBO(255, 255, 255, 1),
                           'Roboto',
                           fontSize: 16 * a,
                           fontWeight: FontWeight.normal,
@@ -480,7 +506,7 @@ class _TreasuresState extends State<Treasures> {
                 Container(
                     width: 11 * a,
                     height: 6.523255825042725 * a,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       image: DecorationImage(
                           image: AssetImage('assets/diamond.png'),
                           fit: BoxFit.fitWidth),
@@ -489,7 +515,7 @@ class _TreasuresState extends State<Treasures> {
                   t1,
                   textAlign: TextAlign.left,
                   style: SafeGoogleFont(
-                      color: Color.fromRGBO(255, 255, 255, 1),
+                      color: const Color.fromRGBO(255, 255, 255, 1),
                       'Roboto',
                       fontSize: 16 * a,
                       fontWeight: FontWeight.normal,
@@ -510,7 +536,7 @@ class _TreasuresState extends State<Treasures> {
               Container(
                   width: 11 * a,
                   height: 6.523255825042725 * a,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     image: DecorationImage(
                         image: AssetImage('assets/diamond.png'),
                         fit: BoxFit.fitWidth),
@@ -519,7 +545,7 @@ class _TreasuresState extends State<Treasures> {
                 t2,
                 textAlign: TextAlign.left,
                 style: SafeGoogleFont(
-                    color: Color.fromRGBO(255, 255, 255, 1),
+                    color: const Color.fromRGBO(255, 255, 255, 1),
                     'Roboto',
                     fontSize: 16 * a,
                     fontWeight: FontWeight.normal,
@@ -541,7 +567,7 @@ class _TreasuresState extends State<Treasures> {
                 Container(
                     width: 11 * a,
                     height: 6.523255825042725 * a,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       image: DecorationImage(
                           image: AssetImage('assets/diamond.png'),
                           fit: BoxFit.fitWidth),
@@ -550,7 +576,7 @@ class _TreasuresState extends State<Treasures> {
                   t3,
                   textAlign: TextAlign.left,
                   style: SafeGoogleFont(
-                      color: Color.fromRGBO(255, 255, 255, 1),
+                      color: const Color.fromRGBO(255, 255, 255, 1),
                       'Roboto',
                       fontSize: 16 * a,
                       fontWeight: FontWeight.normal,
@@ -560,5 +586,37 @@ class _TreasuresState extends State<Treasures> {
             ))
       ],
     );
+  }
+
+  double setValue(int selectedBox, int usedDiamonds) {
+    print('$selectedBox $usedDiamonds');
+    switch(selectedBox){
+      case 0:
+        if(usedDiamonds>99){
+          return 1.0;
+        }
+        return usedDiamonds/100;
+      case 1:
+        if(usedDiamonds>299){
+          return 1.0;
+        }
+        return usedDiamonds/300;
+      case 2:
+        if(usedDiamonds>599){
+          return 1.0;
+        }
+        return usedDiamonds/600;
+      case 3:
+        if(usedDiamonds>999){
+          return 1.0;
+        }
+        return usedDiamonds/1000;
+      case 4:
+        if(usedDiamonds>1999){
+          return 1.0;
+        }
+        return usedDiamonds/2000;
+    }
+    return 0;
   }
 }

@@ -45,13 +45,15 @@ class RoomsModel {
 
 class Room {
   String? announcement;
+  int? treasureBoxLevel;
+  int? usedDaimonds;
   List<dynamic>? members;
   List<dynamic>? lastmembers;
   List<Member>? subscribers;
   List<dynamic>? blockedList;
   List<dynamic>? kickHistory;
   List<dynamic>? contributorsList;
-  List<String>? groupMembers;
+  List<Member>? groupMembers;
   List<String>? images;
   int? noOfSeats;
   int? totalDiamonds;
@@ -71,6 +73,8 @@ class Room {
 
   Room({
     this.announcement,
+    this.treasureBoxLevel,
+    this.usedDaimonds,
     this.members,
     this.lastmembers,
     this.subscribers,
@@ -98,13 +102,15 @@ class Room {
 
   Room copyWith({
     String? announcement,
+    int? treasureBoxLevel,
+    int? usedDaimonds,
     List<dynamic>? members,
     List<dynamic>? lastmembers,
     List<Member>? subscribers,
     List<dynamic>? blockedList,
     List<dynamic>? kickHistory,
     List<dynamic>? contributorsList,
-    List<String>? groupMembers,
+    List<Member>? groupMembers,
     List<String>? images,
     int? noOfSeats,
     int? totalDiamonds,
@@ -124,6 +130,8 @@ class Room {
   }) =>
       Room(
         announcement: announcement ?? this.announcement,
+        treasureBoxLevel: treasureBoxLevel ?? this.treasureBoxLevel,
+        usedDaimonds: usedDaimonds ?? this.usedDaimonds,
         members: members ?? this.members,
         lastmembers: lastmembers ?? this.lastmembers,
         subscribers: subscribers ?? this.subscribers,
@@ -151,13 +159,15 @@ class Room {
 
   factory Room.fromJson(Map<String, dynamic> json) => Room(
     announcement: json["announcement"],
+    treasureBoxLevel: json["treasure_box_level"],
+    usedDaimonds: json["used_daimonds"],
     members: json["members"] == null ? [] : List<dynamic>.from(json["members"]!.map((x) => x)),
     lastmembers: json["lastmembers"] == null ? [] : List<dynamic>.from(json["lastmembers"]!.map((x) => x)),
     subscribers: json["subscribers"] == null ? [] : List<Member>.from(json["subscribers"]!.map((x) => Member.fromJson(x))),
     blockedList: json["blockedList"] == null ? [] : List<dynamic>.from(json["blockedList"]!.map((x) => x)),
     kickHistory: json["kickHistory"] == null ? [] : List<dynamic>.from(json["kickHistory"]!.map((x) => x)),
     contributorsList: json["contributorsList"] == null ? [] : List<dynamic>.from(json["contributorsList"]!.map((x) => x)),
-    groupMembers: json["groupMembers"] == null ? [] : List<String>.from(json["groupMembers"]!.map((x) => x)),
+    groupMembers: json["groupMembers"] == null ? [] : List<Member>.from(json["groupMembers"]!.map((x) => Member.fromJson(x))),
     images: json["images"] == null ? [] : List<String>.from(json["images"]!.map((x) => x)),
     noOfSeats: json["no_of_seats"],
     totalDiamonds: json["totalDiamonds"],
@@ -178,13 +188,15 @@ class Room {
 
   Map<String, dynamic> toJson() => {
     "announcement": announcement,
+    "treasure_box_level": treasureBoxLevel,
+    "used_daimonds": usedDaimonds,
     "members": members == null ? [] : List<dynamic>.from(members!.map((x) => x)),
     "lastmembers": lastmembers == null ? [] : List<dynamic>.from(lastmembers!.map((x) => x)),
     "subscribers": subscribers == null ? [] : List<dynamic>.from(subscribers!.map((x) => x.toJson())),
     "blockedList": blockedList == null ? [] : List<dynamic>.from(blockedList!.map((x) => x)),
     "kickHistory": kickHistory == null ? [] : List<dynamic>.from(kickHistory!.map((x) => x)),
     "contributorsList": contributorsList == null ? [] : List<dynamic>.from(contributorsList!.map((x) => x)),
-    "groupMembers": groupMembers == null ? [] : List<dynamic>.from(groupMembers!.map((x) => x)),
+    "groupMembers": groupMembers == null ? [] : List<dynamic>.from(groupMembers!.map((x) => x.toJson())),
     "images": images == null ? [] : List<dynamic>.from(images!.map((x) => x)),
     "no_of_seats": noOfSeats,
     "totalDiamonds": totalDiamonds,
@@ -226,6 +238,7 @@ class Member {
   List<dynamic>? frame;
   List<dynamic>? gift;
   int? level;
+  int? vipLevel;
   bool? isCommentRestricted;
   List<dynamic>? liveHotlist;
   List<String>? images;
@@ -243,6 +256,7 @@ class Member {
   DateTime? updatedAt;
   int? v;
   String? email;
+  String? club;
 
   Member({
     this.bio,
@@ -266,6 +280,7 @@ class Member {
     this.frame,
     this.gift,
     this.level,
+    this.vipLevel,
     this.isCommentRestricted,
     this.liveHotlist,
     this.images,
@@ -283,6 +298,7 @@ class Member {
     this.updatedAt,
     this.v,
     this.email,
+    this.club,
   });
 
   Member copyWith({
@@ -307,6 +323,7 @@ class Member {
     List<dynamic>? frame,
     List<dynamic>? gift,
     int? level,
+    int? vipLevel,
     bool? isCommentRestricted,
     List<dynamic>? liveHotlist,
     List<String>? images,
@@ -324,6 +341,7 @@ class Member {
     DateTime? updatedAt,
     int? v,
     String? email,
+    String? club,
   }) =>
       Member(
         bio: bio ?? this.bio,
@@ -347,6 +365,7 @@ class Member {
         frame: frame ?? this.frame,
         gift: gift ?? this.gift,
         level: level ?? this.level,
+        vipLevel: vipLevel ?? this.vipLevel,
         isCommentRestricted: isCommentRestricted ?? this.isCommentRestricted,
         liveHotlist: liveHotlist ?? this.liveHotlist,
         images: images ?? this.images,
@@ -364,6 +383,7 @@ class Member {
         updatedAt: updatedAt ?? this.updatedAt,
         v: v ?? this.v,
         email: email ?? this.email,
+        club: club ?? this.club,
       );
 
   factory Member.fromJson(Map<String, dynamic> json) => Member(
@@ -388,6 +408,7 @@ class Member {
     frame: json["frame"] == null ? [] : List<dynamic>.from(json["frame"]!.map((x) => x)),
     gift: json["gift"] == null ? [] : List<dynamic>.from(json["gift"]!.map((x) => x)),
     level: json["level"],
+    vipLevel: json["vip_level"],
     isCommentRestricted: json["is_comment_restricted"],
     liveHotlist: json["live_hotlist"] == null ? [] : List<dynamic>.from(json["live_hotlist"]!.map((x) => x)),
     images: json["images"] == null ? [] : List<String>.from(json["images"]!.map((x) => x)),
@@ -405,6 +426,7 @@ class Member {
     updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
     v: json["__v"],
     email: json["email"],
+    club: json["club"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -429,6 +451,7 @@ class Member {
     "frame": frame == null ? [] : List<dynamic>.from(frame!.map((x) => x)),
     "gift": gift == null ? [] : List<dynamic>.from(gift!.map((x) => x)),
     "level": level,
+    "vip_level": vipLevel,
     "is_comment_restricted": isCommentRestricted,
     "live_hotlist": liveHotlist == null ? [] : List<dynamic>.from(liveHotlist!.map((x) => x)),
     "images": images == null ? [] : List<dynamic>.from(images!.map((x) => x)),
@@ -446,6 +469,7 @@ class Member {
     "updatedAt": updatedAt?.toIso8601String(),
     "__v": v,
     "email": email,
+    "club": club,
   };
 }
 

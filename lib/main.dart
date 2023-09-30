@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/provider/auth_provider.dart';
+import 'package:live_app/provider/club_provider.dart';
 import 'package:live_app/provider/moments_provider.dart';
 import 'package:live_app/provider/rooms_provider.dart';
 import 'package:live_app/provider/user_data_provider.dart';
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => MomentsProvider()),
         ChangeNotifierProvider(create: (context) => RoomsProvider()),
         ChangeNotifierProvider(create: (context) => ZegoRoomProvider()),
+        ChangeNotifierProvider(create: (context) => ClubProvider()),
       ],
       child: GetMaterialApp(
         title: 'Flutter Live App',

@@ -7,6 +7,7 @@ import 'package:live_app/data/model/body/zego_broadcast_model.dart';
 import 'package:live_app/screens/rooms/widgets/widgets.dart';
 import 'package:live_app/subscreens/scree/live_record.dart';
 import 'package:live_app/utils/utils_assets.dart';
+import 'package:live_app/utils/zego_config.dart';
 import 'package:marquee_text/marquee_text.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -314,7 +315,7 @@ class _LiveRoomState extends State<LiveRoom> {
                           children: [
                             InkWell(
                               onTap: (){
-                                w.showGroupMemberBottomSheet(value.room?.groupMembers??[]);
+                                w.showGroupMemberBottomSheet(value.room?.groupMembers);
                               },
                               child: Container(
                                 margin:
@@ -489,19 +490,10 @@ class _LiveRoomState extends State<LiveRoom> {
                                 if((value.roomStreamList.length??0)>i) {
                                   return GestureDetector(
                                 onTap: () {
-                                  if (rooms[i]['locked']) {
-                                    w.showClickLockedBottomSheet();
+                                  if (value.roomStreamList[i].streamId == ZegoConfig.instance.streamID) {
+                                    w.showMyProfileBottomSheet(value.roomStreamList[i]);
                                   } else {
-                                    if (i == 1) {
-                                      w.showMemberProfileBottomSheet1(
-                                          rooms[1]['name'], rooms[1]['image']);
-                                    } else if (i == 0) {
-                                      w.showMemberProfileBottomSheet2(
-                                          rooms[0]['name'], rooms[0]['image']);
-                                    } else {
-                                      w.showMemberProfileBottomSheet(
-                                          rooms[i]['name'], rooms[i]['image']);
-                                    }
+                                      w.showMemberProfileBottomSheet2(value.roomStreamList[i]);
                                   }
                                 },
                                 child: Column(
@@ -512,7 +504,7 @@ class _LiveRoomState extends State<LiveRoom> {
                                       width: 50 * a,
                                       height: 50 * a,
                                       decoration: BoxDecoration(
-                                          image: (value.roomStreamList[i].zegoStream.extraInfo??'')== '' ?DecorationImage(
+                                          image: (value.roomStreamList[i].image??'')== '' ?DecorationImage(
                                             fit: BoxFit.cover,
                                             image: AssetImage(
                                               'assets/profile.png' ??
@@ -526,7 +518,7 @@ class _LiveRoomState extends State<LiveRoom> {
                                               :DecorationImage(
                                             fit: BoxFit.cover,
                                             image: NetworkImage(
-                                              value.roomStreamList[i].zegoStream.extraInfo??'',
+                                              value.roomStreamList[i].image??'',
                                             ),
                                             scale: 3,
                                             alignment: Alignment.center,
@@ -549,7 +541,7 @@ class _LiveRoomState extends State<LiveRoom> {
                                     SizedBox(
                                       width: 60 * a,
                                       child: Text(
-                                        value.roomStreamList[i].zegoStream.user.userName ?? '',
+                                        value.roomStreamList[i].userName ?? '',
                                         textAlign: TextAlign.center,
                                         style: SafeGoogleFont(
                                           'Poppins',
@@ -568,8 +560,6 @@ class _LiveRoomState extends State<LiveRoom> {
                                 }
                                 return GestureDetector(
                                   onTap: () {
-                                    log(value.roomUsersList.length.toString()??'null');
-                                    log(value.roomStreamList.length.toString()??'null');
                                       w.showClickLockedBottomSheet();
                                   },
                                   child: Column(
@@ -792,163 +782,266 @@ class _LiveRoomState extends State<LiveRoom> {
                             height: 270 * a,
                             child: ListView(
                               controller: value.scrollController,
-                              children: List.generate(
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(bottom: 6 * a),
+                                  padding: EdgeInsets.fromLTRB(
+                                      11 * a, 5 * a, 11 * a, 5 * a),
+                                  decoration: const BoxDecoration(
+                                    color: Color(0x66090000),
+                                  ),
+                                  child: Text(
+                                    'Please Respect each other and chat in friendly manner.\nAbuse, sexual and violent contents are not allowed. All violators will be banned.',
+                                    style: SafeGoogleFont(
+                                      'Poppins',
+                                      fontSize: 9 * b,
+                                      letterSpacing: 0.48 * a,
+                                      color: const Color.fromARGB(255, 225, 198, 159),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(bottom: 6 * a),
+                                  padding: EdgeInsets.fromLTRB(
+                                      11 * a, 5 * a, 11 * a, 5 * a),
+                                  decoration: const BoxDecoration(
+                                    color: Color(0x66090000),
+                                  ),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Announcement : ',
+                                        style: SafeGoogleFont(
+                                          'Poppins',
+                                          fontSize: 10 * b,
+                                          fontWeight: FontWeight.w600,
+                                          letterSpacing: 0.48 * a,
+                                          color: const Color.fromARGB(255, 225, 198, 159),
+                                        ),
+                                      ),
+                                      Text(
+                                        (value.room?.announcement??'')==''?'Hii! Welcome to my room.':value.room!.announcement!,
+                                        style: SafeGoogleFont(
+                                          'Poppins',
+                                          fontSize: 9 * b,
+                                          letterSpacing: 0.48 * a,
+                                          color: const Color.fromARGB(255, 225, 198, 159),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: List.generate(
                                 value.broadcastMessageList?.length??0,
-                                (index) {
+                                    (index) {
                                   final ZegoBroadcastMessageInfo message = value.broadcastMessageList![index];
                                   final ZegoBroadcastModel body = zegoBroadcastModelFromJson(message.message);
                                   return Container(
                                     width: 210*a,
-                                  margin: EdgeInsets.only(bottom: 6 * a),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      // showModalBottomSheet(
-                                      //     context: context,
-                                      //     builder: (BuildContext context) {
-                                      //       return Container();
-                                      //     });
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.fromLTRB(
-                                          11 * a, 2 * a, 11 * a, 2 * a),
-                                      decoration: const BoxDecoration(
-                                        color: Color(0x66090000),
-                                      ),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          body.image == null
-                                              ?CircleAvatar(
-                                            foregroundImage: const AssetImage(
-                                              'assets/profile.png',
+                                    margin: EdgeInsets.only(bottom: 6 * a),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        // showModalBottomSheet(
+                                        //     context: context,
+                                        //     builder: (BuildContext context) {
+                                        //       return Container();
+                                        //     });
+                                      },
+                                      child: Container(
+                                        padding: EdgeInsets.fromLTRB(
+                                            11 * a, 2 * a, 11 * a, 2 * a),
+                                        decoration: const BoxDecoration(
+                                          color: Color(0x66090000),
+                                        ),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            body.image == null
+                                                ?CircleAvatar(
+                                              foregroundImage: const AssetImage(
+                                                'assets/profile.png',
+                                              ),
+                                              radius: 15 * a,
+                                            )
+                                                :CircleAvatar(
+                                              foregroundImage: NetworkImage(
+                                                body.image!,
+                                              ),
+                                              radius: 15 * a,
                                             ),
-                                            radius: 15 * a,
-                                          )
-                                              :CircleAvatar(
-                                            foregroundImage: NetworkImage(
-                                              body.image!,
-                                            ),
-                                            radius: 15 * a,
-                                          ),
-                                          SizedBox(width: 3 * a),
-                                          Container(
-                                            margin: EdgeInsets.fromLTRB(
-                                                0 * a, 11 * a, 6 * a, 0 * a),
-                                            padding: const EdgeInsets.symmetric(vertical: 1,horizontal: 3),
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xff9e26bc),
-                                              borderRadius:
-                                                  BorderRadius.circular(
-                                                      9 * a),
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                'Member',
-                                                style: SafeGoogleFont(
-                                                  'Poppins',
-                                                  fontSize: 6 * b,
-                                                  fontWeight: FontWeight.w400,
-                                                  height: 1.5 * b / a,
-                                                  letterSpacing: 0.24 * a,
-                                                  color:
-                                                      const Color(0xffffffff),
+                                            SizedBox(width: 3 * a),
+                                            Container(
+                                              margin: EdgeInsets.fromLTRB(
+                                                  0 * a, 11 * a, 6 * a, 0 * a),
+                                              padding: const EdgeInsets.symmetric(vertical: 1,horizontal: 3),
+                                              decoration: BoxDecoration(
+                                                color: const Color(0xff9e26bc),
+                                                borderRadius:
+                                                BorderRadius.circular(
+                                                    9 * a),
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  'Member',
+                                                  style: SafeGoogleFont(
+                                                    'Poppins',
+                                                    fontSize: 6 * b,
+                                                    fontWeight: FontWeight.w400,
+                                                    height: 1.5 * b / a,
+                                                    letterSpacing: 0.24 * a,
+                                                    color:
+                                                    const Color(0xffffffff),
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                          Expanded(
-                                            child: Container(
-                                              margin: EdgeInsets.fromLTRB(
-                                                  0 * a, 5 * a, 0 * a, 4 * a),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    message.fromUser.userName,
-                                                    style: SafeGoogleFont(
-                                                      'Poppins',
-                                                      fontSize: 12 * b,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      height: 1.5 * b / a,
-                                                      letterSpacing: 0.48 * a,
-                                                      color: const Color(
-                                                          0xffffffff),
-                                                    ),
-                                                  ),
-                                                  Container(
-                                                    height: 10 * a,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              9 * a),
-                                                      color: const Color(
-                                                          0xff4285f4),
-                                                    ),
-                                                    child: Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        SizedBox(
-                                                            width: 3 * a),
-                                                        Image.asset(
-                                                          'assets/room_icons/blue_diamond.png',
-                                                          fit: BoxFit.cover,
-                                                          width: 8 * a,
-                                                          height: 8 * a,
-                                                        ),
-                                                        SizedBox(
-                                                            width: 4 * a),
-                                                        Text(
-                                                          'lv.${body.level}',
-                                                          style:
-                                                              SafeGoogleFont(
-                                                            'Poppins',
-                                                            fontSize: 8 * b,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w400,
-                                                            height:
-                                                                1.5 * b / a,
-                                                            letterSpacing:
-                                                                0.32 * a,
-                                                            color: const Color(
-                                                                0xffffffff),
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                            width: 5 * a),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    child: Text(
-                                                      body.message!,
+                                            Expanded(
+                                              child: Container(
+                                                margin: EdgeInsets.fromLTRB(
+                                                    0 * a, 5 * a, 0 * a, 4 * a),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      message.fromUser.userName,
                                                       style: SafeGoogleFont(
                                                         'Poppins',
                                                         fontSize: 12 * b,
                                                         fontWeight:
-                                                            FontWeight.w400,
+                                                        FontWeight.w400,
                                                         height: 1.5 * b / a,
                                                         letterSpacing: 0.48 * a,
                                                         color: const Color(
                                                             0xffffffff),
                                                       ),
                                                     ),
-                                                  ),
-                                                ],
+                                                    Container(
+                                                      height: 10 * a,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                        BorderRadius.circular(
+                                                            9 * a),
+                                                        color: const Color(
+                                                            0xff4285f4),
+                                                      ),
+                                                      child: Row(
+                                                        mainAxisSize:
+                                                        MainAxisSize.min,
+                                                        children: [
+                                                          SizedBox(
+                                                              width: 3 * a),
+                                                          Image.asset(
+                                                            'assets/room_icons/blue_diamond.png',
+                                                            fit: BoxFit.cover,
+                                                            width: 8 * a,
+                                                            height: 8 * a,
+                                                          ),
+                                                          SizedBox(
+                                                              width: 4 * a),
+                                                          Text(
+                                                            'lv.${body.level}',
+                                                            style:
+                                                            SafeGoogleFont(
+                                                              'Poppins',
+                                                              fontSize: 8 * b,
+                                                              fontWeight:
+                                                              FontWeight
+                                                                  .w400,
+                                                              height:
+                                                              1.5 * b / a,
+                                                              letterSpacing:
+                                                              0.32 * a,
+                                                              color: const Color(
+                                                                  0xffffffff),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                              width: 5 * a),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    if(body.type == 'message') SizedBox(
+                                                      child: Text(
+                                                        body.message!,
+                                                        style: SafeGoogleFont(
+                                                          'Poppins',
+                                                          fontSize: 12 * b,
+                                                          fontWeight:
+                                                          FontWeight.w400,
+                                                          height: 1.5 * b / a,
+                                                          letterSpacing: 0.48 * a,
+                                                          color: const Color(
+                                                              0xffffffff),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    if(body.type == 'gift') SizedBox(
+                                                      child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        children: [
+                                                          SizedBox(height: 9*a),
+                                                          Text(
+                                                            'Sent to ${body.gift?.to}',
+                                                            style: SafeGoogleFont(
+                                                              'Poppins',
+                                                              fontSize: 12 * b,
+                                                              fontWeight:
+                                                              FontWeight.w400,
+                                                              height: 1.5 * b / a,
+                                                              letterSpacing: 0.48 * a,
+                                                              color: const Color(
+                                                                  0xffffffff),
+                                                            ),
+                                                          ),
+                                                          SizedBox(height: 9*a),
+                                                          Row(
+                                                            mainAxisSize: MainAxisSize.min,
+                                                            children: [
+                                                              Image.asset(
+                                                                  body.gift?.giftPath??'',
+                                                                height: 45*a,
+                                                                width: 45*a
+                                                              ),
+                                                              Expanded(
+                                                                child: Text(' X ${body.gift?.count}',
+                                                                  overflow: TextOverflow.ellipsis,
+                                                                  style: SafeGoogleFont(
+                                                                    'Poppins',
+                                                                    fontSize: 16 * b,
+                                                                    fontWeight:
+                                                                    FontWeight.w600,
+                                                                    height: 1.5 * b / a,
+                                                                    letterSpacing: 0.48 * a,
+                                                                    color: const Color(
+                                                                        0xffffffff),
+                                                                  ),),
+                                                              )
+                                                            ],
+                                                          ),
+                                                          SizedBox(height: 3*a)
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                );
+                                  );
                                 },
-                              ),
+                                  ),
+                                )
+                              ]
                             ),
                           ),
                           Container(
@@ -1027,7 +1120,9 @@ class _LiveRoomState extends State<LiveRoom> {
                             zegoRoomProvider.isSoundOn
                                 ? Icons.volume_up_outlined
                                 : Icons.volume_off_outlined,
-                            color: Colors.white,
+                            color: zegoRoomProvider.isSoundOn
+                                ? Colors.white
+                                : Colors.grey,
                             size: 27 * a),
                       ),
                       IconButton(
@@ -1040,7 +1135,7 @@ class _LiveRoomState extends State<LiveRoom> {
                         },
                         icon: Icon(
                             zegoRoomProvider.isMicOn && _isMicrophonePermissionGranted ? Icons.mic_rounded : Icons.mic_off_rounded,
-                            color: Colors.white,
+                            color: zegoRoomProvider.isMicOn && _isMicrophonePermissionGranted ? Colors.white : Colors.grey,
                             size: 27 * a),
                       ),
                       IconButton(

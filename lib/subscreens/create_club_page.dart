@@ -1,9 +1,17 @@
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:live_app/provider/user_data_provider.dart';
+import 'package:live_app/utils/common_widgets.dart';
 import 'package:live_app/utils/utils_assets.dart';
+import 'package:provider/provider.dart';
+
+import '../provider/club_provider.dart';
 
 class CreateClubScreen extends StatefulWidget {
   const CreateClubScreen({Key? key}) : super(key: key);
@@ -13,6 +21,87 @@ class CreateClubScreen extends StatefulWidget {
 }
 
 class _CreateClubScreenState extends State<CreateClubScreen> {
+
+  File? pickedImage;
+  String? imagePaths;
+  String? croppedImagePaths;
+  final name = TextEditingController();
+  final label = TextEditingController();
+  final announcement = TextEditingController();
+
+  Future pickImage(ImageSource source) async {
+    try {
+      final pickedFile = await ImagePicker().pickImage(source: source);
+      setState(() {
+        if (pickedFile != null) {
+          pickedImage = File(pickedFile.path);
+          imagePaths = (pickedImage!.path);
+        }
+      });
+      if (pickedImage == null) return null;
+      await ImageCropper().cropImage(
+        sourcePath: imagePaths!,
+        aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+        cropStyle: CropStyle.circle,
+        uiSettings: [
+          AndroidUiSettings(
+              toolbarTitle: 'Cropper',
+              toolbarColor: const Color(0x339E26BC),
+              toolbarWidgetColor: Colors.black,
+              // toolbarWidgetColor: const Color(0xff9e26bc),
+              initAspectRatio: CropAspectRatioPreset.original,
+              statusBarColor: const Color(0x339E26BC),
+              activeControlsWidgetColor: const Color(0xff9e26bc)
+          ),
+          IOSUiSettings(
+            title: 'Cropper',
+          ),
+          WebUiSettings(
+            context: context,
+          ),
+        ],
+      ).then((croppedImage) {
+        croppedImagePaths = croppedImage?.path;
+        setState(() {});
+        return null;
+      });
+
+    } on Exception catch (e) {
+      return const Text('Adding Failed');
+    }
+  }
+
+  imagePicker() {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height / 6,
+      width: double.infinity,
+      child: Column(
+        children: [
+          InkWell(
+            onTap: () {
+              pickImage(ImageSource.camera);
+              Navigator.of(context).pop();
+            },
+            child: const ListTile(
+              leading: Icon(Icons.camera_alt_outlined),
+              title: Text('Camera'),
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              pickImage(ImageSource.gallery);
+              Navigator.of(context).pop();
+            },
+            child: const ListTile(
+              leading: Icon(Icons.image),
+              title: Text('Gallery'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     double baseWidth = 360;
@@ -45,32 +134,39 @@ class _CreateClubScreenState extends State<CreateClubScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    height: 120 * a,
-                    width: 120 * a,
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.camera_alt,
-                                size: 40 * a,
-                              )),
-                          Text(
-                            'Add Club Avatar',
-                            style: SafeGoogleFont(
-                              'inter',
-                              fontSize: 12 * b,
-                              fontWeight: FontWeight.w700,
-                              height: 1.2125 * b / a,
-                              letterSpacing: 0.64 * a,
-                            ),
-                          )
-                        ]),
+                  GestureDetector(
+                    onTap: () async {
+                      showModalBottomSheet(
+                          context: context, builder: (builder) => imagePicker());
+                    },
+                    child: Container(
+                      height: 120 * a,
+                      width: 120 * a,
+                      decoration: BoxDecoration(
+                          color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: croppedImagePaths != null
+                          ? FittedBox(child: Image.file(File(croppedImagePaths!)))
+                          :Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                                  Icons.camera_alt,
+                                  size: 40 * a,
+                                ),
+                            SizedBox(height: 8*a),
+                            Text(
+                              'Add Club Avatar',
+                              style: SafeGoogleFont(
+                                'inter',
+                                fontSize: 12 * b,
+                                fontWeight: FontWeight.w700,
+                                height: 1.2125 * b / a,
+                                letterSpacing: 0.64 * a,
+                              ),
+                            )
+                          ]),
+                    ),
                   ),
                 ],
               ),
@@ -88,13 +184,14 @@ class _CreateClubScreenState extends State<CreateClubScreen> {
                         letterSpacing: 0.64 * a,
                         color: Colors.grey.shade500),
                   ),
-                  Spacer(),
+                  const Spacer(),
                 ],
               ),
               SizedBox(
                 height: 8 * a,
               ),
               TextFormField(
+                controller: name,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.grey.shade200,
@@ -103,7 +200,7 @@ class _CreateClubScreenState extends State<CreateClubScreen> {
                   ),
                   hintMaxLines: 20,
                   hintText: "Name your Club",
-                  contentPadding: EdgeInsets.symmetric(
+                  contentPadding: const EdgeInsets.symmetric(
                       vertical: 8.0,
                       horizontal: 8), // Adjust the value for vertical centering
                 ),
@@ -123,13 +220,14 @@ class _CreateClubScreenState extends State<CreateClubScreen> {
                         letterSpacing: 0.64 * a,
                         color: Colors.grey.shade500),
                   ),
-                  Spacer(),
+                  const Spacer(),
                 ],
               ),
               SizedBox(
                 height: 8 * a,
               ),
               TextFormField(
+                controller: label,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.grey[200],
@@ -139,7 +237,7 @@ class _CreateClubScreenState extends State<CreateClubScreen> {
                   ),
                   hintMaxLines: 20,
                   hintText: "Tag your Club",
-                  contentPadding: EdgeInsets.symmetric(
+                  contentPadding: const EdgeInsets.symmetric(
                       vertical: 8.0,
                       horizontal: 8), // Adjust the value for vertical centering
                 ),
@@ -171,13 +269,14 @@ class _CreateClubScreenState extends State<CreateClubScreen> {
                         letterSpacing: 0.64 * a,
                         color: Colors.grey.shade500),
                   ),
-                  Spacer(),
+                  const Spacer(),
                 ],
               ),
               SizedBox(
                 height: 8 * a,
               ),
               TextFormField(
+                controller: announcement,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.grey[200],
@@ -209,24 +308,32 @@ class _CreateClubScreenState extends State<CreateClubScreen> {
               SizedBox(
                 height: 42 * a,
               ),
-              GestureDetector(
-                onTap: () {},
-                child: Container(
-                  child: Center(
-                      child: Text(
-                    "Create with 5000 Diamonds",
-                    style: SafeGoogleFont('Poppins',
-                        fontSize: 13 * b,
-                        fontWeight: FontWeight.bold,
-                        height: 2 * b / a,
-                        letterSpacing: 0.64 * a,
-                        color: Colors.white),
-                  )),
-                  width: 300 * b,
-                  height: 35 * a,
-                  decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
-                      borderRadius: BorderRadius.circular(20)),
+              Consumer<UserDataProvider>(
+                builder: (context, user, child) => GestureDetector(
+                  onTap: () {
+                    if((user.userData?.data?.diamonds??0)>5000){
+                      Provider.of<ClubProvider>(context,listen: false).create(name.text, label.text, croppedImagePaths??imagePaths!, announcement.text);
+                    }else{
+                      showCustomSnackBar('Insufficient Diamonds', context);
+                    }
+                  },
+                  child: Container(
+                    width: 300 * b,
+                    height: 35 * a,
+                    decoration: BoxDecoration(
+                        color: Colors.grey.shade300,
+                        borderRadius: BorderRadius.circular(20)),
+                    child: Center(
+                        child: Text(
+                      "Create with 5000 Diamonds",
+                      style: SafeGoogleFont('Poppins',
+                          fontSize: 13 * b,
+                          fontWeight: FontWeight.bold,
+                          height: 2 * b / a,
+                          letterSpacing: 0.64 * a,
+                          color: Colors.white),
+                    )),
+                  ),
                 ),
               )
             ],

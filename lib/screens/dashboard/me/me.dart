@@ -471,7 +471,7 @@ class _MeState extends State<Me> {
                     ),
                   ),
                 ),
-                if(providerUserData.userData!.data!.club!.isEmpty)Padding(
+                if(providerUserData.userData?.data?.club == null) Padding(
                   padding: EdgeInsets.only(top: 290 * a,left: 10 * a,right: 12 * a),
                   child: GestureDetector(
                     onTap: (){
@@ -496,7 +496,7 @@ class _MeState extends State<Me> {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.only(top: providerUserData.userData!.data!.club!.isNotEmpty?260 * a:320 * a),
+                  padding: EdgeInsets.only(top: providerUserData.userData?.data?.club != null ?260 * a:320 * a),
                   child: Column(
                     children: [
                       SizedBox(height: 24 * a),

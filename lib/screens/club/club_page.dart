@@ -89,8 +89,11 @@ class _ClubPageState extends State<ClubPage> {
                     height: 30,
                     child: const Icon(Icons.add,color: Colors.black,),
                   ),
-                  const SizedBox(width: 20,),
-                  const Text("Create a club",style: TextStyle(color: Colors.white),),
+                  const SizedBox(width: 20),
+                  const Text(
+                      "Create a club",
+                    style: TextStyle(color: Colors.white)
+                  ),
                 ],
               ),
             ),

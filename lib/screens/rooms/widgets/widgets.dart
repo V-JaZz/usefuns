@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/provider/zego_room_provider.dart';
 import 'package:live_app/screens/rooms/widgets/contribution_bottomsheet.dart';
 import 'package:live_app/screens/rooms/widgets/send_gifts_bottomsheet.dart';
 import 'package:provider/provider.dart';
+import 'package:zego_express_engine/zego_express_engine.dart';
+import '../../../data/model/body/zego_stream_model.dart';
+import '../../../data/model/response/rooms_model.dart';
 import '../../../subscreens/mess/usefuns_teams.dart';
+import '../../../subscreens/scree/homescreens/homeScreen.dart';
 import '../../../utils/utils_assets.dart';
 import 'package:live_app/screens/rooms/widgets/emoji_bottomsheet.dart';
 import 'package:live_app/subscreens/aristrocracy/tab_bar.dart';
@@ -12,6 +17,7 @@ import 'package:live_app/subscreens/playing_song/playlist.dart';
 import 'package:live_app/subscreens/scree/theme.dart';
 import 'package:live_app/subscreens/shop/shop.dart';
 import 'package:live_app/subscreens/tasks/dailyTask.dart';
+import '../../../utils/zego_config.dart';
 import '../../dashboard/message/activity.dart';
 import '../../dashboard/message/system_notification.dart';
 import '../../dashboard/message/usefuns_club_notifications.dart';
@@ -309,7 +315,7 @@ class RoomWidgets {
           Positioned(
               top: 9 * a,
               left: 177 * a,
-              child: Container(
+              child: SizedBox(
                   width: 50 * a,
                   height: 30 * a,
                   child: Stack(children: <Widget>[
@@ -342,7 +348,7 @@ class RoomWidgets {
           Positioned(
               top: -22 * a,
               left: 90 * a,
-              child: Container(
+              child: SizedBox(
                   width: 85 * a,
                   height: 90 * a,
                   child: Stack(children: <Widget>[
@@ -535,8 +541,9 @@ class RoomWidgets {
     );
   }
 
-  void showMessage() {
-    final controller = TextEditingController();
+  void showMessage({String? mention}) {
+    final controller = TextEditingController(text: mention!=null?'@$mention ':'');
+
     showModalBottomSheet(
         backgroundColor: Colors.transparent,
         isScrollControlled: false,
@@ -646,7 +653,7 @@ class RoomWidgets {
         });
   }
 
-  void showGroupMemberBottomSheet(List<String> members) {
+  void showGroupMemberBottomSheet(List<Member>? members) {
     showModalBottomSheet(
         backgroundColor: Colors.transparent,
         isScrollControlled: false,
@@ -688,6 +695,7 @@ class RoomWidgets {
                           // context.setState(() {
                             isLocked = !isLocked;
                           // });
+                            Get.back();
                         },
                       ),
                       Text(
@@ -712,6 +720,7 @@ class RoomWidgets {
                             isLocked = !isLocked;
                             isPressed = !isPressed;
                           // });
+                            Get.back();
                         },
                       ),
                       Text(
@@ -725,24 +734,31 @@ class RoomWidgets {
                       )
                     ],
                   ),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.mic_external_on_rounded,
-                            color: Colors.black, size: 24 * a),
-                        onPressed: () {},
-                      ),
-                      Text(
-                        'On mic',
-                        style: SafeGoogleFont('Poppins',
-                            fontSize: 12 * b,
-                            fontWeight: FontWeight.w400,
-                            height: 1.5 * b / a,
-                            letterSpacing: 0.48 * a,
-                            color: Colors.black),
-                      )
-                    ],
+                  Consumer<ZegoRoomProvider>(
+                    builder:(context, p, child) => Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.mic_external_on_rounded,
+                              color: Colors.black, size: 24 * a),
+                          onPressed: () {
+                            // if(p.roomStreamList.where((e) => e.streamId == ZegoConfig.instance.streamID).isEmpty){
+                            //   p.startPublishingStream();
+                            // }
+                            Get.back();
+                            },
+                        ),
+                        Text(
+                          'On mic',
+                          style: SafeGoogleFont('Poppins',
+                              fontSize: 12 * b,
+                              fontWeight: FontWeight.w400,
+                              height: 1.5 * b / a,
+                              letterSpacing: 0.48 * a,
+                              color: Colors.black),
+                        )
+                      ],
+                    ),
                   ),
                   GestureDetector(
                     onTap: showInviteBottomSheet,
@@ -1333,7 +1349,7 @@ class RoomWidgets {
         });
   }
 
-  void showMemberProfileBottomSheet(String name, String dp) {
+  void showMyProfileBottomSheet(ZegoStreamExtended user) {
     showModalBottomSheet(
         backgroundColor: Colors.transparent,
         isScrollControlled: false,
@@ -1341,86 +1357,192 @@ class RoomWidgets {
         isDismissible: true,
         context: context,
         builder: (context) {
-          double baseWidth = 300;
+          double baseWidth = 360;
           double a = Get.width / baseWidth;
           double b = a * 0.97;
-          return SizedBox(
-            width: double.infinity,
-            height: 600 * a,
-            child: Stack(
+          return Consumer<UserDataProvider>(
+            builder:(context, value, child) => Stack(
               children: [
-                Positioned(
-                  top: 20 * a,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: Container(
-                    height: 700,
-                    color: Colors.white,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(height: 45 * a),
-                        Text(
-                          name,
-                          style: SafeGoogleFont(
-                            'Poppins',
-                            fontSize: 17 * b,
-                            fontWeight: FontWeight.w400,
-                            height: 1 * b / a,
-                            color: const Color(0xff000000),
-                          ),
+                Container(
+                  margin: EdgeInsets.only(top : 42*a),
+                  color: Colors.white,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(height: 54 * a),
+                      Text(
+                        value.userData?.data?.name??'',
+                        style: SafeGoogleFont(
+                          'Poppins',
+                          fontSize: 17 * b,
+                          fontWeight: FontWeight.w400,
+                          height: 1 * b / a,
+                          color: const Color(0xff000000),
                         ),
-                        SizedBox(height: 12 * a),
-                        lvMemberAdmin(a, b),
-                        SizedBox(height: 22 * a),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              ' Use funs Id - 58948762  ',
-                              style: SafeGoogleFont(
-                                'Poppins',
-                                fontSize: 10 * b,
-                                fontWeight: FontWeight.w400,
-                                height: 1.5 * b / a,
-                                color: const Color(0x99000000),
-                              ),
-                            ),
-                            Image.asset('assets/people.png'),
-                            Text(
-                              ' 5 - Followers',
-                              style: SafeGoogleFont(
-                                'Poppins',
-                                fontSize: 10 * b,
-                                fontWeight: FontWeight.w400,
-                                height: 1.5 * b / a,
-                                color: const Color(0x99000000),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 18 * a),
-                        Text(
-                          'Make a good World without selfishness',
-                          style: SafeGoogleFont(
-                            'Poppins',
-                            fontSize: 12 * b,
-                            fontWeight: FontWeight.w400,
-                            height: 1.5 * b / a,
-                            color: const Color(0x99000000),
-                          ),
-                        ),
-                        SizedBox(height: 38 * a),
-                        Wrap(
-                          alignment: WrapAlignment.start,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                      ),
+                      SizedBox(height: 12 * a),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+
+                          Container(
+                            color: const Color(0xFF4285F4),
+                            padding: EdgeInsets.symmetric(horizontal: 6 *a , vertical: 2*a),
+                            child: Row(
                               children: [
-                                Row(children: [
-                                  Column(
+                                Image.asset(
+                                  'assets/icons/ic_diamond.png',
+                                  height: 12*a,
+                                  width: 12*a,
+                                ),
+                                SizedBox(
+                                  width: 6*a,
+                                ),
+                                Text(
+                                  'Lv.${user.level}',
+                                  style: SafeGoogleFont(
+                                    'Poppins',
+                                    fontSize: 14 * b,
+                                    fontWeight: FontWeight.w400,
+                                    height: 1 * b / a,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          if(user.admin == true) SizedBox(
+                            width: 6*a,
+                          ),
+                          if(user.admin == true) Container(
+                            color: const Color(0xFF138808),
+                            padding: EdgeInsets.symmetric(horizontal: 6 *a , vertical: 2*a),
+                            child: Text(
+                              'Admin',
+                              style: SafeGoogleFont(
+                                'Poppins',
+                                fontSize: 14 * b,
+                                fontWeight: FontWeight.w400,
+                                height: 1 * b / a,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          if(user.owner == true) SizedBox(
+                            width: 6*a,
+                          ),
+                          if(user.owner == true) Container(
+                            color: const Color(0xFF138808),
+                            padding: EdgeInsets.symmetric(horizontal: 6 *a , vertical: 2*a),
+                            child: Text(
+                              'Owner',
+                              style: SafeGoogleFont(
+                                'Poppins',
+                                fontSize: 14 * b,
+                                fontWeight: FontWeight.w400,
+                                height: 1 * b / a,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          if(user.owner != true && user.member == true) SizedBox(
+                            width: 6*a,
+                          ),
+                          if(user.owner != true && user.member == true) Container(
+                            color: const Color(0xFF9E26BC),
+                            padding: EdgeInsets.symmetric(horizontal: 6 *a , vertical: 2*a),
+                            child: Text(
+                              'Member',
+                              style: SafeGoogleFont(
+                                'Poppins',
+                                fontSize: 14 * b,
+                                fontWeight: FontWeight.w400,
+                                height: 1 * b / a,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 6*a,
+                          ),
+                          SizedBox(
+                              child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      '22',
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: const Color.fromRGBO(0, 0, 0, 1),
+                                          fontFamily: 'Poppins',
+                                          fontSize: 14 * a,
+                                          letterSpacing:
+                                          0 /*percentages not used in flutter. defaulting to zero*/,
+                                          fontWeight: FontWeight.normal,
+                                          height: 1 * a),
+                                    ),
+                                    Icon(Icons.female,size: 16*a),
+                                  ]
+                              )
+                          ),
+                          SizedBox(
+                            width: 6*a,
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 12 * a),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            ' Usefuns Id - ${value.userData?.data?.userId??''}  ',
+                            style: SafeGoogleFont(
+                              'Poppins',
+                              fontSize: 10 * b,
+                              fontWeight: FontWeight.w400,
+                              height: 1.5 * b / a,
+                              color: const Color(0x99000000),
+                            ),
+                          ),
+                          Image.asset('assets/people.png'),
+                          Text(
+                            ' ${value.userData?.data?.followers?.length??''} - Followers',
+                            style: SafeGoogleFont(
+                              'Poppins',
+                              fontSize: 10 * b,
+                              fontWeight: FontWeight.w400,
+                              height: 1.5 * b / a,
+                              color: const Color(0x99000000),
+                            ),
+                          ),
+                        ],
+                      ),
+                      if((value.userData?.data?.bio??'') != '')SizedBox(height: 12 * a),
+                      if((value.userData?.data?.bio??'') != '')Text(
+                        value.userData?.data?.bio??'',
+                        style: SafeGoogleFont(
+                          'Poppins',
+                          fontSize: 12 * b,
+                          fontWeight: FontWeight.w400,
+                          height: 1.5 * b / a,
+                          color: const Color(0x99000000),
+                        ),
+                      ),
+                      SizedBox(height: 24 * a),
+                      Wrap(
+                        alignment: WrapAlignment.start,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(children: [
+                                InkWell(
+                                  onTap: (){
+                                    Get.to(() => const Homescreens());
+                                  },
+                                  child: Column(
                                     children: [
                                       const Icon(
                                         Icons.person_3_rounded,
@@ -1438,8 +1560,15 @@ class RoomWidgets {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(width: 40 * a),
-                                  Column(
+                                ),
+                                SizedBox(width: 40 * a),
+                                InkWell(
+                                  onTap: (){
+                                    final p = Provider.of<ZegoRoomProvider>(context,listen: false);
+                                    p.stopPublishingStream();
+                                    Get.back();
+                                  },
+                                  child: Column(
                                     children: [
                                       const Icon(
                                         Icons.chair_rounded,
@@ -1456,23 +1585,29 @@ class RoomWidgets {
                                             height: 1),
                                       ),
                                     ],
-                                  )
-                                ]),
-                              ],
-                            ),
-                            SizedBox(width: 10 * a),
-                          ],
-                        ),
-                      ],
-                    ),
+                                  ),
+                                )
+                              ]),
+                            ],
+                          ),
+                          SizedBox(width: 10 * a),
+                        ],
+                      ),
+                      SizedBox(height: 24 * a),
+                    ],
                   ),
                 ),
                 Positioned(
-                  top: -1,
-                  left: Get.width / 2 - 25 * a,
-                  child: CircleAvatar(
-                    radius: 30 * a,
-                    foregroundImage: AssetImage(dp),
+                  top: 0,
+                  left: (Get.width*0.5)-(42*a),
+                  child: value.userData!.data!.images!.isEmpty
+                      ?CircleAvatar(
+                    radius: 42 * a,
+                    foregroundImage: const AssetImage('assets/profile.png'),
+                  )
+                      :CircleAvatar(
+                    radius: 42 * a,
+                    foregroundImage: NetworkImage(value.userData!.data!.images!.first),
                   ),
                 ),
               ],
@@ -1481,7 +1616,7 @@ class RoomWidgets {
         });
   }
 
-  void showMemberProfileBottomSheet1(String name, String dpp) {
+  void showMemberProfileBottomSheet1(ZegoStreamExtended user) {
     showModalBottomSheet(
         backgroundColor: Colors.transparent,
         isScrollControlled: false,
@@ -1509,7 +1644,7 @@ class RoomWidgets {
                       children: [
                         SizedBox(height: 30 * a),
                         Text(
-                          name,
+                          'name',
                           style: SafeGoogleFont(
                             'Poppins',
                             fontSize: 20 * b,
@@ -1744,7 +1879,7 @@ class RoomWidgets {
                   left: Get.width / 2 - 30 * a,
                   child: CircleAvatar(
                     radius: 40 * a,
-                    foregroundImage: AssetImage(dpp),
+                    foregroundImage: AssetImage("assets/dummy/b2.png"),
                   ),
                 ),
               ],
@@ -1753,7 +1888,7 @@ class RoomWidgets {
         });
   }
 
-  void showMemberProfileBottomSheet2(String name, String dp) {
+  void showMemberProfileBottomSheet2(ZegoStreamExtended user) {
     showModalBottomSheet(
         backgroundColor: Colors.transparent,
         isScrollControlled: false,
@@ -1764,13 +1899,13 @@ class RoomWidgets {
           double baseWidth = 360;
           double a = Get.width / baseWidth;
           double b = a * 0.97;
-          return Container(
+          return SizedBox(
             width: double.infinity,
-            height: 800 * a,
+            height: 1000 * a,
             child: Stack(
               children: [
                 Positioned(
-                  top: 20 * a,
+                  top: 36 * a,
                   left: 0,
                   right: 0,
                   bottom: 0,
@@ -1781,9 +1916,9 @@ class RoomWidgets {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          SizedBox(height: 55 * a),
+                          SizedBox(height: 45 * a),
                           Text(
-                            name,
+                            user.userName??'',
                             style: SafeGoogleFont(
                               'Poppins',
                               fontSize: 20 * b,
@@ -1792,12 +1927,121 @@ class RoomWidgets {
                               color: const Color(0xff000000),
                             ),
                           ),
-                          SizedBox(height: 12 * a),
+                          SizedBox(height: 6 * a),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Container(
+                                  color: const Color(0xFF4285F4),
+                                  padding: EdgeInsets.symmetric(horizontal: 6 *a , vertical: 2*a),
+                                  child: Row(
+                                    children: [
+                                      Image.asset(
+                                        'assets/icons/ic_diamond.png',
+                                        height: 12*a,
+                                        width: 12*a,
+                                      ),
+                                      SizedBox(
+                                        width: 6*a,
+                                      ),
+                                      Text(
+                                        'Lv.${user.level}',
+                                        style: SafeGoogleFont(
+                                          'Poppins',
+                                          fontSize: 14 * b,
+                                          fontWeight: FontWeight.w400,
+                                          height: 1 * b / a,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                if(user.admin == true) SizedBox(
+                                  width: 6*a,
+                                ),
+                                if(user.admin == true) Container(
+                                  color: const Color(0xFF138808),
+                                  padding: EdgeInsets.symmetric(horizontal: 6 *a , vertical: 2*a),
+                                  child: Text(
+                                    'Admin',
+                                    style: SafeGoogleFont(
+                                      'Poppins',
+                                      fontSize: 14 * b,
+                                      fontWeight: FontWeight.w400,
+                                      height: 1 * b / a,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                if(user.owner == true) SizedBox(
+                                  width: 6*a,
+                                ),
+                                if(user.owner == true) Container(
+                                  color: const Color(0xFF138808),
+                                  padding: EdgeInsets.symmetric(horizontal: 6 *a , vertical: 2*a),
+                                  child: Text(
+                                    'Owner',
+                                    style: SafeGoogleFont(
+                                      'Poppins',
+                                      fontSize: 14 * b,
+                                      fontWeight: FontWeight.w400,
+                                      height: 1 * b / a,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                if(user.owner == true||user.member == true) SizedBox(
+                                  width: 6*a,
+                                ),
+                                if(user.owner == true||user.member == true) Container(
+                                  color: const Color(0xFF9E26BC),
+                                  padding: EdgeInsets.symmetric(horizontal: 6 *a , vertical: 2*a),
+                                  child: Text(
+                                    'Member',
+                                    style: SafeGoogleFont(
+                                      'Poppins',
+                                      fontSize: 14 * b,
+                                      fontWeight: FontWeight.w400,
+                                      height: 1 * b / a,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 6*a,
+                                ),
+                                SizedBox(
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: <Widget>[
+                                    Text(
+                                      '22',
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: const Color.fromRGBO(0, 0, 0, 1),
+                                          fontFamily: 'Poppins',
+                                          fontSize: 14 * a,
+                                          letterSpacing:
+                                          0 /*percentages not used in flutter. defaulting to zero*/,
+                                          fontWeight: FontWeight.normal,
+                                          height: 1 * a),
+                                    ),
+                                    Icon(Icons.female,size: 16*a),
+                                    ]
+                                  )
+                                ),
+                                SizedBox(
+                                  width: 6*a,
+                                ),
+                          ]),
+                          SizedBox(height: 6 * a),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                ' Use funs Id - 58948762  ',
+                                ' Usefuns Id - ${user.id}  ',
                                 style: SafeGoogleFont(
                                   'Poppins',
                                   fontSize: 14 * b,
@@ -1808,7 +2052,7 @@ class RoomWidgets {
                               ),
                               Image.asset('assets/people.png'),
                               Text(
-                                ' 10- Followers',
+                                '  ${user.followers}- Followers',
                                 style: SafeGoogleFont(
                                   'Poppins',
                                   fontSize: 14 * b,
@@ -1824,79 +2068,96 @@ class RoomWidgets {
                             alignment: WrapAlignment.start,
                             crossAxisAlignment: WrapCrossAlignment.center,
                             children: [
-                              Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  CircleAvatar(
-                                    radius: 12 * a,
-                                    backgroundColor: Colors.white,
-                                    child: Image.asset(
-                                      'assets/b2.png',
-                                      fit: BoxFit.fill,
+                              GestureDetector(
+                                onTap: (){
+                                  Get.back();
+                                },
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 12 * a,
+                                      backgroundColor: Colors.white,
+                                      child: Image.asset(
+                                        'assets/b2.png',
+                                        fit: BoxFit.fill,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(height: 10 * a),
-                                  Text(
-                                    'Profile',
-                                    textAlign: TextAlign.center,
-                                    style: SafeGoogleFont('Poppins',
-                                        fontSize: 14 * b,
-                                        fontWeight: FontWeight.w500,
-                                        height: 1.5 * b / a,
-                                        letterSpacing: 0.48 * a,
-                                        color: Colors.black),
-                                  )
-                                ],
+                                    SizedBox(height: 10 * a),
+                                    Text(
+                                      'Profile',
+                                      textAlign: TextAlign.center,
+                                      style: SafeGoogleFont('Poppins',
+                                          fontSize: 14 * b,
+                                          fontWeight: FontWeight.w500,
+                                          height: 1.5 * b / a,
+                                          letterSpacing: 0.48 * a,
+                                          color: Colors.black),
+                                    )
+                                  ],
+                                ),
                               ),
                               SizedBox(width: 30 * a),
-                              Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  CircleAvatar(
-                                    radius: 12 * a,
-                                    backgroundColor: Colors.white,
-                                    child: Icon(
-                                      Icons.chat,
-                                      size: 21 * a,
+                              GestureDetector(
+                                onTap: (){
+                                  Get.back();
+                                  showMessage(mention: user.userName);
+                                },
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 12 * a,
+                                      backgroundColor: Colors.white,
+                                      child: Icon(
+                                        Icons.chat,
+                                        size: 21 * a,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(height: 10 * a),
-                                  Text(
-                                    'Chat',
-                                    textAlign: TextAlign.center,
-                                    style: SafeGoogleFont('Poppins',
-                                        fontSize: 14 * b,
-                                        fontWeight: FontWeight.w500,
-                                        height: 1.5 * b / a,
-                                        letterSpacing: 0.48 * a,
-                                        color: Colors.black),
-                                  ),
-                                ],
+                                    SizedBox(height: 10 * a),
+                                    Text(
+                                      'Chat',
+                                      textAlign: TextAlign.center,
+                                      style: SafeGoogleFont('Poppins',
+                                          fontSize: 14 * b,
+                                          fontWeight: FontWeight.w500,
+                                          height: 1.5 * b / a,
+                                          letterSpacing: 0.48 * a,
+                                          color: Colors.black),
+                                    ),
+                                  ],
+                                ),
                               ),
                               SizedBox(width: 30 * a),
-                              Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  CircleAvatar(
-                                    radius: 12 * a,
-                                    backgroundColor: Colors.white,
-                                    child: Image.asset('assets/@.png'),
-                                  ),
-                                  SizedBox(height: 10 * a),
-                                  Text(
-                                    'Mention',
-                                    textAlign: TextAlign.center,
-                                    style: SafeGoogleFont('Poppins',
-                                        fontSize: 14 * b,
-                                        fontWeight: FontWeight.w500,
-                                        height: 1.5 * b / a,
-                                        letterSpacing: 0.48 * a,
-                                        color: Colors.black),
-                                  )
-                                ],
+                              GestureDetector(
+                                onTap: (){
+                                  Get.back();
+                                  showMessage();
+                                },
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 12 * a,
+                                      backgroundColor: Colors.white,
+                                      child: Image.asset('assets/@.png'),
+                                    ),
+                                    SizedBox(height: 10 * a),
+                                    Text(
+                                      'Mention',
+                                      textAlign: TextAlign.center,
+                                      style: SafeGoogleFont('Poppins',
+                                          fontSize: 14 * b,
+                                          fontWeight: FontWeight.w500,
+                                          height: 1.5 * b / a,
+                                          letterSpacing: 0.48 * a,
+                                          color: Colors.black),
+                                    )
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -1919,7 +2180,9 @@ class RoomWidgets {
                                   children: [
                                     IconButton(
                                       icon: const Icon(Icons.mic_off_sharp),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Get.back();
+                                      },
                                     ),
                                     const Text('Mute'),
                                   ],
@@ -1937,7 +2200,7 @@ class RoomWidgets {
                               ],
                             )
                           ]),
-                          SizedBox(height: 30 * a),
+                          SizedBox(height: 12 * a),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -1968,31 +2231,37 @@ class RoomWidgets {
                                           height: 1),
                                     ),
                                   )),
-                              Container(
-                                  width: 90 * a,
-                                  height: 26 * a,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(12 * a),
-                                      topRight: Radius.circular(12 * a),
-                                      bottomLeft: Radius.circular(12 * a),
-                                      bottomRight: Radius.circular(12 * a),
+                              GestureDetector(
+                                onTap: (){
+                                  Get.back();
+                                  showSendGiftsBottomSheet(selection: user.userName);
+                                },
+                                child: Container(
+                                    width: 90 * a,
+                                    height: 26 * a,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(12 * a),
+                                        topRight: Radius.circular(12 * a),
+                                        bottomLeft: Radius.circular(12 * a),
+                                        bottomRight: Radius.circular(12 * a),
+                                      ),
+                                      color: const Color.fromRGBO(255, 153, 51, 1),
                                     ),
-                                    color: const Color.fromRGBO(255, 153, 51, 1),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      'Send Gifts',
-                                      textAlign: TextAlign.left,
-                                      style: SafeGoogleFont(
-                                          color:
-                                          const Color.fromRGBO(250, 248, 248, 1),
-                                          'Poppins',
-                                          fontSize: 12 * a,
-                                          fontWeight: FontWeight.normal,
-                                          height: 1),
-                                    ),
-                                  )),
+                                    child: Center(
+                                      child: Text(
+                                        'Send Gifts',
+                                        textAlign: TextAlign.left,
+                                        style: SafeGoogleFont(
+                                            color:
+                                            const Color.fromRGBO(250, 248, 248, 1),
+                                            'Poppins',
+                                            fontSize: 12 * a,
+                                            fontWeight: FontWeight.normal,
+                                            height: 1),
+                                      ),
+                                    )),
+                              ),
                             ],
                           )
                         ],
@@ -2001,11 +2270,16 @@ class RoomWidgets {
                   ),
                 ),
                 Positioned(
-                  top: -3 * a,
+                  top: 0 * a,
                   left: Get.width / 2 - 40 * a,
-                  child: CircleAvatar(
-                    radius: 35 * a,
-                    foregroundImage: AssetImage(dp),
+                  child: (user.image??'') == ''
+                      ? CircleAvatar(
+                    radius: 36 * a,
+                    foregroundImage: const AssetImage('assets/profile.png'),
+                  )
+                      : CircleAvatar(
+                    radius: 36 * a,
+                    foregroundImage: NetworkImage(user.image??''),
                   ),
                 ),
               ],
@@ -2199,7 +2473,7 @@ class RoomWidgets {
         });
   }
 
-  void showSendGiftsBottomSheet() {
+  void showSendGiftsBottomSheet({String? selection}) {
     showModalBottomSheet(
         backgroundColor: Colors.transparent,
         isScrollControlled: false,
@@ -2207,6 +2481,9 @@ class RoomWidgets {
         isDismissible: true,
         context: context,
         builder: (context) {
+          if(selection!=null){
+            return SendGifts(selection: selection);
+          }
           return const SendGifts();
         });
   }

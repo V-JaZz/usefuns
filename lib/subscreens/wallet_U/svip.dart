@@ -326,52 +326,15 @@ class _SvipState extends State<Svip> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.end,
-                      runSpacing: 24 * a,
-                      spacing: 18 * a,
-                      children: [
-                        iconTextRow(
-                          'assets/svip_benefits_ic/1.png',
-                          'SVIP TAG',
-                          vip: 'SVIP1'
+                      // crossAxisAlignment: WrapCrossAlignment.end,
+                      // runSpacing: 24 * a,
+                      // spacing: 18 * a,
+                      children: List.generate(21, (index) => Container(
+                        child: Image.asset(
+                          'assets/svip_benefits_ic/${index+1}.png',
+                          width: Get.width * 0.27,
                         ),
-                        iconTextRow(
-                            'assets/svip_benefits_ic/2.png', 'Rank The Top',
-                            vip: 'SVIP2'),
-                        iconTextRow('assets/svip_benefits_ic/3.png','SVIP Emoji',
-                            vip: 'SVIP3'),
-                        iconTextRow('assets/svip_benefits_ic/4.png',  'View More',
-                            vip: 'SVIP4'),
-                        iconTextRow('assets/svip_benefits_ic/5.png','SVIP Bubble',
-                            vip: 'SVIP5'),
-                        iconTextRow('assets/svip_benefits_ic/6.png', 'SVIP Frame',
-                            vip: 'SVIP6'),
-                        iconTextRow(
-                            'assets/svip_benefits_ic/7.png', 'Personal\nCard',
-                            vip: 'SVIP7'),
-                        iconTextRow(
-                            'assets/svip_benefits_ic/8.png', 'SVIP Picture',
-                            vip: 'SVIP8'),
-                        iconTextRow(
-                            'assets/svip_benefits_ic/9.png', 'SVIP Bedge',
-                            vip: 'SVIP9'),
-                        iconTextRow(
-                            'assets/svip_benefits_ic/10.png', 'Gif avatar',
-                            vip: 'SVIP10'),
-                        iconTextRow('assets/svip_benefits_ic/8.png',
-                            'Profile\nbackground',
-                            vip: 'SVIP11'),
-                        iconTextRow('assets/svip_benefits_ic/11.png', 'Microphone',
-                            vip: 'SVIP12'),
-                        iconTextRow(
-                            'assets/svip_benefits_ic/12.png', 'SVIP\nVehicle',
-                            vip: 'SVIP10'),
-                        iconTextRow(
-                            'assets/svip_benefits_ic/13.png', 'SVIP Gift',
-                            vip: 'SVIP11'),
-                        iconTextRow(
-                            'assets/svip_benefits_ic/14.png', 'Anti Kick'),
-                      ],
+                      ))
                     ),
                   ],
                 ),

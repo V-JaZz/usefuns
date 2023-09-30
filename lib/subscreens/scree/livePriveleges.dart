@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/screens/dashboard/me/me.dart';
 import 'package:live_app/utils/utils_assets.dart';
+import 'package:provider/provider.dart';
 
 class LivePrivleges extends StatefulWidget {
   final double trackHeight;
@@ -70,22 +72,24 @@ class _LivePrivlegesState extends State<LivePrivleges> {
                     height: 15 * a,
                   ),
 
-                  SizedBox(
-                    width: 270 * a,
-                    child: SliderTheme(
-                        data: SliderTheme.of(context).copyWith(
-                          trackHeight: 10,
-                          overlayShape: SliderComponentShape.noOverlay,
-                          thumbShape: SliderComponentShape.noThumb,
-                        ),
-                        child: Slider(
-                          min: 0,
-                          max: 10,
-                          value: 5,
-                          onChanged: (double value) {},
-                          inactiveColor: Colors.white,
-                          activeColor: const Color(0xff884EFF),
-                        )),
+                  Consumer<UserDataProvider>(
+                    builder: (context, value, child) => SizedBox(
+                      width: 270 * a,
+                      child: SliderTheme(
+                          data: SliderTheme.of(context).copyWith(
+                            trackHeight: 10,
+                            overlayShape: SliderComponentShape.noOverlay,
+                            thumbShape: SliderComponentShape.noThumb,
+                          ),
+                          child: Slider(
+                            min: 0,
+                            max: 10,
+                            value: value.userData?.data?.exp?.toDouble()??0,
+                            onChanged: (double value) {},
+                            inactiveColor: Colors.white,
+                            activeColor: const Color(0xff884EFF),
+                          )),
+                    ),
                   ),
                   SizedBox(
                     height: 5 * a,
