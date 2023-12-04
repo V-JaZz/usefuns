@@ -14,10 +14,8 @@ class MomentsProvider with ChangeNotifier {
   MomentsModel? allMoments;
   MomentsModel? followingMoments;
   MomentsModel? myMoments;
-  bool _isLoadedFollowing = false;
-  bool get isLoadedFollowing => _isLoadedFollowing;
-  bool _isLoadedAll = false;
-  bool get isLoadedAll => _isLoadedAll;
+  bool isLoadedFollowing = false;
+  bool isLoadedAll = false;
   bool _isLoadedMy = false;
   bool get isLoadedMy => _isLoadedMy;
   bool emptyFollowings = true;
@@ -25,11 +23,13 @@ class MomentsProvider with ChangeNotifier {
   bool isCommenting = false;
   bool isDeletingComment = false;
 
-  Future<MomentsModel> getAllMoments() async {
+  Future<MomentsModel> getAllMoments({bool refresh = false}) async {
+    isLoadedAll = false;
+    if(refresh) notifyListeners();
     final apiResponse = await _momentsRepo.getAllMoments();
     MomentsModel responseModel;
     if (apiResponse.statusCode == 200) {
-      _isLoadedAll = true;
+      isLoadedAll = true;
       notifyListeners();
       responseModel = momentsModelFromJson(apiResponse.body);
       if(responseModel.status == 1){
@@ -42,11 +42,13 @@ class MomentsProvider with ChangeNotifier {
     return responseModel;
   }
 
-  Future<MomentsModel> getFollowingMoments() async {
+  Future<MomentsModel> getFollowingMoments({bool refresh = false}) async {
+    isLoadedFollowing = false;
+    if(refresh) notifyListeners();
     final apiResponse = await _momentsRepo.getFollowingMoments(storageService.getString(Constants.id));
     MomentsModel responseModel;
     if (apiResponse.statusCode == 200) {
-      _isLoadedFollowing = true;
+      isLoadedFollowing = true;
       notifyListeners();
       responseModel = momentsModelFromJson(apiResponse.body);
       if(responseModel.status == 1){
@@ -59,15 +61,15 @@ class MomentsProvider with ChangeNotifier {
     return responseModel;
   }
 
-  Future<MomentsModel> getById() async {
-    final apiResponse = await _momentsRepo.getById(storageService.getString(Constants.id));
+  Future<MomentsModel> getById({String? id}) async {
+    final apiResponse = await _momentsRepo.getById(id??storageService.getString(Constants.id));
 
     MomentsModel responseModel;
     if (apiResponse.statusCode == 200) {
       _isLoadedMy = true;
       notifyListeners();
       responseModel = momentsModelFromJson(apiResponse.body);
-      if(responseModel.status == 1){
+      if(responseModel.status == 1 && id==null){
         myMoments= responseModel;
       }
     } else {

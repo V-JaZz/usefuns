@@ -20,11 +20,11 @@ class ClubRepo {
   Future<http.Response> join(String userId, String clubId) async {
     try {
       http.Response response = await _httpClient.post(
-        'club/member/add',
-        {
-          "userId": userId,
-          "clubId": clubId
-        }
+          'club/member/add',
+          {
+            "userId": userId,
+            "clubId": clubId
+          }
       );
       return response;
     } catch (e) {

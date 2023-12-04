@@ -8,9 +8,9 @@ class UserDataRepo {
 
   final HttpApiClient _httpClient = HttpApiClient();
 
-  Future<http.Response> getUserById(String id) async {
+  Future<http.Response> getUserById(String id,bool isUsefunId) async {
     try {
-      http.Response response = await _httpClient.get('user/getbyid/$id');
+      http.Response response = await _httpClient.get('${isUsefunId?'user/getbyuserId/':'user/getbyid/'}$id');
       return response;
     } catch (e) {
       rethrow;
@@ -51,6 +51,15 @@ class UserDataRepo {
         bearerToken: token,
           method: 'PUT'
       );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<http.Response> addVisitor(String id) async {
+    try {
+      http.Response response = await _httpClient.get('user/viewCount/$id');
       return response;
     } catch (e) {
       rethrow;

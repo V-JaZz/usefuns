@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/subscreens/mess/usefuns_teams.dart';
-import 'package:live_app/subscreens/scree/homescreens/homeScreen.dart';
+import 'package:live_app/screens/dashboard/me/profile/user_profile.dart';
 
 import 'package:live_app/utils/utils_assets.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'activity.dart';
 import 'system_notification.dart';
 import 'usefuns_club_notifications.dart';
@@ -16,6 +17,12 @@ class Notifications extends StatefulWidget {
 }
 
 class _NotificationsState extends State<Notifications> {
+  RefreshController refreshController = RefreshController();
+  @override
+  void dispose() {
+    refreshController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     double baseWidth = 360;
@@ -70,12 +77,22 @@ class _NotificationsState extends State<Notifications> {
         elevation: 1,
         title: const Text('Notification'),
       ),
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 18 * a, vertical: 8 * a),
+      body: SmartRefresher(
+        enablePullDown: true,
+        onRefresh: ()async{
+          await Future.delayed(const Duration(milliseconds: 500),() {
+            setState(() {});
+          });
+          refreshController.refreshCompleted();
+          return;
+        },
+        physics: const BouncingScrollPhysics(),
+        header: WaterDropMaterialHeader(distance: 36*a),
+        controller: refreshController,
         child: SingleChildScrollView(
           child: Container(
             color: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 30),
             child: Column(
               children: [
                 Column(
@@ -135,7 +152,7 @@ class _NotificationsState extends State<Notifications> {
                               children: [
                             InkWell(
                               onTap: () {
-                                Homescreens();
+                                UserProfile();
                               },
                               child: Container(
                                   height: 33 * a,

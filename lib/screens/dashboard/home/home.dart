@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:get/get.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../../provider/rooms_provider.dart';
-import '../../../provider/zego_room_provider.dart';
-import '../../rooms/live_room.dart';
+import '../../../utils/common_widgets.dart';
 import 'create_room.dart';
-import 'party.dart';
 import 'ranking.dart';
 import 'search_room_user.dart';
-import 'usefun_clubs.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -20,43 +17,21 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final List<Map> roomList = [
-    {
-      "image": "assets/dummy/g1.png",
-      "name": "DREAM GIRLS",
-      "about": "Sabhi New Users Ka swagat",
-      "rank": "16",
-    },
-    {
-      "image": "assets/dummy/g2.png",
-      "name": "Girl Friend.Com",
-      "about": "Sabhi New Users Ka swagat",
-      "rank": "12",
-    },
-    {
-      "image": "assets/dummy/g3.png",
-      "name": "FRIENDSHIP CLUB",
-      "about": "Sabhi New Users Ka swagat",
-      "rank": "10",
-    },
-    {
-      "image": "assets/dummy/g4.png",
-      "name": "Gf Bf Dating Eoom",
-      "about": "Sabhi New Users Ka swagat",
-      "rank": "24",
-    },
-    {
-      "image": "assets/dummy/g5.png",
-      "name": "Nisha Hosting....",
-      "about": "Sabhi New Users Ka swagat",
-      "rank": "40",
-    },
-  ];
+  RefreshController refreshController = RefreshController();
+  RefreshController refreshController2 = RefreshController();
+  RefreshController refreshController3 = RefreshController();
 
   @override
   void initState() {
     checkUserRoom();
     super.initState();
+  }
+  @override
+  void dispose() {
+    refreshController.dispose();
+    refreshController2.dispose();
+    refreshController3.dispose();
+    super.dispose();
   }
 
   @override
@@ -142,841 +117,533 @@ class _HomeState extends State<Home> {
         ),
         body: TabBarView(
           children: [
-            Column(
-              children: [
-                SizedBox(height: 30 * a),
-                Consumer<RoomsProvider>(
-                  builder:(context, value, child) {
-                    if (value.myRoom == null) {
-                      return Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                              color: const Color(0x33000000),
-                              width: 1,
-                              strokeAlign: BorderSide.strokeAlignInside),
-                        ),
-                        child: const ListTile(
-                          title: LinearProgressIndicator(),
-                          subtitle: Text(''),
-                        ),
-                      );
-                    } else if (value.myRoom?.status == 0) {
-                      return Text('Error: ${value.myRoom?.message}');
-                    } else if((value.myRoom?.data?.length??0) == 0){
-                      return Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                              color: const Color(0x33000000),
-                              width: 1,
-                              strokeAlign: BorderSide.strokeAlignInside),
-                        ),
-                        child: ListTile(
-                          onTap: () {
-                            Get.to(() => const CreateRoom());
-                          },
-                          leading: CircleAvatar(
-                            radius: 20 * a,
-                            backgroundColor: const Color(0xff9e26bc),
-                            child: Image.asset(
-                              'assets/icons/ic_create_room.png',
-                              width: 24 * a,
-                              height: 24 * a,
-                            ),
+            SmartRefresher(
+              enablePullDown: true,
+              onRefresh: ()async{
+                await Future.delayed(const Duration(milliseconds: 500),() {
+                  setState(() {});
+                });
+                refreshController.refreshCompleted();
+                return;
+                },
+              physics: const BouncingScrollPhysics(),
+              header: WaterDropMaterialHeader(distance: 36*a),
+              controller: refreshController,
+                child: Column(
+                children: [
+                  SizedBox(height: 30 * a),
+                  Consumer<RoomsProvider>(
+                    builder:(context, value, child) {
+                      if (value.myRoom == null) {
+                        return Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                                color: const Color(0x33000000),
+                                width: 1,
+                                strokeAlign: BorderSide.strokeAlignInside),
                           ),
-                          title: Text(
-                            'Create My Room',
-                            style: SafeGoogleFont(
-                              'Poppins',
-                              fontSize: 16 * b,
-                              fontWeight: FontWeight.w400,
-                              height: 1.5 * b / a,
-                              letterSpacing: 0.64 * a,
-                              color: const Color(0xff000000),
-                            ),
+                          child: const ListTile(
+                            title: LinearProgressIndicator(),
+                            subtitle: Text(''),
                           ),
-                          subtitle: Text(
-                            'Start Your live Journey on Use funs',
-                            style: SafeGoogleFont(
-                              'Poppins',
-                              fontSize: 12 * b,
-                              fontWeight: FontWeight.w400,
-                              height: 1.5 * b / a,
-                              letterSpacing: 0.48 * a,
-                              color: const Color(0x99000000),
-                            ),
+                        );
+                      } else if (value.myRoom?.status == 0) {
+                        return Text('Error: ${value.myRoom?.message}');
+                      } else if((value.myRoom?.data?.length??0) == 0){
+                        return Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                                color: const Color(0x33000000),
+                                width: 1,
+                                strokeAlign: BorderSide.strokeAlignInside),
                           ),
-                          trailing: Container(
-                            width: 24 * a,
-                            height: 24 * a,
-                            decoration: BoxDecoration(
-                              color: const Color(0xff9e26bc),
-                              borderRadius: BorderRadius.circular(12 * a),
-                            ),
-                            child: Center(
-                              child: Text(
-                                '+',
-                                style: SafeGoogleFont(
-                                  'Poppins',
-                                  fontSize: 12 * b,
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.5 * b / a,
-                                  letterSpacing: 0.48 * a,
-                                  color: const Color(0xff000000),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    } else {
-                      final room = value.myRoom!.data!.first;
-                      return Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                              color: const Color(0x33000000),
-                              width: 1,
-                              strokeAlign: BorderSide.strokeAlignInside),
-                        ),
-                        child: ListTile(
-                          onTap: () {
-                            final provider = Provider.of<ZegoRoomProvider>(context,listen: false);
-                            provider.room = room;
-                            provider.roomID = room.roomId!;
-                            Get.to(() => const LiveRoom());
-                          },
-                          leading:room.images!.isEmpty
-                              ? CircleAvatar(
+                          child: ListTile(
+                            onTap: () {
+                              Get.to(() => const CreateRoom());
+                            },
+                            leading: CircleAvatar(
                               radius: 20 * a,
                               backgroundColor: const Color(0xff9e26bc),
-                              foregroundImage: const AssetImage('assets/icons/ic_create_room.png')
-                          )
-                              : CircleAvatar(
-                            radius: 20 * a,
-                            backgroundColor: const Color(0xff9e26bc),
-                            foregroundImage: NetworkImage(room.images!.first),
-                          ),
-                          title: Text(
-                            room.name!,
-                            style: SafeGoogleFont(
-                              'Poppins',
-                              fontSize: 16 * b,
-                              fontWeight: FontWeight.w400,
-                              height: 1.5 * b / a,
-                              letterSpacing: 0.64 * a,
-                              color: const Color(0xff000000),
+                              child: Image.asset(
+                                'assets/icons/ic_create_room.png',
+                                width: 24 * a,
+                                height: 24 * a,
+                              ),
+                            ),
+                            title: Text(
+                              'Create My Room',
+                              style: SafeGoogleFont(
+                                'Poppins',
+                                fontSize: 16 * b,
+                                fontWeight: FontWeight.w400,
+                                height: 1.5 * b / a,
+                                letterSpacing: 0.64 * a,
+                                color: const Color(0xff000000),
+                              ),
+                            ),
+                            subtitle: Text(
+                              'Start Your live Journey on Use funs',
+                              style: SafeGoogleFont(
+                                'Poppins',
+                                fontSize: 12 * b,
+                                fontWeight: FontWeight.w400,
+                                height: 1.5 * b / a,
+                                letterSpacing: 0.48 * a,
+                                color: const Color(0x99000000),
+                              ),
+                            ),
+                            trailing: Container(
+                              width: 24 * a,
+                              height: 24 * a,
+                              decoration: BoxDecoration(
+                                color: const Color(0xff9e26bc),
+                                borderRadius: BorderRadius.circular(12 * a),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  '+',
+                                  style: SafeGoogleFont(
+                                    'Poppins',
+                                    fontSize: 12 * b,
+                                    fontWeight: FontWeight.w400,
+                                    height: 1.5 * b / a,
+                                    letterSpacing: 0.48 * a,
+                                    color: const Color(0xff000000),
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                          subtitle: Text(
-                            'Join room',
-                            style: SafeGoogleFont(
-                              'Poppins',
-                              fontSize: 12 * b,
-                              fontWeight: FontWeight.w400,
-                              height: 1.5 * b / a,
-                              letterSpacing: 0.48 * a,
-                              color: const Color(0x99000000),
+                        );
+                      } else {
+                        final room = value.myRoom!.data!.first;
+                        return Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                                color: const Color(0x33000000),
+                                width: 1,
+                                strokeAlign: BorderSide.strokeAlignInside),
+                          ),
+                          child: ListTile(
+                            onTap: () {
+                              value.joinRoom(room);
+                            },
+                            leading:room.images!.isEmpty
+                                ? CircleAvatar(
+                                radius: 20 * a,
+                                backgroundColor: const Color(0xff9e26bc),
+                                foregroundImage: const AssetImage('assets/icons/ic_create_room.png')
+                            )
+                                : CircleAvatar(
+                              radius: 20 * a,
+                              backgroundColor: const Color(0xff9e26bc),
+                              foregroundImage: NetworkImage(room.images!.first),
+                            ),
+                            title: Text(
+                              room.name!,
+                              style: SafeGoogleFont(
+                                'Poppins',
+                                fontSize: 16 * b,
+                                fontWeight: FontWeight.w400,
+                                height: 1.5 * b / a,
+                                letterSpacing: 0.64 * a,
+                                color: const Color(0xff000000),
+                              ),
+                            ),
+                            subtitle: Text(
+                              'Join room',
+                              style: SafeGoogleFont(
+                                'Poppins',
+                                fontSize: 12 * b,
+                                fontWeight: FontWeight.w400,
+                                height: 1.5 * b / a,
+                                letterSpacing: 0.48 * a,
+                                color: const Color(0x99000000),
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    };
-                  },
-                ),
-                SizedBox(height: 10 * a),
-                DefaultTabController(
-                  length: 3,
-                  child: Expanded(
-                      child: Column(
-                    children: [
-                      TabBar(
-                        indicatorColor: Colors.black,
-                        indicatorWeight: 1.3,
-                        labelColor: const Color(0xff000000),
-                        unselectedLabelColor: const Color(0x99000000),
-                        labelStyle: SafeGoogleFont(
-                          'Poppins',
-                          fontSize: 16 * b,
-                          fontWeight: FontWeight.w400,
-                          height: 1.5 * b / a,
-                          letterSpacing: 0.96 * a,
-                          color: const Color(0xff000000),
-                        ),
-                        unselectedLabelStyle: SafeGoogleFont(
-                          'Poppins',
-                          fontSize: 16 * b,
-                          fontWeight: FontWeight.w400,
-                          height: 1.5 * b / a,
-                          letterSpacing: 0.96 * a,
-                          color: const Color(0x99000000),
-                        ),
-                        padding: EdgeInsets.symmetric(horizontal: 30 * a),
-                        labelPadding: EdgeInsets.zero,
-                        tabs: const [
-                          Tab(
-                            text: "Recently",
-                          ),
-                          Tab(
-                            text: "Follow",
-                          ),
-                          Tab(
-                            text: "Group",
-                          )
-                        ],
-                      ),
-                      Expanded(
-                        child: TabBarView(
-                            physics: const NeverScrollableScrollPhysics(),
-                            children: [
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 18 * a, vertical: 8 * a),
-                                child:
-                                Consumer<RoomsProvider>(
-                                  builder: (context, value, child) => FutureBuilder(
-                                    future: value.getAllRecent(),
-                                    builder: (context, snapshot) {
-                                      switch (snapshot.connectionState) {
-                                        case ConnectionState.none:
-                                          return const Text('none...');
-                                        case ConnectionState.active:
-                                          return const Text('active...');
-                                        case ConnectionState.waiting:
-                                          return const Center(child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              CircularProgressIndicator(),
-                                              SizedBox(height: 18),
-                                              Text('Loading'),
-                                            ],
-                                          ));
-                                        case ConnectionState.done:
-                                          if (snapshot.hasError) {
-                                            return Text('Error: ${snapshot.error}');
-                                          } else if((snapshot.data?.data?.length??0) == 0){
-                                            return const Center(child: Text('No Recent Rooms!'));
-                                          } else {
-                                            return ListView(
-                                              children: List.generate(snapshot.data?.data?.length??0, (i) {
-                                                int index = snapshot.data!.data!.length - i -1;
-                                                final room = snapshot.data!.data![index];
-                                                return Row(
-                                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                                  children: [
-                                                    Expanded(
-                                                      child: ListTile(
-                                                        onTap: (){
-                                                          value.joinRoom(room);
-                                                        },
-                                                        dense: true,
-                                                        contentPadding: EdgeInsets.zero,
-                                                        leading: room.images!.isEmpty? Image.asset(
-                                                          "assets/logo_greystyle.png",
-                                                          fit: BoxFit.contain,
-                                                          width: 64 * a,
-                                                          height: 64 * a,
-                                                        ) : Image.network(
-                                                          room.images!.first,
-                                                          fit: BoxFit.contain,
-                                                          width: 64 * a,
-                                                          height: 64 * a,
-                                                        ),
-                                                        title: Text(
-                                                          room.name.toString(),
-                                                          style: SafeGoogleFont(
-                                                            'Poppins',
-                                                            fontSize: 16 * b,
-                                                            fontWeight: FontWeight.w400,
-                                                            height: 1.5 * b / a,
-                                                            letterSpacing: 0.64 * a,
-                                                            color: const Color(0xff000000),
-                                                          ),
-                                                        ),
-                                                        subtitle: Text(
-                                                          room.announcement==''?'Welcome to my room!':room.announcement!,
-                                                          overflow: TextOverflow.ellipsis,
-                                                          style: SafeGoogleFont(
-                                                            'Poppins',
-                                                            fontSize: 12 * b,
-                                                            fontWeight: FontWeight.w400,
-                                                            height: 1.5 * b / a,
-                                                            letterSpacing: 0.48 * a,
-                                                            color: const Color(0x99000000),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets.only(bottom: 10.0),
-                                                      child: Row(
-                                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                                        children: [
-                                                          Container(
-                                                            margin: EdgeInsets.fromLTRB(
-                                                                0 * a, 0 * a, 1 * a, 4 * a),
-                                                            width: 3 * a,
-                                                            height: 15 * a,
-                                                            decoration: const BoxDecoration(
-                                                              color: Color(0xffff9933),
-                                                            ),
-                                                          ),
-                                                          Container(
-                                                            margin: EdgeInsets.fromLTRB(
-                                                                0 * a, 0 * a, 1 * a, 4 * a),
-                                                            width: 3 * a,
-                                                            height: 19 * a,
-                                                            decoration: const BoxDecoration(
-                                                              color: Color(0xffff9933),
-                                                            ),
-                                                          ),
-                                                          Container(
-                                                            margin: EdgeInsets.fromLTRB(
-                                                                0 * a, 0 * a, 5 * a, 4 * a),
-                                                            width: 3 * a,
-                                                            height: 15 * a,
-                                                            decoration: const BoxDecoration(
-                                                              color: Color(0xffff9933),
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            room.members?.length.toString()??'0',
-                                                            style: SafeGoogleFont(
-                                                              'Poppins',
-                                                              fontSize: 12 * b,
-                                                              fontWeight: FontWeight.w400,
-                                                              height: 1.5 * b / a,
-                                                              letterSpacing: 0.48 * a,
-                                                              color: const Color(0xff000000),
-                                                            ),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                );
-                                              })
-                                            );
-                                          }
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 18 * a, vertical: 8 * a),
-                                child:
-                                Consumer<RoomsProvider>(
-                                  builder: (context, value, child) => FutureBuilder(
-                                    future: value.getAllFollowingByMe(),
-                                    builder: (context, snapshot) {
-                                      switch (snapshot.connectionState) {
-                                        case ConnectionState.none:
-                                          return const Text('none...');
-                                        case ConnectionState.active:
-                                          return const Text('active...');
-                                        case ConnectionState.waiting:
-                                          return const Center(child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              CircularProgressIndicator(),
-                                              SizedBox(height: 18),
-                                              Text('Loading'),
-                                            ],
-                                          ));
-                                        case ConnectionState.done:
-                                          if (snapshot.hasError) {
-                                            return Text('Error: ${snapshot.error}');
-                                          } else if((snapshot.data?.data?.length??0) == 0){
-                                            return const Center(child: Text('No Data Found!'));
-                                          } else {
-                                            return ListView.builder(
-                                              itemCount: snapshot.data?.data?.length??0,
-                                              itemBuilder: (context, index) {
-                                                final room = snapshot.data!.data![index];
-                                                return Row(
-                                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                                  children: [
-                                                    Expanded(
-                                                      child: ListTile(
-                                                        onTap: (){
-                                                          value.joinRoom(room);
-                                                        },
-                                                        dense: true,
-                                                        contentPadding: EdgeInsets.zero,
-                                                        leading: room.images!.isEmpty? Image.asset(
-                                                          "assets/logo_greystyle.png",
-                                                          fit: BoxFit.contain,
-                                                          width: 64 * a,
-                                                          height: 64 * a,
-                                                        ) : Image.network(
-                                                          room.images!.first,
-                                                          fit: BoxFit.contain,
-                                                          width: 64 * a,
-                                                          height: 64 * a,
-                                                        ),
-                                                        title: Text(
-                                                          room.name.toString(),
-                                                          style: SafeGoogleFont(
-                                                            'Poppins',
-                                                            fontSize: 16 * b,
-                                                            fontWeight: FontWeight.w400,
-                                                            height: 1.5 * b / a,
-                                                            letterSpacing: 0.64 * a,
-                                                            color: const Color(0xff000000),
-                                                          ),
-                                                        ),
-                                                        subtitle: Text(
-                                                          room.announcement==''?'Welcome to my room!':room.announcement!,
-                                                          overflow: TextOverflow.ellipsis,
-                                                          style: SafeGoogleFont(
-                                                            'Poppins',
-                                                            fontSize: 12 * b,
-                                                            fontWeight: FontWeight.w400,
-                                                            height: 1.5 * b / a,
-                                                            letterSpacing: 0.48 * a,
-                                                            color: const Color(0x99000000),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets.only(bottom: 10.0),
-                                                      child: Row(
-                                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                                        children: [
-                                                          Container(
-                                                            margin: EdgeInsets.fromLTRB(
-                                                                0 * a, 0 * a, 1 * a, 4 * a),
-                                                            width: 3 * a,
-                                                            height: 15 * a,
-                                                            decoration: const BoxDecoration(
-                                                              color: Color(0xffff9933),
-                                                            ),
-                                                          ),
-                                                          Container(
-                                                            margin: EdgeInsets.fromLTRB(
-                                                                0 * a, 0 * a, 1 * a, 4 * a),
-                                                            width: 3 * a,
-                                                            height: 19 * a,
-                                                            decoration: const BoxDecoration(
-                                                              color: Color(0xffff9933),
-                                                            ),
-                                                          ),
-                                                          Container(
-                                                            margin: EdgeInsets.fromLTRB(
-                                                                0 * a, 0 * a, 5 * a, 4 * a),
-                                                            width: 3 * a,
-                                                            height: 15 * a,
-                                                            decoration: const BoxDecoration(
-                                                              color: Color(0xffff9933),
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            room.members?.length.toString()??'0',
-                                                            style: SafeGoogleFont(
-                                                              'Poppins',
-                                                              fontSize: 12 * b,
-                                                              fontWeight: FontWeight.w400,
-                                                              height: 1.5 * b / a,
-                                                              letterSpacing: 0.48 * a,
-                                                              color: const Color(0xff000000),
-                                                            ),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            );
-                                          }
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 18 * a, vertical: 8 * a),
-                                child:
-                                Consumer<RoomsProvider>(
-                                  builder: (context, value, child) => FutureBuilder(
-                                    future: value.getAllGroups(),
-                                    builder: (context, snapshot) {
-                                      switch (snapshot.connectionState) {
-                                        case ConnectionState.none:
-                                          return const Text('none...');
-                                        case ConnectionState.active:
-                                          return const Text('active...');
-                                        case ConnectionState.waiting:
-                                          return const Center(child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              CircularProgressIndicator(),
-                                              SizedBox(height: 18),
-                                              Text('Loading'),
-                                            ],
-                                          ));
-                                        case ConnectionState.done:
-                                          if (snapshot.hasError) {
-                                            return Text('Error: ${snapshot.error}');
-                                          } else if((snapshot.data?.data?.length??0) == 0){
-                                            return const Center(child: Text('No Data Found!'));
-                                          } else {
-                                            return ListView.builder(
-                                              itemCount: snapshot.data?.data?.length??0,
-                                              itemBuilder: (context, index) {
-                                                final room = snapshot.data!.data![index];
-                                                return Row(
-                                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                                  children: [
-                                                    Expanded(
-                                                      child: ListTile(
-                                                        onTap: (){
-                                                          value.joinRoom(room);
-                                                        },
-                                                        dense: true,
-                                                        contentPadding: EdgeInsets.zero,
-                                                        leading: room.images!.isEmpty? Image.asset(
-                                                          "assets/logo_greystyle.png",
-                                                          fit: BoxFit.contain,
-                                                          width: 64 * a,
-                                                          height: 64 * a,
-                                                        ) : Image.network(
-                                                          room.images!.first,
-                                                          fit: BoxFit.contain,
-                                                          width: 64 * a,
-                                                          height: 64 * a,
-                                                        ),
-                                                        title: Text(
-                                                          room.name.toString(),
-                                                          style: SafeGoogleFont(
-                                                            'Poppins',
-                                                            fontSize: 16 * b,
-                                                            fontWeight: FontWeight.w400,
-                                                            height: 1.5 * b / a,
-                                                            letterSpacing: 0.64 * a,
-                                                            color: const Color(0xff000000),
-                                                          ),
-                                                        ),
-                                                        subtitle: Text(
-                                                          room.announcement==''?'Welcome to my room!':room.announcement!,
-                                                          overflow: TextOverflow.ellipsis,
-                                                          style: SafeGoogleFont(
-                                                            'Poppins',
-                                                            fontSize: 12 * b,
-                                                            fontWeight: FontWeight.w400,
-                                                            height: 1.5 * b / a,
-                                                            letterSpacing: 0.48 * a,
-                                                            color: const Color(0x99000000),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets.only(bottom: 10.0),
-                                                      child: Row(
-                                                        crossAxisAlignment: CrossAxisAlignment.end,
-                                                        children: [
-                                                          Container(
-                                                            margin: EdgeInsets.fromLTRB(
-                                                                0 * a, 0 * a, 1 * a, 4 * a),
-                                                            width: 3 * a,
-                                                            height: 15 * a,
-                                                            decoration: const BoxDecoration(
-                                                              color: Color(0xffff9933),
-                                                            ),
-                                                          ),
-                                                          Container(
-                                                            margin: EdgeInsets.fromLTRB(
-                                                                0 * a, 0 * a, 1 * a, 4 * a),
-                                                            width: 3 * a,
-                                                            height: 19 * a,
-                                                            decoration: const BoxDecoration(
-                                                              color: Color(0xffff9933),
-                                                            ),
-                                                          ),
-                                                          Container(
-                                                            margin: EdgeInsets.fromLTRB(
-                                                                0 * a, 0 * a, 5 * a, 4 * a),
-                                                            width: 3 * a,
-                                                            height: 15 * a,
-                                                            decoration: const BoxDecoration(
-                                                              color: Color(0xffff9933),
-                                                            ),
-                                                          ),
-                                                          Text(
-                                                            room.members?.length.toString()??'0',
-                                                            style: SafeGoogleFont(
-                                                              'Poppins',
-                                                              fontSize: 12 * b,
-                                                              fontWeight: FontWeight.w400,
-                                                              height: 1.5 * b / a,
-                                                              letterSpacing: 0.48 * a,
-                                                              color: const Color(0xff000000),
-                                                            ),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            );
-                                          }
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ]),
-                      )
-                    ],
-                  )),
-                )
-              ],
-            ),
-            Container(
-              color: Colors.white,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: Column(
-                children: [
-                  Image.asset(
-                    "assets/decoration/reward_program.png",
-                    width: double.infinity,
-                    fit: BoxFit.contain,
+                        );
+                      };
+                    },
                   ),
-                  SizedBox(
-                    height: 20 * a,
-                  ),
-                  Expanded(
-                    child: Column(
+                  SizedBox(height: 10 * a),
+                  DefaultTabController(
+                    length: 3,
+                    child: Expanded(
+                        child: Column(
                       children: [
-                        Row(
-                          children: [
-                            Expanded(
-                                flex: 3,
-                                child: InkWell(
-                                  onTap: () {
-                                    Get.to(() => const Ranking());
-                                  },
-                                  child: Column(
-                                    children: [
-                                      Image.asset('assets/icons/ranking.png',
-                                          width: 30 * a, height: 30 * a),
-                                      Text(
-                                        'Ranking',
-                                        style: SafeGoogleFont(
-                                          'Poppins',
-                                          fontSize: 16 * b,
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.5 * b / a,
-                                          letterSpacing: 0.64 * a,
-                                          color: const Color(0xff000000),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )),
-                            Expanded(
-                                flex: 5,
-                                child: InkWell(
-                                  onTap: () {
-                                    Get.to(() => const UsefunsClub());
-                                  },
-                                  child: Column(
-                                    children: [
-                                      Image.asset('assets/icons/club.png',
-                                          width: 30 * a, height: 30 * a),
-                                      Text(
-                                        'Usefuns Club',
-                                        maxLines: 1,
-                                        style: SafeGoogleFont(
-                                          'Poppins',
-                                          fontSize: 16 * b,
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.5 * b / a,
-                                          letterSpacing: 0.64 * a,
-                                          color: const Color(0xff000000),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )),
-                            Expanded(
-                                flex: 2,
-                                child: InkWell(
-                                  onTap: () {
-                                    Get.to(() => const Party());
-                                  },
-                                  child: Column(
-                                    children: [
-                                      Image.asset('assets/icons/party.png',
-                                          width: 30 * a, height: 30 * a),
-                                      Text(
-                                        'Party',
-                                        style: SafeGoogleFont(
-                                          'Poppins',
-                                          fontSize: 16 * b,
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.5 * b / a,
-                                          letterSpacing: 0.64 * a,
-                                          color: const Color(0xff000000),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )),
+                        TabBar(
+                          indicatorColor: Colors.black,
+                          indicatorWeight: 1.3,
+                          labelColor: const Color(0xff000000),
+                          unselectedLabelColor: const Color(0x99000000),
+                          labelStyle: SafeGoogleFont(
+                            'Poppins',
+                            fontSize: 16 * b,
+                            fontWeight: FontWeight.w400,
+                            height: 1.5 * b / a,
+                            letterSpacing: 0.96 * a,
+                            color: const Color(0xff000000),
+                          ),
+                          unselectedLabelStyle: SafeGoogleFont(
+                            'Poppins',
+                            fontSize: 16 * b,
+                            fontWeight: FontWeight.w400,
+                            height: 1.5 * b / a,
+                            letterSpacing: 0.96 * a,
+                            color: const Color(0x99000000),
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 30 * a),
+                          labelPadding: EdgeInsets.zero,
+                          tabs: const [
+                            Tab(
+                              text: "Recently",
+                            ),
+                            Tab(
+                              text: "Follow",
+                            ),
+                            Tab(
+                              text: "Group",
+                            )
                           ],
                         ),
-                        SizedBox(
-                          height: 20 * a,
-                        ),
                         Expanded(
-                          child: Consumer<RoomsProvider>(
-                            builder: (context, value, child) => FutureBuilder(
-                              future: value.getAllPopular(),
-                              builder: (context, snapshot) {
-                                switch (snapshot.connectionState) {
-                                  case ConnectionState.none:
-                                    return const Text('none...');
-                                  case ConnectionState.active:
-                                    return const Text('active...');
-                                  case ConnectionState.waiting:
-                                    return const Center(child: Column(
-                                      mainAxisSize: MainAxisSize.min,
+                          child: TabBarView(
+                              physics: const NeverScrollableScrollPhysics(),
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(
+                                      left: 18 * a, right: 18 * a, top: 8 * a),
+                                  child:
+                                  Consumer<RoomsProvider>(
+                                    builder: (context, value, child) => FutureBuilder(
+                                      future: value.getAllMyRecent(),
+                                      builder: (context, snapshot) {
+                                        switch (snapshot.connectionState) {
+                                          case ConnectionState.none:
+                                            return const Text('none...');
+                                          case ConnectionState.active:
+                                            return const Text('active...');
+                                          case ConnectionState.waiting:
+                                            return const Center(child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                CircularProgressIndicator(),
+                                                SizedBox(height: 18),
+                                                Text('Loading'),
+                                              ],
+                                            ));
+                                          case ConnectionState.done:
+                                            if (snapshot.hasError) {
+                                              return Text('Error: ${snapshot.error}');
+                                            } else if((snapshot.data?.data?.length??0) == 0){
+                                              return const Center(child: Text('No Recent Rooms!'));
+                                            } else {
+                                              return ListView(
+                                                children: List.generate(snapshot.data?.data?.length??0, (index) {
+                                                  final room = snapshot.data!.data![index];
+                                                  return roomListTile(
+                                                    image: room.images!.isEmpty?null:room.images!.first,
+                                                    title: room.name.toString(),
+                                                    subTitle: room.announcement,
+                                                    active: room.activeUsers?.length.toString()??'0',
+                                                    onTap: (){
+                                                      value.joinRoom(room);
+                                                    },
+                                                  );
+                                                })
+                                              );
+                                            }
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 18 * a, vertical: 8 * a),
+                                  child:
+                                  Consumer<RoomsProvider>(
+                                    builder: (context, value, child) => FutureBuilder(
+                                      future: value.getAllFollowingByMe(),
+                                      builder: (context, snapshot) {
+                                        switch (snapshot.connectionState) {
+                                          case ConnectionState.none:
+                                            return const Text('none...');
+                                          case ConnectionState.active:
+                                            return const Text('active...');
+                                          case ConnectionState.waiting:
+                                            return const Center(child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                CircularProgressIndicator(),
+                                                SizedBox(height: 18),
+                                                Text('Loading'),
+                                              ],
+                                            ));
+                                          case ConnectionState.done:
+                                            if (snapshot.hasError) {
+                                              return Text('Error: ${snapshot.error}');
+                                            } else if((snapshot.data?.data?.length??0) == 0){
+                                              return const Center(child: Text('No Data Found!'));
+                                            } else {
+                                              return ListView.builder(
+                                                itemCount: snapshot.data?.data?.length??0,
+                                                itemBuilder: (context, index) {
+                                                  final room = snapshot.data!.data![index];
+                                                  return roomListTile(
+                                                    image: room.images!.isEmpty?null:room.images!.first,
+                                                    title: room.name.toString(),
+                                                    subTitle: room.announcement,
+                                                    active: room.activeUsers?.length.toString()??'0',
+                                                    onTap: (){
+                                                      value.joinRoom(room);
+                                                    },
+                                                  );
+                                                },
+                                              );
+                                            }
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 18 * a, vertical: 8 * a),
+                                  child:
+                                  Consumer<RoomsProvider>(
+                                    builder: (context, value, child) => FutureBuilder(
+                                      future: value.getAllGroups(),
+                                      builder: (context, snapshot) {
+                                        switch (snapshot.connectionState) {
+                                          case ConnectionState.none:
+                                            return const Text('none...');
+                                          case ConnectionState.active:
+                                            return const Text('active...');
+                                          case ConnectionState.waiting:
+                                            return const Center(child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                CircularProgressIndicator(),
+                                                SizedBox(height: 18),
+                                                Text('Loading'),
+                                              ],
+                                            ));
+                                          case ConnectionState.done:
+                                            if (snapshot.hasError) {
+                                              return Text('Error: ${snapshot.error}');
+                                            } else if((snapshot.data?.data?.length??0) == 0){
+                                              return const Center(child: Text('No Data Found!'));
+                                            } else {
+                                              return ListView.builder(
+                                                itemCount: snapshot.data?.data?.length??0,
+                                                itemBuilder: (context, index) {
+                                                  final room = snapshot.data!.data![index];
+                                                  return roomListTile(
+                                                    image: room.images!.isEmpty?null:room.images!.first,
+                                                    title: room.name.toString(),
+                                                    subTitle: room.announcement,
+                                                    active: room.activeUsers?.length.toString()??'0',
+                                                    onTap: (){
+                                                      value.joinRoom(room);
+                                                    },
+                                                  );
+                                                },
+                                              );
+                                            }
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ]),
+                        )
+                      ],
+                    )),
+                  )
+                ],
+              ),
+            ),
+            SmartRefresher(
+              enablePullDown: true,
+              onRefresh: ()async{
+                await Future.delayed(const Duration(milliseconds: 500),() {
+                  setState(() {});
+                });
+                refreshController2.refreshCompleted();
+                return;
+              },
+              physics: const BouncingScrollPhysics(),
+              header: WaterDropMaterialHeader(distance: 36*a),
+              controller: refreshController2,
+              child: Container(
+                color: Colors.white,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Image.asset(
+                        "assets/decoration/reward_program.png",
+                        width: double.infinity,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20 * a,
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                  flex: 3,
+                                  child: InkWell(
+                                    onTap: () {
+                                      Get.to(() => const Ranking());
+                                    },
+                                    child: Column(
                                       children: [
-                                        CircularProgressIndicator(),
-                                        SizedBox(height: 18),
-                                        Text('Loading'),
+                                        Image.asset('assets/icons/ranking.png',
+                                            width: 30 * a, height: 30 * a),
+                                        Text(
+                                          'Ranking',
+                                          style: SafeGoogleFont(
+                                            'Poppins',
+                                            fontSize: 16 * b,
+                                            fontWeight: FontWeight.w400,
+                                            height: 1.5 * b / a,
+                                            letterSpacing: 0.64 * a,
+                                            color: const Color(0xff000000),
+                                          ),
+                                        ),
                                       ],
+                                    ),
+                                  )),
+                              Expanded(
+                                  flex: 5,
+                                  child: InkWell(
+                                    onTap: () {
+                                      //todo
+                                      // Get.to(() => const UsefunsClub());
+                                      showCustomSnackBar('Upcoming!', context,isError: false);
+                                    },
+                                    child: Column(
+                                      children: [
+                                        Image.asset('assets/icons/club.png',
+                                            width: 30 * a, height: 30 * a),
+                                        Text(
+                                          'Family',
+                                          maxLines: 1,
+                                          style: SafeGoogleFont(
+                                            'Poppins',
+                                            fontSize: 16 * b,
+                                            fontWeight: FontWeight.w400,
+                                            height: 1.5 * b / a,
+                                            letterSpacing: 0.64 * a,
+                                            color: const Color(0xff000000),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )),
+                              Expanded(
+                                  flex: 2,
+                                  child: InkWell(
+                                    onTap: () {
+                                      //todo:
+                                      // Get.to(() => const Party());
+                                      showCustomSnackBar('Upcoming!', context,isError: false);
+                                    },
+                                    child: Column(
+                                      children: [
+                                        Image.asset('assets/icons/party.png',
+                                            width: 30 * a, height: 30 * a),
+                                        Text(
+                                          'Party',
+                                          style: SafeGoogleFont(
+                                            'Poppins',
+                                            fontSize: 16 * b,
+                                            fontWeight: FontWeight.w400,
+                                            height: 1.5 * b / a,
+                                            letterSpacing: 0.64 * a,
+                                            color: const Color(0xff000000),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 20 * a,
+                          ),
+                          Expanded(
+                            child: Consumer<RoomsProvider>(
+                              builder: (context, value, child) => FutureBuilder(
+                                future: value.getAllPopular(),
+                                builder: (context, snapshot) {
+                                  switch (snapshot.connectionState) {
+                                    case ConnectionState.none:
+                                      return const Text('none...');
+                                    case ConnectionState.active:
+                                      return const Text('active...');
+                                    case ConnectionState.waiting:
+                                      return const Center(child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          CircularProgressIndicator(),
+                                          SizedBox(height: 18),
+                                          Text('Loading'),
+                                        ],
                                     ));
-                                  case ConnectionState.done:
-                                    if (snapshot.hasError) {
-                                      return Text('Error: ${snapshot.error}');
-                                    } else {
-                                      return ListView.builder(
-                                        itemCount: snapshot.data?.data?.length??0,
-                                        itemBuilder: (context, index) {
-                                          final room = snapshot.data!.data![index];
-                                          return Row(
-                                            crossAxisAlignment: CrossAxisAlignment.end,
-                                            children: [
-                                              Expanded(
-                                                child: ListTile(
-                                                  onTap: (){
-                                                    value.joinRoom(room);
-                                                  },
-                                                  dense: true,
-                                                  contentPadding: EdgeInsets.zero,
-                                                  leading: room.images!.isEmpty? Image.asset(
-                                                    "assets/logo_greystyle.png",
-                                                    fit: BoxFit.contain,
-                                                    width: 64 * a,
-                                                    height: 64 * a,
-                                                  ) : Image.network(
-                                                    room.images!.first,
-                                                    fit: BoxFit.contain,
-                                                    width: 64 * a,
-                                                    height: 64 * a,
-                                                  ),
-                                                  title: Text(
-                                                    room.name.toString(),
-                                                    style: SafeGoogleFont(
-                                                      'Poppins',
-                                                      fontSize: 16 * b,
-                                                      fontWeight: FontWeight.w400,
-                                                      height: 1.5 * b / a,
-                                                      letterSpacing: 0.64 * a,
-                                                      color: const Color(0xff000000),
-                                                    ),
-                                                  ),
-                                                  subtitle: Text(
-                                                    room.announcement==''?'Welcome to my room!':room.announcement!,
-                                                    overflow: TextOverflow.ellipsis,
-                                                    style: SafeGoogleFont(
-                                                      'Poppins',
-                                                      fontSize: 12 * b,
-                                                      fontWeight: FontWeight.w400,
-                                                      height: 1.5 * b / a,
-                                                      letterSpacing: 0.48 * a,
-                                                      color: const Color(0x99000000),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(bottom: 10.0),
-                                                child: Row(
-                                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                                  children: [
-                                                    Container(
-                                                      margin: EdgeInsets.fromLTRB(
-                                                          0 * a, 0 * a, 1 * a, 4 * a),
-                                                      width: 3 * a,
-                                                      height: 15 * a,
-                                                      decoration: const BoxDecoration(
-                                                        color: Color(0xffff9933),
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      margin: EdgeInsets.fromLTRB(
-                                                          0 * a, 0 * a, 1 * a, 4 * a),
-                                                      width: 3 * a,
-                                                      height: 19 * a,
-                                                      decoration: const BoxDecoration(
-                                                        color: Color(0xffff9933),
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      margin: EdgeInsets.fromLTRB(
-                                                          0 * a, 0 * a, 5 * a, 4 * a),
-                                                      width: 3 * a,
-                                                      height: 15 * a,
-                                                      decoration: const BoxDecoration(
-                                                        color: Color(0xffff9933),
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      room.members?.length.toString()??'0',
-                                                      style: SafeGoogleFont(
-                                                        'Poppins',
-                                                        fontSize: 12 * b,
-                                                        fontWeight: FontWeight.w400,
-                                                        height: 1.5 * b / a,
-                                                        letterSpacing: 0.48 * a,
-                                                        color: const Color(0xff000000),
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
+                                    default:
+                                      if (snapshot.hasError) {
+                                        return Text('Error: ${snapshot.error}');
+                                      }else {
+                                        return
+                                          ListView.builder(
+                                            itemCount: snapshot.data?.data?.length??0,
+                                            itemBuilder: (context, index) {
+                                              final room = snapshot.data!.data![index];
+                                              return roomListTile(
+                                                image: room.images!.isEmpty?null:room.images!.first,
+                                                title: room.name.toString(),
+                                                subTitle: room.announcement,
+                                                active: room.activeUsers?.length.toString()??'0',
+                                                onTap: (){
+                                                  value.joinRoom(room);
+                                                },
+                                              );
+                                            },
                                           );
-                                        },
-                                      );
-                                    }
-                                }
-                              },
+
+                                      }
+                                  }
+                                },
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             Container(
               padding:
-                  EdgeInsets.symmetric(horizontal: 18 * a, vertical: 8 * a),
+                  EdgeInsets.symmetric(horizontal: 18 * a),
               child: Consumer<RoomsProvider>(
                 builder: (context, value, child) => FutureBuilder(
                   future: value.getAllNew(),
@@ -988,116 +655,45 @@ class _HomeState extends State<Home> {
                           return const Text('active...');
                         case ConnectionState.waiting:
                           return const Center(child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              CircularProgressIndicator(),
-                              SizedBox(height: 18),
-                              Text('Loading'),
-                            ],
-                          ));
-                        case ConnectionState.done:
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CircularProgressIndicator(),
+                            SizedBox(height: 18),
+                            Text('Loading'),
+                          ],
+                        ));
+                        default:
                           if (snapshot.hasError) {
                             return Text('Error: ${snapshot.error}');
-                          } else {
-                            return ListView.builder(
-                              itemCount: snapshot.data?.data?.length??0,
-                                itemBuilder: (context, index) {
-                                final room = snapshot.data!.data![index];
-                                  return Row(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Expanded(
-                                        child: ListTile(
-                                          onTap: (){
-                                            value.joinRoom(room);
-                                          },
-                                          dense: true,
-                                          contentPadding: EdgeInsets.zero,
-                                          leading: room.images!.isEmpty? Image.asset(
-                                            "assets/logo_greystyle.png",
-                                            fit: BoxFit.contain,
-                                            width: 64 * a,
-                                            height: 64 * a,
-                                          ) : Image.network(
-                                            room.images!.first,
-                                            fit: BoxFit.contain,
-                                            width: 64 * a,
-                                            height: 64 * a,
-                                          ),
-                                          title: Text(
-                                            room.name.toString(),
-                                            style: SafeGoogleFont(
-                                              'Poppins',
-                                              fontSize: 16 * b,
-                                              fontWeight: FontWeight.w400,
-                                              height: 1.5 * b / a,
-                                              letterSpacing: 0.64 * a,
-                                              color: const Color(0xff000000),
-                                            ),
-                                          ),
-                                          subtitle: Text(
-                                            room.announcement==''?'Welcome to my room!':room.announcement!,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: SafeGoogleFont(
-                                              'Poppins',
-                                              fontSize: 12 * b,
-                                              fontWeight: FontWeight.w400,
-                                              height: 1.5 * b / a,
-                                              letterSpacing: 0.48 * a,
-                                              color: const Color(0x99000000),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(bottom: 10.0),
-                                        child: Row(
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          children: [
-                                            Container(
-                                              margin: EdgeInsets.fromLTRB(
-                                                  0 * a, 0 * a, 1 * a, 4 * a),
-                                              width: 3 * a,
-                                              height: 15 * a,
-                                              decoration: const BoxDecoration(
-                                                color: Color(0xffff9933),
-                                              ),
-                                            ),
-                                            Container(
-                                              margin: EdgeInsets.fromLTRB(
-                                                  0 * a, 0 * a, 1 * a, 4 * a),
-                                              width: 3 * a,
-                                              height: 19 * a,
-                                              decoration: const BoxDecoration(
-                                                color: Color(0xffff9933),
-                                              ),
-                                            ),
-                                            Container(
-                                              margin: EdgeInsets.fromLTRB(
-                                                  0 * a, 0 * a, 5 * a, 4 * a),
-                                              width: 3 * a,
-                                              height: 15 * a,
-                                              decoration: const BoxDecoration(
-                                                color: Color(0xffff9933),
-                                              ),
-                                            ),
-                                            Text(
-                                              room.members?.length.toString()??'0',
-                                              style: SafeGoogleFont(
-                                                'Poppins',
-                                                fontSize: 12 * b,
-                                                fontWeight: FontWeight.w400,
-                                                height: 1.5 * b / a,
-                                                letterSpacing: 0.48 * a,
-                                                color: const Color(0xff000000),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  );
+                          }else {
+                            return
+                              SmartRefresher(
+                                enablePullDown: true,
+                                header: WaterDropMaterialHeader(distance: 36*a),
+                                onRefresh: ()async{
+                                  await Future.delayed(const Duration(milliseconds: 500),() {
+                                    setState(() {});
+                                  });
+                                  refreshController3.refreshCompleted();
+                                  return;
                                 },
+                                physics: const BouncingScrollPhysics(),
+                                controller: refreshController3,
+                              child: ListView.builder(
+                                itemCount: snapshot.data?.data?.length??0,
+                                  itemBuilder: (context, index) {
+                                  final room = snapshot.data!.data![index];
+                                    return roomListTile(
+                                      image: room.images!.isEmpty?null:room.images!.first,
+                                      title: room.name.toString(),
+                                      subTitle: room.announcement,
+                                      active: room.activeUsers?.length.toString()??'0',
+                                      onTap: (){
+                                        value.joinRoom(room);
+                                      },
+                                    );
+                                  },
+                              ),
                             );
 
                           }
@@ -1114,6 +710,6 @@ class _HomeState extends State<Home> {
 
   void checkUserRoom() {
     final provider = Provider.of<RoomsProvider>(context,listen: false);
-    provider.myRoom??provider.getAllMine();
+    provider.getAllMine();
   }
 }

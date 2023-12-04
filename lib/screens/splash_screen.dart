@@ -4,7 +4,7 @@ import 'package:live_app/data/datasource/local/sharedpreferences/storage_service
 import 'package:live_app/screens/dashboard/bottom_navigation.dart';
 import 'package:live_app/utils/constants.dart';
 
-import 'login/login_screen.dart';
+import 'auth/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

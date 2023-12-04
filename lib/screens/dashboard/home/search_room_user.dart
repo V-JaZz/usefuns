@@ -1,13 +1,17 @@
 import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:live_app/provider/rooms_provider.dart';
 import 'package:live_app/utils/utils_assets.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-
+import '../../../data/datasource/local/sharedpreferences/storage_service.dart';
 import '../../../data/model/response/room_search_model.dart';
 import '../../../data/model/response/user_search_model.dart';
+import '../../../provider/user_data_provider.dart';
+import '../../../utils/constants.dart';
+import '../me/profile/user_profile.dart';
 
 class SearchRoomUser extends StatefulWidget {
   const SearchRoomUser({Key? key}) : super(key: key);
@@ -18,6 +22,7 @@ class SearchRoomUser extends StatefulWidget {
 
 class _SearchRoomUserState extends State<SearchRoomUser> {
   final Dio _dio = Dio();
+  String myId =StorageService().getString(Constants.userId);
   final TextEditingController textEditingController = TextEditingController();
   CancelToken? currentCancelToken;
   UserSearchModel? userModel;
@@ -36,16 +41,16 @@ class _SearchRoomUserState extends State<SearchRoomUser> {
     currentCancelToken = newCancelToken;
 
     _dio.get(
-      'https://use2fun.onrender.com/$path/$query',
+      '${Constants.baseUrl}$path/$query',
       cancelToken: newCancelToken,
     ).then((response) {
       if (response.statusCode == 200) {
         if(currentTab==0){
-          roomModel = RoomSearchModel.fromJson(response.data);
           log(roomModel?.toJson().toString()??'');
+          roomModel = RoomSearchModel.fromJson(response.data);
         }else{
-          userModel = UserSearchModel.fromJson(response.data);
           log(userModel?.toJson().toString()??'');
+          userModel = UserSearchModel.fromJson(response.data);
         }
       } else {
         throw Exception('Failed to load data');
@@ -87,6 +92,7 @@ class _SearchRoomUserState extends State<SearchRoomUser> {
                 letterSpacing: 0.6 * a,
                 color: const Color(0x99000000),
               ),
+              keyboardType: TextInputType.number,
               textInputAction: TextInputAction.search,
               decoration: InputDecoration(
                   isDense: true,
@@ -100,7 +106,7 @@ class _SearchRoomUserState extends State<SearchRoomUser> {
                     borderSide: const BorderSide(color: Colors.transparent),
                     borderRadius: BorderRadius.circular(50 * a),
                   ),
-                  hintText: 'Search Room',
+                  hintText: 'Search ${currentTab==0?'Room':'User'} ID',
                   alignLabelWithHint: false,
                   prefixIcon: Padding(
                     padding: EdgeInsets.fromLTRB(15 * a, 10 * a, 10 * a, 8 * a),
@@ -171,7 +177,9 @@ class _SearchRoomUserState extends State<SearchRoomUser> {
                 },
               ),
               Expanded(
-                child: TabBarView(children: [
+                child: TabBarView(
+                  physics: const NeverScrollableScrollPhysics(),
+                    children: [
                   Container(
                     padding: EdgeInsets.symmetric(
                         horizontal: 18 * a, vertical: 8 * a),
@@ -217,6 +225,7 @@ class _SearchRoomUserState extends State<SearchRoomUser> {
                       children: List.generate(roomModel?.data?.length??0, (index) =>
                           Card(
                         child: ListTile(
+                          onTap: (){Provider.of<RoomsProvider>(context,listen: false).joinRoom(roomModel!.data![index]);},
                           leading: roomModel!.data![index].images!.isNotEmpty ? Image.network(roomModel!.data![index].images!.first):Image.asset('assets/logo_greystyle.png'),
                           title: Text(roomModel!.data![index].name!),
                           subtitle: Text((roomModel!.data![index].announcement??'') != ''?roomModel!.data![index].announcement!:'Welcome to my room!'),
@@ -270,6 +279,14 @@ class _SearchRoomUserState extends State<SearchRoomUser> {
                       children: List.generate(userModel?.data?.length??0, (index) =>
                           Card(
                             child: ListTile(
+                              onTap: (){
+                                if(userModel!.data![index].userId == myId){
+                                  Get.to(()=>const UserProfile());
+                                  return;
+                                }
+                                Provider.of<UserDataProvider>(context,listen: false).addVisitor(userModel!.data![index].id!);
+                                Get.to(()=>UserProfile(userData: userModel!.data![index]));
+                              },
                               leading: userModel!.data![index].images!.isNotEmpty ? Image.network(userModel!.data![index].images!.first):Image.asset('assets/logo_greystyle.png'),
                               title: Text(userModel!.data![index].name!),
                               subtitle: Text((userModel!.data![index].bio??'') != ''?userModel!.data![index].bio!:''),

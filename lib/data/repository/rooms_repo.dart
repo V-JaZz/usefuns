@@ -26,11 +26,23 @@ class RoomsRepo {
 
   Future<http.Response> updateName(String roomID, String name) async {
     try {
-      http.Response response = await _httpClient.put('room/update',
-        {
-          "roomId": roomID,
-          "name": name
-        }
+      http.Response response = await _httpClient.put('room/update/$roomID',
+        {"name": name}
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<http.Response> updatePicture(String roomID, String path, String name) async {
+    try {
+      http.Response response = await _httpClient.postMultipartFile(
+          'room/update/$roomID',
+          {"name": name},
+          'images',
+          path,
+        method: 'PUT'
       );
       return response;
     } catch (e) {
@@ -53,12 +65,55 @@ class RoomsRepo {
     }
   }
 
-  Future<http.Response> delete(String roomId) async {
+  Future<http.Response> addUser(String roomID, String userID) async {
     try {
-      http.Response response = await _httpClient.delete(
-        'room/delete',
+      http.Response response = await _httpClient.post('room/activeUser/add',
+          {
+            "userId": userID,
+            "roomId": roomID
+          }
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<http.Response> removeUser(String roomID, String userID) async {
+    try {
+      http.Response response = await _httpClient.post('room/activeUser/remove',
+          {
+            "userId": userID,
+            "roomId": roomID
+          }
+      );
+      return response;
+    } catch (e) {
+      return removeUser(roomID,userID);
+      // rethrow;
+    }
+  }
+
+  Future<http.Response> addAdmin(String roomID, String userID) async {
+    try {
+      http.Response response = await _httpClient.post('room/admin/add',
         {
-          "roomId":roomId
+          "userId": userID,
+          "roomId": roomID
+        }
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<http.Response> removeAdmin(String roomID, String userID) async {
+    try {
+      http.Response response = await _httpClient.post('room/admin/remove',
+        {
+          "userId": userID,
+          "roomId": roomID
         }
       );
       return response;
@@ -72,13 +127,23 @@ class RoomsRepo {
       http.Response response = await _httpClient.get('room/getbyuserId/$id');
       return response;
     } catch (e) {
-      rethrow;
+      return getAllMine(id);
+      // rethrow;
     }
   }
 
   Future<http.Response> getAllFollowingByMe(String id) async {
     try {
       http.Response response = await _httpClient.get('room/getallFollowingByUser/$id');
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<http.Response> getAllMyRecent(String id) async {
+    try {
+      http.Response response = await _httpClient.get('room/joinrecentlyByUser/$id');
       return response;
     } catch (e) {
       rethrow;

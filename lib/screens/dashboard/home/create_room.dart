@@ -11,7 +11,7 @@ import 'package:live_app/utils/common_widgets.dart';
 
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
-import '../../rooms/live_room.dart';
+import '../../room/live_room.dart';
 
 class CreateRoom extends StatefulWidget {
   const CreateRoom({Key? key}) : super(key: key);

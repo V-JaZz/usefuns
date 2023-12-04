@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1085481855373",
+    "project_id": "usefunsmedia-dba9f",
+    "storage_bucket": "usefunsmedia-dba9f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1085481855373:android:6c2298834d507884f235c4",
+        "android_client_info": {
+          "package_name": "com.shivila.liveApp.live_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1085481855373-80oq5rel0es1nopu4ohg56kjo2uml0of.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5iixn8zv5TpXtYky8F3IvSt3axAQ9aHo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1085481855373-80oq5rel0es1nopu4ohg56kjo2uml0of.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1085481855373-m6hm5c6o9tkrc86jdnh8uitdufn5gvud.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "io.flutter.flutter.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

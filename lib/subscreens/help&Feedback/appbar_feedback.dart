@@ -26,7 +26,7 @@ class _AppbarFeedBackState extends State<AppbarFeedBack> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_outlined),
           onPressed: () {
-            Get.to(() => const Me());
+            Get.back();
           },
         ),
         title: const Text(

@@ -151,7 +151,7 @@ class HttpApiClient {
     try {
       final headers = _buildHeaders(bearerToken, 'multipart/form-data');
 
-      log('POST Multipart File Request: $baseUrl$path');
+      log('${method ?? 'POST'} Multipart File Request: $baseUrl$path');
       log('Request Headers: $headers');
       log('Multipart Fields: $fields');
       log('File Key: $fileKey');

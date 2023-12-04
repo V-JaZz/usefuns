@@ -1,12 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:live_app/provider/moments_provider.dart';
 import 'package:live_app/screens/dashboard/home/home.dart';
 import 'package:provider/provider.dart';
-
 import '../../provider/user_data_provider.dart';
-import '../../utils/network_util.dart';
 import 'game/games.dart';
 import 'me/me.dart';
 import 'message/notifications.dart';
@@ -21,6 +21,7 @@ class BottomNavigator extends StatefulWidget {
 }
 
 class _BottomNavigatorState extends State<BottomNavigator> {
+  Timer? timer;
   int _selectedIndex = 0;
   static const List<Widget> _widgetOptions = <Widget>[
     Home(),
@@ -34,8 +35,16 @@ class _BottomNavigatorState extends State<BottomNavigator> {
 
   @override
   void initState() {
-    _fetchUserData();
+    _fetchUserData(refresh: false);
+    timer =Timer.periodic(const Duration(seconds: 30), (timer) {
+      _fetchUserData(refresh: false);
+    });
     super.initState();
+  }
+  @override
+  void dispose() {
+    timer?.cancel(); // Cancel the timer to avoid memory leaks
+    super.dispose();
   }
   @override
   Widget build(BuildContext context) {
@@ -45,7 +54,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     return Scaffold(
       body: Consumer<UserDataProvider>(
         builder: (context, value, child) => Center(
-          child: value.isLoading
+          child: value.isUserDataLoading
               ?const CircularProgressIndicator(color:  Color(0xff9e26bc))
               :(value.userData?.status == 1 ? _widgetOptions.elementAt(_selectedIndex) : Column(
             mainAxisSize: MainAxisSize.min,
@@ -104,7 +113,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
               iconActiveColor: Colors.black,
             ),
             GButton(
-              text: 'Me',
+              text: ' Me ',
               icon: Icons.person,
               iconColor: Colors.black,
               iconActiveColor: Colors.black,
@@ -141,9 +150,9 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     );
   }
 
-  Future<void> _fetchUserData() async {
+  Future<void> _fetchUserData({bool refresh = true}) async {
     userDataProvider = Provider.of<UserDataProvider>(context, listen: false);
-    await userDataProvider.getUser();
+    await userDataProvider.getUser(refresh: refresh);
   }
 
   Future<void> _fetchAllMoments() async {

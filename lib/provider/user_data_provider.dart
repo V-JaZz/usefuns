@@ -1,12 +1,12 @@
-import 'dart:developer';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:live_app/data/model/response/common_model.dart';
 import 'package:live_app/data/model/response/user_data_model.dart';
 import 'package:live_app/utils/constants.dart';
 import '../data/datasource/local/sharedpreferences/storage_service.dart';
 import '../data/repository/user_data_repo.dart';
+import '../screens/auth/login_screen.dart';
 import '../utils/zego_config.dart';
 
 class UserDataProvider with ChangeNotifier {
@@ -14,25 +14,29 @@ class UserDataProvider with ChangeNotifier {
   final storageService = StorageService();
   final UserDataRepo _userDataRepo = UserDataRepo();
   UserDataModel? userData;
-  bool _isLoading = true;
-  bool get isLoading => _isLoading;
+  bool isUserDataLoading = true;
 
-  Future<UserDataModel> getUser() async {
-    if(!_isLoading) {
-      _isLoading= true;
+  Future<UserDataModel> getUser({bool refresh = true, String? id,bool isUsefunId = false}) async {
+    if(!isUserDataLoading&&id==null) {
+      isUserDataLoading= true;
+      if(refresh)notifyListeners();
+    }
+    final apiResponse = await _userDataRepo.getUserById(id??storageService.getString(Constants.id),isUsefunId);
+    if(id==null){
+      isUserDataLoading = false;
       notifyListeners();
     }
-    final apiResponse = await _userDataRepo.getUserById(storageService.getString(Constants.id));
-    _isLoading = false;
-    notifyListeners();
     UserDataModel responseModel;
     if (apiResponse.statusCode == 200) {
       responseModel = userDataModelFromJson(apiResponse.body);
-      if(responseModel.status == 1){
+      if(responseModel.status == 1 && id==null){
         userData= responseModel;
         ZegoConfig.instance.userID = userData!.data!.id!;
         ZegoConfig.instance.streamID = userData!.data!.id!;
         ZegoConfig.instance.userName = userData!.data!.name!;
+      }else if(id==null){
+        storageService.logout();
+        Get.to(const LogInScreen());
       }
     } else {
       responseModel = UserDataModel(status: 0,message: apiResponse.reasonPhrase);
@@ -46,7 +50,7 @@ class UserDataProvider with ChangeNotifier {
         required String? email,
         required String? bio,
         String? image}) async {
-    _isLoading = true;
+    isUserDataLoading = true;
     notifyListeners();
     final apiResponse = await _userDataRepo.updateUser(
         name: name,
@@ -57,7 +61,7 @@ class UserDataProvider with ChangeNotifier {
         id: storageService.getString(Constants.id),
         token: storageService.getString(Constants.token)
     );
-    _isLoading = false;
+    isUserDataLoading = false;
     notifyListeners();
     CommonModel responseModel;
     if (apiResponse.statusCode == 200) {
@@ -68,7 +72,17 @@ class UserDataProvider with ChangeNotifier {
     } else {
       responseModel = CommonModel(status: 0,message: apiResponse.reasonPhrase);
     }
-    notifyListeners();
+    return responseModel;
+  }
+
+  Future <UserDataModel> addVisitor(String id) async {
+    final apiResponse = await _userDataRepo.addVisitor(id);
+    UserDataModel responseModel;
+    if (apiResponse.statusCode == 200) {
+      responseModel = userDataModelFromJson(apiResponse.body);
+    } else {
+      responseModel = UserDataModel(status: 0,message: apiResponse.reasonPhrase);
+    }
     return responseModel;
   }
 

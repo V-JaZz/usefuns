@@ -1,7 +1,4 @@
-import 'dart:io';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-
 import '../datasource/remote/http/http_client.dart';
 
 class AuthRepo {
@@ -11,6 +8,16 @@ class AuthRepo {
   Future<http.Response> sendOtp(String phone) async {
     try {
       http.Response response = await _httpClient.post('user/getotp', {"mobile": phone});
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<http.Response> gmailLogin(String gmail) async {
+    try {
+      http.Response response = await _httpClient.post('user/loginemail',
+          {"email":gmail});
       return response;
     } catch (e) {
       rethrow;

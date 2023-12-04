@@ -1,93 +1,102 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:live_app/provider/rooms_provider.dart';
 import 'package:live_app/provider/user_data_provider.dart';
-import 'package:live_app/utils/constants.dart';
+import 'package:live_app/screens/dashboard/bottom_navigation.dart';
 import 'package:provider/provider.dart';
 import '../data/datasource/local/sharedpreferences/storage_service.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
-
 import '../data/model/body/zego_broadcast_model.dart';
+import '../data/model/body/zego_room_model.dart';
 import '../data/model/body/zego_stream_model.dart';
 import '../data/model/response/rooms_model.dart';
+import '../data/model/response/user_data_model.dart';
 import '../data/repository/rooms_repo.dart';
+import '../screens/room/widget/seat_invitation.dart';
+import '../utils/common_widgets.dart';
 import '../utils/helper.dart';
 import '../utils/zego_config.dart';
+// ignore: depend_on_referenced_packages
+import 'package:svgaplayer_flutter/svgaplayer_flutter.dart';
 
 class ZegoRoomProvider with ChangeNotifier {
   final storageService = StorageService();
   final RoomsRepo _roomsRepo = RoomsRepo();
+
+  // zego init
+  Future<void> init() async {
+    await createEngine();
+    await loginRoom();
+    setZegoEventCallback();
+    _isMicOn = !await ZegoExpressEngine.instance.isMicrophoneMuted();
+    _isSoundOn = !await ZegoExpressEngine.instance.isSpeakerMuted();
+    // await ZegoExpressEngine.instance.startSoundLevelMonitor();
+  }
+
+  // zego dispose
+  Future<void> destroy() async {
+    Provider.of<RoomsProvider>(Get.context!,listen: false).removeRoomUser(_room!.id!);
+    logoutRoom();
+    destroyEngine();
+    clearZegoEventCallback();
+    roomUsersList = [];
+    roomStreamList = [];
+    broadcastMessageList?.clear();
+    activeCount = 0;
+    onSeat=false;
+    isOwner = false;
+    _room= null;
+    zegoRoom = null;
+  }
+
+  //Variables
+  bool isOwner = false;
+  bool onSeat = false;
+  late TickerProvider vsync;
+  ZegoRoomModel? zegoRoom;
+  String roomID = '';
+  bool isMicrophonePermissionGranted = false;
+  double treasureProgress = 0.0;
+  int activeCount = 1;
+  List<ZegoUser> roomUsersList = [];
+  final scrollController = ScrollController();
+  List<ZegoStreamExtended> roomStreamList = [];
+  FixedLengthQueue? broadcastMessageList = FixedLengthQueue<ZegoBroadcastMessageInfo>(50);
+
+  //Getter Setters
   Room? _room;
-
   Room? get room => _room;
-
   set room(Room? value) {
     _room = value;
     notifyListeners();
   }
-
-  int _previewViewID = -1;
-  int _playViewID = -1;
-  Widget? _previewViewWidget;
-  Widget? _playViewWidget;
-  double treasureProgress = 0.0;
-
-  bool isMicOn = false;
-  bool isSoundOn = false;
-
-  static const double viewRatio = 3.0 / 4.0;
-  late String roomID;
-
-  List<ZegoUser> roomUsersList = [];
-  List<ZegoStreamExtended> roomStreamList = [];
-  FixedLengthQueue? broadcastMessageList = FixedLengthQueue<ZegoBroadcastMessageInfo>(10);
-  final scrollController = ScrollController();
-  Timer? timer ;
-
-  int activeCount = 1;
-
-  ZegoMediaPlayer? mediaPlayer;
-  bool _isEngineActive = false;
-  ZegoRoomState _roomState = ZegoRoomState.Disconnected;
-  ZegoRealTimeSequentialDataManager? _zegoRealTimeSequentialDataManager;
-
-  ZegoRoomState get roomState => _roomState;
-
-  set roomState(ZegoRoomState value) {
-    _roomState = value;
+  bool _isMicOn = false;
+  bool get isMicOn => _isMicOn;
+  set isMicOn(bool value) {
+    _isMicOn = value;
+    roomStreamList.where((e) => e.streamId == ZegoConfig.instance.streamID).first.micOn = value;
     notifyListeners();
+    ZegoExpressEngine.instance.muteMicrophone(!value);
+  }
+  bool _isSoundOn = false;
+  bool get isSoundOn => _isSoundOn;
+  set isSoundOn(bool value) {
+    _isSoundOn = value;
+    notifyListeners();
+    ZegoExpressEngine.instance.muteSpeaker(!value);
   }
 
-  ZegoPublisherState publisherState = ZegoPublisherState.NoPublish;
-  ZegoPlayerState _playerState = ZegoPlayerState.NoPlay;
-
-  final TextEditingController _publishingStreamIDController = TextEditingController();
-  final TextEditingController _playingStreamIDController = TextEditingController();
-
-  // MARK: - Step 1: CreateEngine
-
-  void createEngine() {
+  Future<void> createEngine() async {
     ZegoEngineProfile profile = ZegoEngineProfile(
         ZegoConfig.instance.appID, ZegoConfig.instance.scenario,
         enablePlatformView: ZegoConfig.instance.enablePlatformView,
         appSign: ZegoConfig.instance.appSign);
 
-    ZegoExpressEngine.createEngineWithProfile(profile);
-
-    // Notify View that engine state changed
-    _isEngineActive = true;
-
-    log('🚀 Create ZegoExpressEngine');
+    await ZegoExpressEngine.createEngineWithProfile(profile);
   }
-
-  // MARK: - Step 2: LoginRoom
-
-  void loginRoom() {
-    // Instantiate a ZegoUser object
+  Future<void> loginRoom() async {
     final zegoRoomConfig = ZegoRoomConfig(
         99, true, ZegoConfig.instance.token);
 
@@ -97,166 +106,54 @@ class ZegoRoomProvider with ChangeNotifier {
             ? ZegoConfig.instance.userID
             : ZegoConfig.instance.userName);
 
-      ZegoExpressEngine.instance.loginRoom(roomID, user,config: zegoRoomConfig );
+      await ZegoExpressEngine.instance.loginRoom(roomID, user,config: zegoRoomConfig );
 
-    log('🚪 Start login room, roomID: $roomID');
     roomUsersList.add(ZegoUser(ZegoConfig.instance.userID,ZegoConfig.instance.userName));
+    activeCount = roomUsersList.length;
   }
-
-  void logoutRoom() {
-    // Logout room will automatically stop publishing/playing stream.
-    //
-    // But directly logout room without destroying the [PlatformView]
-    // or [TextureRenderer] may cause a memory leak.
-    ZegoExpressEngine.instance.logoutRoom(roomID);
-    log('🚪 logout room, roomID: $roomID');
-
-    clearPreviewView();
-    clearPlayView();
+  Future<void> logoutRoom() async {
+   await ZegoExpressEngine.instance.logoutRoom(roomID);
   }
-
-  // MARK: - Step 3: StartPublishingStream
-  void startPreview() {
-    Future<void> _startPreview(int viewID) async {
-      ZegoCanvas canvas = ZegoCanvas.view(viewID);
-      await ZegoExpressEngine.instance.startPreview(canvas: canvas);
-      log('🔌 Start preview, viewID: $viewID');
-    }
-
-    if (Platform.isIOS ||
-        Platform.isAndroid ||
-        Platform.isWindows ||
-        Platform.isMacOS ||
-        kIsWeb) {
-      ZegoExpressEngine.instance.createCanvasView((viewID) {
-        _previewViewID = viewID;
-        _startPreview(viewID);
-      }).then((widget) {
-          _previewViewWidget = widget;
-      });
-    } else {
-      ZegoExpressEngine.instance.startPreview();
+  Future<void> startPublishingStream(int seat) async {
+    if(roomStreamList.firstWhereOrNull((e) => e.seat == seat) == null) {
+      final user = Provider.of<UserDataProvider>(Get.context!,listen: false).userData;
+      final extraInfo = ZegoStreamExtended(vip: 0,id: user?.data?.userId ,owner: isOwner,age: AgeCalculator.calculateAge(user?.data?.dob??DateTime.now()),followers: user?.data?.followers?.length??0,gender: user?.data?.gender,level: user?.data?.level,streamId: ZegoConfig.instance.streamID,userName: ZegoConfig.instance.userName,image: user!.data!.images!.isNotEmpty ? (user.data?.images?.first??''):'',seat: seat,micOn: _isMicOn&&isMicrophonePermissionGranted);
+      await ZegoExpressEngine.instance.setStreamExtraInfo(zegoStreamExtendedToJson(extraInfo));
+      await ZegoExpressEngine.instance.startPublishingStream(ZegoConfig.instance.streamID);
+      log('📤 Start publishing stream, streamID: ${ZegoConfig.instance.streamID}');
+      roomStreamList.add(extraInfo);
+      onSeat=true;
+      notifyListeners();
+    }else{
+      showCustomSnackBar('Seat Already Occupied!', Get.context!, isToaster: true);
     }
   }
-
-  void stopPreview() {
-    if (!Platform.isAndroid &&
-        !Platform.isIOS &&
-        !Platform.isMacOS &&
-        !kIsWeb) {
-      return;
-    }
-
-    if (_previewViewWidget == null) {
-      return;
-    }
-
-    ZegoExpressEngine.instance.stopPreview();
-    clearPreviewView();
-  }
-
-  void startPublishingStream() {
-    final user = Provider.of<UserDataProvider>(Get.context!,listen: false).userData;
-    final extraInfo = ZegoStreamExtended(vip: 0,id: user?.data?.userId ,owner: room?.userId == user?.data?.id,age: AgeCalculator.calculateAge(user?.data?.dob??DateTime.now()),followers: user?.data?.followers?.length??0,gender: user?.data?.gender,level: user?.data?.level,streamId: ZegoConfig.instance.streamID,userName: ZegoConfig.instance.userName,image: user!.data!.images!.isNotEmpty ? (user.data?.images?.first??''):'');
-    ZegoExpressEngine.instance.setStreamExtraInfo(zegoStreamExtendedToJson(extraInfo));
-    ZegoExpressEngine.instance.startPublishingStream(ZegoConfig.instance.streamID);
-    log('📤 Start publishing stream, streamID: ${ZegoConfig.instance.streamID}');
-    roomStreamList.add(extraInfo);
-  }
-
-  void stopPublishingStream() {
-    ZegoExpressEngine.instance.stopPublishingStream();
+  Future<void> stopPublishingStream() async {
+    await ZegoExpressEngine.instance.stopPublishingStream();
     roomStreamList.removeWhere((element) => element.streamId == ZegoConfig.instance.streamID);
+    onSeat=false;
+    notifyListeners();
   }
-
-  // MARK: - Step 4: StartPlayingStream
-
-  void startPlayingStream(String streamID) {
-    void _startPlayingStream(int viewID, String streamID) {
+  Future<void> startPlayingStream(String streamID) async {
+    Future<void> startPlayingStream(int viewID, String streamID) async {
       ZegoCanvas canvas = ZegoCanvas.view(viewID);
-      ZegoExpressEngine.instance.startPlayingStream(streamID, canvas: canvas);
-      log('📥 Start playing stream, streamID: $streamID, viewID: $viewID');
+      await ZegoExpressEngine.instance.startPlayingStream(streamID, canvas: canvas);
     }
-
-    if (Platform.isIOS ||
-        Platform.isAndroid ||
-        Platform.isWindows ||
-        Platform.isMacOS ||
-        kIsWeb) {
-      log('📥 Start playing stream, streamID');
-      ZegoExpressEngine.instance.createCanvasView((viewID) {
-        _playViewID = viewID;
-        _startPlayingStream(viewID, streamID);
-      }).then((widget) {
-          _playViewWidget = widget;
-      });
-    } else {
-      ZegoExpressEngine.instance.startPlayingStream(streamID);
-    }
+    await ZegoExpressEngine.instance.createCanvasView((viewID) {
+      startPlayingStream(viewID, streamID);
+    });
   }
-
-  void stopPlayingStream(String streamID) {
-    ZegoExpressEngine.instance.stopPlayingStream(streamID);
-
-    clearPlayView();
+  Future<void> stopPlayingStream(String streamID) async {
+    await ZegoExpressEngine.instance.stopPlayingStream(streamID);
   }
-
-  // MARK: - Exit
 
   void destroyEngine() async {
-    stopPreview();
-    clearPreviewView();
-    clearPlayView();
-
-    // Can destroy the engine when you don't need audio and video calls
-    //
-    // Destroy engine will automatically logout room and stop publishing/playing stream.
-    ZegoExpressEngine.destroyEngine()
+    await ZegoExpressEngine.destroyEngine()
         .then((ret) => log('already destroy engine'));
-
-    log('🏳️ Destroy ZegoExpressEngine');
-
-    // Notify View that engine state changed
-
-      _isEngineActive = false;
-      _roomState = ZegoRoomState.Disconnected;
-      publisherState = ZegoPublisherState.NoPublish;
-      _playerState = ZegoPlayerState.NoPlay;
   }
 
-  // MARK: - Zego Event
-
+  //zego event callbacks
   void setZegoEventCallback() {
-    ZegoExpressEngine.onRoomStateUpdate = (String roomID, ZegoRoomState state,
-        int errorCode, Map<String, dynamic> extendedData) {
-      log(
-          '🚩 🚪 Room state update, state: $state, errorCode: $errorCode, roomID: $roomID');
-      _roomState = state;
-    };
-
-    ZegoExpressEngine.onRoomStateChanged = (roomID, reason, errorCode, extendedData) {
-
-      log(
-          '🚩 🚩 🚩 Room state changed, reason: $reason, errorCode: $errorCode, roomID: $roomID');
-    };
-
-    ZegoExpressEngine.onPublisherStateUpdate = (String streamID,
-        ZegoPublisherState state,
-        int errorCode,
-        Map<String, dynamic> extendedData) {
-      log(
-          '🚩 📤 Publisher state update, state: $state, errorCode: $errorCode, streamID: $streamID');
-      publisherState = state;
-    };
-
-    ZegoExpressEngine.onPlayerStateUpdate = (String streamID,
-        ZegoPlayerState state,
-        int errorCode,
-        Map<String, dynamic> extendedData) {
-      log(
-          '🚩 📥 Player state update, state: $state, errorCode: $errorCode, streamID: $streamID');
-      _playerState = state;
-    };
 
     ZegoExpressEngine.onRoomUserUpdate = (roomID, updateType, userList) {
       for (var e in userList) {
@@ -264,30 +161,24 @@ class ZegoRoomProvider with ChangeNotifier {
         var userName = e.userName;
         if(updateType == ZegoUpdateType.Add){
           roomUsersList.add(e);
-          notifyListeners();
         }else if (updateType == ZegoUpdateType.Delete){
           roomUsersList.removeWhere((element) => element.userID == userID);
-          notifyListeners();
         }
-        log(
-            '🚩 🚪 Room user update, roomID: $roomID, updateType: $updateType userID: $userID userName: $userName');
+        activeCount = roomUsersList.length;
+        notifyListeners();
+        log('🚩 🚪 Room user update, roomID: $roomID, updateType: $updateType userID: $userID userName: $userName');
       }
     };
 
-    ZegoExpressEngine.onRoomOnlineUserCountUpdate = (roomID, count) {
-      activeCount = count;
-      notifyListeners();
-    };
-
-    ZegoExpressEngine.onRoomStreamUpdate =
-    ((roomID, updateType, streamList, extendedData) {
+    ZegoExpressEngine.onRoomStreamUpdate = ((roomID, updateType, streamList, extendedData) {
       for (var stream in streamList) {
         var streamID = stream.streamID;
         log('🚩 🚪 Room stream update, roomID: $roomID, updateType: $updateType streamID:$streamID');
 
         if (updateType == ZegoUpdateType.Add) {
+          print('extraInfo11 ${stream.extraInfo}');
           final extraInfo = zegoStreamExtendedFromJson(stream.extraInfo);
-          roomStreamList.add(extraInfo) ;
+          roomStreamList.add(extraInfo);
           startPlayingStream(streamID);
           notifyListeners();
         }else if(updateType == ZegoUpdateType.Delete){
@@ -296,132 +187,265 @@ class ZegoRoomProvider with ChangeNotifier {
         }
       }
     });
+
+    ZegoExpressEngine.onRoomExtraInfoUpdate = (String roomID, List<ZegoRoomExtraInfo> infoList) {
+      print('🚩🚩🚩 onRoomExtraInfoUpdate');
+      for (ZegoRoomExtraInfo i in infoList) {
+        if(i.key == ZegoConfig.instance.roomKey){
+          log("value: ${i.value}");
+          zegoRoom = zegoRoomModelFromJson(i.value);
+        }
+      }
+      notifyListeners();
+    };
+
+    ZegoExpressEngine.onRoomStreamExtraInfoUpdate = (roomID, streamList) {
+      for (ZegoStream stream in streamList) {
+        var streamID = stream.streamID;
+        log('🚩 🚪 Streamer ExtraInfo update, roomID: $roomID, streamID:$streamID');
+        roomStreamList[roomStreamList.indexWhere((e) => e.streamId == streamID)] = zegoStreamExtendedFromJson(stream.extraInfo);
+      }
+      notifyListeners();
+    };
+
+    ZegoExpressEngine.onIMRecvCustomCommand = (String roomID, ZegoUser fromUser, String command){
+      print('🚩🚩🚩 onIMRecvCustomCommand');
+        log(command);
+        if(command == ZegoConfig.instance.roomResetCalculatorKey){
+          for (ZegoStreamExtended user in roomStreamList) {
+            user.points = 0;
+          }
+        }else if(command == ZegoConfig.instance.roomMuteSeatKey){
+          roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.streamID).micPermit = false;
+          showCustomSnackBar('Muted by ${fromUser.userName}', Get.context!,isToaster: true);
+          notifyStreamExtraInfoUpdate();
+          isMicOn = false;
+        }else if(command == ZegoConfig.instance.roomUnMuteSeatKey){
+          roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.streamID).micPermit = true;
+          showCustomSnackBar('Unmuted by ${fromUser.userName}', Get.context!,isToaster: true,isError: false);
+          notifyStreamExtraInfoUpdate();
+        }else if(command == ZegoConfig.instance.roomLockSeatKey){
+          stopPublishingStream();
+          showCustomSnackBar('Locked by ${fromUser.userName}', Get.context!,isToaster: true);
+        }else if(command == ZegoConfig.instance.roomBanChatKey){
+          roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.streamID).chatBan = true;
+          showCustomSnackBar('Banned Chat by ${fromUser.userName}', Get.context!,isToaster: true);
+          notifyStreamExtraInfoUpdate();
+        }else if(command == ZegoConfig.instance.roomUnBanChatKey){
+          roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.streamID).chatBan = false;
+          showCustomSnackBar('Unbanned Chat by ${fromUser.userName}', Get.context!,isToaster: true,isError: false);
+          notifyStreamExtraInfoUpdate();
+        }else if(command == ZegoConfig.instance.roomKickSeatKey){
+          destroy();
+          Get.offAll(const BottomNavigator(),transition: Transition.noTransition);
+          showCustomSnackBar('Kicked by ${fromUser.userName}', Get.context!,isToaster: true);
+        }else if(command.contains(ZegoConfig.instance.roomInviteSeatKey)){
+          viewInviteToSeatDailog(command.substring(20),fromUser.userName);
+        }
+      notifyListeners();
+    };
+
     ZegoExpressEngine.onIMRecvBroadcastMessage = (roomID, messageList) {
       print('🚪🚪 onIMRecvBroadcastMessage');
       for (var m in messageList) {
-        // log(
-        //     '🚩  Broadcast message: ${m.message}, userName: ${m.fromUser.userName}');
+        // log('🚩  Broadcast message: ${m.message}, userName: ${m.fromUser.userName}');
         broadcastMessageList?.enqueue(m);
       }
       notifyListeners();
-      scrollController.jumpTo(scrollController.position.maxScrollExtent);
+      Future.delayed(const Duration(milliseconds: 500),(){
+        scrollController.animateTo(scrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 500), curve: Curves.decelerate);
+      });
+    };
+
+    ZegoExpressEngine.onIMRecvBarrageMessage = (roomID, messageList) async {
+      print('🚪🚪 onIMRecvBarrageMessage');
+      for (var m in messageList) {
+        final controller = SVGAAnimationController(vsync: vsync);
+        controller.videoItem = await SVGAParser.shared.decodeFromAssets(m.message);
+        roomStreamList[roomStreamList.indexWhere((e) => e.streamId == m.fromUser.userID)].reactionController = controller;
+        notifyListeners();
+        roomStreamList[roomStreamList.indexWhere((e) => e.streamId == m.fromUser.userID)].reactionController
+            ?.forward()
+            .whenComplete(() {
+              if(roomStreamList[roomStreamList.indexWhere((e) => e.streamId == m.fromUser.userID)].reactionController?.videoItem == controller.videoItem){
+                roomStreamList[roomStreamList.indexWhere((e) => e.streamId == m.fromUser.userID)].reactionController?.dispose();
+                roomStreamList[roomStreamList.indexWhere((e) => e.streamId == m.fromUser.userID)].reactionController = null;
+                notifyListeners();
+              }
+        });
+      }
+    };
+
+    ZegoExpressEngine.onRemoteMicStateUpdate = (String streamID,ZegoRemoteDeviceState state) {
+      print('🚪🚪 onRemoteMicStateUpdate - $state');
+      roomStreamList.where((e) => e.streamId == streamID).first.micOn = state == ZegoRemoteDeviceState.Open;
       notifyListeners();
     };
 
-    ZegoExpressEngine.onIMRecvBarrageMessage = (roomID, messageList) {
-      print('🚪🚪 onIMRecvBarrageMessage');
-      for (var m in messageList) {
-        roomStreamList[roomStreamList.indexWhere((e) => e.streamId == m.fromUser.userID)].reaction=m.message;
-        notifyListeners();
-        log(
-            '🚩  Broadcast message: ${m.message}, userName: ${m.fromUser.userName}');
-      }
-      notifyListeners();
-    };
+    // ZegoExpressEngine.onCapturedSoundLevelUpdate = (double soundLevel){
+    //   print('local sl : $soundLevel');
+    // };
+    // ZegoExpressEngine.onRemoteSoundLevelUpdate = (Map<String, double> soundLevels){
+    //   print('remote sl : $soundLevels');
+    // };
   }
 
   void clearZegoEventCallback() {
-    ZegoExpressEngine.onRoomStateUpdate = null;
-    ZegoExpressEngine.onPublisherStateUpdate = null;
-    ZegoExpressEngine.onPlayerStateUpdate = null;
+    // ZegoExpressEngine.onCapturedSoundLevelUpdate = null;
+    // ZegoExpressEngine.onRemoteSoundLevelUpdate = null;
+    ZegoExpressEngine.onRoomUserUpdate = null;
+    ZegoExpressEngine.onRoomStreamUpdate = null;
+    ZegoExpressEngine.onIMRecvCustomCommand = null;
+    ZegoExpressEngine.onIMRecvBarrageMessage = null;
+    ZegoExpressEngine.onIMRecvBroadcastMessage = null;
+    ZegoExpressEngine.onRoomExtraInfoUpdate = null;
+    ZegoExpressEngine.onRoomStreamExtraInfoUpdate = null;
+    ZegoExpressEngine.onRemoteMicStateUpdate = null;
   }
 
-  void clearPreviewView() {
-    if (!Platform.isAndroid &&
-        !Platform.isIOS &&
-        !Platform.isMacOS &&
-        !Platform.isWindows &&
-        !kIsWeb) {
-      return;
-    }
-
-    if (_previewViewWidget == null) {
-      return;
-    }
-
-    // Developers should destroy the [CanvasView] after
-    // [stopPublishingStream] or [stopPreview] to release resource and avoid memory leaks
-    ZegoExpressEngine.instance.destroyCanvasView(_previewViewID);
-    _previewViewWidget = null;
+  //room data update methods
+  void notifyRoomUpdate(){
+    ZegoExpressEngine.instance.setRoomExtraInfo(
+        roomID,
+        ZegoConfig.instance.roomKey,
+        zegoRoomModelToJson(zegoRoom!)
+    );
   }
-
-  void clearPlayView() {
-    if (!Platform.isAndroid &&
-        !Platform.isIOS &&
-        !Platform.isMacOS &&
-        !Platform.isWindows &&
-        !kIsWeb) {
-      return;
-    }
-
-    if (_playViewWidget == null) {
-      return;
-    }
-
-    // Developers should destroy the [CanvasView]
-    // after [stopPlayingStream] to release resource and avoid memory leaks
-    ZegoExpressEngine.instance.destroyCanvasView(_playViewID);
-    _playViewWidget = null;
+  //notify stream user data update
+  void notifyStreamExtraInfoUpdate(){
+    final extraInfo =roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.streamID);
+    ZegoExpressEngine.instance.setStreamExtraInfo(zegoStreamExtendedToJson(extraInfo));
   }
-
-  void init() async {
-    isMicOn = !await ZegoExpressEngine.instance.isMicrophoneMuted();
-    isSoundOn = !await ZegoExpressEngine.instance.isSpeakerMuted();
-    _zegoRealTimeSequentialDataManager = await ZegoExpressEngine.instance.createRealTimeSequentialDataManager(roomID);
-    _zegoRealTimeSequentialDataManager?.startBroadcasting(ZegoConfig.instance.streamID);
-  }
-
-  void muteMicrophone(bool b){
-    isMicOn = !b;
+  void updateAdmin(List<String> list) {
+    zegoRoom!.admins = list;
     notifyListeners();
-    ZegoExpressEngine.instance.muteMicrophone(b);
+    notifyRoomUpdate();
   }
-
-  void muteAudio(bool b){
-    isSoundOn = !b;
+  void updateTotalSeats(int total) {
+    zegoRoom!.totalSeats = total;
     notifyListeners();
-    ZegoExpressEngine.instance.muteSpeaker(b);
+    notifyRoomUpdate();
+  }
+  void updateLockedSeats(List<int> locked) {
+    zegoRoom!.lockedSeats = locked;
+    notifyListeners();
+    notifyRoomUpdate();
+  }
+  void updateViewCalculator() {
+    zegoRoom!.viewCalculator = !zegoRoom!.viewCalculator;
+    notifyListeners();
+    notifyRoomUpdate();
   }
 
+  //room callback commands
+  void muteStreamer(String userID, String userName){
+    ZegoExpressEngine.instance.sendCustomCommand(
+      roomID,
+      ZegoConfig.instance.roomMuteSeatKey,
+      [ZegoUser(userID, userName)]
+    );
+  }
+  void unMuteStreamer(String userID, String userName){
+    ZegoExpressEngine.instance.sendCustomCommand(
+        roomID,
+        ZegoConfig.instance.roomUnMuteSeatKey,
+        [ZegoUser(userID, userName)]
+    );
+  }
+  void lockStreamer(String userID, String userName){
+    ZegoExpressEngine.instance.sendCustomCommand(
+        roomID,
+        ZegoConfig.instance.roomLockSeatKey,
+        [ZegoUser(userID, userName)]
+    );
+  }
+  void banChat(String userID, String userName){
+    ZegoExpressEngine.instance.sendCustomCommand(
+        roomID,
+        ZegoConfig.instance.roomBanChatKey,
+        [ZegoUser(userID, userName)]
+    );
+  }
+  void unbanChat(String userID, String userName){
+    ZegoExpressEngine.instance.sendCustomCommand(
+        roomID,
+        ZegoConfig.instance.roomUnBanChatKey,
+        [ZegoUser(userID, userName)]
+    );
+  }
+  void kickStreamer(String userID, String userName){
+    ZegoExpressEngine.instance.sendCustomCommand(
+        roomID,
+        ZegoConfig.instance.roomKickSeatKey,
+        [ZegoUser(userID, userName)]
+    );
+  }
+  void inviteSeat(String userID, String userName, String seat){
+    ZegoExpressEngine.instance.sendCustomCommand(
+        roomID,
+        ZegoConfig.instance.roomInviteSeatKey+seat,
+        [ZegoUser(userID, userName)]
+    );
+  }
+  void resetCalculator(){
+    for (ZegoStreamExtended user in roomStreamList) {
+      user.points = 0;
+    }
+    notifyListeners();
+    ZegoExpressEngine.instance.sendCustomCommand(
+        roomID,
+        ZegoConfig.instance.roomResetCalculatorKey,
+      []
+    );
+  }
+
+  //broadcast and barrage methods
   void sendBroadcastMessage(String message) {
     final user = Provider.of<UserDataProvider>(Get.context!,listen: false).userData;
-    String body = zegoBroadcastModelToJson(ZegoBroadcastModel(message: message,image: user!.data!.images!.isNotEmpty? user.data!.images!.first:null, level:user.data!.level,type: "message"));
+    String body = zegoBroadcastModelToJson(ZegoBroadcastModel(message: message,image: user!.data!.images!.isNotEmpty? user.data!.images!.first:null, level:user.data!.level,type: "message",tags: [if(isOwner)'Owner',if(zegoRoom!.admins.contains(ZegoConfig.instance.streamID))'Admin']));
     ZegoExpressEngine.instance.sendBroadcastMessage(roomID, body);
     broadcastMessageList?.enqueue(ZegoBroadcastMessageInfo(body,0,0,ZegoUser(ZegoConfig.instance.userID,ZegoConfig.instance.userName)));
     notifyListeners();
-    scrollController.jumpTo(scrollController.position.maxScrollExtent);
-    notifyListeners();
+    Future.delayed(const Duration(milliseconds: 500),(){
+      scrollController.animateTo(scrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 500), curve: Curves.decelerate);
+    });
   }
-
   void sendBroadcastGift(List<String> to, String giftPath, int count) {
     for (var receiver in to) {
       final user = Provider.of<UserDataProvider>(Get.context!,listen: false).userData;
-      String body = zegoBroadcastModelToJson(ZegoBroadcastModel(image: user!.data!.images!.isNotEmpty? user.data!.images!.first:null, level:user.data!.level,type: "gift",gift: Gift(to: receiver,count: count,giftPath: giftPath)));
+      String body = zegoBroadcastModelToJson(ZegoBroadcastModel(image: user!.data!.images!.isNotEmpty? user.data!.images!.first:null, level:user.data!.level,type: "gift",gift: Gift(to: receiver,count: count,giftPath: giftPath),tags: [if(isOwner)'Owner',if(zegoRoom!.admins.contains(ZegoConfig.instance.streamID))'Admin']));
       ZegoExpressEngine.instance.sendBroadcastMessage(roomID, body);
       broadcastMessageList?.enqueue(ZegoBroadcastMessageInfo(body,0,0,ZegoUser(ZegoConfig.instance.userID,ZegoConfig.instance.userName)));
       notifyListeners();
-      scrollController.jumpTo(scrollController.position.maxScrollExtent);
-      notifyListeners();
+      Future.delayed(const Duration(milliseconds: 500),(){
+        scrollController.animateTo(scrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 500), curve: Curves.decelerate);
+      });
     }
   }
-
   void sendBarrageMessage(String message) {
     ZegoExpressEngine.instance.sendBarrageMessage(roomID, message);
   }
 
-  void emojiTimer(int i, String v){
-    timer?.cancel();
-    timer = Timer(const Duration(seconds: 3), () {
-      roomStreamList[i].reaction = null;
-      timer?.cancel();
-      notifyListeners();
+  Future<void> reactEmoji(String emoji) async {
+    sendBarrageMessage(emoji);
+    final controller = SVGAAnimationController(vsync: vsync);
+    controller.videoItem = await SVGAParser.shared.decodeFromAssets(emoji);
+    roomStreamList[roomStreamList.indexWhere((e) => e.streamId == ZegoConfig.instance.userID)].reactionController = controller;
+    notifyListeners();
+    roomStreamList[roomStreamList.indexWhere((e) => e.streamId == ZegoConfig.instance.userID)].reactionController
+        ?.forward()
+        .whenComplete(() {
+          if(roomStreamList[roomStreamList.indexWhere((e) => e.streamId == ZegoConfig.instance.userID)].reactionController?.videoItem == controller.videoItem){
+            roomStreamList[roomStreamList.indexWhere((e) => e.streamId == ZegoConfig.instance.userID)].reactionController?.dispose();
+            roomStreamList[roomStreamList.indexWhere((e) => e.streamId == ZegoConfig.instance.userID)].reactionController = null;
+            notifyListeners();
+          }
+      return;
     });
   }
 
-  void reactEmoji(String id){
-    sendBarrageMessage(id);
-    roomStreamList[roomStreamList.indexWhere((e) => e.streamId == ZegoConfig.instance.userID)].reaction = id;
-    notifyListeners();
+  void addGreeting(String message, UserDataModel owner) {
+    String body = zegoBroadcastModelToJson(ZegoBroadcastModel(message: message,image: owner.data!.images!.isNotEmpty? owner.data!.images!.first:null, level:owner.data!.level,type: "message",tags: ['Owner']));
+    broadcastMessageList?.enqueue(ZegoBroadcastMessageInfo(body,0,0,ZegoUser(owner.data!.id!,owner.data!.name!)));
   }
-
 }

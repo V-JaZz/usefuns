@@ -1,8 +1,6 @@
-// To parse this JSON data, do
-//
-//     final zegoStreamExtended = zegoStreamExtendedFromJson(jsonString);
-
 import 'dart:convert';
+// ignore: depend_on_referenced_packages
+import 'package:svgaplayer_flutter/svgaplayer_flutter.dart';
 
 ZegoStreamExtended zegoStreamExtendedFromJson(String str) => ZegoStreamExtended.fromJson(json.decode(str));
 
@@ -19,9 +17,13 @@ class ZegoStreamExtended {
   int? followers;
   int? vip;
   int? seat;
-  String? reaction;
+  bool? micOn;
+  bool? chatBan;
+  bool? micPermit;
+  double? soundLevel;
+  int? points;
+  SVGAAnimationController? reactionController;
   bool? owner;
-  bool? admin;
   bool? member;
 
   ZegoStreamExtended({
@@ -35,9 +37,13 @@ class ZegoStreamExtended {
     this.followers,
     this.vip,
     this.seat,
-    this.reaction,
+    this.micOn,
+    this.chatBan,
+    this.micPermit,
+    this.soundLevel,
+    this.points,
+    this.reactionController,
     this.owner,
-    this.admin,
     this.member,
   });
 
@@ -52,9 +58,12 @@ class ZegoStreamExtended {
     followers: json["followers"],
     vip: json["vip"],
     seat: json["seat"],
-    reaction: json["reaction"],
+    micOn: json["mic_on"],
+    chatBan: json["chat_ban"],
+    micPermit: json["mic_permit"],
+    soundLevel: json["sound_level"],
+    points: json["points"],
     owner: json["owner"],
-    admin: json["admin"],
     member: json["member"],
   );
 
@@ -69,9 +78,12 @@ class ZegoStreamExtended {
     "followers": followers,
     "vip": vip,
     "seat": seat,
-    "reaction": reaction,
+    "mic_on": micOn,
+    "chat_ban": chatBan,
+    "mic_permit": micPermit,
+    "sound_level": soundLevel,
+    "points": points,
     "owner": owner,
-    "admin": admin,
     "member": member,
   };
 }

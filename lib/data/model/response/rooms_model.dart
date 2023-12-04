@@ -47,7 +47,7 @@ class Room {
   String? announcement;
   int? treasureBoxLevel;
   int? usedDaimonds;
-  List<dynamic>? members;
+  List<dynamic>? activeUsers;
   List<dynamic>? lastmembers;
   List<Member>? subscribers;
   List<dynamic>? blockedList;
@@ -55,6 +55,7 @@ class Room {
   List<dynamic>? contributorsList;
   List<Member>? groupMembers;
   List<String>? images;
+  List<String>? admin;
   int? noOfSeats;
   int? totalDiamonds;
   String? country;
@@ -75,7 +76,7 @@ class Room {
     this.announcement,
     this.treasureBoxLevel,
     this.usedDaimonds,
-    this.members,
+    this.activeUsers,
     this.lastmembers,
     this.subscribers,
     this.blockedList,
@@ -83,6 +84,7 @@ class Room {
     this.contributorsList,
     this.groupMembers,
     this.images,
+    this.admin,
     this.noOfSeats,
     this.totalDiamonds,
     this.country,
@@ -104,7 +106,7 @@ class Room {
     String? announcement,
     int? treasureBoxLevel,
     int? usedDaimonds,
-    List<dynamic>? members,
+    List<dynamic>? activeUsers,
     List<dynamic>? lastmembers,
     List<Member>? subscribers,
     List<dynamic>? blockedList,
@@ -112,6 +114,7 @@ class Room {
     List<dynamic>? contributorsList,
     List<Member>? groupMembers,
     List<String>? images,
+    List<String>? admin,
     int? noOfSeats,
     int? totalDiamonds,
     String? country,
@@ -132,7 +135,7 @@ class Room {
         announcement: announcement ?? this.announcement,
         treasureBoxLevel: treasureBoxLevel ?? this.treasureBoxLevel,
         usedDaimonds: usedDaimonds ?? this.usedDaimonds,
-        members: members ?? this.members,
+        activeUsers: activeUsers ?? this.activeUsers,
         lastmembers: lastmembers ?? this.lastmembers,
         subscribers: subscribers ?? this.subscribers,
         blockedList: blockedList ?? this.blockedList,
@@ -140,6 +143,7 @@ class Room {
         contributorsList: contributorsList ?? this.contributorsList,
         groupMembers: groupMembers ?? this.groupMembers,
         images: images ?? this.images,
+        admin: admin ?? this.admin,
         noOfSeats: noOfSeats ?? this.noOfSeats,
         totalDiamonds: totalDiamonds ?? this.totalDiamonds,
         country: country ?? this.country,
@@ -161,14 +165,15 @@ class Room {
     announcement: json["announcement"],
     treasureBoxLevel: json["treasure_box_level"],
     usedDaimonds: json["used_daimonds"],
-    members: json["members"] == null ? [] : List<dynamic>.from(json["members"]!.map((x) => x)),
+    activeUsers: json["activeUsers"] == null ? [] : List<dynamic>.from(json["activeUsers"]!.map((x) => x)),
     lastmembers: json["lastmembers"] == null ? [] : List<dynamic>.from(json["lastmembers"]!.map((x) => x)),
     subscribers: json["subscribers"] == null ? [] : List<Member>.from(json["subscribers"]!.map((x) => Member.fromJson(x))),
     blockedList: json["blockedList"] == null ? [] : List<dynamic>.from(json["blockedList"]!.map((x) => x)),
     kickHistory: json["kickHistory"] == null ? [] : List<dynamic>.from(json["kickHistory"]!.map((x) => x)),
     contributorsList: json["contributorsList"] == null ? [] : List<dynamic>.from(json["contributorsList"]!.map((x) => x)),
-    groupMembers: json["groupMembers"] == null ? [] : List<Member>.from(json["groupMembers"]!.map((x) => Member.fromJson(x))),
+    groupMembers: json["groupMembers"] == null ? [] : List<Member>.from(json["groupMembers"]!.map((x) => x is! String? Member.fromJson(x):Member(id: x))),
     images: json["images"] == null ? [] : List<String>.from(json["images"]!.map((x) => x)),
+    admin: json["admin"] == null ? [] : List<String>.from(json["admin"]!.map((x) => x)),
     noOfSeats: json["no_of_seats"],
     totalDiamonds: json["totalDiamonds"],
     country: json["Country"],
@@ -190,7 +195,7 @@ class Room {
     "announcement": announcement,
     "treasure_box_level": treasureBoxLevel,
     "used_daimonds": usedDaimonds,
-    "members": members == null ? [] : List<dynamic>.from(members!.map((x) => x)),
+    "activeUsers": activeUsers == null ? [] : List<dynamic>.from(activeUsers!.map((x) => x)),
     "lastmembers": lastmembers == null ? [] : List<dynamic>.from(lastmembers!.map((x) => x)),
     "subscribers": subscribers == null ? [] : List<dynamic>.from(subscribers!.map((x) => x.toJson())),
     "blockedList": blockedList == null ? [] : List<dynamic>.from(blockedList!.map((x) => x)),
@@ -198,6 +203,7 @@ class Room {
     "contributorsList": contributorsList == null ? [] : List<dynamic>.from(contributorsList!.map((x) => x)),
     "groupMembers": groupMembers == null ? [] : List<dynamic>.from(groupMembers!.map((x) => x.toJson())),
     "images": images == null ? [] : List<dynamic>.from(images!.map((x) => x)),
+    "admin": admin == null ? [] : List<dynamic>.from(admin!.map((x) => x)),
     "no_of_seats": noOfSeats,
     "totalDiamonds": totalDiamonds,
     "Country": country,
