@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/provider/shop_wallet_provider.dart';
+import 'package:live_app/screens/dashboard/me/mine/mine.dart';
 import 'package:provider/provider.dart';
 import 'package:vertical_tabs_flutter/vertical_tabs.dart';
 import '../../../../provider/user_data_provider.dart';
@@ -30,13 +31,22 @@ class _ShopState extends State<Shop> {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
     double b = a * 0.97;
+
+    final shopWalletProvider = Provider.of<ShopWalletProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 75,
-        backgroundColor: const Color(0xff9E26BC).withOpacity(0.2),
-        automaticallyImplyLeading: true,
+        backgroundColor: Theme.of(context).primaryColor,
+        leading: IconButton(
+            onPressed: () {
+              Get.back();
+            },
+            icon:
+                const Icon(Icons.arrow_back_ios_rounded, color: Colors.white)),
         title: const Text(
           'SHOP',
+          style: TextStyle(color: Colors.white, fontSize: 18),
         ),
         actions: [
           Row(
@@ -61,82 +71,83 @@ class _ShopState extends State<Shop> {
               SizedBox(width: 12 * a),
             ],
           ),
-          InkWell(
+          GestureDetector(
             onTap: () {
-              Get.back();
+              Get.off(() => const Mine(), transition: Transition.noTransition);
             },
             child: Container(
               margin: const EdgeInsets.only(right: 30),
               padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 6),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(3 * a),
-                color: Colors.pink,
+                color: Colors.white,
               ),
-              child: const Text(
-                'MY SHOP',
-                style: TextStyle(color: Colors.white),
+              child: Text(
+                'MINE',
+                style: TextStyle(color: Theme.of(context).primaryColor),
               ),
             ),
           ),
         ],
       ),
-      body: Provider.of<ShopWalletProvider>(context).isShopLoaded
+      body: shopWalletProvider.loadingShopProgress == null
           ? VerticalTabs(
-              tabsWidth: 120 * a,
-              initialIndex: widget.index ?? 0,
-              indicatorColor: Theme.of(context).primaryColor,
-              selectedTabBackgroundColor:
-                  Theme.of(context).primaryColor.withOpacity(0.1),
-              tabs: const <Tab>[
-                Tab(
-                  text: 'Frame',
-                ),
-                Tab(
-                  text: 'Bubble',
-                ),
-                Tab(
-                  text: 'Theme',
-                ),
-                Tab(
-                  text: 'Vehicle',
-                ),
-                Tab(
-                  text: 'Relation',
-                ),
-                Tab(
-                  text: 'Special ID',
-                ),
-                Tab(
-                  text: 'Room Accessories',
-                ),
-              ],
-              contents: const [
-                ShopCommonView(item: 'frame'),
-                ShopCommonView(item: 'chatBubble'),
-                ShopTheme(),
-                ShopCommonView(item: 'vehicle'),
-                ShopCommonView(item: 'relationship'),
-                ShopSpecialId(),
-                ShopRoomAccessories()
-              ],
-            )
+        tabsWidth: 120 * a,
+        initialIndex: widget.index ?? 0,
+        indicatorColor: Theme.of(context).primaryColor,
+        selectedTabBackgroundColor:
+        Theme.of(context).primaryColor.withOpacity(0.1),
+        tabs: const <Tab>[
+          Tab(
+            text: 'Frame',
+          ),
+          Tab(
+            text: 'Bubble',
+          ),
+          Tab(
+            text: 'Theme',
+          ),
+          Tab(
+            text: 'Vehicle',
+          ),
+          Tab(
+            text: 'Relation',
+          ),
+          Tab(
+            text: 'Special ID',
+          ),
+          Tab(
+            text: 'Room Accessories',
+          ),
+        ],
+        contents: const [
+          ShopCommonView(type: 'frame'),
+          ShopCommonView(type: 'chatBubble'),
+          ShopTheme(),
+          ShopCommonView(type: 'vehicle'),
+          ShopCommonView(type: 'relationship'),
+          ShopSpecialId(),
+          ShopRoomAccessories()
+        ],
+      )
           : Center(
-              child: Stack(
-              children: [
-                Center(
-                  child: SizedBox(
-                    height: 50,
-                    width: 50,
-                    child: CircularProgressIndicator(
-                      value: Provider.of<ShopWalletProvider>(context).loadingShopProgress,
-                    ),
+          child: Stack(
+            children: [
+              Center(
+                child: SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: CircularProgressIndicator(
+                    value: Provider.of<ShopWalletProvider>(context)
+                        .loadingShopProgress,
                   ),
                 ),
-                Center(
-                    child: Text(
-                        '${(Provider.of<ShopWalletProvider>(context).loadingShopProgress * 100).toInt()}%'))
-              ],
-            )),
+              ),
+              Center(
+                  child: Text(
+                      '${(Provider.of<ShopWalletProvider>(context).loadingShopProgress! * 100).toInt()}%'))
+            ],
+          )),
     );
   }
 }

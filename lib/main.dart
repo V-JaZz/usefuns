@@ -7,6 +7,7 @@ import 'package:live_app/provider/club_provider.dart';
 import 'package:live_app/provider/gifts_provider.dart';
 import 'package:live_app/provider/moments_provider.dart';
 import 'package:live_app/provider/rooms_provider.dart';
+import 'package:live_app/provider/seller_agency_provider.dart';
 import 'package:live_app/provider/shop_wallet_provider.dart';
 import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/provider/zego_room_provider.dart';
@@ -43,7 +44,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => ClubProvider()),
         ChangeNotifierProvider(create: (context) => ShopWalletProvider()),
         ChangeNotifierProvider(create: (context) => GiftsProvider()),
+        ChangeNotifierProvider(create: (context) => SellerAgencyProvider()),
       ],
+
       child: GetMaterialApp(
         title: 'Usefuns',
         debugShowCheckedModeBanner: false,

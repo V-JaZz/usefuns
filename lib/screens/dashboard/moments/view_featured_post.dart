@@ -175,7 +175,7 @@ class _ViewFeaturedPostState extends State<ViewFeaturedPost> {
                             },
                           ),
                           SizedBox(width: 15 * a),
-                          if(value.allMoments?.data?[widget.index].isCommentRestricted == false)Row(
+                          if(value.allMoments?.data?[widget.index].userDetails!.first.isCommentRestricted == false)Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               const Icon(Icons.mode_comment_outlined,color: Colors.grey),
@@ -197,7 +197,7 @@ class _ViewFeaturedPostState extends State<ViewFeaturedPost> {
                       ),
                     ),
                     const Divider(),
-                    if(value.allMoments?.data?[widget.index].isCommentRestricted == false)Text(
+                    if(value.allMoments?.data?[widget.index].userDetails!.first.isCommentRestricted == false)Text(
                       '${value.allMoments?.data?[widget.index].comments?.length} Comments',
                       style: SafeGoogleFont(
                         'Poppins',
@@ -208,7 +208,7 @@ class _ViewFeaturedPostState extends State<ViewFeaturedPost> {
                         color: const Color(0xff000000),
                       ),
                     ),
-                    if(value.allMoments?.data?[widget.index].isCommentRestricted == false)Column(
+                    if(value.allMoments?.data?[widget.index].userDetails!.first.isCommentRestricted == false)Column(
                       children: List.generate(value.allMoments?.data?[widget.index].comments?.length??0, (index) {
                         return ListTile(
                           leading: (value.allMoments?.data?[widget.index].comments?[index].userId?[0].images?.toString()??'[]') == '[]'
@@ -239,7 +239,7 @@ class _ViewFeaturedPostState extends State<ViewFeaturedPost> {
               ],
             ),
           ),
-          bottomSheet: value.allMoments?.data?[widget.index].isCommentRestricted == false
+          bottomSheet: value.allMoments?.data?[widget.index].userDetails!.first.isCommentRestricted == false
               ?Container(
             width: Get.width,
             color: const Color(0xFFD9D9D9),

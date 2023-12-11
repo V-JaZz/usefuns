@@ -437,7 +437,7 @@ class _TreasuresState extends State<Treasures> {
                         height: 6.523255825042725 * a,
                         decoration: const BoxDecoration(
                           image: DecorationImage(
-                              image: AssetImage('assets/diamond.png'),
+                              image: AssetImage('assets/icons/ic_diamond.png'),
                               fit: BoxFit.fitWidth),
                         )),
                     Text(
@@ -495,7 +495,7 @@ class _TreasuresState extends State<Treasures> {
                         height: 6.523255825042725 * a,
                         decoration: const BoxDecoration(
                           image: DecorationImage(
-                              image: AssetImage('assets/diamond.png'),
+                              image: AssetImage('assets/icons/ic_diamond.png'),
                               fit: BoxFit.fitWidth),
                         )),
                     Text(
@@ -538,7 +538,7 @@ class _TreasuresState extends State<Treasures> {
                     height: 6.523255825042725 * a,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
-                          image: AssetImage('assets/diamond.png'),
+                          image: AssetImage('assets/icons/ic_diamond.png'),
                           fit: BoxFit.fitWidth),
                     )),
                 Text(
@@ -568,7 +568,7 @@ class _TreasuresState extends State<Treasures> {
                   height: 6.523255825042725 * a,
                   decoration: const BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage('assets/diamond.png'),
+                        image: AssetImage('assets/icons/ic_diamond.png'),
                         fit: BoxFit.fitWidth),
                   )),
               Text(
@@ -599,7 +599,7 @@ class _TreasuresState extends State<Treasures> {
                     height: 6.523255825042725 * a,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
-                          image: AssetImage('assets/diamond.png'),
+                          image: AssetImage('assets/icons/ic_diamond.png'),
                           fit: BoxFit.fitWidth),
                     )),
                 Text(

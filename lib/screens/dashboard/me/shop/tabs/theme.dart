@@ -85,12 +85,16 @@ class ShopTheme extends StatelessWidget {
             children: [
                 Text(
                     item.name.toString(),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
-                      'assets/diamond.png',
+                      'assets/icons/ic_diamond.png',
+                height: 12*a,
+                fit: BoxFit.fitHeight,
                     ),
                     Text(
                       '${item.price}/${item.day} Days',

@@ -46,6 +46,7 @@ dependencies:
   vertical_tabs_flutter: ^1.0.0
   pull_to_refresh: ^2.0.0
   collection: ^1.17.1
+  url_launcher: ^6.1.14
 
 dependency_overrides:
   svgaplayer_flutter:

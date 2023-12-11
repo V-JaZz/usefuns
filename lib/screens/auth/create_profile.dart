@@ -513,7 +513,9 @@ class _CreateProfileState extends State<CreateProfile> {
                       const SizedBox(height: 32),
                       TextButton(
                         onPressed: () async {
-                          if(name!='' && name!=null && selectedDate !=null && gender!='' && gender!=null){
+                          if((croppedImagePaths??imagePaths)== null){
+                            showCustomSnackBar('Profile Picture is Required!', Get.context!);
+                          }else if(name!='' && name!=null && selectedDate !=null && gender!='' && gender!=null){
                             RegisterModel model = await value.register(name: name!, dob: DateFormat('MM-dd-yyyy').format(selectedDate!), gender: gender!,image: croppedImagePaths??imagePaths,language: selectedLanguage);
                             if (model.status == 1) {
                           Get.offAll(() => const BottomNavigator());
@@ -560,8 +562,6 @@ class _CreateProfileState extends State<CreateProfile> {
       ),
     );
   }
-
-  
 
   languageDialog() {
     return StatefulBuilder(

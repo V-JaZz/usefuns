@@ -72,7 +72,9 @@ class _SvipState extends State<Svip> {
                             padding: EdgeInsets.only(left: 65 * a),
                             child: Row(
                               children: [
-                                Image.asset('assets/diamond.png'),
+                                Image.asset('assets/icons/ic_diamond.png',
+                height: 12*a,
+                fit: BoxFit.fitHeight,),
                                 SizedBox(
                                   width: 5 * a,
                                 ),
@@ -95,7 +97,9 @@ class _SvipState extends State<Svip> {
                             padding: EdgeInsets.only(right: 100 * a),
                             child: Row(
                               children: [
-                                Image.asset('assets/diamond.png'),
+                                Image.asset('assets/icons/ic_diamond.png',
+                height: 12*a,
+                fit: BoxFit.fitHeight,),
                                 SizedBox(
                                   width: 5 * a,
                                 ),
@@ -259,7 +263,9 @@ class _SvipState extends State<Svip> {
                           SizedBox(
                             width: 10 * a,
                           ),
-                          Image.asset('assets/diamond.png'),
+                          Image.asset('assets/icons/ic_diamond.png',
+                height: 12*a,
+                fit: BoxFit.fitHeight,),
                           SizedBox(
                             width: 10 * a,
                           ),

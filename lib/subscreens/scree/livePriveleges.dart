@@ -5,16 +5,16 @@ import 'package:live_app/screens/dashboard/me/me.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 
-class LivePrivleges extends StatefulWidget {
+class LivePrivileges extends StatefulWidget {
   final double trackHeight;
 
-  const LivePrivleges({super.key, this.trackHeight = 60});
+  const LivePrivileges({super.key, this.trackHeight = 60});
 
   @override
-  State<LivePrivleges> createState() => _LivePrivlegesState();
+  State<LivePrivileges> createState() => _LivePrivilegesState();
 }
 
-class _LivePrivlegesState extends State<LivePrivleges> {
+class _LivePrivilegesState extends State<LivePrivileges> {
   final _volume = 0;
   @override
   Widget build(BuildContext context) {
@@ -41,125 +41,101 @@ class _LivePrivlegesState extends State<LivePrivleges> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              height: 190 * a,
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color: Color(0xffF88600),
-              ),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 30 * a,
-                  ),
-                  Image.asset('assets/bot.png'),
-                  SizedBox(
-                    height: 12 * a,
-                  ),
-                  Text(
-                    'You need 50 EXP to upgrade to next Level',
-                    textAlign: TextAlign.left,
-                    style: SafeGoogleFont(
-                        color: const Color.fromRGBO(255, 255, 255, 1),
-                        'Poppins',
-                        fontSize: 12 * a,
-                        letterSpacing:
-                            0 /*percentages not used in flutter. defaulting to zero*/,
-                        fontWeight: FontWeight.normal,
-                        height: 1 * b / a),
-                  ),
-                  SizedBox(
-                    height: 15 * a,
-                  ),
-
-                  Consumer<UserDataProvider>(
-                    builder: (context, value, child) => SizedBox(
-                      width: 270 * a,
-                      child: SliderTheme(
-                          data: SliderTheme.of(context).copyWith(
-                            trackHeight: 10,
-                            overlayShape: SliderComponentShape.noOverlay,
-                            thumbShape: SliderComponentShape.noThumb,
-                          ),
-                          child: Slider(
-                            min: 0,
-                            max: 10,
-                            value: value.userData?.data?.exp?.toDouble()??0,
-                            onChanged: (double value) {},
-                            inactiveColor: Colors.white,
-                            activeColor: const Color(0xff884EFF),
-                          )),
+            Consumer<UserDataProvider>(
+              builder: (context, value, child) => Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 18*a,vertical: 27*a),
+                decoration: const BoxDecoration(
+                  color: Color(0xffF88600),
+                ),
+                child: Column(
+                  children: [
+                    Image.asset('assets/bot.png'),
+                    SizedBox(
+                      height: 12 * a,
                     ),
-                  ),
-                  SizedBox(
-                    height: 5 * a,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 40 * a),
-                        child: Text(
-                          '0(Lv.0)',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              color: const Color.fromRGBO(255, 255, 255, 1),
-                              fontFamily: 'Poppins',
-                              fontSize: 12 * a,
-                              letterSpacing:
-                                  0 /*percentages not used in flutter. defaulting to zero*/,
-                              fontWeight: FontWeight.normal,
-                              height: 1 * b / a),
+                    Text(
+                      'You need ${(((value.userData?.data?.exp??0) + 999) ~/ 1000) * 1000 - (value.userData?.data?.exp??0)} EXP to upgrade to next Level',
+                      textAlign: TextAlign.left,
+                      style: SafeGoogleFont(
+                          color: const Color.fromRGBO(255, 255, 255, 1),
+                          'Poppins',
+                          fontSize: 12 * a,
+                          letterSpacing:
+                              0 /*percentages not used in flutter. defaulting to zero*/,
+                          fontWeight: FontWeight.normal,
+                          height: 1 * b / a),
+                    ),
+                    SizedBox(
+                      height: 15 * a,
+                    ),
+                    SliderTheme(
+                        data: SliderTheme.of(context).copyWith(
+                          trackHeight: 10,
+                          overlayShape: SliderComponentShape.noOverlay,
+                          thumbShape: SliderComponentShape.noThumb,
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(right: 40 * a),
-                        child: Text(
-                          '50(Lv.1)',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              color: const Color.fromRGBO(255, 255, 255, 1),
-                              fontFamily: 'Poppins',
-                              fontSize: 12 * a,
-                              letterSpacing:
-                                  0 /*percentages not used in flutter. defaulting to zero*/,
-                              fontWeight: FontWeight.normal,
-                              height: 1 * b / a),
+                        child: Slider(
+                          min: 0,
+                          max: 1,
+                          value: ((value.userData?.data?.exp??0) % 1000) / 1000,
+                          onChanged: (double value) {},
+                          inactiveColor: Colors.white,
+                          activeColor: const Color(0xff884EFF),
+                        )),
+                    SizedBox(
+                      height: 5 * a,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 40 * a),
+                          child: Text(
+                            '${value.userData?.data?.exp} (Lv.${value.userData?.data?.level})',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                color: const Color.fromRGBO(255, 255, 255, 1),
+                                fontFamily: 'Poppins',
+                                fontSize: 12 * a,
+                                letterSpacing:
+                                    0 /*percentages not used in flutter. defaulting to zero*/,
+                                fontWeight: FontWeight.normal,
+                                height: 1 * b / a),
+                          ),
                         ),
-                      )
-                    ],
-                  )
-
-                  // SliderTheme(
-                  //   data: SliderTheme.of(context).copyWith(
-                  //     trackHeight: widget.trackHeight,
-                  //     overlayShape: SliderComponentShape.noOverlay,
-                  //     thumbShape: SliderComponentShape.noThumb,
-                  //     trackShape: RoundedRectSliderTrackShape(),
-                  //   ),
-                  //   child: Slider(
-                  //     min: 0,
-                  //     max: 100,
-                  //     value: 0,
-                  //     onChanged: (value) =>
-                  //         setState(() => _volume = value as int),
-                  //     inactiveColor: Colors.blue,
-                  //   ),
-                  // ),
-                ],
+                        Padding(
+                          padding: EdgeInsets.only(right: 40 * a),
+                          child: Text(
+                            '${(value.userData?.data?.level??0)+1}000 (Lv.${(value.userData?.data?.level??0)+1})',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                color: const Color.fromRGBO(255, 255, 255, 1),
+                                fontFamily: 'Poppins',
+                                fontSize: 12 * a,
+                                letterSpacing:
+                                    0 /*percentages not used in flutter. defaulting to zero*/,
+                                fontWeight: FontWeight.normal,
+                                height: 1 * b / a),
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
             Padding(
               padding:
-                  EdgeInsets.only(left: 20 * a, right: 20 * a, top: 40 * a),
+                  EdgeInsets.only(left: 15 * a, right: 15 * a, top: 21 * a),
               child: Align(
                 alignment: Alignment.bottomLeft,
                 child: Text(
                   'How to level Up',
                   style: SafeGoogleFont(
-                      color: const Color.fromRGBO(0, 0, 0, 1),
+                      color: Colors.black.withOpacity(0.8),
                       'Poppins',
-                      fontSize: 12 * a,
+                      fontSize: 14 * a,
                       letterSpacing:
                           0 /*percentages not used in flutter. defaulting to zero*/,
                       fontWeight: FontWeight.w500,
@@ -167,71 +143,100 @@ class _LivePrivlegesState extends State<LivePrivleges> {
                 ),
               ),
             ),
-            Padding(
-              padding:
-                  EdgeInsets.only(left: 45 * a, right: 45 * a, top: 29 * a),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      Image.asset('assets/home.png'),
-                      Text(
-                        'Send Gift',
-                        style: SafeGoogleFont(
-                            color: const Color.fromRGBO(0, 0, 0, 1),
-                            'Poppins',
-                            fontSize: 12,
-                            letterSpacing:
-                                0 /*percentages not used in flutter. defaulting to zero*/,
-                            fontWeight: FontWeight.w500,
-                            height: 1 * b / a),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Image.asset('assets/g2.png'),
-                      Text(
-                        'Shopping in\n      Store',
-                        style: SafeGoogleFont(
-                            color: const Color.fromRGBO(0, 0, 0, 1),
-                            'Poppins',
-                            fontSize: 12,
-                            letterSpacing:
-                                0 /*percentages not used in flutter. defaulting to zero*/,
-                            fontWeight: FontWeight.w500,
-                            height: 1 * b / a),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Image.asset('assets/g3.png'),
-                      Text(
-                        'Add More',
-                        style: SafeGoogleFont(
-                            color: const Color.fromRGBO(0, 0, 0, 1),
-                            'Poppins',
-                            fontSize: 12,
-                            letterSpacing:
-                                0 /*percentages not used in flutter. defaulting to zero*/,
-                            fontWeight: FontWeight.w500,
-                            height: 1 * b / a),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+            SizedBox(
+              height: 21 * a,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    Image.asset(
+                      'assets/home.png',
+                      height: 27*a,
+                      width: 27*a,
+                      fit: BoxFit.contain,
+                    ),
+                    SizedBox(
+                      height: 5 * a,
+                    ),
+                    Text(
+                      'Send Gift',
+                      style: SafeGoogleFont(
+                          color: Colors.black.withOpacity(0.8),
+                          'Poppins',
+                          fontSize: 12,
+                          letterSpacing:
+                              0 /*percentages not used in flutter. defaulting to zero*/,
+                          fontWeight: FontWeight.w500,
+                          height: 1 * b / a),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  width: 20 * a,
+                ),
+                Column(
+                  children: [
+                    Image.asset(
+                      'assets/g2.png',
+                      height: 27*a,
+                      width: 27*a,
+                      fit: BoxFit.contain,
+                    ),
+                    SizedBox(
+                      height: 5 * a,
+                    ),
+                    Text(
+                      'Shop',
+                      style: SafeGoogleFont(
+                          color: Colors.black.withOpacity(0.8),
+                          'Poppins',
+                          fontSize: 12,
+                          letterSpacing:
+                          0 /*percentages not used in flutter. defaulting to zero*/,
+                          fontWeight: FontWeight.w500,
+                          height: 1 * b / a),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  width: 20 * a,
+                ),
+                Column(
+                  children: [
+                    Image.asset(
+                      'assets/g3.png',
+                      height: 27*a,
+                      width: 27*a,
+                      fit: BoxFit.contain,
+                    ),
+                    SizedBox(
+                      height: 5 * a,
+                    ),
+                    Text(
+                      'Add More',
+                      style: SafeGoogleFont(
+                          color: Colors.black.withOpacity(0.8),
+                          'Poppins',
+                          fontSize: 12,
+                          letterSpacing:
+                          0 /*percentages not used in flutter. defaulting to zero*/,
+                          fontWeight: FontWeight.w500,
+                          height: 1 * b / a),
+                    ),
+                  ],
+                ),
+              ],
             ),
             SizedBox(
-              height: 20 * a,
+              height: 15 * a,
             ),
             Text(
-              'Every Time when You Spend Diamonds on Use funs\nYou will get EXP to level up(1 Diamonds=10 exp',
-              textAlign: TextAlign.left,
+              'Every Time when You Spend Diamonds on Usefuns\nYou will get EXP to level up (1 Diamonds = 10 exp).',
+              textAlign: TextAlign.center,
               style: SafeGoogleFont(
-                  color: const Color.fromRGBO(0, 0, 0, 1),
+                  color: Colors.black.withOpacity(0.8),
                   'Poppins',
                   fontSize: 12,
                   letterSpacing:
@@ -240,32 +245,31 @@ class _LivePrivlegesState extends State<LivePrivleges> {
                   height: 1 * b / a),
             ),
             SizedBox(
-              height: 20 * a,
+              height: 27 * a,
             ),
             Padding(
-              padding: EdgeInsets.only(left: 40 * a, right: 40 * a),
+              padding: EdgeInsets.only(left: 20 * a, right: 20 * a),
               child: Align(
                 alignment: Alignment.bottomLeft,
                 child: Text(
                   'Privileges awards',
                   style: SafeGoogleFont(
-                    color: const Color.fromRGBO(0, 0, 0, 1),
-                    'Poppins',
-                    fontSize: 12,
-                    letterSpacing:
-                        0 /*percentages not used in flutter. defaulting to zero*/,
-                    fontWeight: FontWeight.w500,
-                    height: 1,
-                  ),
+                      color: Colors.black.withOpacity(0.8),
+                      'Poppins',
+                      fontSize: 14 * a,
+                      letterSpacing:
+                      0 /*percentages not used in flutter. defaulting to zero*/,
+                      fontWeight: FontWeight.w500,
+                      height: 1 * b / a),
                 ),
               ),
             ),
             SizedBox(
-              height: 10 * a,
+              height: 20 * a,
             ),
             txt('LV.1'),
             Padding(
-              padding: EdgeInsets.only(left: 40 * a, right: 40 * a),
+              padding: EdgeInsets.only(left: 30 * a, right: 30 * a),
               child: Row(
                 children: [
                   red_cont(),
@@ -276,11 +280,8 @@ class _LivePrivlegesState extends State<LivePrivleges> {
               height: 19 * a,
             ),
             txt('LV.4'),
-            SizedBox(
-              height: 19 * a,
-            ),
             Padding(
-              padding: EdgeInsets.only(left: 40 * a, right: 40 * a),
+              padding: EdgeInsets.only(left: 30 * a, right: 30 * a),
               child: Row(
                 children: [
                   cont(),
@@ -292,18 +293,19 @@ class _LivePrivlegesState extends State<LivePrivleges> {
             ),
             txt('LV.5'),
             Padding(
-              padding:
-                  EdgeInsets.only(left: 40 * a, right: 40 * a, top: 15 * a),
+              padding: EdgeInsets.only(left: 30 * a, right: 30 * a),
               child: Row(
                 children: [
                   cont(),
                 ],
               ),
             ),
+            SizedBox(
+              height: 19 * a,
+            ),
             txt('LV.10'),
             Padding(
-              padding:
-                  EdgeInsets.only(left: 40 * a, right: 40 * a, top: 15 * a),
+              padding: EdgeInsets.only(left: 30 * a, right: 30 * a),
               child: Row(
                 children: [
                   cont(),
@@ -329,14 +331,16 @@ class _LivePrivlegesState extends State<LivePrivleges> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          const Spacer(),
           Image.asset(
-            'assets/diamond.png',
+            'assets/icons/ic_diamond.png',
             height: 30 * a,
             width: 30 * a,
           ),
+          const Spacer(),
           Text(
             'Level Icon\nForever',
-            textAlign: TextAlign.left,
+            textAlign: TextAlign.center,
             style: SafeGoogleFont(
               color: const Color.fromRGBO(255, 255, 255, 1),
               'Poppins',
@@ -345,7 +349,8 @@ class _LivePrivlegesState extends State<LivePrivleges> {
               fontWeight: FontWeight.normal,
               height: 1 * b / a,
             ),
-          )
+          ),
+          const Spacer()
         ],
       ),
     );
@@ -370,14 +375,16 @@ class _LivePrivlegesState extends State<LivePrivleges> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          const Spacer(),
           Image.asset(
             'assets/agency/rectangle.png',
             height: 30 * a,
             width: 30 * a,
           ),
+          const Spacer(),
           Text(
             'Level Icon\nForever',
-            textAlign: TextAlign.left,
+            textAlign: TextAlign.center,
             style: SafeGoogleFont(
               color: const Color.fromRGBO(255, 255, 255, 1),
               'Poppins',
@@ -386,7 +393,8 @@ class _LivePrivlegesState extends State<LivePrivleges> {
               fontWeight: FontWeight.normal,
               height: 1 * b / a,
             ),
-          )
+          ),
+          const Spacer(),
         ],
       ),
     );
@@ -405,11 +413,10 @@ Column txt(txt) {
         child: Text(
           txt,
           style: SafeGoogleFont(
-            color: const Color.fromRGBO(0, 0, 0, 1),
+            color: Colors.black.withOpacity(0.8),
             'Poppins',
             fontSize: 12 * a,
-            letterSpacing:
-                0 /*percentages not used in flutter. defaulting to zero*/,
+            letterSpacing: 0,
             fontWeight: FontWeight.w500,
             height: 1,
           ),

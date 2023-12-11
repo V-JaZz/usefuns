@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-
-import '../../utils/utils_assets.dart';
+import '../../../../utils/utils_assets.dart';
 
 class SpecialIdPage extends StatefulWidget {
   const SpecialIdPage({super.key});

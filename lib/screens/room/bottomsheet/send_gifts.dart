@@ -8,7 +8,9 @@ import 'package:live_app/utils/common_widgets.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:live_app/utils/zego_config.dart';
 import 'package:provider/provider.dart';
+import '../../../data/model/body/zego_broadcast_model.dart';
 import '../../../data/model/body/zego_stream_model.dart';
+import '../../../data/model/response/gifts_model.dart';
 
 class SendGiftsBottomSheet extends StatefulWidget {
   final String? selection;
@@ -21,10 +23,11 @@ class SendGiftsBottomSheet extends StatefulWidget {
 class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
   List<String> _selectedStream = [];
   TextEditingController countController = TextEditingController() ;
-  String? selectedGiftPath ;
+  Gift? selectedGift ;
   int? selectedGiftCost ;
   String? selectedPurchaseOption;
   String? selectedPaymentOption;
+  bool animateIcon = false;
 
   @override
   void initState() {
@@ -40,30 +43,16 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
     double a = Get.width / baseWidth;
     double b = a * 0.97;
     return Consumer<GiftsProvider>(
-      builder: (context, value, _) => Container(
-        color: const Color(0xCC352D2D),
-        child: !value.loading
+      builder: (context, giftProvider, _) => Container(
+        color: Colors.black.withOpacity(0.7),
+        child: !giftProvider.loading
             ? DefaultTabController(
-          length: value.allGifts!.keys.length,
+          length: giftProvider.allGifts!.keys.length,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Row(
                 children: [
-                  SizedBox(width: 18 * a),
-                  Image.asset('assets/icons/ic_diamond.png',
-                      height: 12 * a, width: 12 * a),
-                  SizedBox(width: 6 * a),
-                  Text(
-                    Provider.of<UserDataProvider>(context).userData!.data!.diamonds.toString(),
-                    style: SafeGoogleFont(
-                      'Roboto',
-                      fontSize: 16 * b,
-                      fontWeight: FontWeight.w400,
-                      height: 1.171875 * b / a,
-                      color: const Color(0xffffffff),
-                    ),
-                  ),
                   Expanded(
                     child: Center(
                       child: TabBar(
@@ -89,46 +78,47 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                         padding: EdgeInsets.symmetric(horizontal: 8 * a),
                         labelPadding: EdgeInsets.symmetric(horizontal: 12 * a),
                         isScrollable: true,
-                        tabs: List.generate(value.allGifts!.keys.length, (index) =>
+                        tabs: List.generate(giftProvider.allGifts!.keys.length, (index) =>
                             Tab(
-                              text: value.allGifts!.keys.elementAt(index),
+                              text: giftProvider.allGifts!.keys.elementAt(index),
                             ),)
                       ),
                     ),
                   ),
+                  Image.asset('assets/icons/ic_diamond.png',
+                      height: 12 * a, width: 12 * a),
+                  SizedBox(width: 6 * a),
+                  Text(
+                    Provider.of<UserDataProvider>(context).userData!.data!.diamonds.toString(),
+                    style: SafeGoogleFont(
+                      'Roboto',
+                      fontSize: 16 * b,
+                      fontWeight: FontWeight.w400,
+                      height: 1.171875 * b / a,
+                      color: const Color(0xffffffff),
+                    ),
+                  ),
+                  SizedBox(width: 18 * a)
                 ],
               ),
-              // InkWell(
-              //   onTap: () {
-              //     Get.to(() => const LivePrivleges());
-              //   },
-              //   child: Container(
-              //     height: 20 * a,
-              //     width: 70 * a,
-              //     decoration: BoxDecoration(
-              //         borderRadius: BorderRadius.circular(13 * a),
-              //         color: Colors.orange),
-              //     child: const Center(
-              //         child: Text(
-              //       'Privileges',
-              //       style: TextStyle(fontSize: 10),
-              //     )),
-              //   ),
-              // ),
-              SizedBox(
-                height: 290 * a,
-                width: double.infinity,
+
+              Expanded(
                 child: TabBarView(
-                    children: List.generate(value.allGifts!.keys.length, (index) =>
+                    children: List.generate(giftProvider.allGifts!.keys.length, (index) =>
                         Container(
                           padding:
                           EdgeInsets.symmetric(horizontal: 18 * a, vertical: 8 * a),
-                          child: Wrap(
+                          child: GridView(
+                            shrinkWrap: true,
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                              childAspectRatio: 1
+                            ),
                             children:
-                                List.generate(value.allGifts![value.allGifts!.keys.elementAt(index)]!.length, (i) {
-                                  final gift = value.allGifts![value.allGifts!.keys.elementAt(index)]![i];
+                                List.generate(giftProvider.allGifts![giftProvider.allGifts!.keys.elementAt(index)]!.length, (i) {
+                                  final gift = giftProvider.allGifts![giftProvider.allGifts!.keys.elementAt(index)]![i];
                                   return iconTextRow(gift.name??'',
-                                      gift.images!.first??'',
+                                      gift,
                                       '${gift.coin??0}');
                                 }
                                 )
@@ -138,7 +128,7 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                 ),
               ),
               Consumer<ZegoRoomProvider>(
-                builder: (context, value, child) => Padding(
+                builder: (context, zegoRoomProvider, child) => Padding(
                   padding:
                       EdgeInsets.only(left: 36 * a, right: 36 * a, bottom: 10 * a),
                   child: Row(
@@ -213,16 +203,21 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                                 final user = Provider.of<UserDataProvider>(context,listen: false).userData;
                                 if(_selectedStream.isEmpty){
                                   showCustomSnackBar("no user selected!", context,isToaster: true);
-                                }else if (selectedGiftPath == null){
+                                }else if (selectedGift == null){
                                   showCustomSnackBar("no gift selected!", context,isToaster: true);
-                                  //TODO: uncomment below (just done for testing)
-                                // }else if((user?.data?.diamonds??0) < (selectedGiftCost??0)){
-                                //   showInsufficientDialog();
+                                }else if((user?.data?.diamonds??0) < (selectedGiftCost??0)){
+                                  showInsufficientDialog();
                                 }else if (countController.text.trim() == '' || countController.text.trim() == '0' || int.tryParse(countController.text.trim()) == null){
                                   showCustomSnackBar("Invalid count selected!", context,isToaster: true);
                                 }else{
                                   Get.back();
-                                  value.sendBroadcastGift(_selectedStream, selectedGiftPath!, int.parse(countController.text.trim()));
+                                  giftProvider.sendGift(user!.data!.id!, zegoRoomProvider.roomUsersList.where((e) => _selectedStream.contains(e.userName)).map((e) => e.userID).toList(), selectedGift!.id!);
+                                  zegoRoomProvider.sendBroadcastGift(
+                                      _selectedStream,
+                                      selectedGift!.images![1],
+                                      selectedGift!.images![0],
+                                      int.parse(countController.text.trim())
+                                  );
                                 }
                               },
                               child: Container(
@@ -263,39 +258,54 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
     );
   }
 
-  iconTextRow(String t, String p, String d) {
+  iconTextRow(String t, Gift p, String d) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
     double b = a * 0.97;
+    const duration = Duration(milliseconds: 300);
+
     return InkWell(
       onTap: (){
         setState(() {
-          selectedGiftPath = p;
+          animateIcon = true;
+          selectedGift = p;
           selectedGiftCost = int.parse(d);
         });
+        Future.delayed(duration,() => setState((){animateIcon = false;}));
       },
       child: Container(
-        color: selectedGiftPath == p ? Colors.black54:null,
-        padding: EdgeInsets.symmetric(vertical: 10 * a, horizontal: 3 * a),
+        decoration: BoxDecoration(
+          border: Border.all(color: selectedGift == p ? const Color(0xff1877f2): Colors.transparent,width: 2),
+          borderRadius: BorderRadius.circular(3 * a)
+        ),
+        padding: EdgeInsets.symmetric(vertical: 4 * a, horizontal: 2 * a),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.network(p, height: 30 * a, width: 30 * a),
+            AnimatedContainer(
+              duration: duration,
+              curve: Curves.bounceInOut,
+              height: 54 * a,
+              width: double.infinity,
+              padding: EdgeInsets.all(selectedGift == p && animateIcon ? 6 : 0),
+              child: Image.network(
+                p.images![1],
+                fit: BoxFit.contain,
+              ),
+            ),
             SizedBox(height: 3 * a),
-            SizedBox(
-              width: 99 * a,
-              child: Text(
-                t,
-                maxLines: 2,
-                textAlign: TextAlign.center,
-                style: SafeGoogleFont(
-                  'Roboto',
-                  fontSize: 16 * b,
-                  fontWeight: FontWeight.w400,
-                  height: 1.1725 * b / a,
-                  color: const Color(0xffffffff),
-                ),
+            Text(
+              t,
+              maxLines: 1,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: SafeGoogleFont(
+                'Roboto',
+                fontSize: 14 * b,
+                fontWeight: FontWeight.w400,
+                height: 1.1725 * b / a,
+                color: const Color(0xffffffff),
               ),
             ),
             Row(
@@ -306,14 +316,13 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                 SizedBox(width: 3 * a),
                 Text(
                   d,
-                  maxLines: 2,
                   textAlign: TextAlign.center,
                   style: SafeGoogleFont(
                     'Roboto',
-                    fontSize: 16 * b,
+                    fontSize: 13 * b,
                     fontWeight: FontWeight.w400,
                     height: 1.1725 * b / a,
-                    color: const Color(0xffffffff),
+                    color: Colors.white70,
                   ),
                 ),
               ],
@@ -388,7 +397,7 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Image.asset(
-                                      'assets/diamond.png',
+                                      'assets/icons/ic_diamond.png',
                                     height: 12,
                                     width: 12
                                   ),
@@ -433,7 +442,7 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                         const Text('  Beans'),
                         const Spacer(),
                         Image.asset(
-                            'assets/diamond.png',
+                            'assets/icons/ic_diamond.png',
                             height: 12,
                             width: 12
                         ),
@@ -465,7 +474,7 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                         const Text('  Geogle Wallet'),
                         const Spacer(),
                         Image.asset(
-                            'assets/diamond.png',
+                            'assets/icons/ic_diamond.png',
                             height: 12,
                             width: 12
                         ),
@@ -494,7 +503,7 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                         const Text('  Other Wallet'),
                         const Spacer(),
                         Image.asset(
-                            'assets/diamond.png',
+                            'assets/icons/ic_diamond.png',
                             height: 12,
                             width: 12
                         ),
@@ -567,7 +576,7 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Image.asset(
-                            'assets/diamond.png',
+                            'assets/icons/ic_diamond.png',
                             height: 14,
                             width: 14
                         ),

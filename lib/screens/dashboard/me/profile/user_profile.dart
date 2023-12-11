@@ -73,27 +73,47 @@ class _UserProfileState extends State<UserProfile> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        width: 70 * a,
-                        height: 70 * a,
-                        margin: EdgeInsets.only(top:9*a,bottom: 18*a),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.white,width: 3*a),
-                            shape: BoxShape.circle
-                          // image: DecorationImage(
-                          //   fit: BoxFit.cover,
-                          //   image:
-                          //   AssetImage('assets/decoration/recharge_agent.png'),
-                          // ),
+                      SizedBox(
+                        width: 80 * a,
+                        height: 80 * a,
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              top: 12,
+                              right: 10,
+                              left: 10,
+                              bottom: 8,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image:user.images!.isEmpty
+                                        ?const DecorationImage(
+                                        image: AssetImage('assets/profile.png')
+                                    )
+                                        :DecorationImage(
+                                        image: NetworkImage(
+                                            user.images
+                                                ?.first ??
+                                                '')
+                                    )
+                                ),
+                              ),
+                            ),
+                            if(user.frame != null && user.frame!.isNotEmpty)
+                              Container(
+                                  margin: EdgeInsets.fromLTRB(
+                                      0 * a, 0 * a, 0 * a, 0 * a),
+                                  width: 80 * a,
+                                  height: 80 * a,
+                                  child: Image.network(
+                                    user.frame!.first.images!.first,
+                                    fit: BoxFit.contain,
+                                  )
+                              ),
+                          ],
                         ),
-                        child: user.images!.isEmpty
-                            ? CircleAvatar(
-                            foregroundImage: const AssetImage('assets/profile.png'),
-                            radius: 30 * a)
-                            :CircleAvatar(
-                            foregroundImage: NetworkImage(user.images?.first??''),
-                            radius: 30 * a),
                       ),
+                      SizedBox(height: 9*a),
                       Row(
                         children: [
                           Text(
@@ -131,20 +151,24 @@ class _UserProfileState extends State<UserProfile> {
                             fontWeight: FontWeight.w300,
                             height: 1 * a),
                       ),
-                      if(user.badges!.isNotEmpty)SizedBox(height: 6*a),
-                      Row(
-                          children:
-                          List.generate(user.badges?.length??0, (index) =>
-                              SizedBox(
-                                  width: 70 * a,
-                                  height: 80 * a,
-                                  child: Image.network(user.badges![index]!)),
-                          )
-                      ),
-                      SizedBox(height: 6*a),
+                      SizedBox(height: 12*a),
                       Row(
                         children: [
-                          userLevelTag(user.level??0,15 * a,viewZero: true),
+                          Row(
+                              children:
+                              List.generate(user.tags?.length??0, (index) =>
+                              user.tags![index] != null
+                                  ?Padding(
+                                    padding: EdgeInsets.only(right: 9*a),
+                                    child: Image.network(
+                                      user.tags?[index]?.images?.first??'',
+                                      fit: BoxFit.fitHeight,
+                                      height: 17 * a,
+                                    ),
+                                  ): const SizedBox.shrink(),
+                              )
+                          ),
+                          userLevelTag(user.level??0,14 * a,viewZero: true),
                           SizedBox(width: 9*a),
                           Container(
                             decoration: BoxDecoration(
@@ -167,12 +191,12 @@ class _UserProfileState extends State<UserProfile> {
                           ),
                           SizedBox(width: 9*a),
                           SizedBox(
-                              width: 21 * a,
-                              height: 30 * a,
+                              width: 25 * a,
+                              height: 14 * a,
                               child: Image.asset("assets/flag.png")),
                         ],
                       ),
-                      SizedBox(height: 8*a),
+                      SizedBox(height: 16*a),
                       Container(
                           width: double.infinity,
                           height: 40 * a,
@@ -186,6 +210,7 @@ class _UserProfileState extends State<UserProfile> {
                                 columnPairWidget(user.views.toString()??'0','Visitors'),
                               ])
                       ),
+                      SizedBox(height: 8*a),
                     ],
                   ),
                 )

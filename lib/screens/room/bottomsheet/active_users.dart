@@ -6,9 +6,12 @@ import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
+import '../../../data/datasource/local/sharedpreferences/storage_service.dart';
 import '../../../provider/rooms_provider.dart';
 import '../../../provider/user_data_provider.dart';
+import '../../../utils/constants.dart';
 import '../../../utils/zego_config.dart';
+import '../../dashboard/me/profile/user_profile.dart';
 import '../widget/kick_room.dart';
 
 class ActiveUsersBottomSheet extends StatefulWidget {
@@ -165,14 +168,14 @@ class _ActiveUsersBottomSheetState extends State<ActiveUsersBottomSheet> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       InkWell(
-                                        onTap: () {
-                                          // showModalBottomSheet(
-                                          //     context: context,
-                                          //     builder: (BuildContext context) {
-                                          //       return Container(
-                                          //
-                                          //       );
-                                          //     });
+                                        onTap: () async {
+                                          final myId = ZegoConfig.instance.streamID;
+                                          if(user.id == myId){
+                                            Get.to(()=>const UserProfile());
+                                            return;
+                                          }
+                                          final u = await Provider.of<UserDataProvider>(context,listen: false).addVisitor(user.id!);
+                                          Get.to(()=>UserProfile(userData: u.data!));
                                         },
                                         child: Row(
                                           children: [

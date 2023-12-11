@@ -175,7 +175,7 @@ class _ViewFollowingPostState extends State<ViewFollowingPost> {
                             },
                           ),
                           SizedBox(width: 15 * a),
-                          if(value.followingMoments?.data?[widget.index].isCommentRestricted == false)Row(
+                          if(value.followingMoments?.data?[widget.index].userDetails!.first.isCommentRestricted == false)Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               const Icon(Icons.mode_comment_outlined,color: Colors.grey),
@@ -197,7 +197,7 @@ class _ViewFollowingPostState extends State<ViewFollowingPost> {
                       ),
                     ),
                     const Divider(),
-                    if(value.followingMoments?.data?[widget.index].isCommentRestricted == false)Text(
+                    if(value.followingMoments?.data?[widget.index].userDetails!.first.isCommentRestricted == false)Text(
                       '${value.followingMoments?.data?[widget.index].comments?.length} Comments',
                       style: SafeGoogleFont(
                         'Poppins',
@@ -208,7 +208,7 @@ class _ViewFollowingPostState extends State<ViewFollowingPost> {
                         color: const Color(0xff000000),
                       ),
                     ),
-                    if(value.followingMoments?.data?[widget.index].isCommentRestricted == false)Column(
+                    if(value.followingMoments?.data?[widget.index].userDetails!.first.isCommentRestricted == false)Column(
                       children: List.generate(value.followingMoments?.data?[widget.index].comments?.length??0, (index) {
                         return ListTile(
                           leading: (value.followingMoments?.data?[widget.index].comments?[index].userId?[0].images?.toString()??'[]') == '[]'
@@ -239,7 +239,7 @@ class _ViewFollowingPostState extends State<ViewFollowingPost> {
               ],
             ),
           ),
-          bottomSheet: value.followingMoments?.data?[widget.index].isCommentRestricted == false
+          bottomSheet: value.followingMoments?.data?[widget.index].userDetails!.first.isCommentRestricted == false
               ?Container(
             width: Get.width,
             color: const Color(0xFFD9D9D9),

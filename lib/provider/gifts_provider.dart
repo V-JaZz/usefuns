@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:live_app/data/model/response/gifts_model.dart';
+import 'package:live_app/provider/user_data_provider.dart';
+import 'package:provider/provider.dart';
 import '../data/datasource/local/sharedpreferences/storage_service.dart';
+import '../data/model/response/common_model.dart';
 import '../data/repository/gifts_repo.dart';
 import 'package:collection/collection.dart';
 
@@ -26,4 +30,15 @@ class GiftsProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  sendGift(String senderId, List<String> receiverIds, String giftId) async {
+    for(String receiverId in receiverIds){
+      final apiResponse = await _giftsRepo.sendGift(senderId, receiverId, giftId);
+      if (apiResponse.statusCode == 200) {
+        Provider.of<UserDataProvider>(Get.context!,listen: false).getUser(refresh: false);
+        // model = commonModelFromJson(apiResponse.body);
+      }else{
+        // model =CommonModel(status: 0,message: apiResponse.reasonPhrase);
+      }
+    }
+  }
 }

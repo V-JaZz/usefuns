@@ -38,7 +38,9 @@ class _DiamondTabViewState extends State<DiamondTabView> {
                           borderRadius: BorderRadius.circular(20),
                           color: Colors.white),
                       child: Image.asset(
-                        'assets/diamond.png',
+                        'assets/icons/ic_diamond.png',
+                height: 12,
+                fit: BoxFit.fitHeight,
                       ),
                     ),
                   ),
@@ -79,7 +81,9 @@ class _DiamondTabViewState extends State<DiamondTabView> {
         width: double.infinity,
         child: ListTile(
           leading: Image.asset(
-            'assets/diamond.png',
+            'assets/icons/ic_diamond.png',
+                height: 12,
+                fit: BoxFit.fitHeight,
           ),
           title: Text(text),
           trailing: Container(

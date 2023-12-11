@@ -138,7 +138,7 @@ class _RoomProfileBottomSheetState extends State<RoomProfileBottomSheet> {
                           width: 14 * a,
                           height: 14 * a,
                           child: Image.asset(
-                            'assets/room_icons/blue_diamond.png',
+                            'assets/icons/ic_diamond.png',
                             fit: BoxFit.cover,
                           ),
                         ),

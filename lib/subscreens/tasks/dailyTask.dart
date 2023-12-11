@@ -125,7 +125,7 @@ class _DailyTaskState extends State<DailyTask> {
                     )),
               ),
               Text('  '),
-              Image.asset('assets/diamond.png'),
+              Image.asset('assets/icons/ic_diamond.png'),
               Text(
                 '+30',
                 textAlign: TextAlign.left,
@@ -218,7 +218,7 @@ class _DailyTaskState extends State<DailyTask> {
                     )),
               ),
               Text('  '),
-              Image.asset('assets/diamond.png'),
+              Image.asset('assets/icons/ic_diamond.png'),
               Text(
                 '+50',
                 textAlign: TextAlign.left,
@@ -314,7 +314,7 @@ class _DailyTaskState extends State<DailyTask> {
                     )),
               ),
               Text('  '),
-              Image.asset('assets/diamond.png'),
+              Image.asset('assets/icons/ic_diamond.png'),
               Text(
                 '+80',
                 textAlign: TextAlign.left,
@@ -410,7 +410,7 @@ class _DailyTaskState extends State<DailyTask> {
                     )),
               ),
               Text('  '),
-              Image.asset('assets/diamond.png'),
+              Image.asset('assets/icons/ic_diamond.png'),
               Text(
                 '+20',
                 textAlign: TextAlign.left,
@@ -503,7 +503,7 @@ class _DailyTaskState extends State<DailyTask> {
                     )),
               ),
               Text('  '),
-              Image.asset('assets/diamond.png'),
+              Image.asset('assets/icons/ic_diamond.png'),
               Text(
                 '+250',
                 textAlign: TextAlign.left,
@@ -596,7 +596,7 @@ class _DailyTaskState extends State<DailyTask> {
                     )),
               ),
               Text('  '),
-              Image.asset('assets/diamond.png'),
+              Image.asset('assets/icons/ic_diamond.png'),
               Text(
                 '+80',
                 textAlign: TextAlign.left,

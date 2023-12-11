@@ -12,6 +12,7 @@ class ZegoStreamExtended {
   String? userName;
   String? gender;
   String? image;
+  String? frame;
   int? level;
   int? age;
   int? followers;
@@ -32,6 +33,7 @@ class ZegoStreamExtended {
     this.userName,
     this.gender,
     this.image,
+    this.frame,
     this.level,
     this.age,
     this.followers,
@@ -53,6 +55,7 @@ class ZegoStreamExtended {
     userName: json["user_name"],
     gender: json["gender"],
     image: json["image"],
+    frame: json["frame"],
     level: json["level"],
     age: json["age"],
     followers: json["followers"],
@@ -73,6 +76,7 @@ class ZegoStreamExtended {
     "user_name": userName,
     "gender": gender,
     "image": image,
+    "frame": frame,
     "level": level,
     "age": age,
     "followers": followers,

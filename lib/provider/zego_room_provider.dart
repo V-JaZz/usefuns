@@ -38,7 +38,7 @@ class ZegoRoomProvider with ChangeNotifier {
   // zego dispose
   Future<void> destroy() async {
     Provider.of<RoomsProvider>(Get.context!,listen: false).removeRoomUser(_room!.id!);
-    logoutRoom();
+    await logoutRoom();
     destroyEngine();
     clearZegoEventCallback();
     roomUsersList = [];
@@ -49,11 +49,20 @@ class ZegoRoomProvider with ChangeNotifier {
     isOwner = false;
     _room= null;
     zegoRoom = null;
+    foregroundSvgaController?.dispose();
+    foregroundSvgaController = null;
+    backgroundImage = null;
+    foregroundImage = null;
+    await Future.delayed(const Duration(milliseconds: 10),() =>
+        notifyListeners());
   }
 
   //Variables
   bool isOwner = false;
   bool onSeat = false;
+  SVGAAnimationController? foregroundSvgaController;
+  String? backgroundImage;
+  String? foregroundImage;
   late TickerProvider vsync;
   ZegoRoomModel? zegoRoom;
   String roomID = '';
@@ -96,6 +105,7 @@ class ZegoRoomProvider with ChangeNotifier {
 
     await ZegoExpressEngine.createEngineWithProfile(profile);
   }
+
   Future<void> loginRoom() async {
     final zegoRoomConfig = ZegoRoomConfig(
         99, true, ZegoConfig.instance.token);
@@ -117,7 +127,7 @@ class ZegoRoomProvider with ChangeNotifier {
   Future<void> startPublishingStream(int seat) async {
     if(roomStreamList.firstWhereOrNull((e) => e.seat == seat) == null) {
       final user = Provider.of<UserDataProvider>(Get.context!,listen: false).userData;
-      final extraInfo = ZegoStreamExtended(vip: 0,id: user?.data?.userId ,owner: isOwner,age: AgeCalculator.calculateAge(user?.data?.dob??DateTime.now()),followers: user?.data?.followers?.length??0,gender: user?.data?.gender,level: user?.data?.level,streamId: ZegoConfig.instance.streamID,userName: ZegoConfig.instance.userName,image: user!.data!.images!.isNotEmpty ? (user.data?.images?.first??''):'',seat: seat,micOn: _isMicOn&&isMicrophonePermissionGranted);
+      final extraInfo = ZegoStreamExtended(vip: 0,id: user?.data?.userId ,owner: isOwner,age: AgeCalculator.calculateAge(user?.data?.dob??DateTime.now()),followers: user?.data?.followers?.length??0,gender: user?.data?.gender,level: user?.data?.level,streamId: ZegoConfig.instance.streamID,userName: ZegoConfig.instance.userName,image: user!.data!.images!.isNotEmpty ? (user.data?.images?.first??''):'',seat: seat,micOn: _isMicOn&&isMicrophonePermissionGranted,frame: user.data!.frame != null && user.data!.frame!.isNotEmpty?user.data?.frame?.first.images?.first:null);
       await ZegoExpressEngine.instance.setStreamExtraInfo(zegoStreamExtendedToJson(extraInfo));
       await ZegoExpressEngine.instance.startPublishingStream(ZegoConfig.instance.streamID);
       log('📤 Start publishing stream, streamID: ${ZegoConfig.instance.streamID}');
@@ -236,8 +246,8 @@ class ZegoRoomProvider with ChangeNotifier {
           showCustomSnackBar('Unbanned Chat by ${fromUser.userName}', Get.context!,isToaster: true,isError: false);
           notifyStreamExtraInfoUpdate();
         }else if(command == ZegoConfig.instance.roomKickSeatKey){
-          destroy();
           Get.offAll(const BottomNavigator(),transition: Transition.noTransition);
+          destroy();
           showCustomSnackBar('Kicked by ${fromUser.userName}', Get.context!,isToaster: true);
         }else if(command.contains(ZegoConfig.instance.roomInviteSeatKey)){
           viewInviteToSeatDailog(command.substring(20),fromUser.userName);
@@ -250,6 +260,10 @@ class ZegoRoomProvider with ChangeNotifier {
       for (var m in messageList) {
         // log('🚩  Broadcast message: ${m.message}, userName: ${m.fromUser.userName}');
         broadcastMessageList?.enqueue(m);
+        final model = zegoBroadcastModelFromJson(m.message);
+        if(model.type == 'gift'){
+          updateRoomForeground(model.gift?.giftPath??'', model.gift?.count??1);
+        }
       }
       notifyListeners();
       Future.delayed(const Duration(milliseconds: 500),(){
@@ -410,20 +424,50 @@ class ZegoRoomProvider with ChangeNotifier {
       scrollController.animateTo(scrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 500), curve: Curves.decelerate);
     });
   }
-  void sendBroadcastGift(List<String> to, String giftPath, int count) {
+  void sendBroadcastGift(List<String> to, String thumbnailPath, String giftPath, int count) {
     for (var receiver in to) {
+      print('thumbnailPath $thumbnailPath');
+      print('giftPath $giftPath');
       final user = Provider.of<UserDataProvider>(Get.context!,listen: false).userData;
-      String body = zegoBroadcastModelToJson(ZegoBroadcastModel(image: user!.data!.images!.isNotEmpty? user.data!.images!.first:null, level:user.data!.level,type: "gift",gift: Gift(to: receiver,count: count,giftPath: giftPath),tags: [if(isOwner)'Owner',if(zegoRoom!.admins.contains(ZegoConfig.instance.streamID))'Admin']));
+      String body = zegoBroadcastModelToJson(ZegoBroadcastModel(image: user!.data!.images!.isNotEmpty? user.data!.images!.first:null, level:user.data!.level,type: "gift",gift: ZegoGift(to: receiver,count: count,thumbnailPath: thumbnailPath, giftPath: giftPath),tags: [if(isOwner)'Owner',if(zegoRoom!.admins.contains(ZegoConfig.instance.streamID))'Admin']));
       ZegoExpressEngine.instance.sendBroadcastMessage(roomID, body);
       broadcastMessageList?.enqueue(ZegoBroadcastMessageInfo(body,0,0,ZegoUser(ZegoConfig.instance.userID,ZegoConfig.instance.userName)));
       notifyListeners();
       Future.delayed(const Duration(milliseconds: 500),(){
         scrollController.animateTo(scrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 500), curve: Curves.decelerate);
       });
+      updateRoomForeground(giftPath, count);
     }
   }
   void sendBarrageMessage(String message) {
     ZegoExpressEngine.instance.sendBarrageMessage(roomID, message);
+  }
+
+  Future<void> updateRoomForeground(String url, int count) async {
+    if(url.split('.').last.toLowerCase() == 'svga'){
+        do{
+          foregroundSvgaController = SVGAAnimationController(vsync: vsync);
+          foregroundSvgaController?.videoItem = await SVGAParser.shared.decodeFromURL(url);
+          notifyListeners();
+          await foregroundSvgaController?.forward();
+          foregroundSvgaController?.dispose();
+          foregroundSvgaController = null;
+          notifyListeners();
+          --count;
+        }while(count>0);
+
+    }else{
+      for (var i = 0; i < count; i++) {
+        foregroundImage = url;
+        notifyListeners();
+        await Future.delayed(const Duration(seconds: 3),() {
+          foregroundImage = null;
+          notifyListeners();
+        });
+        await Future.delayed(const Duration(seconds: 1));
+      }
+    }
+    return;
   }
 
   Future<void> reactEmoji(String emoji) async {

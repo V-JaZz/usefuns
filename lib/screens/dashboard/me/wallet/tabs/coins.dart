@@ -103,7 +103,9 @@ class _WalletState extends State<CoinsTabView> {
 
                   children: [
                      const SizedBox(width: 19,),
-                    Image.asset('assets/diamond.png'),
+                    Image.asset('assets/icons/ic_diamond.png',
+                height: 12,
+                fit: BoxFit.fitHeight),
                     const SizedBox(width: 19,),
                     Text(t1),
                   ],

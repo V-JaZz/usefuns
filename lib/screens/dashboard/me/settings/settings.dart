@@ -6,10 +6,10 @@ import 'package:live_app/subscreens/refund.dart';
 import 'package:live_app/subscreens/sanitize.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
-import '../../../provider/auth_provider.dart';
-import '../../../subscreens/intellectual.dart';
-import '../../../utils/common_widgets.dart';
-import '../../auth/login_screen.dart';
+import '../../../../provider/auth_provider.dart';
+import '../../../../subscreens/intellectual.dart';
+import '../../../../utils/common_widgets.dart';
+import '../../../auth/login_screen.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});

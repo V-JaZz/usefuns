@@ -196,27 +196,12 @@ class _CreateRoomState extends State<CreateRoom> {
                   onPressed: () {
                     if(textEditingController.text.isEmpty){
                       showCustomSnackBar('Enter Room Name!', context);
+                    }else if((croppedImagePaths??imagePaths) == null){
+                      showCustomSnackBar('Image Required!', context);
                     }else if(!value.creatingRoom){
                       value.create(textEditingController.text, croppedImagePaths??imagePaths).then((value) {
                         if(value.status==1){
                           Get.back();
-                        //   Room(
-                        //   announcement: value.data?.announcement,
-                        //   members: value.data?.members,
-                        //   lastmembers: value.data?.lastmembers,
-                        //   subscribers: value.data?.subscribers,
-                        //   images: value.data?.images,
-                        //   noOfSeats: value.data?.noOfSeats,
-                        //   isLocked: value.data?.isLocked,
-                        //   isActive: value.data?.isActive,
-                        //   id: value.data?.id,
-                        //   roomId: value.data?.roomId,
-                        //   userId: value.data?.userId,
-                        //   name: value.data?.name,
-                        //   createdAt: value.data?.createdAt,
-                        //   updatedAt: value.data?.updatedAt,
-                        //   v: value.data?.v,
-                        // );
                         }else{
                           showCustomSnackBar(value.message, context);
                         }

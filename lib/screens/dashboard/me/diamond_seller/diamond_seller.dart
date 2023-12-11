@@ -5,6 +5,7 @@ import 'package:live_app/screens/dashboard/me/diamond_seller/tabs/recharge_user.
 import 'package:live_app/screens/dashboard/me/diamond_seller/tabs/record_tab_view.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../provider/seller_agency_provider.dart';
 import '../../../../provider/user_data_provider.dart';
 import '../../../../utils/utils_assets.dart';
 
@@ -17,6 +18,13 @@ class DiamondSeller extends StatefulWidget {
 
 class _DiamondSellerState extends State<DiamondSeller> {
   @override
+  void initState() {
+    Provider.of<SellerAgencyProvider>(context,listen: false).loginSeller(
+      '${Provider.of<UserDataProvider>(context,listen: false).userData?.data?.mobile}'
+    );
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
@@ -26,68 +34,74 @@ class _DiamondSellerState extends State<DiamondSeller> {
         automaticallyImplyLeading: true,
         title: const Text('Diamond Seller'),
       ),
-      body: Column(
-        children: [
-          sellerDetails(a,b),
-          SizedBox(height: 8 * a),
-          Expanded(
-            child: DefaultTabController(
-              length: 3,
-              child: Column(children: [
-                TabBar(
-                  indicatorColor: Colors.black,
-                  indicatorWeight: 1.3,
-                  labelColor: const Color(0xff000000),
-                  unselectedLabelColor: const Color(0x99000000),
-                  labelStyle: SafeGoogleFont(
-                    'Poppins',
-                    fontSize: 16 * b,
-                    fontWeight: FontWeight.w400,
-                    height: 1.5 * b / a,
-                    letterSpacing: 0.96 * a,
-                    color: const Color(0xff000000),
-                  ),
-                  unselectedLabelStyle: SafeGoogleFont(
-                    'Poppins',
-                    fontSize: 16 * b,
-                    fontWeight: FontWeight.w400,
-                    height: 1.5 * b / a,
-                    letterSpacing: 0.96 * a,
-                    color: const Color(0x99000000),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 30 * a),
-                  labelPadding: EdgeInsets.zero,
-                  tabs: const [
-                    Tab(
-                      text: "Recharge",
+      body: Consumer<SellerAgencyProvider>(
+        builder: (context, value, _) {
+          if(!value.isSellerLogged){
+            return const Center(child: CircularProgressIndicator());
+          }
+          return Column(
+          children: [
+            sellerDetails(a,b,Provider.of<UserDataProvider>(context,listen: false).userData!.data!.images!,value.seller?.data?.sellerName,value.seller?.data?.mobile),
+            SizedBox(height: 8 * a),
+            Expanded(
+              child: DefaultTabController(
+                length: 3,
+                child: Column(children: [
+                  TabBar(
+                    indicatorColor: Colors.black,
+                    indicatorWeight: 1.3,
+                    labelColor: const Color(0xff000000),
+                    unselectedLabelColor: const Color(0x99000000),
+                    labelStyle: SafeGoogleFont(
+                      'Poppins',
+                      fontSize: 15 * b,
+                      fontWeight: FontWeight.w400,
+                      height: 1.5 * b / a,
+                      letterSpacing: 0.96 * a,
+                      color: const Color(0xff000000),
                     ),
-                    Tab(
-                      text: "Balance",
+                    unselectedLabelStyle: SafeGoogleFont(
+                      'Poppins',
+                      fontSize: 14 * b,
+                      fontWeight: FontWeight.w400,
+                      height: 1.5 * b / a,
+                      letterSpacing: 0.96 * a,
+                      color: const Color(0x99000000),
                     ),
-                    Tab(
-                      text: "Record",
-                    )
-                  ],
-                ),
-                const Expanded(
-                    child: TabBarView(
-                        children: [
-                          RechargeUserTabView(),
-                          BalanceTabView(),
-                          SellerRecordTabView(),
-                        ]
-                    )
-                )
-              ]),
-            ),
-          )
-        ],
+                    padding: EdgeInsets.symmetric(horizontal: 30 * a),
+                    labelPadding: EdgeInsets.zero,
+                    tabs: const [
+                      Tab(
+                        text: "Recharge",
+                      ),
+                      Tab(
+                        text: "Balance",
+                      ),
+                      Tab(
+                        text: "Record",
+                      )
+                    ],
+                  ),
+                  const Expanded(
+                      child: TabBarView(
+                          children: [
+                            RechargeUserTabView(),
+                            BalanceTabView(),
+                            SellerRecordTabView(),
+                          ]
+                      )
+                  )
+                ]),
+              ),
+            )
+          ],
+        );
+        },
       ),
     );
   }
 
-  Widget sellerDetails(double a,double b) {
-    final providerUserData = Provider.of<UserDataProvider>(context);
+  Widget sellerDetails(double a,double b, List<String> image, String? name, int? number) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12*a, vertical: 3*a),
       width: double.infinity,
@@ -101,17 +115,14 @@ class _DiamondSellerState extends State<DiamondSeller> {
                 border: Border.all(color: Theme.of(context).primaryColor.withOpacity(0.4),width: 3),
                 shape: BoxShape.circle
             ),
-            child: providerUserData
-                .userData!.data!.images!.isEmpty
+            child: image.isEmpty
                 ? CircleAvatar(
                 foregroundImage:
                 const AssetImage('assets/profile.png'),
                 radius: 27 * a)
                 : CircleAvatar(
                 foregroundImage: NetworkImage(
-                    providerUserData.userData?.data?.images
-                        ?.first ??
-                        ''),
+                    image.first),
                 radius: 27 * a),
           ),
           SizedBox(width: 8*a),
@@ -119,16 +130,26 @@ class _DiamondSellerState extends State<DiamondSeller> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'ID: 1234567890',
+                'Name: $name',
                 textAlign: TextAlign.left,
                 style: SafeGoogleFont(
-                    color: Colors.black.withOpacity(0.7),
+                    color: Colors.black.withOpacity(0.6),
                     'Poppins',
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
                     height: 1),
               ),
               SizedBox(height: 6*a),
+              Text(
+                'Mobile: $number',
+                textAlign: TextAlign.left,
+                style: SafeGoogleFont(
+                    color: Colors.black.withOpacity(0.6),
+                    'Poppins',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    height: 1),
+              ),
             ],
           )
         ],

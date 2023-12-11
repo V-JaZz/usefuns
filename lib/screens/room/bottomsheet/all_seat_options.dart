@@ -163,7 +163,7 @@ class MyProfileSeatBottomSheet extends StatelessWidget {
         return Stack(
         children: [
           Container(
-            margin: EdgeInsets.only(top : 42*a),
+            margin: EdgeInsets.only(top : 50*a),
             color: Colors.white,
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -385,20 +385,48 @@ class MyProfileSeatBottomSheet extends StatelessWidget {
           ),
           Positioned(
             top: 0,
-            left: (Get.width*0.5)-(42*a),
+            left: (Get.width*0.5)-(50*a),
             child: GestureDetector(
               onTap: (){
-                Get.back();
-                Get.to(() => const UserProfile());
+                  Get.to(()=>const UserProfile());
               },
-              child: value.userData!.data!.images!.isEmpty
-                  ?CircleAvatar(
-                radius: 42 * a,
-                foregroundImage: const AssetImage('assets/profile.png'),
-              )
-                  :CircleAvatar(
-                radius: 42 * a,
-                foregroundImage: NetworkImage(value.userData!.data!.images!.first),
+              child: SizedBox(
+                width: 100 * a,
+                height: 100 * a,
+                child: Stack(
+                  children: [
+                    Positioned(
+                      top: 15,
+                      right: 13,
+                      left: 13,
+                      bottom: 11,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image:value.userData!.data!.images!.isEmpty
+                                ?const DecorationImage(
+                                image: AssetImage('assets/profile.png')
+                            )
+                                :DecorationImage(
+                                image: NetworkImage(
+                                    value.userData!.data!.images!.first)
+                            )
+                        ),
+                      ),
+                    ),
+                    if(value.userData!.data!.frame != null && value.userData!.data!.frame!.isNotEmpty)
+                      Container(
+                          margin: EdgeInsets.fromLTRB(
+                              0 * a, 0 * a, 0 * a, 0 * a),
+                          width: 100 * a,
+                          height: 100 * a,
+                          child: Image.network(
+                            value.userData!.data!.frame!.first.images!.first,
+                            fit: BoxFit.contain,
+                          )
+                      ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -409,11 +437,25 @@ class MyProfileSeatBottomSheet extends StatelessWidget {
   }
 }
 
-class OthersProfileSeatBottomSheet extends StatelessWidget {
+class OthersProfileSeatBottomSheet extends StatefulWidget {
   final ZegoStreamExtended user;
   final bool owner;
   final bool admin;
   const OthersProfileSeatBottomSheet({super.key, required this.user, required this.owner, required this.admin});
+
+  @override
+  State<OthersProfileSeatBottomSheet> createState() => _OthersProfileSeatBottomSheetState();
+}
+
+class _OthersProfileSeatBottomSheetState extends State<OthersProfileSeatBottomSheet> {
+  late final UserDataProvider userDataProvider;
+  late bool follow;
+  @override
+  void initState() {
+    userDataProvider = Provider.of<UserDataProvider>(context,listen: false);
+    follow = userDataProvider.userData!.data!.following!.firstWhereOrNull((element) => element == widget.user.streamId)!=null;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -421,6 +463,7 @@ class OthersProfileSeatBottomSheet extends StatelessWidget {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
     double b = a * 0.97;
+
     return Consumer<ZegoRoomProvider>(
       builder: (context, value, child) => Stack(
         children: [
@@ -433,7 +476,7 @@ class OthersProfileSeatBottomSheet extends StatelessWidget {
                 children: [
                   SizedBox(height: 45 * a),
                   Text(
-                    user.userName??'',
+                    widget.user.userName??'',
                     style: SafeGoogleFont(
                       'Poppins',
                       fontSize: 20 * b,
@@ -447,14 +490,14 @@ class OthersProfileSeatBottomSheet extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         userLevelTag(
-                          user.level??0,
+                          widget.user.level??0,
                           17 * a,
                           viewZero: true
                       ),
-                        if(value.zegoRoom!.admins.contains(user.streamId)) SizedBox(
+                        if(value.zegoRoom!.admins.contains(widget.user.streamId)) SizedBox(
                           width: 6*a,
                         ),
-                        if(value.zegoRoom!.admins.contains(user.streamId)) Container(
+                        if(value.zegoRoom!.admins.contains(widget.user.streamId)) Container(
                           decoration: BoxDecoration(
                               color: const Color(0xffFF9933),
                               borderRadius: BorderRadius.circular(12*a)
@@ -471,10 +514,10 @@ class OthersProfileSeatBottomSheet extends StatelessWidget {
                             ),
                           ),
                         ),
-                        if(user.owner == true) SizedBox(
+                        if(widget.user.owner == true) SizedBox(
                           width: 6*a,
                         ),
-                        if(user.owner == true) Container(
+                        if(widget.user.owner == true) Container(
                           decoration: BoxDecoration(
                               color: const Color(0xFF138808),
                             borderRadius: BorderRadius.circular(12*a)
@@ -491,10 +534,10 @@ class OthersProfileSeatBottomSheet extends StatelessWidget {
                             ),
                           ),
                         ),
-                        if(user.owner == true||user.member == true) SizedBox(
+                        if(widget.user.owner == true||widget.user.member == true) SizedBox(
                           width: 6*a,
                         ),
-                        if(user.owner != true && user.member == true) Container(
+                        if(widget.user.owner != true && widget.user.member == true) Container(
                           decoration: BoxDecoration(
                               color: const Color(0xFF9E26BC),
                               borderRadius: BorderRadius.circular(12*a)
@@ -544,7 +587,7 @@ class OthersProfileSeatBottomSheet extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        ' Usefuns Id - ${user.id}  ',
+                        ' Usefuns Id - ${widget.user.id}  ',
                         style: SafeGoogleFont(
                           'Poppins',
                           fontSize: 14 * b,
@@ -555,7 +598,7 @@ class OthersProfileSeatBottomSheet extends StatelessWidget {
                       ),
                       Image.asset('assets/people.png'),
                       Text(
-                        '  ${user.followers}- Followers',
+                        '  ${widget.user.followers}- Followers',
                         style: SafeGoogleFont(
                           'Poppins',
                           fontSize: 14 * b,
@@ -578,7 +621,7 @@ class OthersProfileSeatBottomSheet extends StatelessWidget {
                           path: 'assets/icon_p/profile.png',
                           onTap: () async {
                             Get.back();
-                            final data = await Provider.of<UserDataProvider>(context,listen: false).addVisitor(user.streamId!);
+                            final data = await userDataProvider.addVisitor(widget.user.streamId!);
                             Get.to(()=>UserProfile(userData: data.data));
                           }),
                       iconTextWidget(
@@ -594,66 +637,66 @@ class OthersProfileSeatBottomSheet extends StatelessWidget {
                           onTap: (){
                             Get.back();
 
-                            bs.showMessage(mention: user.userName);
+                            bs.showMessage(mention: widget.user.userName);
                           }),
-                      if((owner || admin)&& user.owner == false) iconTextWidget(
+                      if((widget.owner || widget.admin)&& widget.user.owner == false) iconTextWidget(
                           text: 'Lock',
                           path: 'assets/icon_p/lock.png',
                           onTap: (){
-                            value.lockStreamer(user.streamId!,user.userName!);
+                            value.lockStreamer(widget.user.streamId!,widget.user.userName!);
                             Get.back();
                           }),
-                      if((owner || admin)&& user.owner == false) iconTextWidget(
-                          text:  value.roomStreamList.where((e) => e.streamId == user.streamId).first.micPermit == false ? 'Unmute Mic': 'Mute Mic',
+                      if((widget.owner || widget.admin)&& widget.user.owner == false) iconTextWidget(
+                          text:  value.roomStreamList.where((e) => e.streamId == widget.user.streamId).first.micPermit == false ? 'Unmute Mic': 'Mute Mic',
                           path: 'assets/icon_p/mute_mic.png',
                           onTap: (){
-                            if(value.roomStreamList.where((e) => e.streamId == user.streamId).first.micPermit == false) {
-                              value.unMuteStreamer(user.streamId!,user.userName!);
+                            if(value.roomStreamList.where((e) => e.streamId == widget.user.streamId).first.micPermit == false) {
+                              value.unMuteStreamer(widget.user.streamId!,widget.user.userName!);
                               showCustomSnackBar('Permitted to use mic',context,isToaster: true,isError: false);
                             } else{
-                              value.muteStreamer(user.streamId!,user.userName!);
+                              value.muteStreamer(widget.user.streamId!,widget.user.userName!);
                             }
                             Get.back();
                           }),
-                      if((owner || admin)&& user.owner == false) iconTextWidget(
-                          text: value.roomStreamList.where((e) => e.streamId == user.streamId).first.chatBan == true?'Unban Chat':'Ban Chat',
+                      if((widget.owner || widget.admin)&& widget.user.owner == false) iconTextWidget(
+                          text: value.roomStreamList.where((e) => e.streamId == widget.user.streamId).first.chatBan == true?'Unban Chat':'Ban Chat',
                           path: 'assets/icon_p/ban.png',
                           onTap: (){
-                            if(value.roomStreamList.where((e) => e.streamId == user.streamId).first.chatBan == true){
-                              value.unbanChat(user.streamId!,user.userName!);
+                            if(value.roomStreamList.where((e) => e.streamId == widget.user.streamId).first.chatBan == true){
+                              value.unbanChat(widget.user.streamId!,widget.user.userName!);
                             }else{
-                              value.banChat(user.streamId!,user.userName!);
+                              value.banChat(widget.user.streamId!,widget.user.userName!);
                             }
                             Get.back();
                           }),
-                      if((owner || admin)&& user.owner == false) iconTextWidget(
+                      if((widget.owner || widget.admin)&& widget.user.owner == false) iconTextWidget(
                           text: 'Kick',
                           path: 'assets/icon_p/kick.png',
                           onTap: (){
-                            kickRoomWidget(context, user.userName, user.streamId);
+                            kickRoomWidget(context, widget.user.userName, widget.user.streamId);
                           }),
-                      if((owner || admin)&& user.owner == false) iconTextWidget(
+                      if((widget.owner || widget.admin)&& widget.user.owner == false) iconTextWidget(
                           text: 'Invite',
                           path: 'assets/icon_p/invite.png',
                           onTap: (){}
                       ),
-                      if(owner==true) iconTextWidget(
-                          text: value.zegoRoom!.admins.contains(user.streamId) ? 'Remove Admin':'Set Admin',
+                      if(widget.owner==true) iconTextWidget(
+                          text: value.zegoRoom!.admins.contains(widget.user.streamId) ? 'Remove Admin':'Set Admin',
                           path: 'assets/icon_p/set_admin.png',
                           onTap: () async {
                             final p = Provider.of<RoomsProvider>(context,listen: false);
                             final list = value.zegoRoom!.admins;
                             Get.back();
-                            if(value.zegoRoom!.admins.contains(user.streamId)){
-                              list.remove(user.streamId);
+                            if(value.zegoRoom!.admins.contains(widget.user.streamId)){
+                              list.remove(widget.user.streamId);
                               value.updateAdmin(list);
-                              await p.removeAdmin(value.room!.id!, user.streamId!);
+                              await p.removeAdmin(value.room!.id!, widget.user.streamId!);
                             }else if(list.length>3){
                               showCustomSnackBar('Max Admin limit is 4!', context,isToaster: true);
                             }else{
-                              list.add(user.streamId!);
+                              list.add(widget.user.streamId!);
                               value.updateAdmin(list);
-                              await p.addAdmin(value.room!.id!, user.streamId!);
+                              await p.addAdmin(value.room!.id!, widget.user.streamId!);
                             }
                             p.getAllMine();
                           }),
@@ -663,42 +706,71 @@ class OthersProfileSeatBottomSheet extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          // Provider.
-                        },
-                        child: Container(
-                            width: 90 * a,
-                            height: 26 * a,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: const Color.fromRGBO(255, 153, 51, 1),
-                              ),
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(12 * a),
-                                topRight: Radius.circular(12 * a),
-                                bottomLeft: Radius.circular(12 * a),
-                                bottomRight: Radius.circular(12 * a),
-                              ),
-                              color: Colors.white,
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Follow',
-                                textAlign: TextAlign.left,
-                                style: SafeGoogleFont(
-                                    color: const Color.fromRGBO(0, 0, 0, 1),
-                                    'Poppins',
-                                    fontSize: 12 * a,
-                                    fontWeight: FontWeight.normal,
-                                    height: 1),
-                              ),
-                            )),
+                      Consumer<UserDataProvider>(
+                        builder:(context, up , _) =>
+                            GestureDetector(
+                            onTap: () async {
+                              if(follow){
+                                final res = await up.unFollowUser(userId: widget.user.streamId!);
+                                if(res.status == 1){
+                                  setState(() {
+                                    follow = false;
+                                  });
+                                }else{
+                                  showCustomSnackBar('error unfollowing user!', context, isToaster: true);
+                                }
+                              }else{
+                                final res = await up.followUser(userId: widget.user.streamId!);
+                                if(res.status == 1){
+                                  setState(() {
+                                    follow = true;
+                                  });
+                                }else{
+                                  showCustomSnackBar('error following user!', context, isToaster: true);
+                                }
+                              }
+                            },
+                            child: Container(
+                                width: 90 * a,
+                                height: 26 * a,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: const Color.fromRGBO(255, 153, 51, 1),
+                                  ),
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(12 * a),
+                                    topRight: Radius.circular(12 * a),
+                                    bottomLeft: Radius.circular(12 * a),
+                                    bottomRight: Radius.circular(12 * a),
+                                  ),
+                                  color: Colors.white,
+                                ),
+                                child: Center(
+                                  child: up.isFollowLoading
+                                      ? Padding(
+                                        padding: EdgeInsets.all(3*a),
+                                        child: const AspectRatio(
+                                            aspectRatio: 1,
+                                            child: CircularProgressIndicator(color: Color.fromRGBO(255, 153, 51, 1))
+                                        ),
+                                      )
+                                      : Text(
+                                    follow?'Unfollow':'Follow',
+                                    textAlign: TextAlign.left,
+                                    style: SafeGoogleFont(
+                                        color: const Color.fromRGBO(0, 0, 0, 1),
+                                        'Poppins',
+                                        fontSize: 12 * a,
+                                        fontWeight: FontWeight.normal,
+                                        height: 1),
+                                  ),
+                                )),
+                          )
                       ),
                       GestureDetector(
                         onTap: (){
                           Get.back();
-                          bs.showSendGiftsBottomSheet(selection: user.userName);
+                          bs.showSendGiftsBottomSheet(selection: widget.user.userName);
                         },
                         child: Container(
                             width: 90 * a,
@@ -734,29 +806,58 @@ class OthersProfileSeatBottomSheet extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: 0 * a,
-            left: Get.width / 2 - 40 * a,
-            child:GestureDetector(
+            top: 0,
+            left: (Get.width*0.5)-(40*a),
+            child: GestureDetector(
               onTap: () async {
-                Get.back();
-                final data = await Provider.of<UserDataProvider>(context,listen: false).addVisitor(user.streamId!);
-                Get.to(()=>UserProfile(userData: data.data));
+                final user = await Provider.of<UserDataProvider>(context,listen: false).addVisitor(widget.user.streamId!);
+                Get.to(()=>UserProfile(userData: user.data!));
               },
-              child:  (user.image??'') == ''
-                  ? CircleAvatar(
-                radius: 36 * a,
-                foregroundImage: const AssetImage('assets/profile.png'),
-              )
-                  : CircleAvatar(
-                radius: 36 * a,
-                foregroundImage: NetworkImage(user.image??''),
+              child: SizedBox(
+                width: 80 * a,
+                height: 80 * a,
+                child: Stack(
+                  children: [
+                    Positioned(
+                      top: 12,
+                      right: 10,
+                      left: 10,
+                      bottom: 8,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image:(widget.user.image??'') == ''
+                                ?const DecorationImage(
+                                image: AssetImage('assets/profile.png')
+                            )
+                                :DecorationImage(
+                                image: NetworkImage(
+                                    widget.user.image!)
+                            )
+                        ),
+                      ),
+                    ),
+                    if(widget.user.frame != null && widget.user.frame!.isNotEmpty)
+                      Container(
+                          margin: EdgeInsets.fromLTRB(
+                              0 * a, 0 * a, 0 * a, 0 * a),
+                          width: 80 * a,
+                          height: 80 * a,
+                          child: Image.network(
+                            widget.user.frame!,
+                            fit: BoxFit.contain,
+                          )
+                      ),
+                  ],
+                ),
               ),
-            )
+            ),
           ),
         ],
       ),
     );
   }
+
   iconTextWidget({required String text, required String path,void Function()? onTap}) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;

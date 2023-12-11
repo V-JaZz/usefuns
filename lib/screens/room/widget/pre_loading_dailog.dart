@@ -62,10 +62,13 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
   void start() async {
     final response = await Provider.of<RoomsProvider>(context,listen: false).addRoomUser(zegoRoomProvider.room!.id!);
     if(response.status==1){
+      final me = Provider.of<UserDataProvider>(Get.context!,listen: false).userData;
       await zegoRoomProvider.init();
-      if(!zegoRoomProvider.isOwner) {
-        final me = Provider.of<UserDataProvider>(Get.context!,listen: false).userData;
+      if(zegoRoomProvider.isOwner) {
+        if(me!.data!.roomWallpaper!.isNotEmpty) zegoRoomProvider.backgroundImage = me.data!.roomWallpaper!.first.images!.first;
+      }else{
         final ownerData = await Provider.of<UserDataProvider>(Get.context!,listen: false).getUser(id: zegoRoomProvider.room!.userId!);
+        if(ownerData.data!.roomWallpaper!.isNotEmpty) zegoRoomProvider.backgroundImage = ownerData.data!.roomWallpaper!.first.images!.first;
         zegoRoomProvider.addGreeting(getGreeting(me?.data?.name, Random().nextInt(5), ownerData.data?.name), ownerData);
       }
       Get.off(()=>const LiveRoom(),transition: Transition.size);

@@ -89,7 +89,7 @@ class _MomentsPageState extends State<MomentsPage> {
   }
 }
 class ImageGallery extends StatefulWidget {
-  final List<Datum> myMoments;
+  final List<Moment> myMoments;
 
   const ImageGallery({super.key, required this.myMoments});
 
@@ -171,7 +171,7 @@ class _ImageGalleryState extends State<ImageGallery> {
                 },
               ),
               SizedBox(width: 15 * a),
-              if(widget.myMoments[index].isCommentRestricted == false)Row(
+              if(widget.myMoments[index].userDetails!.first.isCommentRestricted == false)Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Icon(Icons.mode_comment_outlined,color: Colors.grey),
@@ -242,7 +242,7 @@ class _ImageGalleryState extends State<ImageGallery> {
             },
           ),
           SizedBox(width: 15 * a),
-          if(widget.myMoments[index].isCommentRestricted == false)Row(
+          if(widget.myMoments[index].userDetails!.first.isCommentRestricted == false)Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Icon(Icons.mode_comment_outlined,color: Colors.grey),

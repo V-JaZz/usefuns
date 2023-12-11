@@ -15,7 +15,7 @@ class ZegoBroadcastModel {
     List<String>? tags;
     String? message;
     String? type;
-    Gift? gift;
+    ZegoGift? gift;
 
     ZegoBroadcastModel({
         this.level,
@@ -34,7 +34,7 @@ class ZegoBroadcastModel {
         tags: json["tags"] == null ? [] : List<String>.from(json["tags"]!.map((x) => x)),
         message: json["message"],
         type: json["type"],
-        gift: json["gift"] == null ? null : Gift.fromJson(json["gift"]),
+        gift: json["gift"] == null ? null : ZegoGift.fromJson(json["gift"]),
     );
 
     Map<String, dynamic> toJson() => {
@@ -48,25 +48,29 @@ class ZegoBroadcastModel {
     };
 }
 
-class Gift {
+class ZegoGift {
     String? to;
+    String? thumbnailPath;
     String? giftPath;
     int? count;
 
-    Gift({
+    ZegoGift({
         this.to,
+        this.thumbnailPath,
         this.giftPath,
         this.count,
     });
 
-    factory Gift.fromJson(Map<String, dynamic> json) => Gift(
+    factory ZegoGift.fromJson(Map<String, dynamic> json) => ZegoGift(
         to: json["to"],
+        thumbnailPath: json["thumbnail_path"],
         giftPath: json["gift_path"],
         count: json["count"],
     );
 
     Map<String, dynamic> toJson() => {
         "to": to,
+        "thumbnail_path": thumbnailPath,
         "gift_path": giftPath,
         "count": count,
     };

@@ -15,6 +15,7 @@ class UserDataProvider with ChangeNotifier {
   final UserDataRepo _userDataRepo = UserDataRepo();
   UserDataModel? userData;
   bool isUserDataLoading = true;
+  bool isFollowLoading = false;
 
   Future<UserDataModel> getUser({bool refresh = true, String? id,bool isUsefunId = false}) async {
     if(!isUserDataLoading&&id==null) {
@@ -86,4 +87,47 @@ class UserDataProvider with ChangeNotifier {
     return responseModel;
   }
 
+  Future<CommonModel> followUser(
+      {required String userId}) async {
+    isFollowLoading = true;
+    notifyListeners();
+    final apiResponse = await _userDataRepo.follow(
+        fromID: storageService.getString(Constants.id),
+        toID: userId
+    );
+    isFollowLoading = false;
+    notifyListeners();
+    CommonModel responseModel;
+    if (apiResponse.statusCode == 200) {
+      responseModel = commonModelFromJson(apiResponse.body);
+      if(responseModel.status == 1){
+        getUser();
+      }
+    } else {
+      responseModel = CommonModel(status: 0,message: apiResponse.reasonPhrase);
+    }
+    return responseModel;
+  }
+
+  Future<CommonModel> unFollowUser(
+      {required String userId}) async {
+    isFollowLoading = true;
+    notifyListeners();
+    final apiResponse = await _userDataRepo.unFollow(
+        fromID: storageService.getString(Constants.id),
+        toID: userId
+    );
+    isFollowLoading = false;
+    notifyListeners();
+    CommonModel responseModel;
+    if (apiResponse.statusCode == 200) {
+      responseModel = commonModelFromJson(apiResponse.body);
+      if(responseModel.status == 1){
+        getUser();
+      }
+    } else {
+      responseModel = CommonModel(status: 0,message: apiResponse.reasonPhrase);
+    }
+    return responseModel;
+  }
 }

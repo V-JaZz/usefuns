@@ -118,6 +118,7 @@ class AuthProvider with ChangeNotifier {
         storageService.setString(Constants.id, responseModel.data!.id!);
         storageService.setString(Constants.userId, responseModel.data!.userId!);
         storageService.setString(Constants.token, responseModel.data!.token!);
+        storageService.setBool('NEW_USER',true);
       }
     } else {
       responseModel = RegisterModel(status: 0,message: apiResponse.reasonPhrase);

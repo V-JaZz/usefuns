@@ -94,7 +94,7 @@ class _AgencyRewardState extends State<AgencyReward> {
                 ),
               ),
             ),
-            Image.asset('assets/diamond.png'),
+            Image.asset('assets/icons/ic_diamond.png'),
           ],
         ),
       ),

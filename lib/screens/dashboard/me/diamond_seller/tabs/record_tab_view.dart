@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:live_app/provider/seller_agency_provider.dart';
+import 'package:provider/provider.dart';
 
+import '../../../../../data/model/response/seller_record_model.dart';
 import '../../../../../utils/utils_assets.dart';
 
 class SellerRecordTabView extends StatefulWidget {
@@ -16,6 +19,53 @@ class _SellerRecordTabViewState extends State<SellerRecordTabView> {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
     double b = a * 0.97;
-    return Container();
+    return FutureBuilder(
+      future: Provider.of<SellerAgencyProvider>(context).getRecord(),
+      builder:
+          (BuildContext context, AsyncSnapshot<SellerRecordModel> snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            return const Text('none...');
+          case ConnectionState.active:
+            return const Text('active...');
+          case ConnectionState.waiting:
+            return const Center(
+                child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 18),
+                Text('Loading'),
+              ],
+            ));
+          case ConnectionState.done:
+            if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else if ((snapshot.data?.data?.length ?? 0) == 0) {
+              return const Center(child: Text('No Recent Rooms!'));
+            } else {
+              return ListView.separated(
+                reverse: true,
+                itemCount: snapshot.data?.data?.length??0,
+                separatorBuilder: (context, index) => const Divider(color: Colors.black12),
+                itemBuilder: (context, index) {
+                  final report = snapshot.data!.data![index];
+                  return ListTile(
+                    title: Text('User ID: ${report.userId}'),
+                    subtitle: Text('Date Time : ${report.createdAt}'),
+                    trailing: Text(
+                      '- ₹${report.amount}',
+                      style: TextStyle(
+                        fontSize: 16*a,
+                        fontWeight: FontWeight.w700,
+                        color: Theme.of(context).primaryColor
+                      ),
+                    ),
+                  );
+                });
+            }
+        }
+      },
+    );
   }
 }

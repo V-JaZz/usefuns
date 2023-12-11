@@ -11,6 +11,7 @@ class MomentsProvider with ChangeNotifier {
 
   final storageService = StorageService();
   final MomentsRepo _momentsRepo = MomentsRepo();
+
   MomentsModel? allMoments;
   MomentsModel? followingMoments;
   MomentsModel? myMoments;

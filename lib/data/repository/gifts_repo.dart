@@ -17,4 +17,24 @@ class GiftsRepo {
     }
   }
 
+  Future<http.Response> sendGift(
+      String senderId,
+      String receiverId,
+      String giftId
+      ) async {
+    try {
+      http.Response response = await _httpClient.post(
+          'user/send/gift',
+        {
+          "sender": senderId,
+          "receiver": receiverId,
+          "giftId": giftId
+        }
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
 }

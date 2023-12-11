@@ -14,11 +14,9 @@ class ShopWalletProvider with ChangeNotifier {
   final ShopWalletRepo _shopRepo = ShopWalletRepo();
 
   bool isBuying = false;
-  bool isShopLoaded = false;
   bool isWalletLoaded = false;
 
-  double loadingShopProgress = 0.0;
-
+  double? loadingShopProgress = 0.0;
   late Map<String , ShopItemsModel?> items = {
     'frame':null,
     'chatBubble':null,
@@ -32,7 +30,6 @@ class ShopWalletProvider with ChangeNotifier {
   List<DiamondValue>? diamondValueList;
 
   Future<void> getAll() async {
-    isShopLoaded = false;
     await Future.delayed(const Duration(milliseconds: 500));
     await getCategory('frame');
     await getCategory('chatBubble');
@@ -42,18 +39,21 @@ class ShopWalletProvider with ChangeNotifier {
     await getCategory('specialId');
     await getCategory('lockRoom');
     await getCategory('extraSeat');
-    isShopLoaded = true;
-    loadingShopProgress = 0.0;
-    notifyListeners();
+    if(loadingShopProgress!=null){
+      loadingShopProgress = null;
+      notifyListeners();
+    }
   }
 
   Future<void> getCategory(String key) async {
-    loadingShopProgress = loadingShopProgress + 0.125;
-    notifyListeners();
+    if(loadingShopProgress!=null){
+      loadingShopProgress = loadingShopProgress! + 0.125;
+      notifyListeners();
+    }
     final apiResponse = await _shopRepo.get(key);
     if (apiResponse.statusCode == 200) {
       ShopItemsModel responseModel = shopItemsModelFromJson(apiResponse.body);
-      if(responseModel.status == 1){
+      if(responseModel.status == 1 && items[key]!=responseModel){
         items[key] = responseModel;
       }
     } else {

@@ -250,7 +250,8 @@ Widget roomListTile(
 }
 
 class WaveAnimation extends StatefulWidget {
-  const WaveAnimation({Key? key}) : super(key: key);
+  final Color? color;
+  const WaveAnimation({Key? key, this.color}) : super(key: key);
 
   @override
   WaveAnimationState createState() => WaveAnimationState();
@@ -300,11 +301,11 @@ class WaveAnimationState extends State<WaveAnimation>
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const SizedBox(width: 3),
-        AnimatedBar(animation: _animation1),
+        AnimatedBar(animation: _animation1,color: widget.color),
         const SizedBox(width: 2),
-        AnimatedBar(animation: _animation2),
+        AnimatedBar(animation: _animation2,color: widget.color),
         const SizedBox(width: 2),
-        AnimatedBar(animation: _animation3),
+        AnimatedBar(animation: _animation3,color: widget.color),
         const SizedBox(width: 4),
       ],
     );
@@ -319,8 +320,8 @@ class WaveAnimationState extends State<WaveAnimation>
 
 class AnimatedBar extends StatelessWidget {
   final Animation<double> animation;
-
-  const AnimatedBar({Key? key, required this.animation}) : super(key: key);
+  final Color? color;
+  const AnimatedBar({Key? key, required this.animation, this.color}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -331,10 +332,99 @@ class AnimatedBar extends StatelessWidget {
           height: animation.value,
           width: 3,
           decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
+              color: color??Theme.of(context).primaryColor,
               borderRadius: BorderRadius.circular(6)),
         );
       },
     );
   }
+}
+
+void rewardDialog(String path, String title, String info, void Function() onTap){
+  double baseWidth = 360;
+  double a = Get.width / baseWidth;
+  double b = a * 0.97;
+  showDialog(
+      context: Get.context!,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          content: SizedBox(
+              width: 50 * a,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    title,
+                    style: SafeGoogleFont('Poppins',
+                        fontSize: 16 * b,
+                        fontWeight: FontWeight.w600,
+                        height: 1.5 * b / a,
+                        letterSpacing: 0.48 * a,
+                        color: Colors.black),
+                  ),
+                  SizedBox(height: 3*a),
+                  Image.asset(
+                      path,
+                    height: 136 * a,
+                    fit: BoxFit.fitHeight,
+                  ),
+                  SizedBox(height: 9*a),
+                  Text(
+                    info,
+                    textAlign: TextAlign.center,
+                    style: SafeGoogleFont('Poppins',
+                        fontSize: 10 * b,
+                        fontWeight: FontWeight.w500,
+                        height: 1.5 * b / a,
+                        letterSpacing: 0.48 * a,
+                        color: Colors.black),
+                  ),
+                  InkWell(
+                    onTap: onTap,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          top: 12 * a,
+                          left: 0 * a,
+                          right: 0 * a),
+                      child: Container(
+                          width: 136 * a,
+                          height: 30 * a,
+                          decoration: BoxDecoration(
+                            borderRadius:
+                            BorderRadius.only(
+                              topLeft: Radius.circular(
+                                  9 * a),
+                              topRight: Radius.circular(
+                                  9 * a),
+                              bottomLeft:
+                              Radius.circular(
+                                  9 * a),
+                              bottomRight:
+                              Radius.circular(
+                                  9 * a),
+                            ),
+                            color: Colors.deepOrangeAccent,
+                          ),
+                          child: Center(
+                            child: Text(
+                              'OKAY',
+                              style: SafeGoogleFont(
+                                  'Poppins',
+                                  fontSize: 13 * a,
+                                  fontWeight:
+                                  FontWeight.w500,
+                                  height: 1.5 * b / a,
+                                  letterSpacing:
+                                  0.48 * a,
+                                  color: Colors.white),
+                            ),
+                          )),
+                    ),
+                  ),
+                ],
+              )),
+        );
+      });
 }
