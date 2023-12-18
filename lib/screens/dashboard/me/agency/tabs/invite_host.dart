@@ -21,43 +21,57 @@ class _HostMemberState extends State<HostMember> {
         padding: EdgeInsets.all(15 * a),
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: 30 * b,
-              ),
-              Center(
-                child: cont_method('Members', 158),
-              ),
               SizedBox(
                 height: 10 * a,
               ),
-              Table(
-                children: [
-                  TableRow(
-                    children: [
-                      red_conta("UseFunds\nID"),
-                      red_conta(
-                        "Valid Days\n(04.\n6.23",
-                      ),
-                      red_conta(
-                        "Room\nGifts(04.\n6.23",
-                      ),
-                      red_conta(
-                        "Valid Days\n(04.\n6.23",
-                      ),
-                      red_conta(
-                        "Valid Days\n(04.\n6.23",
-                      ),
-                    ],
+              // Center(
+              //   child: cont_method('Members', 158),
+              // ),
+              // SizedBox(
+              //   height: 10 * a,
+              // ),
+              // Table(
+              //   children: [
+              //     TableRow(
+              //       children: [
+              //         red_conta("UseFunds\nID"),
+              //         red_conta(
+              //           "Valid Days\n(04.\n6.23",
+              //         ),
+              //         red_conta(
+              //           "Room\nGifts(04.\n6.23",
+              //         ),
+              //         red_conta(
+              //           "Valid Days\n(04.\n6.23",
+              //         ),
+              //         red_conta(
+              //           "Valid Days\n(04.\n6.23",
+              //         ),
+              //       ],
+              //     ),
+              //     tablerow(),
+              //     tablerow(),
+              //   ],
+              // ),
+              // SizedBox(
+              //   height: 25 * a,
+              // ),
+              Center(child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 18 * a, vertical: 6 * a),
+                color: Colors.deepOrange,
+                child: Text(
+                  'Invite host to join',
+                  style: SafeGoogleFont(
+                    'Poppins',
+                    fontSize: 14 * b,
+                    fontWeight: FontWeight.w500,
+                    height: 1.5 * b / a,
+                    color: Colors.white,
                   ),
-                  tablerow(),
-                  tablerow(),
-                ],
-              ),
-              SizedBox(
-                height: 25 * a,
-              ),
-              cont_method('Invite host to join', 158),
+                ),
+              )),
               SizedBox(
                 height: 20 * a,
               ),
@@ -94,7 +108,7 @@ class _HostMemberState extends State<HostMember> {
               SizedBox(
                 height: 20 * a,
               ),
-              txtt2('How to invite host to join Your Agency', Alignment.center),
+              txtt2('How to invite host to join Your Agency', Alignment.centerLeft),
               SizedBox(
                 height: 10 * a,
               ),
@@ -102,13 +116,13 @@ class _HostMemberState extends State<HostMember> {
                 '1. In june you can invite 144 more host. (all the hodt under\napplication. Under audition anf audition failed will \nYour invited Host. ',
               ),
               SizedBox(
-                height: 25 * a,
+                height: 10 * a,
               ),
               txtt(
                 '2. Host basic Requirements:\nHost age should be 22 Years old above, or will be rejected\nHe/she has not add any other agency yet\nHe/she Completed His/Her Bio .',
               ),
               SizedBox(
-                height: 25 * a,
+                height: 10 * a,
               ),
               txtt(
                 '3. Agency Invite host Process: \nFill your invited host usefun id and Watsapp number      \n ask he/her to fill the application form on app \nWait for official team’s audition result within 48 hours',
@@ -132,7 +146,7 @@ class _HostMemberState extends State<HostMember> {
                 ),
                 child: ListTile(
                   leading: Text(
-                    'His/Her Usefun ID',
+                    'His/Her Usefuns ID',
                     textAlign: TextAlign.left,
                     style: SafeGoogleFont(
                       'Poppins',
@@ -152,7 +166,7 @@ class _HostMemberState extends State<HostMember> {
                         bottomLeft: Radius.circular(9 * a),
                         bottomRight: Radius.circular(9 * a),
                       ),
-                      color: const Color.fromRGBO(255, 0, 0, 1),
+                      color: Colors.deepOrange,
                     ),
                     child: Center(
                         child: Text(
@@ -168,41 +182,54 @@ class _HostMemberState extends State<HostMember> {
                   ),
                 ),
               ),
+              // SizedBox(
+              //   height: 25 * a,
+              // ),
+              // txtt2('WhatsApp No.', Alignment.bottomLeft),
+              // SizedBox(
+              //   height: 10 * a,
+              // ),
+              // Container(
+              //   width: 299 * a,
+              //   height: 44 * a,
+              //   decoration: BoxDecoration(
+              //     color: const Color.fromRGBO(255, 255, 255, 1),
+              //     border: Border.all(
+              //       color: const Color.fromRGBO(0, 0, 0, 1),
+              //       width: 1 * b,
+              //     ),
+              //   ),
+              //   child: ListTile(
+              //     leading: Text(
+              //       'His/Her Usefun ID',
+              //       textAlign: TextAlign.left,
+              //       style: SafeGoogleFont(
+              //         'Poppins',
+              //         fontSize: 14 * b,
+              //         fontWeight: FontWeight.w500,
+              //         height: 1.5 * b / a,
+              //         color: Colors.black,
+              //       ),
+              //     ),
+              //   ),
+              // ),
               SizedBox(
-                height: 25 * a,
+                height: 20 * a,
               ),
-              txtt2('WhatsApp No.', Alignment.bottomLeft),
-              SizedBox(
-                height: 10 * a,
-              ),
-              Container(
-                width: 299 * a,
-                height: 44 * a,
-                decoration: BoxDecoration(
-                  color: const Color.fromRGBO(255, 255, 255, 1),
-                  border: Border.all(
-                    color: const Color.fromRGBO(0, 0, 0, 1),
-                    width: 1 * b,
+              Center(child: GestureDetector(onTap: () {}, child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 18 * a, vertical: 6 * a),
+                color: Colors.deepOrange,
+                child: Text(
+                  'Submit',
+                  style: SafeGoogleFont(
+                    'Poppins',
+                    fontSize: 14 * b,
+                    fontWeight: FontWeight.w500,
+                    height: 1.5 * b / a,
+                    color: const Color.fromARGB(255, 253, 253, 253),
                   ),
                 ),
-                child: ListTile(
-                  leading: Text(
-                    'His/Her Usefun ID',
-                    textAlign: TextAlign.left,
-                    style: SafeGoogleFont(
-                      'Poppins',
-                      fontSize: 14 * b,
-                      fontWeight: FontWeight.w500,
-                      height: 1.5 * b / a,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 10 * a,
-              ),
-              GestureDetector(onTap: () {}, child: cont_method('Submit', 137)),
+              ))),
             ],
           ),
         ),
@@ -216,7 +243,7 @@ class _HostMemberState extends State<HostMember> {
     double b = a * 0.97;
     return Container(
       height: 45 * a,
-      decoration: const BoxDecoration(color: Color(0xffFF0000)),
+      decoration: const BoxDecoration(color: Colors.deepOrange),
       child: Text(
         txt,
         style: TextStyle(fontSize: 8.0 * a, color: Colors.white),
@@ -256,29 +283,6 @@ class _HostMemberState extends State<HostMember> {
         height: 1.5 * b / a,
         color: Colors.black,
       ),
-    );
-  }
-
-  Container cont_method(txt, double w) {
-    double baseWidth = 360;
-    double a = Get.width / baseWidth;
-    double b = a * 0.97;
-
-    return Container(
-      width: w * a,
-      height: 20 * a,
-      color: const Color(0xffFF0000),
-      child: Center(
-          child: Text(
-        txt,
-        style: SafeGoogleFont(
-          'Poppins',
-          fontSize: 12 * b,
-          fontWeight: FontWeight.w500,
-          height: 1.5 * b / a,
-          color: const Color.fromARGB(255, 253, 253, 253),
-        ),
-      )),
     );
   }
 

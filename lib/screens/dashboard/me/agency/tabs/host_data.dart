@@ -18,19 +18,19 @@ class _AgencyState extends State<Agency> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(children: [
-          SizedBox(
-            height: 30 * b,
-          ),
-          Container(
-            width: 158 * a,
-            height: 30 * a,
-            color: const Color(0xffFF0000),
-            child: const Center(
-                child: Text(
-              'Monthly data',
-              style: TextStyle(color: Colors.white),
-            )),
-          ),
+          // SizedBox(
+          //   height: 30 * b,
+          // ),
+          // Container(
+          //   width: 158 * a,
+          //   height: 30 * a,
+          //   color: const Color(0xffFF0000),
+          //   child: const Center(
+          //       child: Text(
+          //     'Monthly data',
+          //     style: TextStyle(color: Colors.white),
+          //   )),
+          // ),
           SizedBox(
             height: 30 * a,
           ),
@@ -50,21 +50,18 @@ class _AgencyState extends State<Agency> {
             height: 20 * a,
           ),
           const Text(
-            'View Monthly Data',
+            'Monthly Data',
             style: TextStyle(color: Colors.black),
           ),
-          const SizedBox(
-            height: 30,
-          ),
-          const table(),
+          const HostDataTable(),
         ]),
       ),
     );
   }
 }
 
-class table extends StatelessWidget {
-  const table({
+class HostDataTable extends StatelessWidget {
+  const HostDataTable({
     super.key,
   });
 
@@ -73,89 +70,88 @@ class table extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Container(
-        decoration: BoxDecoration(border: Border.all()),
+        decoration: BoxDecoration(border: Border.all(color: Colors.deepOrange)),
         child: Table(
+          columnWidths: const {
+            0: FlexColumnWidth(1.5),
+          },
+          border: TableBorder.all(color: Colors.black12),
           children: [
             TableRow(
               children: [
                 Container(
-                  height: 50,
-                  decoration: const BoxDecoration(color: Color(0xffFF0000)),
+                  height: 42,
+                  decoration: const BoxDecoration(color: Colors.deepOrange),
+                  alignment: Alignment.center,
                   child: const Text(
-                    "UseFunds\nID",
+                    "Usefuns ID",
+                    textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 12.0, color: Colors.white),
                   ),
                 ),
                 Container(
-                  height: 50,
-                  decoration: const BoxDecoration(color: Color(0xffFF0000)),
+                  height: 42,
+                  alignment: Alignment.center,
+                  decoration: const BoxDecoration(color: Colors.deepOrange),
                   child: const Text(
-                    "Valid Days\n(04.\n6.23",
+                    "Room Gifts\n(04.6.23)",
+                    textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 12.0, color: Colors.white),
                   ),
                 ),
                 Container(
-                  height: 50,
-                  decoration: const BoxDecoration(color: Color(0xffFF0000)),
+                  height: 42,
+                  alignment: Alignment.center,
+                  decoration: const BoxDecoration(color: Colors.deepOrange),
                   child: const Text(
-                    "Room\nGifts(04.\n6.23",
+                    "Valid Days\n(04.6.23)",
+                    textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 12.0, color: Colors.white),
                   ),
                 ),
                 Container(
-                  height: 50,
-                  decoration: const BoxDecoration(color: Color(0xffFF0000)),
+                  height: 42,
+                  alignment: Alignment.center,
+                  decoration: const BoxDecoration(color: Colors.deepOrange),
                   child: const Text(
-                    "Valid Days\n(04.\n6.23",
-                    style: TextStyle(fontSize: 12.0, color: Colors.white),
-                  ),
-                ),
-                Container(
-                  height: 50,
-                  decoration: const BoxDecoration(color: Color(0xffFF0000)),
-                  child: const Text(
-                    "Valid Days\n(04.\n6.23",
+                    "Valid Days\n(04.6.23)",
+                    textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 12.0, color: Colors.white),
                   ),
                 ),
               ],
             ),
-            tablerow(),
-            tablerow(),
-            tablerow(),
-            tablerow(),
-            tablerow(),
-            tablerow(),
-            tablerow(),
-            tablerow(),
-            tablerow(),
-            tablerow(),
+            tableRow(),
+            tableRow(),
+            tableRow(),
+            tableRow(),
+            tableRow()
           ],
         ),
       ),
     );
   }
 
-  TableRow tablerow() {
+  TableRow tableRow() {
     return const TableRow(children: [
       Text(
         "564756689",
+        textAlign: TextAlign.center,
         style: TextStyle(fontSize: 15.0),
       ),
       Text(
-        "     0",
+        "0",
+        textAlign: TextAlign.center,
         style: TextStyle(fontSize: 15.0),
       ),
       Text(
-        "     0",
+        "0",
+        textAlign: TextAlign.center,
         style: TextStyle(fontSize: 15.0),
       ),
       Text(
-        "     0",
-        style: TextStyle(fontSize: 15.0),
-      ),
-      Text(
-        "     0",
+        "0",
+        textAlign: TextAlign.center,
         style: TextStyle(fontSize: 15.0),
       ),
     ]);
