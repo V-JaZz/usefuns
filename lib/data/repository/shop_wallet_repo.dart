@@ -42,4 +42,39 @@ class ShopWalletRepo {
     }
   }
 
+  Future<http.Response> shopDiamonds(
+      {required String userId,required int diamonds, required int price, required String method}) async {
+    try {
+      http.Response response = await _httpClient.post(
+          'user/wallet/add',
+          {
+            "userId": userId,
+            "diamonds": diamonds,
+            "payment_method": method,
+            "price": price
+          }
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<http.Response> convertBeans(
+      {required String userId,required int diamonds, required int beans}) async {
+    try {
+      http.Response response = await _httpClient.post(
+          'user/beansToDiamonds/convert',
+          {
+            "userId": userId,
+            "diamonds": diamonds,
+            "beans": beans
+          }
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
 }

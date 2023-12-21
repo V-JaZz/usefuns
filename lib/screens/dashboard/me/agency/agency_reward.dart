@@ -18,52 +18,43 @@ class _AgencyRewardState extends State<AgencyReward> {
     return Scaffold(
       body: Column(children: [
         SizedBox(
-          height: 30 * a,
+          height: 36 * a,
         ),
         red_cont(7668),
         SizedBox(
           height: 30 * a,
         ),
-        Padding(
-          padding: EdgeInsets.only(left: 48 * a, right: 48 * a),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Image.asset('assets/agency/2.png'),
-              Image.asset('assets/agency/1.png'),
-              Image.asset('assets/agency/3.png'),
-            ],
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Image.asset('assets/agency/2.png'),
+            Image.asset('assets/agency/1.png'),
+            Image.asset('assets/agency/3.png'),
+          ],
         ),
         SizedBox(
-          height: 20 * a,
+          height: 36 * a,
         ),
         red_cont(5643),
         SizedBox(
           height: 20 * a,
         ),
-        Padding(
-          padding: EdgeInsets.only(left: 48 * a, right: 48 * a),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Image.asset('assets/agency/4.png'),
-              Image.asset('assets/agency/5.png'),
-              Image.asset('assets/agency/6.png'),
-            ],
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Image.asset('assets/agency/4.png'),
+            Image.asset('assets/agency/5.png'),
+            Image.asset('assets/agency/6.png'),
+          ],
         ),
         SizedBox(
-          height: 20 * a,
+          height: 36 * a,
         ),
         red_cont(7878),
         SizedBox(
           height: 20 * a,
         ),
-        Padding(
-          padding: EdgeInsets.only(left: 50 * a, right: 200 * a),
-          child: Image.asset('assets/agency/6.png'),
-        ),
+        Image.asset('assets/agency/6.png'),
       ]),
     );
   }
@@ -76,11 +67,12 @@ class _AgencyRewardState extends State<AgencyReward> {
       child: Container(
         width: 175 * a,
         height: 23 * a,
-        decoration: const BoxDecoration(
-          color: Color.fromRGBO(255, 0, 0, 1),
+        decoration: BoxDecoration(
+            color: Colors.deepOrange,
+            borderRadius: BorderRadius.circular(4*a)
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Center(
               child: Text(
@@ -94,7 +86,10 @@ class _AgencyRewardState extends State<AgencyReward> {
                 ),
               ),
             ),
-            Image.asset('assets/icons/ic_diamond.png'),
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Image.asset('assets/icons/ic_diamond.png'),
+            ),
           ],
         ),
       ),

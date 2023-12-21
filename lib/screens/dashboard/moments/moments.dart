@@ -598,7 +598,11 @@ class _MomentsState extends State<Moments> with TickerProviderStateMixin {
         ),
           ),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: (){Get.to(()=>const PostMoments());},tooltip: 'Add Moment',child: const Icon(Icons.add)),
+      floatingActionButton: FloatingActionButton(
+          onPressed: (){Get.to(()=>const PostMoments());},
+          tooltip: 'Add Moment',
+          child: const Icon(Icons.add)),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 

@@ -23,7 +23,7 @@ class _AdminsBottomSheetState extends State<AdminsBottomSheet> {
     double b = a * 0.97;
     return Consumer<ZegoRoomProvider>(
       builder: (context, value, child) {
-        final admins = value.zegoRoom?.admins??[];
+        final admins = value.room!.admin!;
         return Container(
           color: Colors.white,
           child: Column(
@@ -189,12 +189,10 @@ class _AdminsBottomSheetState extends State<AdminsBottomSheet> {
                                         onPressed: ()=> _showConfirmationDialog(
                                                   () async {
                                                     final p = Provider.of<RoomsProvider>(context,listen: false);
-                                                    final list = value.zegoRoom!.admins;
                                                     Get.back();
-                                                    list.remove(admins[index]);
-                                                    value.updateAdmin(list);
+                                                    value.room!.admin!.remove(admins[index]);
                                                     await p.removeAdmin(value.room!.id!,admins[index]);
-                                                    p.getAllMine();
+                                                    value.updateAdminList();
                                                   },
                                           user.name
                                                 ),

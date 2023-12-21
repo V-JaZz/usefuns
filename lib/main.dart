@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:live_app/provider/auth_provider.dart';
 import 'package:live_app/provider/club_provider.dart';
 import 'package:live_app/provider/gifts_provider.dart';
+import 'package:live_app/provider/messages_provider.dart';
 import 'package:live_app/provider/moments_provider.dart';
 import 'package:live_app/provider/rooms_provider.dart';
 import 'package:live_app/provider/seller_agency_provider.dart';
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => ClubProvider()),
         ChangeNotifierProvider(create: (context) => ShopWalletProvider()),
         ChangeNotifierProvider(create: (context) => GiftsProvider()),
+        ChangeNotifierProvider(create: (context) => MessagesProvider()),
         ChangeNotifierProvider(create: (context) => SellerAgencyProvider()),
       ],
 

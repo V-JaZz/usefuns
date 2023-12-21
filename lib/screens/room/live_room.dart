@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -5,16 +6,21 @@ import 'package:get/get.dart';
 import 'package:live_app/data/model/body/zego_broadcast_model.dart';
 import 'package:live_app/screens/room/widget/power_options.dart';
 import 'package:live_app/screens/room/widget/sound_visualizer.dart';
+import 'package:live_app/screens/room/widget/unlock_treasure_box.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:marquee_text/marquee_text.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 import '../../data/model/body/zego_stream_model.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
+import '../../data/model/response/room_gift_history_model.dart';
+import '../../provider/gifts_provider.dart';
 import '../../provider/user_data_provider.dart';
 import '../../provider/zego_room_provider.dart';
-import '../../subscreens/scree/live_record.dart';
+import '../../utils/helper.dart';
+import 'widget/live_record.dart';
 import '../../utils/common_widgets.dart';
 import '../../utils/zego_config.dart';
 import '../dashboard/me/profile/user_profile.dart';
@@ -33,7 +39,6 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
 
   late final LiveRoomBottomSheets bs;
   late final ZegoRoomProvider zegoRoomProvider;
-  bool chatLoading = false;
 
   @override
   void initState() {
@@ -42,6 +47,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
     bs = LiveRoomBottomSheets(context);
     Permission.microphone.status.then((value) => zegoRoomProvider.isMicrophonePermissionGranted = value == PermissionStatus.granted);
     zegoRoomProvider.vsync = this;
+    Provider.of<GiftsProvider>(context,listen: false).getAllContribution(zegoRoomProvider.room!.id!);
     super.initState();
   }
 
@@ -324,48 +330,98 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                   ),
                                 ),
                                 const Spacer(flex: 2),
-                                GestureDetector(
-                                  onTap: bs.showContributionBottomSheet,
-                                  child: Container(
-                                    padding: EdgeInsets.fromLTRB(
-                                        12 * a, 4 * a, 9 * a, 4 * a),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0x33000000),
-                                      borderRadius: BorderRadius.circular(12 * a),
-                                    ),
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        if(value.room!.contributorsList!.isNotEmpty)
-                                          for(int i=0; i < (value.room!.contributorsList!.length>2?3:value.room!.contributorsList!.length);i++)
-                                            Container(
-                                              margin: EdgeInsets.fromLTRB(
-                                                  0 * a, 0 * a, 12 * a, 0 * a),
-                                              width: 21 * a,
-                                              height: 21 * a,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(9 * a),
-                                                image: const DecorationImage(
-                                                  fit: BoxFit.cover,
-                                                  image: AssetImage(
-                                                    'assets/dummy/b1.png',
+                                Consumer<GiftsProvider>(
+                                  builder: (context, gp, child) {
+                                    final list = gp.todayRoomContribution;
+                                    return GestureDetector(
+                                      onTap: bs.showContributionBottomSheet,
+                                      child: Container(
+                                        padding: EdgeInsets.fromLTRB(
+                                            12 * a, 4 * a, 9 * a, 4 * a),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0x33000000),
+                                          borderRadius: BorderRadius.circular(12 * a),
+                                        ),
+                                        child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              if(list.isNotEmpty)
+                                                Row(
+                                                  children: List.generate(
+                                                    list.length>2?3:list.length,
+                                                        (i) {
+                                                      final userId = list.keys.elementAt(i);
+                                                      final List<GiftHistory> history = list[userId]!;
+                                                      int diamondsSum = 0;
+                                                      for(var g in history){
+                                                        diamondsSum = diamondsSum+g.gift!.coin!;
+                                                      }
+                                                      return FutureBuilder(
+                                                        future: Provider.of<UserDataProvider>(context,listen: false).getUser(id: userId),
+                                                        builder: (context, snapshot) {
+                                                          switch (snapshot.connectionState) {
+                                                            case ConnectionState.none:
+                                                              return const Text('none...');
+                                                            case ConnectionState.active:
+                                                              return const Text('active...');
+                                                            case ConnectionState.waiting:
+                                                              return Shimmer.fromColors(
+                                                                baseColor: const Color.fromARGB(
+                                                                    248, 188, 187, 187),
+                                                                highlightColor: Colors.white,
+                                                                period: const Duration(seconds: 1),
+                                                                child: Container(
+                                                                  margin: EdgeInsets.fromLTRB(
+                                                                      0 * a, 0 * a, 12 * a, 0 * a),
+                                                                  width: 21 * a,
+                                                                  height: 21 * a,
+                                                                  decoration: const BoxDecoration(
+                                                                      shape: BoxShape.circle,
+                                                                      color: Colors.white
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            case ConnectionState.done:
+                                                              if(snapshot.hasError || snapshot.data == null){
+                                                                return const Text('error!');
+                                                              }
+                                                              return Container(
+                                                                  margin: EdgeInsets.fromLTRB(
+                                                                      0 * a, 0 * a, 12 * a, 0 * a),
+                                                                  width: 21 * a,
+                                                                  height: 21 * a,
+                                                                  decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                    BorderRadius.circular(9 * a),
+                                                                    image: snapshot.data!.data!.images!.isNotEmpty
+                                                                        ? DecorationImage(
+                                                                      fit: BoxFit.cover,
+                                                                      image: NetworkImage(snapshot.data!.data!.images!.first),
+                                                                    )
+                                                                        : const DecorationImage(
+                                                                      fit: BoxFit.cover,
+                                                                      image: AssetImage('assets/profile.png'),
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                          }
+                                                        },
+                                                      );
+                                                    },
                                                   ),
                                                 ),
+                                              SizedBox(
+                                                width: 3 * a,
                                               ),
-                                             ),
-                                        SizedBox(
-                                          width: 3 * a,
-                                        ),
-                                        Icon(
-                                          Icons.chevron_right_rounded,
-                                          color: Colors.white70,
-                                          size: 18 * a,
-                                        )
-                                      ],
-                                    ),
-                                  ),
+                                              Icon(
+                                                Icons.chevron_right_rounded,
+                                                color: Colors.white70,
+                                                size: 18 * a,
+                                              )
+                                            ]),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ],
                             ),
@@ -393,7 +449,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                       if (user.streamId == ZegoConfig.instance.streamID) {
                                         bs.showMyProfileSeatBottomSheet(user);
                                       } else {
-                                          bs.showOthersProfileSeatBottomSheet(user: user, owner: value.isOwner, admin: value.zegoRoom!.admins.contains(ZegoConfig.instance.streamID));
+                                          bs.showOthersProfileSeatBottomSheet(user: user, owner: value.isOwner, admin: value.room!.admin!.contains(ZegoConfig.instance.streamID));
                                       }
                                     },
                                     child: Column(
@@ -413,47 +469,20 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                                 ),
                                               ),
                                               Center(
-                                                child: Container(
-                                                  width: 52 * a,
-                                                  height: 52 * a,
-                                                  decoration: BoxDecoration(
-                                                      image: (user.image??'')== '' ?const DecorationImage(
-                                                        fit: BoxFit.cover,
-                                                        image: AssetImage(
-                                                          'assets/profile.png',
-                                                        ),
-                                                        scale: 3,
-                                                        alignment: Alignment.center,
-                                                      )
-                                                          :DecorationImage(
-                                                        fit: BoxFit.cover,
-                                                        image: NetworkImage(
-                                                          user.image??'',
-                                                        ),
-                                                        scale: 3,
-                                                        alignment: Alignment.center,
-                                                      ),
-                                                      shape: BoxShape.circle),
+                                                child: userProfileDisplay(
+                                                  size: 72 * a,
+                                                  image: user.image??'',
+                                                  frame: user.frame??'',
                                                   child: !user.micOn!
                                                       ? Container(
-                                                          width: 52 * a,
-                                                          height: 52 * a,
-                                                          decoration: const BoxDecoration(
-                                                            color: Colors.black26,
-                                                            shape: BoxShape.circle
-                                                          ),
-                                                          child: Icon(Icons.mic_off,color: Colors.white.withOpacity(0.8),size: 18*a),
-                                                      ):null,
-                                                ),
-                                              ),
-                                              if(user.frame!=null)
-                                                Center(
-                                                child: SizedBox(
-                                                  width: double.infinity,
-                                                  height: double.infinity,
-                                                  child: Image.network(
-                                                      user.frame!
-                                                  ),
+                                                    width: 52 * a,
+                                                    height: 52 * a,
+                                                    decoration: const BoxDecoration(
+                                                        color: Colors.black26,
+                                                        shape: BoxShape.circle
+                                                    ),
+                                                    child: Icon(Icons.mic_off,color: Colors.white.withOpacity(0.8),size: 18*a),
+                                                  ):null,
                                                 ),
                                               ),
                                               if(user.reactionController!=null)
@@ -495,7 +524,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                               Icon(CupertinoIcons.star_circle_fill,size: 11*a,color: Colors.white),
                                               SizedBox(width: 2 * a),
                                               Text(
-                                                '0',
+                                                '${user.points??0}',
                                                 textAlign: TextAlign.center,
                                                 style: SafeGoogleFont(
                                                   'Poppins',
@@ -516,7 +545,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                     }
                                     return GestureDetector(
                                       onTap: () {
-                                          if(value.isOwner || value.zegoRoom!.admins.contains(ZegoConfig.instance.streamID)) {
+                                          if(value.isOwner || value.room!.admin!.contains(ZegoConfig.instance.streamID)) {
                                             bs.showSeatOptionsBottomSheet(i);
                                           }else if(value.onSeat && !value.zegoRoom!.lockedSeats.contains(i)){
                                             value.stopPublishingStream();
@@ -560,165 +589,194 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                 )),
                           ),
                           if(value.isOwner) Expanded(
-                            child: Center(
-                              child: SizedBox(
-                                height: 36*a,
-                                width: 54*a,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    shape: const StadiumBorder(),
-                                    backgroundColor: Colors.white12,
-                                    surfaceTintColor: Colors.black26,
-                                    elevation: 0,
-                                    padding: EdgeInsets.zero,
-                                  ),
-                                  onPressed: (){
-                                    showDialog(
-                                      context: context,
-                                      barrierColor: Colors.transparent,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          insetPadding: const EdgeInsets.only(left: 18, right: 18, top: 0,bottom: 0),
-                                          actionsPadding: EdgeInsets.zero,
-                                          contentPadding: EdgeInsets.zero,
-                                          titlePadding: EdgeInsets.zero,
-                                          buttonPadding: EdgeInsets.zero,
-                                          iconPadding: EdgeInsets.zero,
-                                          backgroundColor: const Color(0xBF9e26bc),
-                                          shape: ShapeBorder.lerp(
-                                              InputBorder.none, InputBorder.none, 0),
-                                          content: Container(
-                                            padding: EdgeInsets.only(bottom: 14*a,top: 7*a),
-                                            width: 400 * a,
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Padding(
-                                                      padding:
-                                                      EdgeInsets.only(left: 8 * a),
-                                                      child: Icon(
-                                                          CupertinoIcons.question_circle,
-                                                          color: Colors.white,
-                                                          size: 12 * a),
-                                                    ),
-                                                    const Spacer()
-                                                  ],
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    const Spacer(flex: 2),
-                                                    Container(
-                                                      width: 64 * a,
-                                                      height: 17 * a,
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                        BorderRadius.circular(9 * a),
-                                                        color: const Color(0xffffe500),
-                                                      ),
-                                                      child: Center(
-                                                        child: Row(
-                                                          mainAxisSize: MainAxisSize.min,
-                                                          children: [
-                                                            Icon(
-                                                                CupertinoIcons.heart_fill,
-                                                                size: 12 * a),
-                                                            Text(
-                                                              ' Match',
-                                                              style: SafeGoogleFont(
-                                                                'Poppins',
-                                                                fontSize: 9 * b,
-                                                                fontWeight:
-                                                                FontWeight.w400,
-                                                                height: 1.5 * b / a,
-                                                                letterSpacing: 0.36 * a,
-                                                                color: const Color(
-                                                                    0xff000000),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    const Spacer(flex: 1),
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        bs.inviteMemberSheet();
-                                                      },
-                                                      child: Container(
-                                                        width: 64 * a,
-                                                        height: 17 * a,
-                                                        decoration: BoxDecoration(
-                                                          borderRadius:
-                                                          BorderRadius.circular(
-                                                              9 * a),
-                                                          color: const Color(0xffffe500),
-                                                        ),
-                                                        child: Center(
-                                                          child: Row(
-                                                            mainAxisSize:
-                                                            MainAxisSize.min,
-                                                            children: [
-                                                              Icon(Icons.person_add,
-                                                                  size: 12 * a),
-                                                              Text(
-                                                                ' Invite',
-                                                                style: SafeGoogleFont(
-                                                                  'Poppins',
-                                                                  fontSize: 9 * b,
-                                                                  fontWeight:
-                                                                  FontWeight.w400,
-                                                                  height: 1.5 * b / a,
-                                                                  letterSpacing: 0.36 * a,
-                                                                  color: const Color(
-                                                                      0xff000000),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    const Spacer(flex: 2),
-                                                  ],
-                                                ),
-                                                SizedBox(height: 5*a),
-                                                Text(
-                                                  'Participating in PK will Help to gather Your room Members',
-                                                  style: SafeGoogleFont(
-                                                    'Poppins',
-                                                    fontSize: 9 * b,
-                                                    fontWeight: FontWeight.w400,
-                                                    height: 1.5 * b / a,
-                                                    letterSpacing: 0.24 * a,
-                                                    color: const Color(0xffffffff),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
+                            child: Stack(
+                              children: [
+                                Center(
+                                  child: SizedBox(
+                                    height: 36*a,
+                                    width: 54*a,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        shape: const StadiumBorder(),
+                                        backgroundColor: Colors.white12,
+                                        surfaceTintColor: Colors.black26,
+                                        elevation: 0,
+                                        padding: EdgeInsets.zero,
+                                      ),
+                                      onPressed: (){
+                                        // showDialog(
+                                        //   context: context,
+                                        //   barrierColor: Colors.transparent,
+                                        //   builder: (BuildContext context) {
+                                        //     return AlertDialog(
+                                        //       insetPadding: const EdgeInsets.only(left: 18, right: 18, top: 0,bottom: 0),
+                                        //       actionsPadding: EdgeInsets.zero,
+                                        //       contentPadding: EdgeInsets.zero,
+                                        //       titlePadding: EdgeInsets.zero,
+                                        //       buttonPadding: EdgeInsets.zero,
+                                        //       iconPadding: EdgeInsets.zero,
+                                        //       backgroundColor: const Color(0xBF9e26bc),
+                                        //       shape: ShapeBorder.lerp(
+                                        //           InputBorder.none, InputBorder.none, 0),
+                                        //       content: Container(
+                                        //         padding: EdgeInsets.only(bottom: 14*a,top: 7*a),
+                                        //         width: 400 * a,
+                                        //         child: Column(
+                                        //           mainAxisAlignment: MainAxisAlignment.start,
+                                        //           crossAxisAlignment: CrossAxisAlignment.center,
+                                        //           mainAxisSize: MainAxisSize.min,
+                                        //           children: [
+                                        //             Row(
+                                        //               mainAxisAlignment:
+                                        //               MainAxisAlignment.spaceBetween,
+                                        //               children: [
+                                        //                 Padding(
+                                        //                   padding:
+                                        //                   EdgeInsets.only(left: 8 * a),
+                                        //                   child: Icon(
+                                        //                       CupertinoIcons.question_circle,
+                                        //                       color: Colors.white,
+                                        //                       size: 12 * a),
+                                        //                 ),
+                                        //                 const Spacer()
+                                        //               ],
+                                        //             ),
+                                        //             Row(
+                                        //               children: [
+                                        //                 const Spacer(flex: 2),
+                                        //                 Container(
+                                        //                   width: 64 * a,
+                                        //                   height: 17 * a,
+                                        //                   decoration: BoxDecoration(
+                                        //                     borderRadius:
+                                        //                     BorderRadius.circular(9 * a),
+                                        //                     color: const Color(0xffffe500),
+                                        //                   ),
+                                        //                   child: Center(
+                                        //                     child: Row(
+                                        //                       mainAxisSize: MainAxisSize.min,
+                                        //                       children: [
+                                        //                         Icon(
+                                        //                             CupertinoIcons.heart_fill,
+                                        //                             size: 12 * a),
+                                        //                         Text(
+                                        //                           ' Match',
+                                        //                           style: SafeGoogleFont(
+                                        //                             'Poppins',
+                                        //                             fontSize: 9 * b,
+                                        //                             fontWeight:
+                                        //                             FontWeight.w400,
+                                        //                             height: 1.5 * b / a,
+                                        //                             letterSpacing: 0.36 * a,
+                                        //                             color: const Color(
+                                        //                                 0xff000000),
+                                        //                           ),
+                                        //                         ),
+                                        //                       ],
+                                        //                     ),
+                                        //                   ),
+                                        //                 ),
+                                        //                 const Spacer(flex: 1),
+                                        //                 GestureDetector(
+                                        //                   onTap: () {
+                                        //                     bs.inviteMemberSheet();
+                                        //                   },
+                                        //                   child: Container(
+                                        //                     width: 64 * a,
+                                        //                     height: 17 * a,
+                                        //                     decoration: BoxDecoration(
+                                        //                       borderRadius:
+                                        //                       BorderRadius.circular(
+                                        //                           9 * a),
+                                        //                       color: const Color(0xffffe500),
+                                        //                     ),
+                                        //                     child: Center(
+                                        //                       child: Row(
+                                        //                         mainAxisSize:
+                                        //                         MainAxisSize.min,
+                                        //                         children: [
+                                        //                           Icon(Icons.person_add,
+                                        //                               size: 12 * a),
+                                        //                           Text(
+                                        //                             ' Invite',
+                                        //                             style: SafeGoogleFont(
+                                        //                               'Poppins',
+                                        //                               fontSize: 9 * b,
+                                        //                               fontWeight:
+                                        //                               FontWeight.w400,
+                                        //                               height: 1.5 * b / a,
+                                        //                               letterSpacing: 0.36 * a,
+                                        //                               color: const Color(
+                                        //                                   0xff000000),
+                                        //                             ),
+                                        //                           ),
+                                        //                         ],
+                                        //                       ),
+                                        //                     ),
+                                        //                   ),
+                                        //                 ),
+                                        //                 const Spacer(flex: 2),
+                                        //               ],
+                                        //             ),
+                                        //             SizedBox(height: 5*a),
+                                        //             Text(
+                                        //               'Participating in PK will Help to gather Your room Members',
+                                        //               style: SafeGoogleFont(
+                                        //                 'Poppins',
+                                        //                 fontSize: 9 * b,
+                                        //                 fontWeight: FontWeight.w400,
+                                        //                 height: 1.5 * b / a,
+                                        //                 letterSpacing: 0.24 * a,
+                                        //                 color: const Color(0xffffffff),
+                                        //               ),
+                                        //             ),
+                                        //           ],
+                                        //         ),
+                                        //       ),
+                                        //     );
+                                        //   },
+                                        // );
                                       },
-                                    );
-                                  },
-                                  child: Text(
-                                    'PK',
-                                    style: SafeGoogleFont(
-                                      'Poppins',
-                                      fontSize: 18 * b,
-                                      fontStyle: FontStyle.italic,
-                                      fontWeight: FontWeight.w400,
-                                      letterSpacing: 0.48 * a,
-                                      color: const Color.fromARGB(255, 225, 198, 159),
+                                      child: Text(
+                                        'PK',
+                                        style: SafeGoogleFont(
+                                          'Poppins',
+                                          fontSize: 18 * b,
+                                          fontStyle: FontStyle.italic,
+                                          fontWeight: FontWeight.w400,
+                                          letterSpacing: 0.48 * a,
+                                          color: const Color.fromARGB(255, 225, 198, 159),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: AnimatedContainer(
+                                    margin: EdgeInsets.only(left: 12*a),
+                                    duration: const Duration(milliseconds: 500),
+                                    width: value.newUser==null?0:120,
+                                    height: 27 * a,
+                                    padding: EdgeInsets.fromLTRB(
+                                        11 * a, 5 * a, 11 * a, 5 * a),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(4),
+                                        color: const Color(0x66090000)
+                                    ),
+                                    child: Text(
+                                      value.newUser==null?'':'${value.newUser}',
+                                      overflow: TextOverflow.ellipsis,
+                                      style: SafeGoogleFont(
+                                        'Poppins',
+                                        fontSize: 10.5 * b,
+                                        fontWeight: FontWeight.w400,
+                                        color: const Color(0xFFFFE57C),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
                           ),
                           Expanded(
@@ -794,9 +852,6 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                             margin: EdgeInsets.only(bottom: 6 * a),
                                             child: GestureDetector(
                                               onTap: () async {
-                                                setState(() {
-                                                  chatLoading = true;
-                                                });
                                                 final myId = ZegoConfig.instance.streamID;
                                                 if(message.fromUser.userID == myId){
                                                   Get.to(()=>const UserProfile());
@@ -804,9 +859,6 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                                   final u = await Provider.of<UserDataProvider>(context,listen: false).addVisitor(message.fromUser.userID);
                                                   Get.to(()=>UserProfile(userData: u.data!));
                                                 }
-                                                setState(() {
-                                                  chatLoading = false;
-                                                });
                                               },
                                               child: Container(
                                                 padding: EdgeInsets.fromLTRB(
@@ -861,7 +913,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                                                 ),
                                                                 SizedBox(width: 6*a),
                                                                 if(body.tags!.isNotEmpty) Container(
-                                                                  height: 14 * a,
+                                                                  height: 12 * a,
                                                                   padding: const EdgeInsets.symmetric(vertical: 1,horizontal: 4),
                                                                   decoration: BoxDecoration(
                                                                     color: const Color(0xff9e26bc),
@@ -895,7 +947,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                                 mainAxisSize: MainAxisSize.min,
                                                                 children: [
-                                                                  buildRichText('Sent to @${body.gift?.to}'),
+                                                                  buildRichText('Sent to @${body.gift?.toName}'),
                                                                   SizedBox(height: 9*a),
                                                                   Row(
                                                                     mainAxisSize: MainAxisSize.min,
@@ -905,7 +957,6 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                                                         height: 45*a,
                                                                         width: 45*a,
                                                                         errorBuilder: (context, error, stackTrace) {
-                                                                            print('body.gift!.thumbnailPath! ${body.gift!.thumbnailPath!}');
                                                                           return SizedBox(
                                                                             height: 45*a,
                                                                             width: 45*a);
@@ -934,15 +985,6 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                                         ),
                                                       ),
                                                     ),
-                                                    if(chatLoading)
-                                                      SizedBox(
-                                                        height: 30* a,
-                                                        width: 30* a,
-                                                        child: Padding(
-                                                          padding: EdgeInsets.all(8.0* a),
-                                                          child: const CircularProgressIndicator(color: Colors.white54),
-                                                        ),
-                                                      )
                                                   ],
                                                 ),
                                               ),
@@ -986,7 +1028,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                               Padding(
                                                 padding: EdgeInsets.all(4*a),
                                                 child: LinearProgressIndicator(
-                                                  value: setValue(value.room!.treasureBoxLevel!+1,value.room!.usedDaimonds!),
+                                                  value: setTreasureBoxValue(value.room!.treasureBoxLevel!,value.room!.usedDaimonds!),
                                                   backgroundColor: Colors.white24,
                                                   valueColor: const AlwaysStoppedAnimation<Color>(Colors.orange),
                                                 ),
@@ -1133,7 +1175,6 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
     );
   }
 
-  // Function to build RichText widget with different text styles
   Widget buildRichText(String text) {
     // double baseWidth = 360;
     // double a = Get.width / baseWidth;
@@ -1193,7 +1234,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
     );
   }
 
-  double setValue(int selectedBox, int usedDiamonds) {
+  double setTreasureBoxValue(int selectedBox, int usedDiamonds) {
     print('$selectedBox $usedDiamonds');
     switch(selectedBox){
       case 0:

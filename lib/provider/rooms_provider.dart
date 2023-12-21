@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -41,13 +43,41 @@ class RoomsProvider with ChangeNotifier {
     return responseModel;
   }
 
+  Future<Room?> getRoom(String roomId) async {
+    final apiResponse = await _roomsRepo.getRoom(roomId);
+    Room? responseModel;
+    if (apiResponse.statusCode == 200) {
+      responseModel = Room.fromJson(jsonDecode(apiResponse.body)['data']);
+    }
+    return responseModel;
+  }
+
+  Future<Room?> getAdmins(String roomId) async {
+    final apiResponse = await _roomsRepo.getAdmins(roomId);
+    Room? responseModel;
+    if (apiResponse.statusCode == 200) {
+      responseModel = Room.fromJson(jsonDecode(apiResponse.body)['data']);
+    }
+    return responseModel;
+  }
+
+  Future<Room?> getTreasureBox(String roomId) async {
+    final apiResponse = await _roomsRepo.getTreasureBox(roomId);
+    Room? responseModel;
+    if (apiResponse.statusCode == 200) {
+      responseModel = Room.fromJson(jsonDecode(apiResponse.body)['data']);
+    }
+    return responseModel;
+  }
+
   joinRoom(Room room) async {
     final provider = Provider.of<ZegoRoomProvider>(Get.context!,listen: false);
+    if(provider.room != null) await provider.destroy();
     bool isOwner = room.userId! == storageService.getString(Constants.id);
     provider.room = room;
     provider.roomID = room.roomId!;
     provider.isOwner = isOwner;
-    provider.zegoRoom = ZegoRoomModel(totalSeats: room.noOfSeats??8,lockedSeats:[], viewCalculator: false, admins: room.admin??[]);
+    provider.zegoRoom = ZegoRoomModel(totalSeats: room.noOfSeats??8,lockedSeats:[], viewCalculator: false);
     Get.dialog(const RoomPreLoadingDialog(),barrierDismissible: false);
   }
 

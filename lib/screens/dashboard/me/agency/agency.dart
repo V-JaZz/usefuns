@@ -1,13 +1,13 @@
 import 'package:contained_tab_bar_view/contained_tab_bar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import 'package:live_app/subscreens/agency/agency_reward.dart';
-import 'package:live_app/subscreens/agency/host_data.dart';
-import 'package:live_app/subscreens/agency/host_member.dart';
 import 'package:live_app/utils/utils_assets.dart';
-
-import '../../screens/dashboard/me/me.dart';
+import 'package:provider/provider.dart';
+import '../../../../provider/seller_agency_provider.dart';
+import '../../../../provider/user_data_provider.dart';
+import 'agency_reward.dart';
+import 'tabs/host_data.dart';
+import 'tabs/invite_host.dart';
 
 class AgencyTab extends StatefulWidget {
   const AgencyTab({super.key});
@@ -18,6 +18,14 @@ class AgencyTab extends StatefulWidget {
 
 class _AgencyTabState extends State<AgencyTab> {
   @override
+  void initState() {
+    Provider.of<SellerAgencyProvider>(context,listen: false).loginAgency(
+        '${Provider.of<UserDataProvider>(context,listen: false).userData?.data?.mobile}'
+    );
+    super.initState();
+    super.initState();
+  }
+  @override
   Widget build(BuildContext context) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
@@ -25,9 +33,9 @@ class _AgencyTabState extends State<AgencyTab> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 66 * a,
-        backgroundColor: const Color(0xff9E26BC).withOpacity(0.2),
+        backgroundColor: Colors.deepOrange,
         leading:   IconButton(
-          icon:  const Icon(Icons.arrow_back_ios_new_outlined),
+          icon:  const Icon(Icons.arrow_back_ios_new_outlined,color: Colors.white,),
           onPressed: () {
             Get.back();
           },
@@ -36,34 +44,44 @@ class _AgencyTabState extends State<AgencyTab> {
           'Agency',
           style: SafeGoogleFont(
             'Poppins',
-            fontSize: 12 * b,
+            fontSize: 14 * b,
             fontWeight: FontWeight.w400,
             height: 1.5 * b / a,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
       ),
-      body: Container(
-        decoration: const BoxDecoration(color: Colors.white),
-        child: ContainedTabBarView(
-          tabs: [
-            textt('HostData'),
-            textt('HostMember'),
-            textt('AgencyReport'),
-            textt('AgencyReward'),
-          ],
-          views: const [
-            Agency(),
-            HostMember(),
-            HostMember(),
-            AgencyReward(),
-          ],
-        ),
+      body: Consumer<SellerAgencyProvider>(
+        builder: (context, value, _) {
+          if(!value.isAgentLogged){
+            return const Center(child: CircularProgressIndicator(color: Colors.deepOrange));
+          }
+          return Container(
+          decoration: const BoxDecoration(color: Colors.white),
+          child: ContainedTabBarView(
+            tabBarProperties: const TabBarProperties(
+              indicatorColor: Colors.deepOrange
+            ),
+            tabs: [
+              tabBarWidget('Host Data'),
+              tabBarWidget('Invite Host'),
+              // tabBarWidget('Report'),
+              tabBarWidget('Reward'),
+            ],
+            views: const [
+              HostDataTabView(),
+              InviteHostTabView(),
+              // HostMember(),
+              AgencyReward(),
+            ],
+          ),
+        );
+        },
       ),
     );
   }
 
-  Text textt(txt) {
+  Text tabBarWidget(txt) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
     double b = a * 0.97;

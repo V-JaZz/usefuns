@@ -164,7 +164,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
           if(value.room==null) return const SizedBox.shrink();
           bool roomIcon = value.room!.images!.isNotEmpty;
           return FloatingActionButton(
-              isExtended: true,
+              tooltip: 'Goto Room',
               child: Stack(
                 children: [
                   if (roomIcon)

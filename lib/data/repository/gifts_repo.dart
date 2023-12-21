@@ -17,10 +17,20 @@ class GiftsRepo {
     }
   }
 
+  Future<http.Response> getAllContribution(String id) async {
+    try {
+      http.Response response = await _httpClient.get('room/getGiftHistory/$id');
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<http.Response> sendGift(
       String senderId,
       String receiverId,
-      String giftId
+      String giftId,
+      String roomId
       ) async {
     try {
       http.Response response = await _httpClient.post(
@@ -28,8 +38,27 @@ class GiftsRepo {
         {
           "sender": senderId,
           "receiver": receiverId,
-          "giftId": giftId
+          "giftId": giftId,
+          "roomId": roomId
         }
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<http.Response> updateTBoxLevel(
+      String roomId,
+      int giftPrice
+      ) async {
+    try {
+      http.Response response = await _httpClient.put(
+          'room/updateBoxLevel',
+          {
+            "roomId": roomId,
+            "daimonds": giftPrice
+          }
       );
       return response;
     } catch (e) {

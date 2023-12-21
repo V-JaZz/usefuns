@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../data/model/body/zego_stream_model.dart';
 import '../../../provider/user_data_provider.dart';
 import '../../../provider/zego_room_provider.dart';
+import '../../../utils/helper.dart';
 import '../../dashboard/me/profile/user_profile.dart';
 import '../../../utils/common_widgets.dart';
 import '../../../utils/utils_assets.dart';
@@ -159,7 +160,7 @@ class MyProfileSeatBottomSheet extends StatelessWidget {
     double b = a * 0.97;
     return Consumer<UserDataProvider>(
       builder:(context, value, child) {
-        final List<String> admins = Provider.of<ZegoRoomProvider>(context,listen: false).zegoRoom!.admins;
+        final List<String> admins = Provider.of<ZegoRoomProvider>(context,listen: false).room!.admin!;
         return Stack(
         children: [
           Container(
@@ -386,48 +387,13 @@ class MyProfileSeatBottomSheet extends StatelessWidget {
           Positioned(
             top: 0,
             left: (Get.width*0.5)-(50*a),
-            child: GestureDetector(
-              onTap: (){
+            child: userProfileDisplay(
+                size: 100*a,
+                image: value.userData!.data!.images!.isEmpty?'':value.userData!.data!.images?.first??'',
+                frame: userFrameViewPath(value.userData!.data!.frame),
+                onTap: (){
                   Get.to(()=>const UserProfile());
-              },
-              child: SizedBox(
-                width: 100 * a,
-                height: 100 * a,
-                child: Stack(
-                  children: [
-                    Positioned(
-                      top: 15,
-                      right: 13,
-                      left: 13,
-                      bottom: 11,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image:value.userData!.data!.images!.isEmpty
-                                ?const DecorationImage(
-                                image: AssetImage('assets/profile.png')
-                            )
-                                :DecorationImage(
-                                image: NetworkImage(
-                                    value.userData!.data!.images!.first)
-                            )
-                        ),
-                      ),
-                    ),
-                    if(value.userData!.data!.frame != null && value.userData!.data!.frame!.isNotEmpty)
-                      Container(
-                          margin: EdgeInsets.fromLTRB(
-                              0 * a, 0 * a, 0 * a, 0 * a),
-                          width: 100 * a,
-                          height: 100 * a,
-                          child: Image.network(
-                            value.userData!.data!.frame!.first.images!.first,
-                            fit: BoxFit.contain,
-                          )
-                      ),
-                  ],
-                ),
-              ),
+                },
             ),
           ),
         ],
@@ -453,7 +419,7 @@ class _OthersProfileSeatBottomSheetState extends State<OthersProfileSeatBottomSh
   @override
   void initState() {
     userDataProvider = Provider.of<UserDataProvider>(context,listen: false);
-    follow = userDataProvider.userData!.data!.following!.firstWhereOrNull((element) => element == widget.user.streamId)!=null;
+    follow = Provider.of<UserDataProvider>(context,listen: false).userData!.data!.following!.firstWhereOrNull((element) => element == widget.user.streamId)!=null;
     super.initState();
   }
 
@@ -494,10 +460,10 @@ class _OthersProfileSeatBottomSheetState extends State<OthersProfileSeatBottomSh
                           17 * a,
                           viewZero: true
                       ),
-                        if(value.zegoRoom!.admins.contains(widget.user.streamId)) SizedBox(
+                        if(value.room!.admin!.contains(widget.user.streamId)) SizedBox(
                           width: 6*a,
                         ),
-                        if(value.zegoRoom!.admins.contains(widget.user.streamId)) Container(
+                        if(value.room!.admin!.contains(widget.user.streamId)) Container(
                           decoration: BoxDecoration(
                               color: const Color(0xffFF9933),
                               borderRadius: BorderRadius.circular(12*a)
@@ -681,24 +647,19 @@ class _OthersProfileSeatBottomSheetState extends State<OthersProfileSeatBottomSh
                           onTap: (){}
                       ),
                       if(widget.owner==true) iconTextWidget(
-                          text: value.zegoRoom!.admins.contains(widget.user.streamId) ? 'Remove Admin':'Set Admin',
+                          text: value.room!.admin!.contains(widget.user.streamId) ? 'Remove Admin':'Set Admin',
                           path: 'assets/icon_p/set_admin.png',
                           onTap: () async {
                             final p = Provider.of<RoomsProvider>(context,listen: false);
-                            final list = value.zegoRoom!.admins;
                             Get.back();
-                            if(value.zegoRoom!.admins.contains(widget.user.streamId)){
-                              list.remove(widget.user.streamId);
-                              value.updateAdmin(list);
+                            if(value.room!.admin!.contains(widget.user.streamId)){
+                              value.room!.admin!.remove(widget.user.streamId);
                               await p.removeAdmin(value.room!.id!, widget.user.streamId!);
-                            }else if(list.length>3){
-                              showCustomSnackBar('Max Admin limit is 4!', context,isToaster: true);
                             }else{
-                              list.add(widget.user.streamId!);
-                              value.updateAdmin(list);
+                              value.room!.admin!.add(widget.user.streamId!);
                               await p.addAdmin(value.room!.id!, widget.user.streamId!);
                             }
-                            p.getAllMine();
+                            value.updateAdminList();
                           }),
                     ],
                   ),
@@ -808,49 +769,14 @@ class _OthersProfileSeatBottomSheetState extends State<OthersProfileSeatBottomSh
           Positioned(
             top: 0,
             left: (Get.width*0.5)-(40*a),
-            child: GestureDetector(
+            child: userProfileDisplay(
+              size: 80*a,
+              image: widget.user.image??'',
+              frame: widget.user.frame??'',
               onTap: () async {
                 final user = await Provider.of<UserDataProvider>(context,listen: false).addVisitor(widget.user.streamId!);
                 Get.to(()=>UserProfile(userData: user.data!));
               },
-              child: SizedBox(
-                width: 80 * a,
-                height: 80 * a,
-                child: Stack(
-                  children: [
-                    Positioned(
-                      top: 12,
-                      right: 10,
-                      left: 10,
-                      bottom: 8,
-                      child: Container(
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image:(widget.user.image??'') == ''
-                                ?const DecorationImage(
-                                image: AssetImage('assets/profile.png')
-                            )
-                                :DecorationImage(
-                                image: NetworkImage(
-                                    widget.user.image!)
-                            )
-                        ),
-                      ),
-                    ),
-                    if(widget.user.frame != null && widget.user.frame!.isNotEmpty)
-                      Container(
-                          margin: EdgeInsets.fromLTRB(
-                              0 * a, 0 * a, 0 * a, 0 * a),
-                          width: 80 * a,
-                          height: 80 * a,
-                          child: Image.network(
-                            widget.user.frame!,
-                            fit: BoxFit.contain,
-                          )
-                      ),
-                  ],
-                ),
-              ),
             ),
           ),
         ],

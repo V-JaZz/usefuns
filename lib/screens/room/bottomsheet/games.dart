@@ -13,18 +13,18 @@ class GamesBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<Map> gamesList = [
       {
-        "image": 'assets/jackpot.gif',
-        "name": "JackPot",
+        "image": 'assets/Crazy_racing.png',
+        "name": "Crazy racing",
         "rank": "516",
       },
       {
-        "image": 'assets/ludo.gif',
-        "name": "Ludo",
+        "image": 'assets/Grady_bord.png',
+        "name": "Grady bord",
         "rank": "412",
       },
       {
-        "image": 'assets/777.png',
-        "name": "777 game",
+        "image": 'assets/Lucky_7.png',
+        "name": "Lucky 7",
         "rank": "510",
       },
       {
@@ -70,12 +70,12 @@ class GamesBottomSheet extends StatelessWidget {
               ),
               LayoutBuilder(
                 builder: (context, constraints) => GridView.count(
-                  padding: EdgeInsets.all(22 * a),
+                  padding: EdgeInsets.symmetric(vertical: 22 * a),
                   shrinkWrap: true,
                   crossAxisCount: 3,
-                  crossAxisSpacing: 18,
-                  mainAxisSpacing: 18,
-                  childAspectRatio: 3 / 4,
+                  crossAxisSpacing: 3,
+                  mainAxisSpacing: 3,
+                  childAspectRatio: 1.2,
                   physics: const NeverScrollableScrollPhysics(),
                   children: List.generate(
                     gamesList.length,
@@ -99,6 +99,7 @@ class GamesBottomSheet extends StatelessWidget {
                           SizedBox(width: 6 * a),
                           Text(
                             gamesList[index]["name"],
+                            textAlign: TextAlign.center,
                             style: SafeGoogleFont(
                               'Poppins',
                               fontSize: 14 * b,

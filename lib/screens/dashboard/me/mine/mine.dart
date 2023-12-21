@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:live_app/provider/shop_wallet_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:vertical_tabs_flutter/vertical_tabs.dart';
 import '../../../../provider/user_data_provider.dart';

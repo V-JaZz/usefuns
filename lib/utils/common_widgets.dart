@@ -4,6 +4,8 @@ import 'dart:ui' as ui;
 import 'package:get/get.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:shimmer/shimmer.dart';
+// ignore: depend_on_referenced_packages
+import 'package:svgaplayer_flutter/svgaplayer_flutter.dart';
 
 void showCustomSnackBar(String? message, BuildContext context,
     {bool isError = true, bool isToaster = false}) {
@@ -82,7 +84,7 @@ Widget userLevelTag(int level, double height, {bool viewZero = false}) {
       case < 79:
         i = 8;
         break;
-      case > 79:
+      case >= 79:
         i = 9;
         break;
     }
@@ -109,6 +111,53 @@ Widget userLevelTag(int level, double height, {bool viewZero = false}) {
         ),
       ),
     ],
+  );
+}
+
+Widget userProfileDisplay(
+    {required double size,
+      required String image,
+      required String frame,
+      Widget? child,
+      void Function()? onTap}){
+  return GestureDetector(
+    onTap: onTap,
+    child: SizedBox(
+      height: size,
+      width: size,
+      child: Stack(
+        children: [
+          Center(
+            child: Container(
+              width: size * 0.7,
+              height: size * 0.7,
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: image.isEmpty
+                      ? const DecorationImage(image: AssetImage('assets/profile.png'))
+                      : DecorationImage(image: NetworkImage(image))),
+              child: child,
+            ),
+          ),
+          if(frame.isNotEmpty)
+            frame.split('.').last == 'svga'
+                ?SizedBox(
+                  width: size,
+                  height: size,
+                  child:SVGASimpleImage(
+                    resUrl: frame,
+                ))
+                :Container(
+                  margin: EdgeInsets.all(size*0.05),
+                  width: size*0.9,
+                  height: size*0.9,
+                  child: Image.network(
+                    frame,
+                    fit: BoxFit.contain,
+                )),
+        ],
+      ),
+    ),
   );
 }
 

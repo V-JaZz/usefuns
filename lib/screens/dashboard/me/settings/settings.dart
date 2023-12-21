@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/screens/dashboard/me/contact_us.dart';
 import 'package:live_app/subscreens/ref_useFuns.dart';
 import 'package:live_app/subscreens/refund.dart';
@@ -158,7 +159,7 @@ class _SettingsState extends State<Settings> {
                       ),
                     if (m['trailing'] == 'number')
                       Text(
-                        '8456876756',
+                        '${Provider.of<UserDataProvider>(context).userData?.data?.mobile??0}',
                         style: SafeGoogleFont(
                           'Poppins',
                           fontSize: 12 * b,

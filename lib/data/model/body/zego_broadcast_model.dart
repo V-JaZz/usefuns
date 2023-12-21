@@ -49,29 +49,37 @@ class ZegoBroadcastModel {
 }
 
 class ZegoGift {
-    String? to;
+    String? toName;
+    String? toId;
     String? thumbnailPath;
     String? giftPath;
+    int? giftPrice;
     int? count;
 
     ZegoGift({
-        this.to,
+        this.toName,
+        this.toId,
         this.thumbnailPath,
         this.giftPath,
+        this.giftPrice,
         this.count,
     });
 
     factory ZegoGift.fromJson(Map<String, dynamic> json) => ZegoGift(
-        to: json["to"],
+        toName: json["toName"],
+        toId: json["toId"],
         thumbnailPath: json["thumbnail_path"],
         giftPath: json["gift_path"],
+        giftPrice: json["giftPrice"],
         count: json["count"],
     );
 
     Map<String, dynamic> toJson() => {
-        "to": to,
+        "toName": toName,
+        "toId": toId,
         "thumbnail_path": thumbnailPath,
         "gift_path": giftPath,
+        "giftPrice": giftPrice,
         "count": count,
     };
 }

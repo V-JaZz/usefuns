@@ -36,6 +36,9 @@ class _PostMomentsState extends State<PostMoments> {
       if (pickedImage == null) return null;
       await ImageCropper().cropImage(
         sourcePath: imagePaths!, // Set your desired aspect ratio
+        compressFormat: ImageCompressFormat.jpg,
+        maxHeight: 1000,
+        maxWidth: 500,
         aspectRatioPresets: [
           CropAspectRatioPreset.original,
           CropAspectRatioPreset.square,

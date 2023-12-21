@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:live_app/provider/zego_room_provider.dart';
+import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
+import '../../../data/model/response/room_gift_history_model.dart';
+import '../../../provider/gifts_provider.dart';
 
 
 class Contribution extends StatefulWidget {
@@ -13,53 +16,6 @@ class Contribution extends StatefulWidget {
 }
 
 class _ContributionState extends State<Contribution> {
-  final List<Map> giftsList = [
-    {
-      "dp": "assets/dummy/g1.png",
-      "name": "Liza",
-      "points": "33913",
-    },
-    {
-      "dp": "assets/dummy/g2.png",
-      "name": "Girl Friend.Com",
-      "points": "32878",
-    },
-    {
-      "dp": "assets/dummy/b1.png",
-      "name": "Ariful islam",
-      "points": "27567",
-    },
-    {
-      "dp": "assets/dummy/b2.png",
-      "name": "Simple Boy",
-      "points": "21398",
-    },
-    {
-      "dp": "assets/dummy/g3.png",
-      "name": "FRIENDSHIP CLUB",
-      "points": "18232",
-    },
-    {
-      "dp": "assets/dummy/g4.png",
-      "name": "Gf Bf Dating Eoom",
-      "points": "18221",
-    },
-    {
-      "dp": "assets/dummy/g5.png",
-      "name": "Nisha Hosting....",
-      "points": "17323",
-    },
-    {
-      "dp": "assets/dummy/b1.png",
-      "name": "Dimple Ayesha.",
-      "points": "11237",
-    },
-    {
-      "dp": "assets/dummy/g1.png",
-      "name": "Sheikh Papia.",
-      "points": "3421",
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +65,7 @@ class _ContributionState extends State<Contribution> {
               dividerColor: Colors.transparent,
               tabs: const [
                 Tab(
-                  text: "Last 24 Hours",
+                  text: "Today",
                 ),
                 Tab(
                   text: "Last 7 Days",
@@ -126,8 +82,10 @@ class _ContributionState extends State<Contribution> {
                       color: Colors.white,
                       padding:
                           EdgeInsets.symmetric(horizontal: 20 * a, vertical: 0),
-                      child: Consumer<ZegoRoomProvider>(
-                        builder:(context, value, child) => Column(
+                      child: Consumer<GiftsProvider>(
+                        builder:(context, value, child) {
+                          final list = value.todayRoomContribution;
+                          return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // Text(
@@ -153,7 +111,7 @@ class _ContributionState extends State<Contribution> {
                             //   ),
                             // ),
                             SizedBox(height: 20 * a),
-                            if(value.room!.contributorsList!.isEmpty)
+                            if(list.isEmpty)
                               Center(child: Text('No Data!',
                                   style: SafeGoogleFont(
                                     'Poppins',
@@ -164,155 +122,240 @@ class _ContributionState extends State<Contribution> {
                                     color: const Color(0x88000000),
                                   ))),
                             Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: List.generate(
-                                  value.room!.contributorsList!.length>2?3:value.room!.contributorsList!.length,
-                                  (i) => Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                        height: 58 * a,
-                                        child: Stack(
-                                          children: [
-                                            CircleAvatar(
-                                              foregroundImage:
-                                                  AssetImage(giftsList[i]['dp']),
-                                              radius: 25 * a,
-                                            ),
-                                            Positioned(
-                                              left: 29 * a,
-                                              top: 34 * a,
-                                              child: CircleAvatar(
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                foregroundImage: AssetImage(
-                                                    'assets/decoration/top_${i + 1}.png'),
-                                                radius: 12,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Text(
-                                        giftsList[i]['name'],
-                                        style: SafeGoogleFont(
-                                          'Poppins',
-                                          fontSize: 12 * b,
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.5 * b / a,
-                                          letterSpacing: 0.48 * a,
-                                          color: const Color(0xff000000),
-                                        ),
-                                      ),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            margin: EdgeInsets.only(right: 5 * a),
-                                            width: 13 * a,
-                                            height: 14 * a,
-                                            child: Image.asset(
-                                              'assets/icons/ic_diamond.png',
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                          Text(
-                                            giftsList[i]['points'],
-                                            style: SafeGoogleFont(
-                                              'Poppins',
-                                              fontSize: 9 * b,
-                                              fontWeight: FontWeight.w400,
-                                              height: 1.5 * b / a,
-                                              letterSpacing: 0.36 * a,
-                                              color: const Color(0xff000000),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
+                                  list.length>2?3:list.length,
+                                  (i) {
+                                    final userId = list.keys.elementAt(i);
+                                    final List<GiftHistory> history = list[userId]!;
+                                    int diamondsSum = 0;
+                                    for(var g in history){
+                                      diamondsSum = diamondsSum+g.gift!.coin!;
+                                    }
+                                    return FutureBuilder(
+                                      future: Provider.of<UserDataProvider>(context,listen: false).getUser(id: userId),
+                                        builder: (context, snapshot) {
+                                          switch (snapshot.connectionState) {
+                                            case ConnectionState.none:
+                                              return const Text('none...');
+                                            case ConnectionState.active:
+                                              return const Text('active...');
+                                            case ConnectionState.waiting:
+                                              return Shimmer.fromColors(
+                                                baseColor: const Color.fromARGB(
+                                                    248, 188, 187, 187),
+                                                highlightColor: Colors.white,
+                                                period: const Duration(seconds: 1),
+                                                child: Container(
+                                                  height: 50,
+                                                  width: 50,
+                                                  margin: const EdgeInsets.only(bottom: 36),
+                                                  decoration: const BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Colors.white
+                                                  ),
+                                                ),
+                                              );
+                                            case ConnectionState.done:
+                                              if(snapshot.hasError || snapshot.data == null){
+                                                return const Text('error!');
+                                              }
+                                              return Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: [
+                                                    SizedBox(
+                                                      height: 58 * a,
+                                                      child: Stack(
+                                                        children: [
+                                                          snapshot.data!.data!.images!.isNotEmpty
+                                                            ? CircleAvatar(
+                                                            foregroundImage:NetworkImage(snapshot.data!.data!.images!.first),
+                                                            radius: 25 * a,
+                                                          )
+                                                              : CircleAvatar(
+                                                            foregroundImage:const AssetImage('assets/profile.png'),
+                                                            radius: 25 * a,
+                                                          ),
+                                                          Positioned(
+                                                            left: 29 * a,
+                                                            top: 34 * a,
+                                                            child: CircleAvatar(
+                                                              backgroundColor:
+                                                              Colors.transparent,
+                                                              foregroundImage: AssetImage(
+                                                                  'assets/decoration/top_${i + 1}.png'),
+                                                              radius: 12,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      snapshot.data!.data!.name!,
+                                                      style: SafeGoogleFont(
+                                                        'Poppins',
+                                                        fontSize: 12 * b,
+                                                        fontWeight: FontWeight.w400,
+                                                        height: 1.5 * b / a,
+                                                        letterSpacing: 0.48 * a,
+                                                        color: const Color(0xff000000),
+                                                      ),
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        Container(
+                                                          margin: EdgeInsets.only(right: 5 * a),
+                                                          width: 13 * a,
+                                                          height: 14 * a,
+                                                          child: Image.asset(
+                                                            'assets/icons/ic_diamond.png',
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          diamondsSum.toString(),
+                                                          style: SafeGoogleFont(
+                                                            'Poppins',
+                                                            fontSize: 9 * b,
+                                                            fontWeight: FontWeight.w400,
+                                                            height: 1.5 * b / a,
+                                                            letterSpacing: 0.36 * a,
+                                                            color: const Color(0xff000000),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  ],
+                                                );
+                                          }
+                                        },
+                                    );
+                                  },
                                 )),
                             SizedBox(
                               height: 26 * a,
                             ),
-                            if(value.room!.contributorsList!.length>3)ListView(
+                            if(list.length>3)ListView(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
-                              children: List.generate(
-                                value.room!.contributorsList!.skip(3).length,
-                                (index) {
-                                  int i = index + 3;
-                                  return ListTile(
-                                    dense: true,
-                                    minVerticalPadding: 26 * a,
-                                    contentPadding: EdgeInsets.zero,
-                                    leading: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Container(
-                                          margin: EdgeInsets.fromLTRB(
-                                              0 * a, 0 * a, 11 * a, 0 * a),
-                                          child: Text(
-                                            '${i + 1}',
-                                            style: SafeGoogleFont(
-                                              'Poppins',
-                                              fontSize: 16 * b,
-                                              fontWeight: FontWeight.w400,
-                                              height: 1.5 * b / a,
-                                              letterSpacing: 0.64 * a,
-                                              color: const Color(0xff000000),
+                              children:
+
+                              List.generate(
+                                list.length-3,
+                                    (index) {
+                                      int i = index + 3;
+                                  final userId = list.keys.elementAt(i);
+                                  final List<GiftHistory> history = list[userId]!;
+                                  int diamondsSum = 0;
+                                  for(var g in history){
+                                    diamondsSum = diamondsSum+g.gift!.coin!;
+                                  }
+                                  return FutureBuilder(
+                                    future: Provider.of<UserDataProvider>(context,listen: false).getUser(id: userId),
+                                    builder: (context, snapshot) {
+                                      switch (snapshot.connectionState) {
+                                        case ConnectionState.none:
+                                          return const Text('none...');
+                                        case ConnectionState.active:
+                                          return const Text('active...');
+                                        case ConnectionState.waiting:
+                                          return Shimmer.fromColors(
+                                            baseColor: const Color.fromARGB(
+                                                248, 188, 187, 187),
+                                            highlightColor: Colors.white,
+                                            period: const Duration(seconds: 1),
+                                            child: ListTile(
+                                              dense: true,
+                                              minVerticalPadding: 26 * a,
+                                              contentPadding: EdgeInsets.zero,
+                                              leading: CircleAvatar(radius: 25 * a,foregroundColor: Colors.white),
+                                              title: Container(height: 16*a, width: 50*a, color: Colors.white,),
                                             ),
-                                          ),
-                                        ),
-                                        CircleAvatar(
-                                          foregroundImage: AssetImage(
-                                            giftsList[i]['dp'],
-                                          ),
-                                          radius: 25 * a,
-                                        ),
-                                      ],
-                                    ),
-                                    title: Text(
-                                      giftsList[i]['name'],
-                                      style: SafeGoogleFont(
-                                        'Poppins',
-                                        fontSize: 12 * b,
-                                        fontWeight: FontWeight.w400,
-                                        height: 1.5 * b / a,
-                                        letterSpacing: 0.48 * a,
-                                        color: const Color(0xff000000),
-                                      ),
-                                    ),
-                                    trailing: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Container(
-                                          margin: EdgeInsets.only(right: 5 * a),
-                                          width: 13 * a,
-                                          height: 14 * a,
-                                          child: Image.asset(
-                                            'assets/icons/ic_diamond.png',
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        Text(
-                                          giftsList[i]['points'],
-                                          style: SafeGoogleFont(
-                                            'Poppins',
-                                            fontSize: 9 * b,
-                                            fontWeight: FontWeight.w400,
-                                            height: 1.5 * b / a,
-                                            letterSpacing: 0.36 * a,
-                                            color: const Color(0xff000000),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                          );
+                                        case ConnectionState.done:
+                                          if(snapshot.hasError || snapshot.data == null){
+                                            return const Text('error!');
+                                          }
+                                          return ListTile(
+                                            dense: true,
+                                            minVerticalPadding: 26 * a,
+                                            contentPadding: EdgeInsets.zero,
+                                            leading: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Container(
+                                                  margin: EdgeInsets.fromLTRB(
+                                                      0 * a, 0 * a, 11 * a, 0 * a),
+                                                  child: Text(
+                                                    '${i + 1}',
+                                                    style: SafeGoogleFont(
+                                                      'Poppins',
+                                                      fontSize: 16 * b,
+                                                      fontWeight: FontWeight.w400,
+                                                      height: 1.5 * b / a,
+                                                      letterSpacing: 0.64 * a,
+                                                      color: const Color(0xff000000),
+                                                    ),
+                                                  ),
+                                                ),
+                                                snapshot.data!.data!.images!.isNotEmpty
+                                                    ? CircleAvatar(
+                                                  foregroundImage:NetworkImage(snapshot.data!.data!.images!.first),
+                                                  radius: 25 * a,
+                                                )
+                                                    : CircleAvatar(
+                                                  foregroundImage:const AssetImage('assets/profile.png'),
+                                                  radius: 25 * a,
+                                                ),
+                                              ],
+                                            ),
+                                            title: Text(
+                                              snapshot.data!.data!.name!,
+                                              style: SafeGoogleFont(
+                                                'Poppins',
+                                                fontSize: 12 * b,
+                                                fontWeight: FontWeight.w400,
+                                                height: 1.5 * b / a,
+                                                letterSpacing: 0.48 * a,
+                                                color: const Color(0xff000000),
+                                              ),
+                                            ),
+                                            trailing: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Container(
+                                                  margin: EdgeInsets.only(right: 5 * a),
+                                                  width: 13 * a,
+                                                  height: 14 * a,
+                                                  child: Image.asset(
+                                                    'assets/icons/ic_diamond.png',
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  diamondsSum.toString(),
+                                                  style: SafeGoogleFont(
+                                                    'Poppins',
+                                                    fontSize: 9 * b,
+                                                    fontWeight: FontWeight.w400,
+                                                    height: 1.5 * b / a,
+                                                    letterSpacing: 0.36 * a,
+                                                    color: const Color(0xff000000),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+
+                                      }
+                                    },
                                   );
                                 },
                               ),
                             )
                           ],
-                        ),
+                        );
+                        },
                       ),
                     ),
                   ),
@@ -325,193 +368,280 @@ class _ContributionState extends State<Contribution> {
                       color: Colors.white,
                       padding:
                       EdgeInsets.symmetric(horizontal: 20 * a, vertical: 0),
-                      child: Consumer<ZegoRoomProvider>(
-                        builder:(context, value, child) => Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Text(
-                            //   'Time Period: 18/05 00:00-24/05 23:59',
-                            //   style: SafeGoogleFont(
-                            //     'Poppins',
-                            //     fontSize: 12 * b,
-                            //     fontWeight: FontWeight.w400,
-                            //     height: 1.5 * b / a,
-                            //     letterSpacing: 0.48 * a,
-                            //     color: const Color(0x88000000),
-                            //   ),
-                            // ),
-                            // Text(
-                            //   'Updated at: 16:59',
-                            //   style: SafeGoogleFont(
-                            //     'Poppins',
-                            //     fontSize: 12 * b,
-                            //     fontWeight: FontWeight.w400,
-                            //     height: 1.5 * b / a,
-                            //     letterSpacing: 0.48 * a,
-                            //     color: const Color(0x88000000),
-                            //   ),
-                            // ),
-                            SizedBox(height: 20 * a),
-                            if(value.room!.contributorsList!.isEmpty)
-                              Center(child: Text('No Data!',
-                                  style: SafeGoogleFont(
-                                    'Poppins',
-                                    fontSize: 12 * b,
-                                    fontWeight: FontWeight.w400,
-                                    height: 1.5 * b / a,
-                                    letterSpacing: 0.48 * a,
-                                    color: const Color(0x88000000),
-                                  ))),
-                            Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: List.generate(
-                                  value.room!.contributorsList!.length>2?3:value.room!.contributorsList!.length,
-                                      (i) => Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      SizedBox(
-                                        height: 58 * a,
-                                        child: Stack(
-                                          children: [
-                                            CircleAvatar(
-                                              foregroundImage:
-                                              AssetImage(giftsList[i]['dp']),
-                                              radius: 25 * a,
-                                            ),
-                                            Positioned(
-                                              left: 29 * a,
-                                              top: 34 * a,
-                                              child: CircleAvatar(
-                                                backgroundColor:
-                                                Colors.transparent,
-                                                foregroundImage: AssetImage(
-                                                    'assets/decoration/top_${i + 1}.png'),
-                                                radius: 12,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Text(
-                                        giftsList[i]['name'],
-                                        style: SafeGoogleFont(
-                                          'Poppins',
-                                          fontSize: 12 * b,
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.5 * b / a,
-                                          letterSpacing: 0.48 * a,
-                                          color: const Color(0xff000000),
-                                        ),
-                                      ),
-                                      Row(
-                                        children: [
-                                          Container(
-                                            margin: EdgeInsets.only(right: 5 * a),
-                                            width: 13 * a,
-                                            height: 14 * a,
-                                            child: Image.asset(
-                                              'assets/icons/ic_diamond.png',
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                          Text(
-                                            giftsList[i]['points'],
-                                            style: SafeGoogleFont(
-                                              'Poppins',
-                                              fontSize: 9 * b,
-                                              fontWeight: FontWeight.w400,
-                                              height: 1.5 * b / a,
-                                              letterSpacing: 0.36 * a,
-                                              color: const Color(0xff000000),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                )),
-                            SizedBox(
-                              height: 26 * a,
-                            ),
-                            if(value.room!.contributorsList!.length>3)ListView(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              children: List.generate(
-                                value.room!.contributorsList!.skip(3).length,
-                                    (index) {
-                                  int i = index + 3;
-                                  return ListTile(
-                                    dense: true,
-                                    minVerticalPadding: 26 * a,
-                                    contentPadding: EdgeInsets.zero,
-                                    leading: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Container(
-                                          margin: EdgeInsets.fromLTRB(
-                                              0 * a, 0 * a, 11 * a, 0 * a),
-                                          child: Text(
-                                            '${i + 1}',
-                                            style: SafeGoogleFont(
-                                              'Poppins',
-                                              fontSize: 16 * b,
-                                              fontWeight: FontWeight.w400,
-                                              height: 1.5 * b / a,
-                                              letterSpacing: 0.64 * a,
-                                              color: const Color(0xff000000),
-                                            ),
-                                          ),
-                                        ),
-                                        CircleAvatar(
-                                          foregroundImage: AssetImage(
-                                            giftsList[i]['dp'],
-                                          ),
-                                          radius: 25 * a,
-                                        ),
-                                      ],
-                                    ),
-                                    title: Text(
-                                      giftsList[i]['name'],
-                                      style: SafeGoogleFont(
-                                        'Poppins',
-                                        fontSize: 12 * b,
-                                        fontWeight: FontWeight.w400,
-                                        height: 1.5 * b / a,
-                                        letterSpacing: 0.48 * a,
-                                        color: const Color(0xff000000),
-                                      ),
-                                    ),
-                                    trailing: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Container(
-                                          margin: EdgeInsets.only(right: 5 * a),
-                                          width: 13 * a,
-                                          height: 14 * a,
-                                          child: Image.asset(
-                                            'assets/icons/ic_diamond.png',
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        Text(
-                                          giftsList[i]['points'],
-                                          style: SafeGoogleFont(
-                                            'Poppins',
-                                            fontSize: 9 * b,
-                                            fontWeight: FontWeight.w400,
-                                            height: 1.5 * b / a,
-                                            letterSpacing: 0.36 * a,
-                                            color: const Color(0xff000000),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
+                      child: Consumer<GiftsProvider>(
+                        builder:(context, value, child) {
+                          final list = value.sevenDaysRoomContribution;
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Text(
+                              //   'Time Period: 18/05 00:00-24/05 23:59',
+                              //   style: SafeGoogleFont(
+                              //     'Poppins',
+                              //     fontSize: 12 * b,
+                              //     fontWeight: FontWeight.w400,
+                              //     height: 1.5 * b / a,
+                              //     letterSpacing: 0.48 * a,
+                              //     color: const Color(0x88000000),
+                              //   ),
+                              // ),
+                              // Text(
+                              //   'Updated at: 16:59',
+                              //   style: SafeGoogleFont(
+                              //     'Poppins',
+                              //     fontSize: 12 * b,
+                              //     fontWeight: FontWeight.w400,
+                              //     height: 1.5 * b / a,
+                              //     letterSpacing: 0.48 * a,
+                              //     color: const Color(0x88000000),
+                              //   ),
+                              // ),
+                              SizedBox(height: 20 * a),
+                              if(list.isEmpty)
+                                Center(child: Text('No Data!',
+                                    style: SafeGoogleFont(
+                                      'Poppins',
+                                      fontSize: 12 * b,
+                                      fontWeight: FontWeight.w400,
+                                      height: 1.5 * b / a,
+                                      letterSpacing: 0.48 * a,
+                                      color: const Color(0x88000000),
+                                    ))),
+                              Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: List.generate(
+                                    list.length>2?3:list.length,
+                                        (i) {
+                                      final userId = list.keys.elementAt(i);
+                                      final List<GiftHistory> history = list[userId]!;
+                                      int diamondsSum = 0;
+                                      for(var g in history){
+                                        diamondsSum = diamondsSum+g.gift!.coin!;
+                                      }
+                                      return FutureBuilder(
+                                        future: Provider.of<UserDataProvider>(context,listen: false).getUser(id: userId),
+                                        builder: (context, snapshot) {
+                                          switch (snapshot.connectionState) {
+                                            case ConnectionState.none:
+                                              return const Text('none...');
+                                            case ConnectionState.active:
+                                              return const Text('active...');
+                                            case ConnectionState.waiting:
+                                              return Shimmer.fromColors(
+                                                baseColor: const Color.fromARGB(
+                                                    248, 188, 187, 187),
+                                                highlightColor: Colors.white,
+                                                period: const Duration(seconds: 1),
+                                                child: Container(
+                                                  height: 50,
+                                                  width: 50,
+                                                  margin: const EdgeInsets.only(bottom: 36),
+                                                  decoration: const BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color: Colors.white
+                                                  ),
+                                                ),
+                                              );
+                                            case ConnectionState.done:
+                                              if(snapshot.hasError || snapshot.data == null){
+                                                return const Text('error!');
+                                              }
+                                              return Column(
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                children: [
+                                                  SizedBox(
+                                                    height: 58 * a,
+                                                    child: Stack(
+                                                      children: [
+                                                        snapshot.data!.data!.images!.isNotEmpty
+                                                            ? CircleAvatar(
+                                                          foregroundImage:NetworkImage(snapshot.data!.data!.images!.first),
+                                                          radius: 25 * a,
+                                                        )
+                                                            : CircleAvatar(
+                                                          foregroundImage:const AssetImage('assets/profile.png'),
+                                                          radius: 25 * a,
+                                                        ),
+                                                        Positioned(
+                                                          left: 29 * a,
+                                                          top: 34 * a,
+                                                          child: CircleAvatar(
+                                                            backgroundColor:
+                                                            Colors.transparent,
+                                                            foregroundImage: AssetImage(
+                                                                'assets/decoration/top_${i + 1}.png'),
+                                                            radius: 12,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    snapshot.data!.data!.name!,
+                                                    style: SafeGoogleFont(
+                                                      'Poppins',
+                                                      fontSize: 12 * b,
+                                                      fontWeight: FontWeight.w400,
+                                                      height: 1.5 * b / a,
+                                                      letterSpacing: 0.48 * a,
+                                                      color: const Color(0xff000000),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Container(
+                                                        margin: EdgeInsets.only(right: 5 * a),
+                                                        width: 13 * a,
+                                                        height: 14 * a,
+                                                        child: Image.asset(
+                                                          'assets/icons/ic_diamond.png',
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        diamondsSum.toString(),
+                                                        style: SafeGoogleFont(
+                                                          'Poppins',
+                                                          fontSize: 9 * b,
+                                                          fontWeight: FontWeight.w400,
+                                                          height: 1.5 * b / a,
+                                                          letterSpacing: 0.36 * a,
+                                                          color: const Color(0xff000000),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )
+                                                ],
+                                              );
+                                          }
+                                        },
+                                      );
+                                    },
+                                  )),
+                              SizedBox(
+                                height: 26 * a,
                               ),
-                            )
-                          ],
-                        ),
+                              if(list.length>3)ListView(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                children:
+
+                                List.generate(
+                                  list.length-3,
+                                      (index) {
+                                    int i = index + 3;
+                                    final userId = list.keys.elementAt(i);
+                                    final List<GiftHistory> history = list[userId]!;
+                                    int diamondsSum = 0;
+                                    for(var g in history){
+                                      diamondsSum = diamondsSum+g.gift!.coin!;
+                                    }
+                                    return FutureBuilder(
+                                      future: Provider.of<UserDataProvider>(context,listen: false).getUser(id: userId),
+                                      builder: (context, snapshot) {
+                                        switch (snapshot.connectionState) {
+                                          case ConnectionState.none:
+                                            return const Text('none...');
+                                          case ConnectionState.active:
+                                            return const Text('active...');
+                                          case ConnectionState.waiting:
+                                            return Shimmer.fromColors(
+                                              baseColor: const Color.fromARGB(
+                                                  248, 188, 187, 187),
+                                              highlightColor: Colors.white,
+                                              period: const Duration(seconds: 1),
+                                              child: ListTile(
+                                                dense: true,
+                                                minVerticalPadding: 26 * a,
+                                                contentPadding: EdgeInsets.zero,
+                                                leading: CircleAvatar(radius: 25 * a,foregroundColor: Colors.white),
+                                                title: Container(height: 16*a, width: 50*a, color: Colors.white,),
+                                              ),
+                                            );
+                                          case ConnectionState.done:
+                                            if(snapshot.hasError || snapshot.data == null){
+                                              return const Text('error!');
+                                            }
+                                            return ListTile(
+                                              dense: true,
+                                              minVerticalPadding: 26 * a,
+                                              contentPadding: EdgeInsets.zero,
+                                              leading: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Container(
+                                                    margin: EdgeInsets.fromLTRB(
+                                                        0 * a, 0 * a, 11 * a, 0 * a),
+                                                    child: Text(
+                                                      '${i + 1}',
+                                                      style: SafeGoogleFont(
+                                                        'Poppins',
+                                                        fontSize: 16 * b,
+                                                        fontWeight: FontWeight.w400,
+                                                        height: 1.5 * b / a,
+                                                        letterSpacing: 0.64 * a,
+                                                        color: const Color(0xff000000),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  snapshot.data!.data!.images!.isNotEmpty
+                                                      ? CircleAvatar(
+                                                    foregroundImage:NetworkImage(snapshot.data!.data!.images!.first),
+                                                    radius: 25 * a,
+                                                  )
+                                                      : CircleAvatar(
+                                                    foregroundImage:const AssetImage('assets/profile.png'),
+                                                    radius: 25 * a,
+                                                  ),
+                                                ],
+                                              ),
+                                              title: Text(
+                                                snapshot.data!.data!.name!,
+                                                style: SafeGoogleFont(
+                                                  'Poppins',
+                                                  fontSize: 12 * b,
+                                                  fontWeight: FontWeight.w400,
+                                                  height: 1.5 * b / a,
+                                                  letterSpacing: 0.48 * a,
+                                                  color: const Color(0xff000000),
+                                                ),
+                                              ),
+                                              trailing: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Container(
+                                                    margin: EdgeInsets.only(right: 5 * a),
+                                                    width: 13 * a,
+                                                    height: 14 * a,
+                                                    child: Image.asset(
+                                                      'assets/icons/ic_diamond.png',
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    diamondsSum.toString(),
+                                                    style: SafeGoogleFont(
+                                                      'Poppins',
+                                                      fontSize: 9 * b,
+                                                      fontWeight: FontWeight.w400,
+                                                      height: 1.5 * b / a,
+                                                      letterSpacing: 0.36 * a,
+                                                      color: const Color(0xff000000),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+
+                                        }
+                                      },
+                                    );
+                                  },
+                                ),
+                              )
+                            ],
+                          );
+                        },
                       ),
                     ),
                   ),

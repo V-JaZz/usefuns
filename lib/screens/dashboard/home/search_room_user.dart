@@ -10,6 +10,7 @@ import '../../../data/datasource/local/sharedpreferences/storage_service.dart';
 import '../../../data/model/response/room_search_model.dart';
 import '../../../data/model/response/user_search_model.dart';
 import '../../../provider/user_data_provider.dart';
+import '../../../utils/common_widgets.dart';
 import '../../../utils/constants.dart';
 import '../me/profile/user_profile.dart';
 
@@ -290,6 +291,69 @@ class _SearchRoomUserState extends State<SearchRoomUser> {
                               leading: userModel!.data![index].images!.isNotEmpty ? Image.network(userModel!.data![index].images!.first):Image.asset('assets/logo_greystyle.png'),
                               title: Text(userModel!.data![index].name!),
                               subtitle: Text((userModel!.data![index].bio??'') != ''?userModel!.data![index].bio!:''),
+                              trailing:
+                              Consumer<UserDataProvider>(
+                                  builder:(context, up , _) {
+                                    String id = userModel!.data![index].id!;
+                                    bool follow = up.userData!.data!.following!.firstWhereOrNull((element) => element == id)!=null;
+                                    if(id==StorageService().getString(Constants.id)){
+                                      return const SizedBox.shrink();
+                                    }
+                                    return GestureDetector(
+                                        onTap: () async {
+                                          if(follow){
+                                            final res = await up.unFollowUser(userId: id);
+                                            if(res.status == 1){
+                                              setState(() {
+                                                follow = false;
+                                              });
+                                            }else{
+                                              showCustomSnackBar('error unfollowing user!', context, isToaster: true);
+                                            }
+                                          }else{
+                                            final res = await up.followUser(userId: id);
+                                            if(res.status == 1){
+                                              setState(() {
+                                                follow = true;
+                                              });
+                                            }else{
+                                              showCustomSnackBar('error following user!', context, isToaster: true);
+                                            }
+                                          }
+                                        },
+                                        child: Container(
+                                            width: 72 * a,
+                                            height: 26 * a,
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: follow?Colors.black:Colors.white,
+                                              ),
+                                              borderRadius: BorderRadius.circular(12 * a),
+                                              color: follow?Colors.white:Theme.of(context).primaryColor,
+                                            ),
+                                            child: Center(
+                                              child: up.isFollowLoading
+                                                  ? Padding(
+                                                padding: EdgeInsets.all(3*a),
+                                                child: AspectRatio(
+                                                    aspectRatio: 1,
+                                                    child: CircularProgressIndicator(color: Theme.of(context).primaryColor)
+                                                ),
+                                              )
+                                                  : Text(
+                                                follow?'Unfollow':'Follow',
+                                                textAlign: TextAlign.left,
+                                                style: SafeGoogleFont(
+                                                    color: follow?Colors.black:Colors.white,
+                                                    'Poppins',
+                                                    fontSize: 12 * a,
+                                                    fontWeight: FontWeight.normal,
+                                                    height: 1),
+                                              ),
+                                            )),
+                                      );
+                                  }
+                              ),
                             ),
                           )),
                     )

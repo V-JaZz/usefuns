@@ -91,22 +91,25 @@ class _RechargeUserTabViewState extends State<RechargeUserTabView> {
             onPressed: () {
               if(userIdController.text.isEmpty){
                 showCustomSnackBar('Enter User ID!', context);
-              }else if(user==null){
+              }else if(user==null || user?.data== null){
                 showCustomSnackBar('Please Confirm User!', context);
               }else if(amountController.text.isEmpty){
                 showCustomSnackBar('Enter Amount!', context);
               }else{
-                Provider.of<SellerAgencyProvider>(context,listen: false).rechargeUser(
-                    userIdController.text,
-                  amountController.text
-                ).then((value) {
-                  if(value.status == 1){
-                    showCustomSnackBar(value.message, context,isError: false);
-                    clear();
-                  }else{
-                    showCustomSnackBar(value.message, context);
-                  }
-                });
+                _showConfirmationDialog(() {
+                  Get.back();
+                  Provider.of<SellerAgencyProvider>(context,listen: false).rechargeUser(
+                      userIdController.text,
+                      amountController.text
+                  ).then((value) {
+                    if(value.status == 1){
+                      showCustomSnackBar(value.message, context,isError: false);
+                      clear();
+                    }else{
+                      showCustomSnackBar(value.message, context);
+                    }
+                  });
+                }, 'Confirm ${user?.data?.name} recharge of ${amountController.text} diamonds?');
               }
             },
             child: Text(
@@ -194,5 +197,34 @@ class _RechargeUserTabViewState extends State<RechargeUserTabView> {
       amountController.clear();
       userIdController.clear();
     });
+  }
+  Future<void> _showConfirmationDialog(void Function() onConfirm, message) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          surfaceTintColor: Colors.white,
+          shape: const RoundedRectangleBorder(),
+          title: Text(message),
+          titleTextStyle: const TextStyle(fontSize: 16, color: Colors.black),
+          actionsPadding: const EdgeInsets.all(3),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child:
+              const Text('Cancel', style: TextStyle(color: Colors.black54)),
+            ),
+            TextButton(
+              onPressed: onConfirm,
+              child: Text('Confirm',
+                  style: TextStyle(color: Theme.of(context).primaryColor)),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

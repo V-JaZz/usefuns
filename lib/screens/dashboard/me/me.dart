@@ -1,20 +1,22 @@
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/screens/dashboard/me/profile/moments_page.dart';
 import 'package:live_app/screens/dashboard/me/settings/settings.dart';
 import 'package:live_app/screens/dashboard/me/shop/shop.dart';
 import 'package:live_app/screens/dashboard/me/wallet/wallet.dart';
-import 'package:live_app/subscreens/agency/agency.dart';
 import 'package:live_app/subscreens/help&Feedback/appbar_feedback.dart';
 import 'package:live_app/screens/dashboard/me/diamond_seller/diamond_seller.dart';
 import 'package:live_app/screens/dashboard/me/profile/user_profile.dart';
-import 'package:live_app/subscreens/scree/livePriveleges.dart';
+import 'package:live_app/screens/dashboard/me/levelPriveleges.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../../utils/common_widgets.dart';
 import '../../../utils/helper.dart';
+import 'agency/agency.dart';
 import 'security_pannel.dart';
 
 class Me extends StatefulWidget {
@@ -50,6 +52,7 @@ class _MeState extends State<Me> {
           Get.to(() => const Wallet());
         }
       },
+
       if (providerUserData.userData?.data?.isAgencyPanel == true)
         {
           "icon": "assets/icons/ic_person.png",
@@ -58,7 +61,6 @@ class _MeState extends State<Me> {
             Get.to(() => const AgencyTab());
           }
         },
-      //todo
       if (providerUserData.userData?.data?.isCoinseller == true)
         {
           "icon": "assets/icons/ic_person.png",
@@ -100,9 +102,9 @@ class _MeState extends State<Me> {
       },
       {
         "icon": "assets/icons/ic_level_up.png",
-        "title": "Live Level",
+        "title": "Level Privileges",
         "onTap": () {
-          Get.to(() => const LivePrivileges());
+          Get.to(() => const LevelPrivileges());
         }
       },
       {
@@ -134,43 +136,6 @@ class _MeState extends State<Me> {
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        backgroundColor: const Color(0x339E26BC),
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-        elevation: 1,
-        title: Row(
-          children: [
-            GestureDetector(
-              onTap: () {
-                Get.back();
-              },
-              child: Icon(
-                Icons.people_outline,
-                color: Colors.black,
-                size: 18 * a,
-              ),
-            ),
-            Expanded(
-                child: Text('Me',
-                    textAlign: TextAlign.center,
-                    style: SafeGoogleFont(
-                      'Poppins',
-                      fontSize: 20 * b,
-                      fontWeight: FontWeight.w400,
-                      height: 1.5 * b / a,
-                      letterSpacing: 0.8 * a,
-                      color: const Color(0xff000000),
-                    ))),
-            Image.asset(
-              'assets/icons/ic_share.png',
-              color: Colors.black,
-              height: 18 * a,
-              width: 18 * a,
-            ),
-          ],
-        ),
-      ),
       body:
       SmartRefresher(
         enablePullDown: true,
@@ -180,14 +145,14 @@ class _MeState extends State<Me> {
           return;
         },
         physics: const BouncingScrollPhysics(),
-        header: WaterDropMaterialHeader(distance: 36*a),
         controller: refreshController,
         child: SingleChildScrollView(
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: const Color(0x2F9E26BC),
+                  color: const Color(0x339E26BC),
                   image: providerUserData.userData!.data!.level! > 1
                       ? const DecorationImage(
 
@@ -196,250 +161,266 @@ class _MeState extends State<Me> {
                       fit: BoxFit.cover)
                       : null,
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 18*a,vertical: 12*a),
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Text(
-                    //   'You had Complete 50% Profile\nInformation',
-                    //   textAlign: TextAlign.left,
-                    //   style: SafeGoogleFont(
-                    //       color: const Color.fromRGBO(
-                    //           0, 0, 0, 0.6000000238418579),
-                    //       'Poppins',
-                    //       fontSize: 12,
-                    //       letterSpacing:
-                    //           0 /*percentages not used in flutter. defaulting to zero*/,
-                    //       fontWeight: FontWeight.normal,
-                    //       height: 1),
-                    // ),
-                    GestureDetector(
-                      onTap: () {
-                        Get.to(() => const UserProfile());
-                      },
-                      child: Row(
+                    AppBar(
+                      backgroundColor: Colors.transparent,
+                      automaticallyImplyLeading: false,
+                      centerTitle: true,
+                      elevation: 1,
+                      title: Row(
                         children: [
-                          SizedBox(
-                            width: 80 * a,
-                            height: 80 * a,
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  top: 12,
-                                  right: 10,
-                                  left: 10,
-                                  bottom: 8,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        image:providerUserData.userData!.data!.images!.isEmpty
-                                            ?const DecorationImage(
-                                            image: AssetImage('assets/profile.png')
-                                        )
-                                            :DecorationImage(
-                                            image: NetworkImage(
-                                                providerUserData.userData?.data?.images
-                                                    ?.first ??
-                                                    '')
-                                        )
-                                    ),
-                                  ),
-                                ),
-                                if(providerUserData.userData?.data?.frame != null && providerUserData.userData!.data!.frame!.isNotEmpty)
-                                  Container(
-                                      margin: EdgeInsets.fromLTRB(
-                                          0 * a, 0 * a, 0 * a, 0 * a),
-                                      width: 80 * a,
-                                      height: 80 * a,
-                                      child: Image.network(
-                                        providerUserData.userData!.data!.frame!.first.images!.first,
-                                        fit: BoxFit.contain,
-                                      )
-                                  ),
-                              ],
+                          GestureDetector(
+                            onTap: () {
+                              Get.back();
+                            },
+                            child: Icon(
+                              Icons.people_outline,
+                              color: Colors.black,
+                              size: 18 * a,
                             ),
                           ),
-                          SizedBox(width: 8*a),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                providerUserData.userData?.data?.name ?? 'null',
-                                textAlign: TextAlign.left,
-                                style: SafeGoogleFont(
-                                    color: Colors.black.withOpacity(0.7),
+                          Expanded(
+                              child: Text('Me',
+                                  textAlign: TextAlign.center,
+                                  style: SafeGoogleFont(
                                     'Poppins',
-                                    fontSize: 16,
-                                    letterSpacing:
-                                        0 /*percentages not used in flutter. defaulting to zero*/,
-                                    fontWeight: FontWeight.w500,
-                                    height: 1),
-                              ),
-                              SizedBox(height: 8*a),
-                              Text(
-                                'View Or Edit Your Profile',
-                                textAlign: TextAlign.left,
-                                style: SafeGoogleFont(
-                                    color: const Color.fromRGBO(
-                                        0, 0, 0, 0.6000000238418579),
-                                    'Poppins',
-                                    fontSize: 12,
-                                    letterSpacing:
-                                        0 /*percentages not used in flutter. defaulting to zero*/,
-                                    fontWeight: FontWeight.w300,
-                                    height: 1),
-                              )
-                            ],
+                                    fontSize: 20 * b,
+                                    fontWeight: FontWeight.w400,
+                                    height: 1.5 * b / a,
+                                    letterSpacing: 0.8 * a,
+                                    color: const Color(0xff000000),
+                                  ))),
+                          Image.asset(
+                            'assets/icons/ic_share.png',
+                            color: Colors.black,
+                            height: 18 * a,
+                            width: 18 * a,
                           ),
-                          const Spacer(),
-                          const Icon(Icons.arrow_forward_ios_outlined,color: Colors.black54),
                         ],
                       ),
                     ),
-                    SizedBox(height: 8*a),
-                    Row(
-                      children: [
-                        SizedBox(width: 3*a),
-                        Text(
-                          'ID: ${providerUserData.userData?.data?.userId.toString()}',
-                          textAlign: TextAlign.left,
-                          style: SafeGoogleFont(
-                              color: const Color.fromRGBO(0, 0, 0, 1),
-                              'Poppins',
-                              fontSize: 10 * a,
-                              fontWeight: FontWeight.normal,
-                              height: 1 * a),
-                        ),
-                        SizedBox(width: 8 * a),
-                        Container(
-                            width: 27 * a,
-                            height: 11 * a,
-                            decoration: BoxDecoration(
-                              color: const Color.fromRGBO(217, 217, 217, 1),
-                              border: Border.all(
-                                color: const Color.fromRGBO(255, 255, 255, 1),
-                                width: 1 * b / a,
-                              ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 18*a,vertical: 12*a),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // Text(
+                          //   'You had Complete 50% Profile\nInformation',
+                          //   textAlign: TextAlign.left,
+                          //   style: SafeGoogleFont(
+                          //       color: const Color.fromRGBO(
+                          //           0, 0, 0, 0.6000000238418579),
+                          //       'Poppins',
+                          //       fontSize: 12,
+                          //       letterSpacing:
+                          //           0 /*percentages not used in flutter. defaulting to zero*/,
+                          //       fontWeight: FontWeight.normal,
+                          //       height: 1),
+                          // ),
+                          GestureDetector(
+                            onTap: () {
+                              Get.to(() => const UserProfile());
+                            },
+                            child: Row(
+                              children: [
+                                userProfileDisplay(
+                                  size: 87*a,
+                                  image: providerUserData.userData!.data!.images!.isEmpty?'':providerUserData.userData?.data?.images?.first??'',
+                                  frame: userFrameViewPath(providerUserData.userData?.data?.frame)
+                                ),
+                                SizedBox(width: 8*a),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      providerUserData.userData?.data?.name ?? 'null',
+                                      textAlign: TextAlign.left,
+                                      style: SafeGoogleFont(
+                                          color: Colors.black.withOpacity(0.7),
+                                          'Poppins',
+                                          fontSize: 16,
+                                          letterSpacing:
+                                              0 /*percentages not used in flutter. defaulting to zero*/,
+                                          fontWeight: FontWeight.w500,
+                                          height: 1),
+                                    ),
+                                    SizedBox(height: 8*a),
+                                    Text(
+                                      'View Or Edit Your Profile',
+                                      textAlign: TextAlign.left,
+                                      style: SafeGoogleFont(
+                                          color: const Color.fromRGBO(
+                                              0, 0, 0, 0.6000000238418579),
+                                          'Poppins',
+                                          fontSize: 12,
+                                          letterSpacing:
+                                              0 /*percentages not used in flutter. defaulting to zero*/,
+                                          fontWeight: FontWeight.w300,
+                                          height: 1),
+                                    )
+                                  ],
+                                ),
+                                const Spacer(),
+                                const Icon(Icons.arrow_forward_ios_outlined,color: Colors.black54),
+                              ],
                             ),
-                            child: Center(
-                              child: Text(
-                                'Copy',
+                          ),
+                          SizedBox(height: 8*a),
+                          Row(
+                            children: [
+                              SizedBox(width: 3*a),
+                              Text(
+                                'ID: ${providerUserData.userData?.data?.userId}',
                                 textAlign: TextAlign.left,
-                                style: TextStyle(
-                                  color: const Color.fromRGBO(0, 0, 0, 1),
-                                  fontFamily: 'Poppins',
-                                  fontSize: 7 * a,
-                                  letterSpacing:
-                                      0 /*percentages not used in flutter. defaulting to zero*/,
-                                  fontWeight: FontWeight.normal,
-                                  height: 1 * b / a,
+                                style: SafeGoogleFont(
+                                    color: const Color.fromRGBO(0, 0, 0, 1),
+                                    'Poppins',
+                                    fontSize: 10 * a,
+                                    fontWeight: FontWeight.normal,
+                                    height: 1 * a),
+                              ),
+                              SizedBox(width: 8 * a),
+                              InkWell(
+                                onTap: (){
+                                  FlutterClipboard.copy('${providerUserData.userData?.data?.userId}').then((value) {
+                                    showCustomSnackBar('Copied to Clipboard!', context, isToaster: true, isError: false);
+                                  });
+                                },
+                                child: Container(
+                                    width: 27 * a,
+                                    height: 11 * a,
+                                    decoration: BoxDecoration(
+                                      color: const Color.fromRGBO(217, 217, 217, 1),
+                                      border: Border.all(
+                                        color: const Color.fromRGBO(255, 255, 255, 1),
+                                        width: 1 * b / a,
+                                      ),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        'Copy',
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: const Color.fromRGBO(0, 0, 0, 1),
+                                          fontFamily: 'Poppins',
+                                          fontSize: 7 * a,
+                                          letterSpacing:
+                                              0 /*percentages not used in flutter. defaulting to zero*/,
+                                          fontWeight: FontWeight.normal,
+                                          height: 1 * b / a,
+                                        ),
+                                      ),
+                                    )),
+                              ),
+                            ],
+                          ),
+                          Container(
+                              height: 36 *a,
+                              margin: EdgeInsets.only(top: 16*a),
+                              child: Row(
+                                  children: <Widget>[
+                                    columnPairWidget(
+                                        providerUserData
+                                                .userData?.data?.followers?.length
+                                                .toString() ??
+                                            '0',
+                                        'Followers'),
+                                    columnPairWidget(
+                                        providerUserData
+                                                .userData?.data?.following?.length
+                                                .toString() ??
+                                            '0',
+                                        'Following'),
+                                    columnPairWidget(
+                                        providerUserData.userData?.data?.likes
+                                                .toString() ??
+                                            '0',
+                                        'Likes'),
+                                    columnPairWidget(
+                                        providerUserData.userData?.data?.views
+                                                .toString() ??
+                                            '0',
+                                        'Visitors'),
+                                  ])),
+                          SizedBox(height: 12*a),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Row(
+                                  children:
+                                  List.generate(providerUserData.userData!.data!.tags?.length??0, (index) =>
+                                  (providerUserData.userData?.data?.tags?[index]?.images?.first??'')!=''
+                                      ?Padding(
+                                    padding: EdgeInsets.only(right: 8*a),
+                                    child: SvgPicture.network(
+                                      providerUserData.userData!.data!.tags![index]!.images!.first,
+                                      fit: BoxFit.fitHeight,
+                                      height: 17 * a,
+                                    )
+                                  ):const SizedBox.shrink()
+                                  )
+                              ),
+                              userLevelTag(
+                                  providerUserData.userData?.data?.level??0,
+                                  14 * a,
+                                  viewZero: true),
+                              SizedBox(width: 8*a),
+                              Container(
+                                  height: 14 * a,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(12 * a),
+                                      topRight: Radius.circular(12 * a),
+                                      bottomLeft: Radius.circular(12 * a),
+                                      bottomRight: Radius.circular(12 * a),
+                                    ),
+                                    color: const Color.fromRGBO(255, 255, 255, 1),
+                                    border: Border.all(
+                                      color: const Color.fromRGBO(0, 0, 0, 1),
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: <Widget>[
+                                        SizedBox(width: 3 * a),
+                                        Icon(
+                                          providerUserData.userData?.data?.gender!
+                                                      .toLowerCase() ==
+                                                  'male'
+                                              ? Icons.male
+                                              : Icons.female,
+                                          size: 10 * a,
+                                        ),
+                                        SizedBox(width: 3 * a),
+                                        Text(
+                                          AgeCalculator.calculateAge(
+                                                  providerUserData
+                                                          .userData?.data?.dob ??
+                                                      DateTime.now())
+                                              .toString(),
+                                          style: TextStyle(fontSize: 8 * a),
+                                        ),
+                                        SizedBox(width: 4 * a)
+                                      ])),
+                              SizedBox(width: 8*a),
+                              Container(
+                                width: 25 * a,
+                                height: 13 * a,
+                                decoration: const BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage('assets/flag.png'),
+                                      fit: BoxFit.contain),
                                 ),
                               ),
-                            )),
-                      ],
-                    ),
-                    Container(
-                        height: 36 *a,
-                        margin: EdgeInsets.only(top: 16*a),
-                        child: Row(
-                            children: <Widget>[
-                              columnPairWidget(
-                                  providerUserData
-                                          .userData?.data?.followers?.length
-                                          .toString() ??
-                                      '0',
-                                  'Followers'),
-                              columnPairWidget(
-                                  providerUserData
-                                          .userData?.data?.following?.length
-                                          .toString() ??
-                                      '0',
-                                  'Following'),
-                              columnPairWidget(
-                                  providerUserData.userData?.data?.likes
-                                          .toString() ??
-                                      '0',
-                                  'Likes'),
-                              columnPairWidget(
-                                  providerUserData.userData?.data?.views
-                                          .toString() ??
-                                      '0',
-                                  'Visitors'),
-                            ])),
-                    SizedBox(height: 12*a),
-                    Row(
-                      children: [
-                        Row(
-                            children:
-                            List.generate(providerUserData.userData!.data!.tags?.length??0, (index) =>
-                            (providerUserData.userData?.data?.tags?[index]?.images?.first??'')!=''
-                                ?Padding(
-                              padding: EdgeInsets.only(right: 8*a),
-                              child: Image.network(
-                                providerUserData.userData!.data!.tags![index]!.images!.first,
-                                fit: BoxFit.fitHeight,
-                                height: 17 * a,
-                              ),
-                            ):const SizedBox.shrink()
-                            )
-                        ),
-                        userLevelTag(
-                            providerUserData.userData?.data?.level??0,
-                            14 * a,
-                            viewZero: true),
-                        SizedBox(width: 8*a),
-                        Container(
-                            height: 14 * a,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(12 * a),
-                                topRight: Radius.circular(12 * a),
-                                bottomLeft: Radius.circular(12 * a),
-                                bottomRight: Radius.circular(12 * a),
-                              ),
-                              color: const Color.fromRGBO(255, 255, 255, 1),
-                              border: Border.all(
-                                color: const Color.fromRGBO(0, 0, 0, 1),
-                                width: 1,
-                              ),
-                            ),
-                            child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  SizedBox(width: 3 * a),
-                                  Icon(
-                                    providerUserData.userData?.data?.gender!
-                                                .toLowerCase() ==
-                                            'male'
-                                        ? Icons.male
-                                        : Icons.female,
-                                    size: 10 * a,
-                                  ),
-                                  SizedBox(width: 3 * a),
-                                  Text(
-                                    AgeCalculator.calculateAge(
-                                            providerUserData
-                                                    .userData?.data?.dob ??
-                                                DateTime.now())
-                                        .toString(),
-                                    style: TextStyle(fontSize: 8 * a),
-                                  ),
-                                  SizedBox(width: 4 * a)
-                                ])),
-                        SizedBox(width: 8*a),
-                        Container(
-                          width: 25 * a,
-                          height: 13 * a,
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(
-                                image: AssetImage('assets/flag.png'),
-                                fit: BoxFit.contain),
+                            ],
                           ),
-                        ),
-                      ],
+                          SizedBox(height: 8*a),
+                        ],
+                      ),
                     ),
-                    SizedBox(height: 8*a),
                   ],
                 ),
               ),

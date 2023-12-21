@@ -95,17 +95,17 @@ class UserDataProvider with ChangeNotifier {
         fromID: storageService.getString(Constants.id),
         toID: userId
     );
-    isFollowLoading = false;
-    notifyListeners();
     CommonModel responseModel;
     if (apiResponse.statusCode == 200) {
       responseModel = commonModelFromJson(apiResponse.body);
       if(responseModel.status == 1){
-        getUser();
+        await getUser();
       }
     } else {
       responseModel = CommonModel(status: 0,message: apiResponse.reasonPhrase);
     }
+    isFollowLoading = false;
+    notifyListeners();
     return responseModel;
   }
 
@@ -117,8 +117,27 @@ class UserDataProvider with ChangeNotifier {
         fromID: storageService.getString(Constants.id),
         toID: userId
     );
+    CommonModel responseModel;
+    if (apiResponse.statusCode == 200) {
+      responseModel = commonModelFromJson(apiResponse.body);
+      if(responseModel.status == 1){
+        await getUser();
+      }
+    } else {
+      responseModel = CommonModel(status: 0,message: apiResponse.reasonPhrase);
+    }
     isFollowLoading = false;
     notifyListeners();
+    return responseModel;
+  }
+
+  Future<CommonModel> selectFrame(
+      {required String frameId}) async {
+    final apiResponse = await _userDataRepo.selectFrame(
+        userId: storageService.getString(Constants.userId),
+        frameId: frameId,
+      token: storageService.getString(Constants.token)
+    );
     CommonModel responseModel;
     if (apiResponse.statusCode == 200) {
       responseModel = commonModelFromJson(apiResponse.body);

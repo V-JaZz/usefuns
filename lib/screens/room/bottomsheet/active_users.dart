@@ -36,7 +36,7 @@ class _ActiveUsersBottomSheetState extends State<ActiveUsersBottomSheet> {
             value.roomStreamList.map((e) => e.streamId.toString()).toList();
         List<ZegoUser> reorderedUsers = reorderList(
             ownerId: widget.ownerId,
-            adminIds: value.zegoRoom!.admins,
+            adminIds: value.room!.admin!,
             onSeatUsers: onSeat,
             activeUsers: value.roomUsersList);
 
@@ -147,10 +147,10 @@ class _ActiveUsersBottomSheetState extends State<ActiveUsersBottomSheet> {
                               } else {
                                 final user = snapshot.data!.data;
                                 print(
-                                    '${reorderedUsers[index].userID.trim() != widget.ownerId.trim()} || ${!value.zegoRoom!.admins.contains(reorderedUsers[index].userID.trim())}');
+                                    '${reorderedUsers[index].userID.trim() != widget.ownerId.trim()} || ${!value.room!.admin!.contains(reorderedUsers[index].userID.trim())}');
                                 print(reorderedUsers[index].userID.trim() !=
                                         widget.ownerId.trim() &&
-                                    !value.zegoRoom!.admins.contains(
+                                    !value.room!.admin!.contains(
                                         reorderedUsers[index].userID.trim()));
                                 return Container(
                                   width: double.infinity,
@@ -224,7 +224,7 @@ class _ActiveUsersBottomSheetState extends State<ActiveUsersBottomSheet> {
                                       //if user is an owner or admin
                                       reorderedUsers[index].userID.trim() ==
                                                   widget.ownerId.trim() ||
-                                              value.zegoRoom!.admins.contains(
+                                              value.room!.admin!.contains(
                                                   reorderedUsers[index]
                                                       .userID
                                                       .trim())
@@ -310,7 +310,7 @@ class _ActiveUsersBottomSheetState extends State<ActiveUsersBottomSheet> {
                                         child: (widget.ownerId.trim() ==
                                                         ZegoConfig.instance
                                                             .streamID ||
-                                                    value.zegoRoom!.admins
+                                                    value.room!.admin!
                                                         .contains(ZegoConfig
                                                             .instance.streamID
                                                             .trim())) &&
@@ -320,7 +320,7 @@ class _ActiveUsersBottomSheetState extends State<ActiveUsersBottomSheet> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.center,
                                                 children: [
-                                                  if (!value.zegoRoom!.admins
+                                                  if (!value.room!.admin!
                                                           .contains(
                                                               reorderedUsers[
                                                                       index]
@@ -337,23 +337,12 @@ class _ActiveUsersBottomSheetState extends State<ActiveUsersBottomSheet> {
                                                                 RoomsProvider>(
                                                             context,
                                                             listen: false);
-                                                        final list = value
-                                                            .zegoRoom!.admins;
                                                         Get.back();
-                                                        if (list.length > 3) {
-                                                          showCustomSnackBar(
-                                                              'Max Admin limit is 4!',
-                                                              context,
-                                                              isToaster: true);
-                                                        } else {
-                                                          list.add(user.id!);
-                                                          value.updateAdmin(
-                                                              list);
-                                                          await p.addAdmin(
-                                                              value.room!.id!,
-                                                              user.id!);
-                                                          p.getAllMine();
-                                                        }
+                                                        value.room!.admin!.add(user.id!);
+                                                        await p.addAdmin(
+                                                            value.room!.id!,
+                                                            user.id!);
+                                                        value.updateAdminList();
                                                       }, user.name),
                                                       child: Icon(
                                                           Icons
@@ -366,7 +355,7 @@ class _ActiveUsersBottomSheetState extends State<ActiveUsersBottomSheet> {
                                                               .trim() !=
                                                           widget.ownerId
                                                               .trim() &&
-                                                      !value.zegoRoom!.admins
+                                                      !value.room!.admin!
                                                           .contains(
                                                               reorderedUsers[
                                                                       index]
@@ -378,7 +367,7 @@ class _ActiveUsersBottomSheetState extends State<ActiveUsersBottomSheet> {
                                                               .trim() !=
                                                           widget.ownerId
                                                               .trim() &&
-                                                      !value.zegoRoom!.admins
+                                                      !value.room!.admin!
                                                           .contains(
                                                               reorderedUsers[
                                                                       index]

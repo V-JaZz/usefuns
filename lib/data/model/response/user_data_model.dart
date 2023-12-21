@@ -61,6 +61,7 @@ class UserData {
   int? vipLevel;
   int? exp;
   bool? isCommentRestricted;
+  int? totalDiamondsUses;
   List<dynamic>? liveHotlist;
   List<String>? images;
   bool? isActiveUserId;
@@ -110,6 +111,7 @@ class UserData {
     this.vipLevel,
     this.exp,
     this.isCommentRestricted,
+    this.totalDiamondsUses,
     this.liveHotlist,
     this.images,
     this.isActiveUserId,
@@ -160,6 +162,7 @@ class UserData {
     vipLevel: json["vip_level"],
     exp: json["exp"],
     isCommentRestricted: json["is_comment_restricted"],
+    totalDiamondsUses: json["totalDiamondsUses"],
     liveHotlist: json["live_hotlist"] == null ? [] : List<dynamic>.from(json["live_hotlist"]!.map((x) => x)),
     images: json["images"] == null ? [] : List<String>.from(json["images"]!.map((x) => x)),
     isActiveUserId: json["is_active_userId"],
@@ -210,6 +213,7 @@ class UserData {
     "vip_level": vipLevel,
     "exp": exp,
     "is_comment_restricted": isCommentRestricted,
+    "totalDiamondsUses": totalDiamondsUses,
     "live_hotlist": liveHotlist == null ? [] : List<dynamic>.from(liveHotlist!.map((x) => x)),
     "images": images == null ? [] : List<dynamic>.from(images!.map((x) => x)),
     "is_active_userId": isActiveUserId,
@@ -239,6 +243,7 @@ class Frame {
   int? price;
   String? name;
   int? level;
+  bool? defaultFrame;
   bool? isOfficial;
   DateTime? createdAt;
   DateTime? updatedAt;
@@ -251,6 +256,7 @@ class Frame {
     this.price,
     this.name,
     this.level,
+    this.defaultFrame,
     this.isOfficial,
     this.createdAt,
     this.updatedAt,
@@ -264,6 +270,7 @@ class Frame {
     price: json["price"],
     name: json["name"],
     level: json["level"],
+    defaultFrame: json["default_frame"],
     isOfficial: json["is_official"],
     createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
     updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
@@ -277,6 +284,7 @@ class Frame {
     "price": price,
     "name": name,
     "level": level,
+    "default_frame": defaultFrame,
     "is_official": isOfficial,
     "createdAt": createdAt?.toIso8601String(),
     "updatedAt": updatedAt?.toIso8601String(),

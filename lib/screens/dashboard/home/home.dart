@@ -597,16 +597,16 @@ class _HomeState extends State<Home> {
               controller: refreshController2,
               child: Container(
                 color: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10),
+                padding: EdgeInsets.symmetric(horizontal: 10*a),
                 child: Column(
                   children: [
-                    const SizedBox(height: 20),
+                    SizedBox(height: 20*a),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      padding: EdgeInsets.symmetric(horizontal: 10*a),
                       child: Image.asset(
                         "assets/decoration/reward_program.png",
                         width: double.infinity,
+                        height: 120*a,
                         fit: BoxFit.contain,
                       ),
                     ),

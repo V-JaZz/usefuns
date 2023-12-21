@@ -90,4 +90,21 @@ class UserDataRepo {
     }
   }
 
+  Future<http.Response> selectFrame(
+      {required String userId, required String frameId, required String token}) async {
+    try {
+      http.Response response = await _httpClient.post(
+        'user/set_default_frame',
+        {
+          "userId": userId,
+          "frame_id": frameId
+        },
+        bearerToken: token
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
 }

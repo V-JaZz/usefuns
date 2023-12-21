@@ -16,8 +16,8 @@ class _WalletState extends State<CoinsTabView> {
     return Column(
       children: [
         GestureDetector(
-          onTap: (){
-            showCustomSnackBar('Upcomming',context);
+          onTap: () {
+            showCustomSnackBar('Upcomming', context);
           },
           child: Padding(
             padding: const EdgeInsets.all(15.0),
@@ -45,7 +45,8 @@ class _WalletState extends State<CoinsTabView> {
                       padding: const EdgeInsets.only(top: 39.0, left: 50),
                       child: Column(
                         children: [
-                          coinsWidget('${Provider.of<UserDataProvider>(context).userData?.data?.coins??0}'),
+                          coinsWidget(
+                              '${Provider.of<UserDataProvider>(context).userData?.data?.coins ?? 0}'),
                           const Text(
                             'Account Balance',
                             style: TextStyle(color: Colors.white),
@@ -59,9 +60,6 @@ class _WalletState extends State<CoinsTabView> {
             ),
           ),
         ),
-        coinsValueWidget('20','1'),
-        coinsValueWidget('2020','15'),
-        coinsValueWidget('80','35'),
 
         //  Container(
         //   child: ListTile(
@@ -79,41 +77,43 @@ class _WalletState extends State<CoinsTabView> {
     );
   }
 
-  Padding coinsValueWidget(text,t1) {
+  Padding coinsValueWidget(text, t1) {
     return Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: SizedBox(
-            width: double.infinity,
-            child: ListTile(
-              onTap: (){
-                showCustomSnackBar('Upcomming',context);
-              },
-              leading: Image.asset(
-                'assets/bitcoin.png',
-              ),
-              title: Text(text),
-              trailing: Container(
-                height: 30,
-                width: 97,
-                decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xffFFE500)),
-                  borderRadius: BorderRadius.circular(15),
+      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+      child: SizedBox(
+        width: double.infinity,
+        child: ListTile(
+          onTap: () {
+            showCustomSnackBar('Upcomming', context);
+          },
+          leading: Image.asset(
+            'assets/bitcoin.png',
+          ),
+          title: Text(text),
+          trailing: Container(
+            height: 30,
+            width: 97,
+            decoration: BoxDecoration(
+              border: Border.all(color: const Color(0xffFFE500)),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Row(
+              children: [
+                const SizedBox(
+                  width: 19,
                 ),
-                child: Row(
-
-                  children: [
-                     const SizedBox(width: 19,),
-                    Image.asset('assets/icons/ic_diamond.png',
-                height: 12,
-                fit: BoxFit.fitHeight),
-                    const SizedBox(width: 19,),
-                    Text(t1),
-                  ],
+                Image.asset('assets/icons/ic_diamond.png',
+                    height: 12, fit: BoxFit.fitHeight),
+                const SizedBox(
+                  width: 19,
                 ),
-              ),
+                Text(t1),
+              ],
             ),
           ),
-        );
+        ),
+      ),
+    );
   }
 
   Text coinsWidget(text) => Text(

@@ -1,6 +1,7 @@
 import 'package:contained_tab_bar_view/contained_tab_bar_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:live_app/screens/dashboard/me/profile/profile_tab_view.dart';
 import 'package:live_app/subscreens/scree/homescreens/honor.dart';
@@ -73,45 +74,10 @@ class _UserProfileState extends State<UserProfile> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        width: 80 * a,
-                        height: 80 * a,
-                        child: Stack(
-                          children: [
-                            Positioned(
-                              top: 12,
-                              right: 10,
-                              left: 10,
-                              bottom: 8,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image:user.images!.isEmpty
-                                        ?const DecorationImage(
-                                        image: AssetImage('assets/profile.png')
-                                    )
-                                        :DecorationImage(
-                                        image: NetworkImage(
-                                            user.images
-                                                ?.first ??
-                                                '')
-                                    )
-                                ),
-                              ),
-                            ),
-                            if(user.frame != null && user.frame!.isNotEmpty)
-                              Container(
-                                  margin: EdgeInsets.fromLTRB(
-                                      0 * a, 0 * a, 0 * a, 0 * a),
-                                  width: 80 * a,
-                                  height: 80 * a,
-                                  child: Image.network(
-                                    user.frame!.first.images!.first,
-                                    fit: BoxFit.contain,
-                                  )
-                              ),
-                          ],
-                        ),
+                      userProfileDisplay(
+                          size: 87*a,
+                          image: user.images!.isEmpty?'':user.images?.first??'',
+                          frame: userFrameViewPath(user.frame)
                       ),
                       SizedBox(height: 9*a),
                       Row(
@@ -160,7 +126,7 @@ class _UserProfileState extends State<UserProfile> {
                               user.tags![index] != null
                                   ?Padding(
                                     padding: EdgeInsets.only(right: 9*a),
-                                    child: Image.network(
+                                    child: SvgPicture.network(
                                       user.tags?[index]?.images?.first??'',
                                       fit: BoxFit.fitHeight,
                                       height: 17 * a,

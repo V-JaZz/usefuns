@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/data/model/response/shop_items_model.dart';
+import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/utils/common_widgets.dart';
 import 'package:live_app/utils/constants.dart';
+import 'package:provider/provider.dart';
 import '../data/datasource/local/sharedpreferences/storage_service.dart';
 import '../data/model/response/common_model.dart';
 import '../data/model/response/diamond_value_model.dart';
@@ -85,6 +87,18 @@ class ShopWalletProvider with ChangeNotifier {
     }
   }
 
+  Future<void> rewardDiamonds(int diamonds) async {
+    final apiResponse = await _shopRepo.shopDiamonds(
+        userId: storageService.getString(Constants.id),
+        diamonds: diamonds,
+        price: 0,
+        method: 'reward');
+    if (apiResponse.statusCode == 200) {
+      Provider.of<UserDataProvider>(Get.context!,listen: false).getUser(refresh: false);
+      showCustomSnackBar('$diamonds diamonds added to your wallet!', Get.context!,isError: false,isToaster: true);
+    }
+  }
+
   Future<void> getDiamondValueList() async {
     isWalletLoaded = false;
     await Future.delayed(const Duration(milliseconds: 500));
@@ -99,6 +113,21 @@ class ShopWalletProvider with ChangeNotifier {
     }
     isWalletLoaded = true;
     notifyListeners();
+  }
+
+  Future<void> convertBeans(int diamonds,int beans) async {
+    final apiResponse = await _shopRepo.convertBeans(
+        userId: storageService.getString(Constants.userId),
+        diamonds: diamonds,
+        beans: beans);
+    if (apiResponse.statusCode == 200) {
+      CommonModel responseModel = commonModelFromJson(apiResponse.body);
+      if(responseModel.status == 1){
+        Provider.of<UserDataProvider>(Get.context!,listen: false).getUser();
+      }
+    } else {
+      showCustomSnackBar('Error Converting beans!', Get.context!);
+    }
   }
 
 }

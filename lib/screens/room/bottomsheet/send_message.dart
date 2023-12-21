@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/utils/common_widgets.dart';
 import 'package:provider/provider.dart';
-
 import '../../../provider/zego_room_provider.dart';
 import '../../../utils/zego_config.dart';
 
@@ -64,6 +63,7 @@ class _SendMessageBottomSheetState extends State<SendMessageBottomSheet> {
                           focusNode: _focusNode,
                           controller: controller,
                           maxLength: 333,
+                          maxLines: 1,
                           textInputAction: TextInputAction.send,
                           decoration: const InputDecoration(
                               hintText: 'Type a message',

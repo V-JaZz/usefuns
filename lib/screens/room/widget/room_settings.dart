@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../../../provider/rooms_provider.dart';
 import '../../../provider/zego_room_provider.dart';
-import '../../../subscreens/scree/live_record.dart';
+import 'live_record.dart';
 import '../../../utils/common_widgets.dart';
 import '../../../utils/utils_assets.dart';
 
@@ -36,6 +36,9 @@ class _RoomSettingsState extends State<RoomSettings> {
       if (pickedImage == null) return null;
       await ImageCropper().cropImage(
         sourcePath: imagePaths!,
+        compressFormat: ImageCompressFormat.jpg,
+        maxHeight: 250,
+        maxWidth: 250,
         aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
         uiSettings: [
           AndroidUiSettings(

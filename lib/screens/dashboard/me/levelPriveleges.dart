@@ -5,6 +5,8 @@ import 'package:live_app/screens/dashboard/me/me.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 
+import '../../../utils/common_widgets.dart';
+
 class LevelPrivileges extends StatefulWidget {
   final double trackHeight;
 
@@ -48,6 +50,7 @@ class _LevelPrivilegesState extends State<LevelPrivileges> {
           )),
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Consumer<UserDataProvider>(
               builder: (context, value, child) => Container(
@@ -58,7 +61,23 @@ class _LevelPrivilegesState extends State<LevelPrivileges> {
                 ),
                 child: Column(
                   children: [
-                    Image.asset('assets/bot.png'),
+                    Container(
+                      width: 60 * a,
+                      height: 60 * a,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image:value.userData!.data!.images!.isEmpty
+                              ?const DecorationImage(
+                            image: AssetImage('assets/profile.png'),
+                          )
+                              :DecorationImage(
+                              image: NetworkImage(
+                                  value.userData?.data?.images
+                                      ?.first ??
+                                      '')
+                          )
+                      ),
+                    ),
                     SizedBox(
                       height: 12 * a,
                     ),
@@ -239,17 +258,20 @@ class _LevelPrivilegesState extends State<LevelPrivileges> {
             SizedBox(
               height: 15 * a,
             ),
-            Text(
-              'Every Time when You Spend Diamonds on Usefuns\nYou will get EXP to level up (1 Diamonds = 1 exp).',
-              textAlign: TextAlign.center,
-              style: SafeGoogleFont(
-                  color: Colors.black.withOpacity(0.8),
-                  'Poppins',
-                  fontSize: 12,
-                  letterSpacing:
-                      0 /*percentages not used in flutter. defaulting to zero*/,
-                  fontWeight: FontWeight.w500,
-                  height: 1 * b / a),
+            SizedBox(
+              width: double.infinity,
+              child: Text(
+                'Every Time when You Spend Diamonds on Usefuns\nYou will get EXP to level up (1 Diamonds = 1 exp).',
+                textAlign: TextAlign.center,
+                style: SafeGoogleFont(
+                    color: Colors.black.withOpacity(0.8),
+                    'Poppins',
+                    fontSize: 12,
+                    letterSpacing:
+                        0 /*percentages not used in flutter. defaulting to zero*/,
+                    fontWeight: FontWeight.w500,
+                    height: 1 * b / a),
+              ),
             ),
             SizedBox(
               height: 27 * a,
@@ -274,135 +296,34 @@ class _LevelPrivilegesState extends State<LevelPrivileges> {
             SizedBox(
               height: 20 * a,
             ),
-            txt('LV.1'),
             Padding(
-              padding: EdgeInsets.only(left: 30 * a, right: 30 * a),
-              child: Row(
+              padding: EdgeInsets.symmetric(horizontal: 28*a),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  red_cont(),
+                  userLevelTag(0, 28 * a,viewZero: true),
+                  SizedBox(height: 14 * a),
+                  userLevelTag(2, 28 * a,viewZero: true),
+                  SizedBox(height: 14 * a),
+                  userLevelTag(13, 28 * a,viewZero: true),
+                  SizedBox(height: 14 * a),
+                  userLevelTag(24, 28 * a,viewZero: true),
+                  SizedBox(height: 14 * a),
+                  userLevelTag(35, 28 * a,viewZero: true),
+                  SizedBox(height: 14 * a),
+                  userLevelTag(46, 28 * a,viewZero: true),
+                  SizedBox(height: 14 * a),
+                  userLevelTag(57, 28 * a,viewZero: true),
+                  SizedBox(height: 14 * a),
+                  userLevelTag(68, 28 * a,viewZero: true),
+                  SizedBox(height: 14 * a),
+                  userLevelTag(79, 28 * a,viewZero: true),
+                  SizedBox(height: 28 * a),
                 ],
               ),
-            ),
-            SizedBox(
-              height: 19 * a,
-            ),
-            txt('LV.4'),
-            Padding(
-              padding: EdgeInsets.only(left: 30 * a, right: 30 * a),
-              child: Row(
-                children: [
-                  cont(),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 19 * a,
-            ),
-            txt('LV.5'),
-            Padding(
-              padding: EdgeInsets.only(left: 30 * a, right: 30 * a),
-              child: Row(
-                children: [
-                  cont(),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 19 * a,
-            ),
-            txt('LV.10'),
-            Padding(
-              padding: EdgeInsets.only(left: 30 * a, right: 30 * a),
-              child: Row(
-                children: [
-                  cont(),
-                ],
-              ),
-            ),
+            )
           ],
         ),
-      ),
-    );
-  }
-
-  Container red_cont() {
-    double baseWidth = 360;
-    double a = Get.width / baseWidth;
-    double b = a * 0.97;
-    return Container(
-      width: 62 * a,
-      height: 63 * a,
-      decoration: const BoxDecoration(
-        color: Color.fromRGBO(66, 133, 244, 1),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const Spacer(),
-          Image.asset(
-            'assets/icons/ic_diamond.png',
-            height: 30 * a,
-            width: 30 * a,
-          ),
-          const Spacer(),
-          Text(
-            'Level Icon\nForever',
-            textAlign: TextAlign.center,
-            style: SafeGoogleFont(
-              color: const Color.fromRGBO(255, 255, 255, 1),
-              'Poppins',
-              fontSize: 9 * a,
-              /*percentages not used in flutter. defaulting to zero*/
-              fontWeight: FontWeight.normal,
-              height: 1 * b / a,
-            ),
-          ),
-          const Spacer()
-        ],
-      ),
-    );
-  }
-
-  Container cont() {
-    double baseWidth = 360;
-    double a = Get.width / baseWidth;
-    double b = a * 0.97;
-    return Container(
-      width: 62 * a,
-      height: 63 * a,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-            begin: Alignment(6.123234262925839e-17, 1),
-            end: Alignment(-1, 6.123234262925839e-17),
-            colors: [
-              Color.fromRGBO(226, 18, 118, 1),
-              Color.fromRGBO(144, 6, 193, 0)
-            ]),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const Spacer(),
-          Image.asset(
-            'assets/agency/rectangle.png',
-            height: 30 * a,
-            width: 30 * a,
-          ),
-          const Spacer(),
-          Text(
-            'Level Icon\nForever',
-            textAlign: TextAlign.center,
-            style: SafeGoogleFont(
-              color: const Color.fromRGBO(255, 255, 255, 1),
-              'Poppins',
-              fontSize: 9 * a,
-              /*percentages not used in flutter. defaulting to zero*/
-              fontWeight: FontWeight.normal,
-              height: 1 * b / a,
-            ),
-          ),
-          const Spacer(),
-        ],
       ),
     );
   }

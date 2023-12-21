@@ -29,7 +29,7 @@ class _InviteUserBottomSheetState extends State<InviteUserBottomSheet> {
       builder: (context, value, child) {
         List<String> onSeat =  value.roomStreamList.map((e) => e.streamId.toString()).toList();
         List<ZegoUser> activeNotOnSeat = value.roomUsersList.where((e) => !onSeat.contains(e.userID)).toList();
-        List<ZegoUser> reorderedUsers = reorderList(ownerId: widget.ownerId,adminIds: value.zegoRoom!.admins, activeNotOnSeat: activeNotOnSeat);
+        List<ZegoUser> reorderedUsers = reorderList(ownerId: widget.ownerId,adminIds: value.room!.admin!, activeNotOnSeat: activeNotOnSeat);
 
         return Container(
         width: double.infinity,
@@ -162,8 +162,7 @@ class _InviteUserBottomSheetState extends State<InviteUserBottomSheet> {
                               );
                             }else {
                               final user = snapshot.data!.data;
-                              print('${reorderedUsers[index].userID.trim() != widget.ownerId.trim()} || ${!value.zegoRoom!.admins.contains(reorderedUsers[index].userID.trim())}');
-                              print(reorderedUsers[index].userID.trim() != widget.ownerId.trim() && !value.zegoRoom!.admins.contains(reorderedUsers[index].userID.trim()));
+
                               return Container(
                                 width: double.infinity,
                                 height: 70 * a,
@@ -225,7 +224,7 @@ class _InviteUserBottomSheetState extends State<InviteUserBottomSheet> {
                                     ),
 
                                     //if user is an owner or admin
-                                    if(reorderedUsers[index].userID.trim() == widget.ownerId.trim() || value.zegoRoom!.admins.contains(reorderedUsers[index].userID.trim()))
+                                    if(reorderedUsers[index].userID.trim() == widget.ownerId.trim() || value.room!.admin!.contains(reorderedUsers[index].userID.trim()))
                                       Container(
                                         margin: EdgeInsets.only(left: 5*a),
                                         padding: EdgeInsets.fromLTRB(5 * a, 0 * a, 6 * a, 0 * a),

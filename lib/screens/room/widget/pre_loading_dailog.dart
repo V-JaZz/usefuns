@@ -7,6 +7,7 @@ import 'package:live_app/screens/room/live_room.dart';
 import 'package:live_app/utils/common_widgets.dart';
 import 'package:provider/provider.dart';
 
+import '../../../provider/gifts_provider.dart';
 import '../../../provider/user_data_provider.dart';
 import '../../../provider/zego_room_provider.dart';
 
@@ -71,6 +72,7 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
         if(ownerData.data!.roomWallpaper!.isNotEmpty) zegoRoomProvider.backgroundImage = ownerData.data!.roomWallpaper!.first.images!.first;
         zegoRoomProvider.addGreeting(getGreeting(me?.data?.name, Random().nextInt(5), ownerData.data?.name), ownerData);
       }
+      Provider.of<GiftsProvider>(context, listen: false).generateSeries();
       Get.off(()=>const LiveRoom(),transition: Transition.size);
     }else {
       Get.back();

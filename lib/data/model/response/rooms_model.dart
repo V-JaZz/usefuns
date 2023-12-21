@@ -52,7 +52,6 @@ class Room {
   List<Member>? subscribers;
   List<dynamic>? blockedList;
   List<dynamic>? kickHistory;
-  List<dynamic>? contributorsList;
   List<Member>? groupMembers;
   List<String>? images;
   List<String>? admin;
@@ -81,7 +80,6 @@ class Room {
     this.subscribers,
     this.blockedList,
     this.kickHistory,
-    this.contributorsList,
     this.groupMembers,
     this.images,
     this.admin,
@@ -140,7 +138,6 @@ class Room {
         subscribers: subscribers ?? this.subscribers,
         blockedList: blockedList ?? this.blockedList,
         kickHistory: kickHistory ?? this.kickHistory,
-        contributorsList: contributorsList ?? this.contributorsList,
         groupMembers: groupMembers ?? this.groupMembers,
         images: images ?? this.images,
         admin: admin ?? this.admin,
@@ -170,7 +167,6 @@ class Room {
     subscribers: json["subscribers"] == null ? [] : List<Member>.from(json["subscribers"]!.map((x) => Member.fromJson(x))),
     blockedList: json["blockedList"] == null ? [] : List<dynamic>.from(json["blockedList"]!.map((x) => x)),
     kickHistory: json["kickHistory"] == null ? [] : List<dynamic>.from(json["kickHistory"]!.map((x) => x)),
-    contributorsList: json["contributorsList"] == null ? [] : List<dynamic>.from(json["contributorsList"]!.map((x) => x)),
     groupMembers: json["groupMembers"] == null ? [] : List<Member>.from(json["groupMembers"]!.map((x) => x is! String? Member.fromJson(x):Member(id: x))),
     images: json["images"] == null ? [] : List<String>.from(json["images"]!.map((x) => x)),
     admin: json["admin"] == null ? [] : List<String>.from(json["admin"]!.map((x) => x)),
@@ -200,7 +196,6 @@ class Room {
     "subscribers": subscribers == null ? [] : List<dynamic>.from(subscribers!.map((x) => x.toJson())),
     "blockedList": blockedList == null ? [] : List<dynamic>.from(blockedList!.map((x) => x)),
     "kickHistory": kickHistory == null ? [] : List<dynamic>.from(kickHistory!.map((x) => x)),
-    "contributorsList": contributorsList == null ? [] : List<dynamic>.from(contributorsList!.map((x) => x)),
     "groupMembers": groupMembers == null ? [] : List<dynamic>.from(groupMembers!.map((x) => x.toJson())),
     "images": images == null ? [] : List<dynamic>.from(images!.map((x) => x)),
     "admin": admin == null ? [] : List<dynamic>.from(admin!.map((x) => x)),

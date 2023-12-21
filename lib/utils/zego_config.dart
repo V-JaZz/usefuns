@@ -16,6 +16,8 @@ class ZegoConfig {
   String roomKickSeatKey= 'ROOM_KICK_SEAT_KEY';
   String roomInviteSeatKey= 'ROOM_INVITE_SEAT_KEY';
   String roomResetCalculatorKey= 'ROOM_RESET_CALCULATOR_KEY';
+  String refreshAdminKey= 'REFRESH_ADMIN_KEY';
+  String refreshTreasureKey= 'REFRESH_TREASURE_KEY';
 
   // It is for native only, do not use it for web!
   String appSign = "da0d6214cf4ff6ca326fadf76e2802c0308a99cb0cb74ccfaf6798fb8aa21285";

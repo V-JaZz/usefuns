@@ -62,6 +62,9 @@ class _CreateProfileState extends State<CreateProfile> {
         sourcePath: imagePaths!,
         aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
         cropStyle: CropStyle.circle,
+        compressFormat: ImageCompressFormat.jpg,
+        maxHeight: 250,
+        maxWidth: 250,
         uiSettings: [
           AndroidUiSettings(
               toolbarTitle: 'Cropper',

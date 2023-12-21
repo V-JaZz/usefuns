@@ -20,7 +20,7 @@ class _SellerRecordTabViewState extends State<SellerRecordTabView> {
     double a = Get.width / baseWidth;
     double b = a * 0.97;
     return FutureBuilder(
-      future: Provider.of<SellerAgencyProvider>(context).getRecord(),
+      future: Provider.of<SellerAgencyProvider>(context).getSellerRecord(),
       builder:
           (BuildContext context, AsyncSnapshot<SellerRecordModel> snapshot) {
         switch (snapshot.connectionState) {
@@ -45,10 +45,10 @@ class _SellerRecordTabViewState extends State<SellerRecordTabView> {
               return const Center(child: Text('No Recent Rooms!'));
             } else {
               return ListView.separated(
-                reverse: true,
                 itemCount: snapshot.data?.data?.length??0,
                 separatorBuilder: (context, index) => const Divider(color: Colors.black12),
-                itemBuilder: (context, index) {
+                itemBuilder: (context, i) {
+                  int index = snapshot.data!.data!.length-i-1;
                   final report = snapshot.data!.data![index];
                   return ListTile(
                     title: Text('User ID: ${report.userId}'),

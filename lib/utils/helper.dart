@@ -1,4 +1,8 @@
 
+import 'package:collection/collection.dart';
+
+import '../data/model/response/user_data_model.dart';
+
 class TimeUtil {
   static String getTimeDifferenceString(DateTime dateTime) {
     final now = DateTime.now();
@@ -71,4 +75,28 @@ class FixedLengthQueue<T> {
   }
 
   int get length => _queue.length;
+}
+
+bool isToday(DateTime dateToCheck) {
+  DateTime now = DateTime.now();
+  return dateToCheck.year == now.year &&
+      dateToCheck.month == now.month &&
+      dateToCheck.day == now.day;
+}
+
+bool inLastSevenDays(DateTime dateToCheck) {
+  DateTime now = DateTime.now();
+  DateTime sevenDaysAgo = now.subtract(Duration(days: 7));
+
+  return dateToCheck.isAfter(sevenDaysAgo) && dateToCheck.isBefore(now);
+}
+
+String userFrameViewPath(List<Frame>? frame){
+  if(frame==null) return '';
+  if(frame.isEmpty) return '';
+  if(frame.firstWhereOrNull((e) => e.defaultFrame??false) != null){
+    return frame.firstWhere((e) => e.defaultFrame??false).images?.last??'';
+  }
+  if(frame.isNotEmpty) return frame.first.images?.last??'';
+  return '';
 }

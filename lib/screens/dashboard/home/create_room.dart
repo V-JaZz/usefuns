@@ -1,17 +1,12 @@
-import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:live_app/data/model/response/rooms_model.dart';
 import 'package:live_app/provider/rooms_provider.dart';
 import 'package:live_app/utils/common_widgets.dart';
-
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
-import '../../room/live_room.dart';
 
 class CreateRoom extends StatefulWidget {
   const CreateRoom({Key? key}) : super(key: key);
@@ -39,6 +34,9 @@ class _CreateRoomState extends State<CreateRoom> {
       await ImageCropper().cropImage(
         sourcePath: imagePaths!,
         aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+        compressFormat: ImageCompressFormat.jpg,
+        maxHeight: 250,
+        maxWidth: 250,
         uiSettings: [
           AndroidUiSettings(
               toolbarTitle: 'Cropper',

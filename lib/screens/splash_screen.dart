@@ -42,7 +42,7 @@ class StartState extends State<SplashScreen> {
         if (response.statusCode == 200) {
           AppVersionConfigModel model = appVersionConfigModelFromJson(response.body);
           if(model.status == 1){
-            if(model.data!.first.name == "0.0.1v"){
+            if(model.data!.first.name == Constants.appVersion){
               Get.off(() {
                 return StorageService().getString(Constants.id) == ''?const LogInScreen():const BottomNavigator();
               });
@@ -116,11 +116,10 @@ class StartState extends State<SplashScreen> {
                     ),
                     InkWell(
                       onTap: () async {
-                        const String redirectUrl = 'http://usefuns.live/';
-                        if (await canLaunchUrl(Uri.parse(redirectUrl))) {
-                        await launchUrl(Uri.parse(redirectUrl));
+                        if (await canLaunchUrl(Uri.parse(Constants.updateUrl))) {
+                        await launchUrl(Uri.parse(Constants.updateUrl), mode: LaunchMode.externalApplication);
                         } else {
-                        throw 'Could not launch $redirectUrl';
+                        throw 'Could not launch $Constants.redirectUrl';
                         }
                       },
                       child: Padding(
