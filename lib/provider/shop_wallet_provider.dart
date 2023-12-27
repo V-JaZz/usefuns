@@ -115,6 +115,21 @@ class ShopWalletProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<bool> spendUserDiamonds(int diamonds) async {
+    final apiResponse = await _shopRepo.spendUserDiamonds(
+        userId: storageService.getString(Constants.userId),
+        diamonds: diamonds);
+    if (apiResponse.statusCode == 200) {
+      CommonModel responseModel = commonModelFromJson(apiResponse.body);
+      if(responseModel.status == 1){
+        Provider.of<UserDataProvider>(Get.context!,listen: false).getUser();
+        return true;
+      }
+    }
+    showCustomSnackBar('Error spending diamonds!', Get.context!);
+    return false;
+  }
+
   Future<void> convertBeans(int diamonds,int beans) async {
     final apiResponse = await _shopRepo.convertBeans(
         userId: storageService.getString(Constants.userId),

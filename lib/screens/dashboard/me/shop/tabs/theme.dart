@@ -19,26 +19,28 @@ class ShopTheme extends StatelessWidget {
 
     return Consumer<ShopWalletProvider>(
       builder: (context, value, _) {
-        return Padding(
-          padding: EdgeInsets.only(top: 15.0 * a),
-          child: value.items[item]!.data!.isEmpty
-              ? Align(
-                  alignment: Alignment.topCenter,
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 15.0 * a),
-                    child: const Text('No theme found!'),
-                  ))
-              : Align(
-                  alignment: Alignment.topCenter,
-                  child: Wrap(
-                    spacing: 20 * a,
-                    runSpacing: 30 * a,
-                    children:
-                        List.generate(value.items[item]!.data!.length, (index) {
-                      return viewTheme(value.items[item]!.data![index]);
-                    }),
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(top: 15.0 * a),
+            child: value.items[item]!.data!.isEmpty
+                ? Align(
+                    alignment: Alignment.topCenter,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 15.0 * a),
+                      child: const Text('No theme found!'),
+                    ))
+                : Align(
+                    alignment: Alignment.topCenter,
+                    child: Wrap(
+                      spacing: 20 * a,
+                      runSpacing: 30 * a,
+                      children:
+                          List.generate(value.items[item]!.data!.length, (index) {
+                        return viewTheme(value.items[item]!.data![index]);
+                      }),
+                    ),
                   ),
-                ),
+          ),
         );
       },
     );
@@ -83,30 +85,40 @@ class ShopTheme extends StatelessWidget {
                 child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-                Text(
-                    item.name.toString(),
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
+                SizedBox(
+                  width: 80 * a,
+                  child: Text(
+                      item.name.toString(),
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/icons/ic_diamond.png',
-                height: 12*a,
-                fit: BoxFit.fitHeight,
-                    ),
-                    Text(
-                      '${item.price}/${item.day} Days',
-                      style: SafeGoogleFont(
-                        'Poppins',
-                        fontSize: 10 * b,
-                        fontWeight: FontWeight.w400,
-                        height: 1.1725 * b / a,
-                        color: const Color.fromARGB(255, 11, 11, 11),
+                SizedBox(
+                  width: 80 * a,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/icons/ic_diamond.png',
+                  height: 12*a,
+                  fit: BoxFit.fitHeight,
                       ),
-                    ),
-                  ],
+                      Expanded(
+                        child: Text(
+                          '${item.price}/${item.day} Days',
+                          maxLines: 2,
+                          style: SafeGoogleFont(
+                            'Poppins',
+                            fontSize: 10 * b,
+                            fontWeight: FontWeight.w400,
+                            height: 1.1725 * b / a,
+                            color: const Color.fromARGB(255, 11, 11, 11),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               SizedBox(height: 9*a),
                 Container(
@@ -134,7 +146,7 @@ class ShopTheme extends StatelessWidget {
                     ),
                   ),
                 ),
-              SizedBox(height: 18*a)
+              SizedBox(height: 12*a)
             ],
           ),
               ))

@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:live_app/data/model/body/zego_broadcast_model.dart';
 import 'package:live_app/screens/room/widget/power_options.dart';
 import 'package:live_app/screens/room/widget/sound_visualizer.dart';
-import 'package:live_app/screens/room/widget/unlock_treasure_box.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:marquee_text/marquee_text.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -44,6 +43,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
   void initState() {
     WakelockPlus.enable();
     zegoRoomProvider = Provider.of<ZegoRoomProvider>(context,listen: false);
+    zegoRoomProvider.broadcastMessageList?.clear();
     bs = LiveRoomBottomSheets(context);
     Permission.microphone.status.then((value) => zegoRoomProvider.isMicrophonePermissionGranted = value == PermissionStatus.granted);
     zegoRoomProvider.vsync = this;
@@ -53,6 +53,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
 
   @override
   void dispose() {
+    zegoRoomProvider.broadcastMessageList?.clear();
     WakelockPlus.disable();
     super.dispose();
   }
@@ -524,7 +525,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                               Icon(CupertinoIcons.star_circle_fill,size: 11*a,color: Colors.white),
                                               SizedBox(width: 2 * a),
                                               Text(
-                                                '${user.points??0}',
+                                              formatInt(user.points??0),
                                                 textAlign: TextAlign.center,
                                                 style: SafeGoogleFont(
                                                   'Poppins',
@@ -1020,7 +1021,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                               InkWell(
                                                 onTap: bs.showTreasuresBottomSheet,
                                                 child: Image.asset(
-                                                  'assets/ic_treasure_box/${value.room!.treasureBoxLevel!+1}.png',
+                                                  'assets/ic_treasure_box/${value.room!.treasureBoxLevel! == 5 ?5 :(value.room!.treasureBoxLevel!+1)}.png',
                                                   width: double.infinity,
                                                   fit: BoxFit.contain,
                                                 ),
@@ -1234,34 +1235,30 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
     );
   }
 
-  double setTreasureBoxValue(int selectedBox, int usedDiamonds) {
-    print('$selectedBox $usedDiamonds');
-    switch(selectedBox){
+  double setTreasureBoxValue(int boxLevel, int usedDiamonds) {
+    int b1 = 3500;
+    int b2 = 13500;
+    int b3 = 28500;
+    int b4 = 50500;
+    int b5 = 80500;
+    switch(boxLevel){
       case 0:
-        if(usedDiamonds>3499){
-          return 1.0;
-        }
-        return usedDiamonds/3500;
+        if(usedDiamonds>=b1) return 1.0;
+        return usedDiamonds/b1;
       case 1:
-        if(usedDiamonds>9999){
-          return 1.0;
-        }
-        return usedDiamonds/10000;
+        if(usedDiamonds>=b2) return 1.0;
+        return (usedDiamonds-b1)/b2;
       case 2:
-        if(usedDiamonds>14999){
-          return 1.0;
-        }
-        return usedDiamonds/15000;
+        if(usedDiamonds>=b3) return 1.0;
+        return (usedDiamonds-b2)/b3;
       case 3:
-        if(usedDiamonds>21999){
-          return 1.0;
-        }
-        return usedDiamonds/22000;
+        if(usedDiamonds>=b4) return 1.0;
+        return (usedDiamonds-b3)/b4;
       case 4:
-        if(usedDiamonds>29999){
-          return 1.0;
-        }
-        return usedDiamonds/30000;
+        if(usedDiamonds>=b5) return 1.0;
+        return (usedDiamonds-b4)/b5;
+      case 5:
+        return 1.0;
     }
     return 0;
   }

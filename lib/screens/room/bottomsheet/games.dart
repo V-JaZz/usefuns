@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/provider/zego_room_provider.dart';
+import 'package:live_app/screens/room/bottomsheet/manager.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/utils_assets.dart';
@@ -16,31 +17,40 @@ class GamesBottomSheet extends StatelessWidget {
         "image": 'assets/Crazy_racing.png',
         "name": "Crazy racing",
         "rank": "516",
+        "onTap" : (){}
       },
       {
         "image": 'assets/Grady_bord.png',
         "name": "Grady bord",
         "rank": "412",
+        "onTap" : (){}
       },
       {
         "image": 'assets/Lucky_7.png',
         "name": "Lucky 7",
         "rank": "510",
+        "onTap" : (){}
       },
       {
         "image": 'assets/wheel.gif',
         "name": "Wheel",
         "rank": "524",
+        "onTap" : (){
+          Get.back();
+          LiveRoomBottomSheets(context).showLuckyWheelBottomSheet();
+        }
       },
       {
         "image": 'assets/dias.png',
         "name": "Ludo Dias",
         "rank": "440",
+        "onTap" : (){}
       },
       if(owner){
         "image": 'assets/star.gif',
         "name": "Calculator",
         "rank": "440",
+        "onTap" : (){showCalculatorOptions(context);}
       },
     ];
     double baseWidth = 360;
@@ -80,12 +90,7 @@ class GamesBottomSheet extends StatelessWidget {
                   children: List.generate(
                     gamesList.length,
                         (index) => InkWell(
-                      onTap: () {
-                        if (index == 5) {
-                          showCalculatorOptions(context);
-                        }
-                        ;
-                      },
+                      onTap: gamesList[index]["onTap"],
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,

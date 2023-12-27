@@ -25,11 +25,6 @@ class _HomeState extends State<Home> {
   RefreshController refreshController3 = RefreshController();
 
   @override
-  void initState() {
-    checkUserRoom();
-    super.initState();
-  }
-  @override
   void dispose() {
     refreshController.dispose();
     refreshController2.dispose();
@@ -368,164 +363,7 @@ class _HomeState extends State<Home> {
                                     ),
                                   ),
                                 ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 18 * a, vertical: 8 * a),
-                                  child:
-                                  Consumer<UserDataProvider>(
-                                    builder: (context, value, child) {
-                                      final following = value.userData!.data!.following!;
-                                      if(following.isEmpty){
-                                        return const Center(child: Text('Not Followed any user until now!'));
-                                      }else {
-                                        return ListView.builder(
-                                          itemCount: following.length,
-                                          itemBuilder: (context, index) {
-                                            return FutureBuilder(
-                                                future: Provider.of<UserDataProvider>(context,
-                                                    listen: false)
-                                                    .getUser(id: following[index]),
-                                                builder: (context, snapshot) {
-                                                  switch (snapshot.connectionState) {
-                                                    case ConnectionState.none:
-                                                      return const Text('none...');
-                                                    case ConnectionState.active:
-                                                      return const Text('active...');
-                                                    case ConnectionState.waiting:
-                                                      return Container(
-                                                          width: double.infinity,
-                                                          height: 70 * a,
-                                                          decoration: BoxDecoration(
-                                                            border: Border(
-                                                                top: BorderSide(
-                                                                    color:
-                                                                    Colors.black.withOpacity(0.06),
-                                                                    width: 1)),
-                                                          ),
-                                                          padding: EdgeInsets.all(10 * a),
-                                                          child: Row(
-                                                            children: [
-                                                              Shimmer.fromColors(
-                                                                baseColor: const Color.fromARGB(
-                                                                    248, 188, 187, 187),
-                                                                highlightColor: Colors.white,
-                                                                period: const Duration(seconds: 1),
-                                                                child: Container(
-                                                                  margin: EdgeInsets.fromLTRB(
-                                                                      0 * a, 0 * a, 12 * a, 0 * a),
-                                                                  width: 50 * a,
-                                                                  height: 50 * a,
-                                                                  decoration: const BoxDecoration(
-                                                                    shape: BoxShape.circle,
-                                                                    image: DecorationImage(
-                                                                      fit: BoxFit.cover,
-                                                                      image: AssetImage(
-                                                                          'assets/profile.png'),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              Expanded(
-                                                                child: Align(
-                                                                  alignment: Alignment.center,
-                                                                  child: Shimmer.fromColors(
-                                                                    baseColor: const Color.fromARGB(
-                                                                        248, 188, 187, 187),
-                                                                    highlightColor: Colors.white,
-                                                                    period: const Duration(seconds: 1),
-                                                                    child: Container(
-                                                                      margin: EdgeInsets.fromLTRB(
-                                                                          0 * a, 2 * a, 7 * a, 8 * a),
-                                                                      height: 21 * a,
-                                                                      decoration: BoxDecoration(
-                                                                          color: Colors.white,
-                                                                          borderRadius:
-                                                                          BorderRadius.circular(8)),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ));
-                                                    case ConnectionState.done:
-                                                      if (snapshot.hasError ||
-                                                          snapshot.data?.status == 0 ||
-                                                          snapshot.data?.data == null) {
-                                                        return ListTile(
-                                                          title: Text('Error: ${snapshot.error}'),
-                                                        );
-                                                      } else {
-                                                        final user = snapshot.data!.data;
-
-                                                        return Container(
-                                                          width: double.infinity,
-                                                          height: 70 * a,
-                                                          decoration: BoxDecoration(
-                                                            border: Border(
-                                                                top: BorderSide(
-                                                                    color:
-                                                                    Colors.black.withOpacity(0.06),
-                                                                    width: 1)),
-                                                          ),
-                                                          padding: EdgeInsets.all(10 * a),
-                                                          child: InkWell(
-                                                            onTap: () async {
-                                                              Provider.of<UserDataProvider>(context,listen: false).addVisitor(following[index]);
-                                                              Get.to(()=> UserProfile(userData: user));
-                                                            },
-                                                            child: Row(
-                                                              children: [
-                                                                Container(
-                                                                  margin: EdgeInsets.fromLTRB(
-                                                                      0 * a, 0 * a, 7 * a, 0 * a),
-                                                                  width: 50 * a,
-                                                                  height: 50 * a,
-                                                                  decoration: BoxDecoration(
-                                                                    shape: BoxShape.circle,
-                                                                    image: user!.images!.isEmpty
-                                                                        ? const DecorationImage(
-                                                                      fit: BoxFit.cover,
-                                                                      image: AssetImage(
-                                                                          'assets/profile.png'),
-                                                                    )
-                                                                        : DecorationImage(
-                                                                      fit: BoxFit.cover,
-                                                                      image: NetworkImage(
-                                                                          user.images!.first),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                Container(
-                                                                  margin: EdgeInsets.fromLTRB(
-                                                                      3 * a, 0 * a, 6 * a, 2 * a),
-                                                                  child: Text(
-                                                                    user.name.toString(),
-                                                                    style: SafeGoogleFont(
-                                                                      'Poppins',
-                                                                      fontSize: 15 * b,
-                                                                      fontWeight: FontWeight.w400,
-                                                                      height: 1.5 * b / a,
-                                                                      letterSpacing: 0.48 * a,
-                                                                      color:
-                                                                      const Color(0xff000000),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                userLevelTag(
-                                                                    user.level ?? 0, 17 * a)
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        );
-                                                      }
-                                                  }
-                                                });
-                                          },
-                                        );
-                                        }
-                                    },
-                                  ),
-                                ),
+                                viewUsersByIds(Provider.of<UserDataProvider>(context,listen: false).userData?.data?.following),
                                 Container(
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 18 * a, vertical: 8 * a),
@@ -818,10 +656,5 @@ class _HomeState extends State<Home> {
         ),
       ),
     );
-  }
-
-  void checkUserRoom() {
-    final provider = Provider.of<RoomsProvider>(context,listen: false);
-    provider.getAllMine();
   }
 }

@@ -19,7 +19,10 @@ class RoomsProvider with ChangeNotifier {
   final RoomsRepo _roomsRepo = RoomsRepo();
 
   RoomsModel? _myRoom;
-  RoomsModel? get myRoom => _myRoom;
+  RoomsModel? get myRoom {
+    if(_myRoom == null) getAllMine();
+    return _myRoom;
+  }
   set myRoom(RoomsModel? value) {
     _myRoom = value;
     notifyListeners();
@@ -225,5 +228,4 @@ class RoomsProvider with ChangeNotifier {
     }
     return responseModel;
   }
-
 }

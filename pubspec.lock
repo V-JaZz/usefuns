@@ -326,6 +326,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+  flutter_fortune_wheel:
+    dependency: "direct main"
+    description:
+      name: flutter_fortune_wheel
+      sha256: "693198dad5c70fd3cf4177d687628ebb70c65c713e546a5505c8598ec79c442c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.3.0"
+  flutter_hooks:
+    dependency: transitive
+    description:
+      name: flutter_hooks
+      sha256: "6a126f703b89499818d73305e4ce1e3de33b4ae1c5512e3b8eab4b986f46774c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.18.6"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -600,6 +616,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  luckywheel:
+    dependency: "direct main"
+    description:
+      name: luckywheel
+      sha256: "73331d43dd66a9f05904a504fee79c3776ceb2d5b804553c72a64a688af771ec"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   marquee_text:
     dependency: "direct main"
     description:

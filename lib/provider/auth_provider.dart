@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:live_app/data/model/response/login_model.dart';
 import 'package:live_app/data/repository/auth_repo.dart';
 import 'package:live_app/utils/constants.dart';
@@ -9,6 +10,9 @@ import '../data/model/response/register_model.dart';
 import '../data/model/response/send_otp_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
+import '../screens/auth/login_screen.dart';
+import '../utils/common_widgets.dart';
 
 class AuthProvider with ChangeNotifier {
   final storageService = StorageService();
@@ -130,17 +134,19 @@ class AuthProvider with ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     final apiResponse = await _authRepo.logout(storageService.getString(Constants.token));
-    _isLoading = false;
-    notifyListeners();
     CommonModel responseModel;
     if (apiResponse.statusCode == 200) {
       responseModel = commonModelFromJson(apiResponse.body);
       if(responseModel.status == 1){
-        storageService.logout();
+        await storageService.clearStorage();
+        Get.offAll(()=>const LogInScreen());
+      }else{
+        showCustomSnackBar('Failed to logout!', Get.context!);
       }
     } else {
       responseModel = CommonModel(status: 0,message: apiResponse.reasonPhrase);
     }
+    _isLoading = false;
     notifyListeners();
     return responseModel;
   }

@@ -3,9 +3,13 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:ui' as ui;
 import 'package:get/get.dart';
 import 'package:live_app/utils/utils_assets.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 // ignore: depend_on_referenced_packages
 import 'package:svgaplayer_flutter/svgaplayer_flutter.dart';
+
+import '../provider/user_data_provider.dart';
+import '../screens/dashboard/me/profile/user_profile.dart';
 
 void showCustomSnackBar(String? message, BuildContext context,
     {bool isError = true, bool isToaster = false}) {
@@ -476,4 +480,455 @@ void rewardDialog(String path, String title, String info, void Function() onTap)
               )),
         );
       });
+}
+
+void showInsufficientDialog(context) {
+  String? selectedPurchaseOption;
+  final user = Provider.of<UserDataProvider>(context, listen: false).userData;
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return Dialog(
+            backgroundColor: Colors.white,
+            // insetPadding: null,
+            shape: Border.all(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 21, vertical: 12),
+                    width: double.infinity,
+                    child: FittedBox(
+                        child: Column(
+                          children: [
+                            const Text('Your diamonds are not enough'),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  'Account Balance ',
+                                  style: TextStyle(
+                                      fontSize: 12, color: Colors.black38),
+                                ),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Image.asset('assets/icons/ic_diamond.png',
+                                        height: 12, width: 12),
+                                    Text(
+                                      '${user?.data?.diamonds} ',
+                                      style: const TextStyle(fontSize: 12),
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Image.asset('assets/beans.png',
+                                        height: 12, width: 12),
+                                    Text(
+                                      '${user?.data?.beans}',
+                                      style: const TextStyle(fontSize: 12),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
+                          ],
+                        ))),
+                const Text(
+                  '   \t Recharge By:',
+                  style: TextStyle(fontSize: 14, color: Colors.black38),
+                ),
+                RadioListTile<String>(
+                  activeColor: const Color(0xFFFF9933),
+                  dense: true,
+                  title: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset('assets/beans.png', height: 16, width: 16),
+                      const Text('  Beans'),
+                      const Spacer(),
+                      Image.asset('assets/icons/ic_diamond.png',
+                          height: 12, width: 12),
+                      const Text(
+                        ' 1=4 ',
+                        style: TextStyle(fontSize: 12),
+                      ),
+                      Image.asset('assets/beans.png', height: 12, width: 12),
+                    ],
+                  ),
+                  value: 'beans',
+                  groupValue: selectedPurchaseOption,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedPurchaseOption = value;
+                    });
+                  },
+                ),
+                RadioListTile<String>(
+                  activeColor: const Color(0xFFFF9933),
+                  dense: true,
+                  title: Row(
+                    children: [
+                      Image.asset('assets/geogle.png', height: 16, width: 16),
+                      const Text('  Geogle Wallet'),
+                      const Spacer(),
+                      Image.asset('assets/icons/ic_diamond.png',
+                          height: 12, width: 12),
+                      const Text(
+                        ' 1664 = ₹750',
+                        style: TextStyle(fontSize: 12),
+                      )
+                    ],
+                  ),
+                  value: 'geogle wallet',
+                  groupValue: selectedPurchaseOption,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedPurchaseOption = value;
+                    });
+                  },
+                ),
+                RadioListTile<String>(
+                  activeColor: const Color(0xFFFF9933),
+                  dense: true,
+                  title: Row(
+                    children: [
+                      Image.asset('assets/other_wallet.png',
+                          height: 16, width: 16),
+                      const Text('  Other Wallet'),
+                      const Spacer(),
+                      Image.asset('assets/icons/ic_diamond.png',
+                          height: 12, width: 12),
+                      const Text(
+                        ' 1000 = ₹750',
+                        style: TextStyle(fontSize: 12),
+                      )
+                    ],
+                  ),
+                  value: 'other wallet',
+                  groupValue: selectedPurchaseOption,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedPurchaseOption = value;
+                    });
+                  },
+                ),
+                Center(
+                  child: InkWell(
+                    onTap: (){
+                      showRechargeDailog(context);
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 24, top: 12),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 9),
+                      decoration: BoxDecoration(
+                          color: const Color(0xFFFF9933),
+                          borderRadius: BorderRadius.circular(12)),
+                      child: const Text(
+                        "Recharge Now",
+                        style: TextStyle(color: Colors.black, fontSize: 16),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          );
+        },
+      );
+    },
+  );
+}
+
+void showRechargeDailog(context) {
+  String? selectedPaymentOption;
+  Get.back();
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return Dialog(
+            backgroundColor: Colors.white,
+            // insetPadding: null,
+            shape: Border.all(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 21, vertical: 12),
+                    width: double.infinity,
+                    child: Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back_ios,
+                              color: Colors.black),
+                          onPressed: () {
+                            Get.back();
+                          },
+                        ),
+                        const Text('Purchase Methods',
+                            style: TextStyle(fontSize: 16)),
+                      ],
+                    )),
+                RadioListTile<String>(
+                  activeColor: const Color(0xFFFF9933),
+                  title: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset('assets/icons/ic_diamond.png',
+                          height: 14, width: 14),
+                      const Text('  UPI  '),
+                      Container(
+                          color: const Color(0xFFFF8D5E),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 2),
+                          child: const Text('Sale +2%',
+                              style: TextStyle(
+                                  fontSize: 11, color: Colors.white)))
+                    ],
+                  ),
+                  value: 'upi',
+                  groupValue: selectedPaymentOption,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedPaymentOption = value;
+                    });
+                  },
+                ),
+                RadioListTile<String>(
+                  activeColor: const Color(0xFFFF9933),
+                  title: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset('assets/geogle.png', height: 14, width: 14),
+                      const Text('  Geogle Wallet  '),
+                      Container(
+                          color: const Color(0xFFFF8D5E),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 2),
+                          child: const Text('Sale +2%',
+                              style: TextStyle(
+                                  fontSize: 11, color: Colors.white)))
+                    ],
+                  ),
+                  value: 'geogle wallet',
+                  groupValue: selectedPaymentOption,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedPaymentOption = value;
+                    });
+                  },
+                ),
+                RadioListTile<String>(
+                  activeColor: const Color(0xFFFF9933),
+                  title: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.asset('assets/other_wallet.png',
+                          height: 14, width: 14),
+                      const Text('  Wallet  '),
+                      Container(
+                          color: const Color(0xFFFF8D5E),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 2),
+                          child: const Text('Sale +2%',
+                              style: TextStyle(
+                                  fontSize: 11, color: Colors.white)))
+                    ],
+                  ),
+                  value: 'wallet',
+                  groupValue: selectedPaymentOption,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedPaymentOption = value;
+                    });
+                  },
+                ),
+                const SizedBox(height: 24)
+              ],
+            ),
+          );
+        },
+      );
+    },
+  );
+}
+
+Container viewUsersByIds(List<String>? list){
+  double baseWidth = 360;
+  double a = Get.width / baseWidth;
+  double b = a * 0.97;
+  return Container(
+      padding: EdgeInsets.symmetric(
+          horizontal: 18 * a, vertical: 8 * a),
+      child:
+      Consumer<UserDataProvider>(
+        builder: (context, value, child) {
+          if(list==null){
+            return const Center(child: Text('Null!'));
+          }if(list.isEmpty){
+            return const Center(child: Text('NoData!'));
+          }else {
+            return ListView.builder(
+              itemCount: list.length,
+              itemBuilder: (context, index) {
+                return FutureBuilder(
+                    future: Provider.of<UserDataProvider>(context,
+                        listen: false)
+                        .getUser(id: list[index]),
+                    builder: (context, snapshot) {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.none:
+                          return const Text('none...');
+                        case ConnectionState.active:
+                          return const Text('active...');
+                        case ConnectionState.waiting:
+                          return Container(
+                              width: double.infinity,
+                              height: 70 * a,
+                              decoration: BoxDecoration(
+                                border: Border(
+                                    top: BorderSide(
+                                        color:
+                                        Colors.black.withOpacity(0.06),
+                                        width: 1)),
+                              ),
+                              padding: EdgeInsets.all(10 * a),
+                              child: Row(
+                                children: [
+                                  Shimmer.fromColors(
+                                    baseColor: const Color.fromARGB(
+                                        248, 188, 187, 187),
+                                    highlightColor: Colors.white,
+                                    period: const Duration(seconds: 1),
+                                    child: Container(
+                                      margin: EdgeInsets.fromLTRB(
+                                          0 * a, 0 * a, 12 * a, 0 * a),
+                                      width: 50 * a,
+                                      height: 50 * a,
+                                      decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: AssetImage(
+                                              'assets/profile.png'),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: Shimmer.fromColors(
+                                        baseColor: const Color.fromARGB(
+                                            248, 188, 187, 187),
+                                        highlightColor: Colors.white,
+                                        period: const Duration(seconds: 1),
+                                        child: Container(
+                                          margin: EdgeInsets.fromLTRB(
+                                              0 * a, 2 * a, 7 * a, 8 * a),
+                                          height: 21 * a,
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                              BorderRadius.circular(8)),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ));
+                        case ConnectionState.done:
+                          if (snapshot.hasError ||
+                              snapshot.data?.status == 0 ||
+                              snapshot.data?.data == null) {
+                            return ListTile(
+                              title: Text('Error: ${snapshot.error}'),
+                            );
+                          } else {
+                            final user = snapshot.data!.data;
+
+                            return Container(
+                              width: double.infinity,
+                              height: 70 * a,
+                              decoration: BoxDecoration(
+                                border: Border(
+                                    top: BorderSide(
+                                        color:
+                                        Colors.black.withOpacity(0.06),
+                                        width: 1)),
+                              ),
+                              padding: EdgeInsets.all(10 * a),
+                              child: InkWell(
+                                onTap: () async {
+                                  Provider.of<UserDataProvider>(context,listen: false).addVisitor(list[index]);
+                                  Get.to(()=> UserProfile(userData: user));
+                                },
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.fromLTRB(
+                                          0 * a, 0 * a, 7 * a, 0 * a),
+                                      width: 50 * a,
+                                      height: 50 * a,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: user!.images!.isEmpty
+                                            ? const DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: AssetImage(
+                                              'assets/profile.png'),
+                                        )
+                                            : DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: NetworkImage(
+                                              user.images!.first),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: EdgeInsets.fromLTRB(
+                                          3 * a, 0 * a, 6 * a, 2 * a),
+                                      constraints: BoxConstraints(
+                                        maxWidth: Get.width/2
+                                      ),
+                                      child: Text(
+                                        user.name.toString(),
+                                        overflow: TextOverflow.ellipsis,
+                                        style: SafeGoogleFont(
+                                          'Poppins',
+                                          fontSize: 15 * b,
+                                          fontWeight: FontWeight.w400,
+                                          height: 1.5 * b / a,
+                                          letterSpacing: 0.48 * a,
+                                          color:
+                                          const Color(0xff000000),
+                                        ),
+                                      ),
+                                    ),
+                                    userLevelTag(
+                                        user.level ?? 0, 17 * a)
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+                      }
+                    });
+              },
+            );
+          }
+        },
+      ),
+    );
 }

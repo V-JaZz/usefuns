@@ -92,62 +92,62 @@ class _ShopState extends State<Shop> {
       ),
       body: shopWalletProvider.loadingShopProgress == null
           ? VerticalTabs(
-        tabsWidth: 120 * a,
-        initialIndex: widget.index ?? 0,
-        indicatorColor: Theme.of(context).primaryColor,
-        selectedTabBackgroundColor:
-        Theme.of(context).primaryColor.withOpacity(0.1),
-        tabs: const <Tab>[
-          Tab(
-            text: 'Frame',
-          ),
-          Tab(
-            text: 'Bubble',
-          ),
-          Tab(
-            text: 'Theme',
-          ),
-          Tab(
-            text: 'Vehicle',
-          ),
-          Tab(
-            text: 'Relation',
-          ),
-          Tab(
-            text: 'Special ID',
-          ),
-          Tab(
-            text: 'Room Accessories',
-          ),
-        ],
-        contents: const [
-          ShopCommonView(type: 'frame'),
-          ShopCommonView(type: 'chatBubble'),
-          ShopTheme(),
-          ShopCommonView(type: 'vehicle'),
-          ShopCommonView(type: 'relationship'),
-          ShopSpecialId(),
-          ShopRoomAccessories()
-        ],
-      )
+              tabsWidth: 120 * a,
+              initialIndex: widget.index ?? 0,
+              indicatorColor: Theme.of(context).primaryColor,
+              selectedTabBackgroundColor:
+                  Theme.of(context).primaryColor.withOpacity(0.1),
+              tabs: const <Tab>[
+                Tab(
+                  text: 'Frame',
+                ),
+                Tab(
+                  text: 'Bubble',
+                ),
+                Tab(
+                  text: 'Theme',
+                ),
+                Tab(
+                  text: 'Vehicle',
+                ),
+                Tab(
+                  text: 'Relation',
+                ),
+                Tab(
+                  text: 'Special ID',
+                ),
+                Tab(
+                  text: 'Room Accessories',
+                ),
+              ],
+              contents: const [
+                ShopCommonView(type: 'frame'),
+                ShopCommonView(type: 'chatBubble'),
+                ShopTheme(),
+                ShopCommonView(type: 'vehicle'),
+                ShopCommonView(type: 'relationship'),
+                ShopSpecialId(),
+                ShopRoomAccessories()
+              ],
+            )
           : Center(
-          child: Stack(
-            children: [
-              Center(
-                child: SizedBox(
-                  height: 50,
-                  width: 50,
-                  child: CircularProgressIndicator(
-                    value: Provider.of<ShopWalletProvider>(context)
-                        .loadingShopProgress,
+              child: Stack(
+              children: [
+                Center(
+                  child: SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: CircularProgressIndicator(
+                      value: Provider.of<ShopWalletProvider>(context)
+                          .loadingShopProgress,
+                    ),
                   ),
                 ),
-              ),
-              Center(
-                  child: Text(
-                      '${(Provider.of<ShopWalletProvider>(context).loadingShopProgress! * 100).toInt()}%'))
-            ],
-          )),
+                Center(
+                    child: Text(
+                        '${(Provider.of<ShopWalletProvider>(context).loadingShopProgress! * 100).toInt()}%'))
+              ],
+            )),
     );
   }
 }

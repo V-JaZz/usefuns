@@ -23,10 +23,6 @@ class UserDataProvider with ChangeNotifier {
       if(refresh)notifyListeners();
     }
     final apiResponse = await _userDataRepo.getUserById(id??storageService.getString(Constants.id),isUsefunId);
-    if(id==null){
-      isUserDataLoading = false;
-      notifyListeners();
-    }
     UserDataModel responseModel;
     if (apiResponse.statusCode == 200) {
       responseModel = userDataModelFromJson(apiResponse.body);
@@ -36,11 +32,15 @@ class UserDataProvider with ChangeNotifier {
         ZegoConfig.instance.streamID = userData!.data!.id!;
         ZegoConfig.instance.userName = userData!.data!.name!;
       }else if(id==null){
-        storageService.logout();
+        storageService.clearStorage();
         Get.to(const LogInScreen());
       }
     } else {
       responseModel = UserDataModel(status: 0,message: apiResponse.reasonPhrase);
+    }
+    if(id==null){
+      isUserDataLoading = false;
+      notifyListeners();
     }
     return responseModel;
   }
@@ -68,7 +68,7 @@ class UserDataProvider with ChangeNotifier {
     if (apiResponse.statusCode == 200) {
       responseModel = commonModelFromJson(apiResponse.body);
       if(responseModel.status == 1){
-        getUser();
+        getUser(refresh: false);
       }
     } else {
       responseModel = CommonModel(status: 0,message: apiResponse.reasonPhrase);

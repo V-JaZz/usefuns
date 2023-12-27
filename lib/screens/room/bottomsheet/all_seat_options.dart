@@ -306,14 +306,19 @@ class MyProfileSeatBottomSheet extends StatelessWidget {
                   ],
                 ),
                 if((value.userData?.data?.bio??'') != '')SizedBox(height: 12 * a),
-                if((value.userData?.data?.bio??'') != '')Text(
-                  value.userData?.data?.bio??'',
-                  style: SafeGoogleFont(
-                    'Poppins',
-                    fontSize: 12 * b,
-                    fontWeight: FontWeight.w400,
-                    height: 1.5 * b / a,
-                    color: const Color(0x99000000),
+                if((value.userData?.data?.bio??'') != '')Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 36 * a),
+                  child: Text(
+                    value.userData?.data?.bio??'',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: SafeGoogleFont(
+                      'Poppins',
+                      fontSize: 12 * b,
+                      fontWeight: FontWeight.w400,
+                      height: 1.5 * b / a,
+                      color: const Color(0x99000000),
+                    ),
                   ),
                 ),
                 SizedBox(height: 24 * a),

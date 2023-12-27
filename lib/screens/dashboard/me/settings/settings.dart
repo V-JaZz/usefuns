@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:live_app/provider/rooms_provider.dart';
 import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/screens/dashboard/me/contact_us.dart';
 import 'package:live_app/subscreens/ref_useFuns.dart';
 import 'package:live_app/subscreens/refund.dart';
 import 'package:live_app/subscreens/sanitize.dart';
+import 'package:live_app/utils/constants.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import '../../../../provider/auth_provider.dart';
 import '../../../../subscreens/intellectual.dart';
 import '../../../../utils/common_widgets.dart';
 import '../../../auth/login_screen.dart';
+import 'info_text_view.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -26,68 +29,74 @@ class _SettingsState extends State<Settings> {
       "title": "Account",
       "trailing": "number"
     },
-    {
-      "icon": "assets/icons/ic_eng.png",
-      "title": "English Mode",
-      "trailing": "switch1"
-    },
-    {
-      "icon": "assets/icons/ic_privacy.png",
-      "title": "Privacy Settings",
-      "trailing": "view"
-    },
-    {
-      "icon": "assets/icons/ic_notify.png",
-      "title": "Push Notification",
-      "trailing": "switch2"
-    },
-    {
-      "icon": "assets/icons/ic_clean.png",
-      "title": "Clean Cache",
-    },
-    {
-      "icon": "assets/icons/ic_privacy.png",
-      "title": "Santize Room",
-      "onTap": () {
-        Get.to(() => const Sanitize());
-      }
-    }
+    // {
+    //   "icon": "assets/icons/ic_eng.png",
+    //   "title": "English Mode",
+    //   "trailing": "switch1"
+    // },
+    // {
+    //   "icon": "assets/icons/ic_privacy.png",
+    //   "title": "Privacy Settings",
+    //   "trailing": "view"
+    // },
+    // {
+    //   "icon": "assets/icons/ic_notify.png",
+    //   "title": "Push Notification",
+    //   "trailing": "switch2"
+    // },
+    // {
+    //   "icon": "assets/icons/ic_clean.png",
+    //   "title": "Clean Cache",
+    // },
+    // {
+    //   "icon": "assets/icons/ic_privacy.png",
+    //   "title": "Santize Room",
+    //   "onTap": () {
+    //     Get.to(() => const Sanitize());
+    //   }
+    // }
   ];
   final List<Map> settingsList2 = [
     {
       "title": "Terms of Service",
       "ontap": () {
-        Get.to(() => const UseFunds());
+        Get.to(() => InfoTextView(title: "Terms of Service",info: Constants.termsOfService));
       }
     },
     {
       "title": "Privacy Policy",
+      "ontap": () {
+        Get.to(() => InfoTextView(title: "Privacy Policy",info: Constants.privacyPolicy));
+      }
     },
     {
       "title": "Community Policy",
+      "ontap": () {
+        Get.to(() => InfoTextView(title: "Community Policy",info: Constants.communityPolicy));
+      }
     },
     {
       "title": "Refund Policy",
       "ontap": () {
-        Get.to(() => const Refund());
+        Get.to(() => InfoTextView(title: "Refund Policy",info: Constants.refundPolicy));
       }
     },
     {
       "title": "Intellectual Property Rights",
       "ontap": () {
-        Get.to(() => const Intellectual());
+        Get.to(() => InfoTextView(title: "Intellectual Property Rights",info: Constants.intellectualPropertyRights));
       }
     },
     {
       "title": "About us",
       "ontap": () {
-        Get.to(() => const UseFunds());
+        Get.to(() => InfoTextView(title: "About us",info: Constants.aboutUs));
       }
     },
     {
       "title": "Contact us",
       "ontap": () {
-        Get.to(() => const ContactUs());
+        Get.to(() => InfoTextView(title: "Contact us",info: Constants.contactUs));
       }
     }
   ];
@@ -198,7 +207,7 @@ class _SettingsState extends State<Settings> {
                   ],
                 ),
               ),
-            SizedBox(height: 36 * a),
+            SizedBox(height: 12 * a),
             for (Map m in settingsList2)
               Container(
                 margin: EdgeInsets.only(bottom: 12 * a),
@@ -228,13 +237,8 @@ class _SettingsState extends State<Settings> {
             Consumer<AuthProvider>(
               builder: (context, value, child) => GestureDetector(
                 onTap: (){
-                  value.logout().then((model) {
-                    if(model.status==1){
-                      Get.offAll(()=>const LogInScreen());
-                    }else{
-                      showCustomSnackBar('Failed to logout!', Get.context!);
-                    }
-                  });
+                  Provider.of<RoomsProvider>(context,listen: false).myRoom = null;
+                  value.logout();
                 },
                 child: Container(
                   width: 316 * a,

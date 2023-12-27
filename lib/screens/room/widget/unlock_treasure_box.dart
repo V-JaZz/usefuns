@@ -24,11 +24,11 @@ class _UnlockTreasureBoxState extends State<UnlockTreasureBox> {
         size = !size;
       });
     });
-    Timer.periodic(const Duration(seconds: 1), (timer) {
+    Timer.periodic(const Duration(seconds: 1), (timer) async {
       if (countDown == 0) {
         timer.cancel();
+        await Get.dialog(TreasureBoxReward(level: widget.level));
         Get.back();
-        Get.dialog(TreasureBoxReward(level: widget.level));
       } else {
         setState(() {
           countDown--;

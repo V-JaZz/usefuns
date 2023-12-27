@@ -195,7 +195,8 @@ class _TreasuresState extends State<Treasures> {
   int selectedBox = 0;
   @override
   void initState() {
-    selectedBox = Provider.of<ZegoRoomProvider>(context,listen: false).room?.treasureBoxLevel??0;
+    int level = Provider.of<ZegoRoomProvider>(context,listen: false).room?.treasureBoxLevel??0;
+    selectedBox = level==5 ?5-1 :level;
     super.initState();
   }
   @override
@@ -626,45 +627,33 @@ class _TreasuresState extends State<Treasures> {
   }
 
   double setValue(int selectedBox, int usedDiamonds) {
-    print('$selectedBox $usedDiamonds');
+    int b1 = 3500;
+    int b2 = 13500;
+    int b3 = 28500;
+    int b4 = 50500;
+    int b5 = 80500;
     switch(selectedBox){
       case 0:
-        if(usedDiamonds>3499){
-          return 1.0;
-        }
-        return usedDiamonds/3500;
+        if(usedDiamonds>=b1) return 1.0;
+        return usedDiamonds/b1;
       case 1:
-        if(usedDiamonds>9999){
-          return 1.0;
-        }
-        if(usedDiamonds<3500){
-          return 0;
-        }
-        return usedDiamonds/10000;
+        if(usedDiamonds>=b2) return 1.0;
+        if(usedDiamonds<=b1) return 0;
+        return (usedDiamonds-b1)/b2;
       case 2:
-        if(usedDiamonds>14999){
-          return 1.0;
-        }
-        if(usedDiamonds<10000){
-          return 0;
-        }
-        return usedDiamonds/15000;
+        if(usedDiamonds>=b3) return 1.0;
+        if(usedDiamonds<=b2) return 0;
+        return (usedDiamonds-b2)/b3;
       case 3:
-        if(usedDiamonds>21999){
-          return 1.0;
-        }
-        if(usedDiamonds<15000){
-          return 0;
-        }
-        return usedDiamonds/22000;
+        if(usedDiamonds>=b4) return 1.0;
+        if(usedDiamonds<=b3) return 0;
+        return (usedDiamonds-b3)/b4;
       case 4:
-        if(usedDiamonds>29999){
-          return 1.0;
-        }
-        if(usedDiamonds<22000){
-          return 0;
-        }
-        return usedDiamonds/30000;
+        if(usedDiamonds>=b5) return 1.0;
+        if(usedDiamonds<=b4) return 0;
+        return (usedDiamonds-b4)/b5;
+      case 5:
+        return 1.0;
     }
     return 0;
   }

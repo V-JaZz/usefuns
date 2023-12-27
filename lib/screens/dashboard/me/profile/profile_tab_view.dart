@@ -46,28 +46,33 @@ class _ProfileTabViewState extends State<ProfileTabView> {
             SizedBox(
               height: 10 * a,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(
-                  '    Bio',
-                  style: SafeGoogleFont(
-                      color: const Color.fromRGBO(0, 0, 0, 1),
-                      'Poppins',
-                      fontSize: 12 * a,
-                      fontWeight: FontWeight.w200,
-                      height: 1 * b / a),
-                ),
-                Text(
-                  '${userData.bio}',
-                  style: SafeGoogleFont(
-                      color: const Color.fromRGBO(0, 0, 0, 1),
-                      'Poppins',
-                      fontSize: 10 * a,
-                      fontWeight: FontWeight.w200,
-                      height: 1 * b / a),
-                ),
-              ],
+            SizedBox(
+              width: Get.width,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '    Bio  :  ',
+                    style: SafeGoogleFont(
+                        color: const Color.fromRGBO(0, 0, 0, 1),
+                        'Poppins',
+                        fontSize: 13 * a,
+                        fontWeight: FontWeight.w300,
+                        height: 1 * b / a),
+                  ),
+                  Expanded(
+                    child: Text(
+                      '${userData.bio}',
+                      style: SafeGoogleFont(
+                          color: Colors.black87,
+                          'Poppins',
+                          fontSize: 12 * a,
+                          fontWeight: FontWeight.w300,
+                          height: 1 * b / a),
+                    ),
+                  ),
+                ],
+              ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 10, left: 16),

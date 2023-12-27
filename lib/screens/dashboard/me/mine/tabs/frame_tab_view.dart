@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 // ignore: depend_on_referenced_packages
 import 'package:svgaplayer_flutter/svgaplayer_flutter.dart';
 
+import '../../../../../utils/common_widgets.dart';
+
 class MineFrameTabView extends StatelessWidget {
   const MineFrameTabView({super.key});
   @override
@@ -158,58 +160,10 @@ class FramePreview extends StatelessWidget {
                     color: Colors.black),
               ),
               SizedBox(height: 3 * a),
-              SizedBox(
-                width: 100 * a,
-                height: 100 * a,
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Container(
-                        width: 60 * a,
-                        height: 60 * a,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: Provider.of<UserDataProvider>(context,
-                                listen: false)
-                                .userData!
-                                .data!
-                                .images!
-                                .isEmpty
-                                ? const DecorationImage(
-                                image:
-                                AssetImage('assets/profile.png'))
-                                : DecorationImage(
-                                image: NetworkImage(
-                                    Provider.of<UserDataProvider>(
-                                        context,
-                                        listen: false)
-                                        .userData
-                                        ?.data
-                                        ?.images
-                                        ?.first ??
-                                        ''))),
-                      ),
-                    ),
-                    path.split('.').last == 'svga'
-                        ?Container(
-                        margin: EdgeInsets.fromLTRB(
-                            0 * a, 0 * a, 0 * a, 0 * a),
-                        width: 100 * a,
-                        height: 100 * a,
-                        child:SVGASimpleImage(
-                          resUrl: path,
-                        ))
-                        :Container(
-                        margin: EdgeInsets.fromLTRB(
-                            5 * a, 5 * a, 5 * a, 5 * a),
-                        width: 90 * a,
-                        height: 90 * a,
-                        child: Image.network(
-                          path,
-                          fit: BoxFit.contain,
-                        )),
-                  ],
-                ),
+              userProfileDisplay(
+                  size: 100*a,
+                  image: Provider.of<UserDataProvider>(context,listen: false).userData!.data!.images!.isEmpty?'':Provider.of<UserDataProvider>(context,listen: false).userData?.data?.images?.first??'',
+                  frame: path
               ),
               SizedBox(height: 3 * a),
               if(price!=null)Row(

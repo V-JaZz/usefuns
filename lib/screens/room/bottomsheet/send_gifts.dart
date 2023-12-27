@@ -30,8 +30,14 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
   @override
   void initState() {
     Provider.of<GiftsProvider>(context, listen: false).getAll();
+    String? zpu = Provider.of<ZegoRoomProvider>(context,listen: false).roomStreamList.firstWhereOrNull((e) => e.streamId != ZegoConfig.instance.streamID)?.userName;
+    print('zpu $zpu');
     countController.text = '1';
-    if (widget.selection != null) _selectedStream.add(widget.selection!);
+    if (widget.selection != null) {
+      _selectedStream.add(widget.selection!);
+    }else if(zpu!=null){
+      _selectedStream.add(zpu);
+    }
     super.initState();
   }
 
@@ -283,8 +289,8 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                                             "no gift selected!", context,
                                             isToaster: true);
                                       } else if ((user?.data?.diamonds ?? 0) <
-                                          (selectedGiftCost ?? 0)) {
-                                        showInsufficientDialog();
+                                          (selectedGiftCost ?? 0)*(_selectedStream.length)*(int.tryParse(countController.text)??1)) {
+                                        showInsufficientDialog(context);
                                       } else if (countController.text.trim() ==
                                               '' ||
                                           countController.text.trim() == '0' ||
@@ -295,7 +301,6 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                                             "Invalid count selected!", context,
                                             isToaster: true);
                                       } else {
-                                        Get.back();
                                         giftProvider.sendGift(
                                             user!.data!.id!,
                                             zegoRoomProvider.roomUsersList.where((e) => _selectedStream.contains(e.userName)).map((e) => e.userID).toList(),
@@ -308,8 +313,7 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                                             selectedGift!.images![1],
                                             selectedGift!.images![0],
                                             selectedGift!.coin??1,
-                                            int.parse(
-                                                countController.text.trim()));
+                                            int.parse(countController.text.trim()));
                                       }
                                     },
                                     child: Container(
@@ -456,284 +460,6 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                   callBack: callBack, selectedStream: ss),
             ),
           ),
-        );
-      },
-    );
-  }
-
-  void showInsufficientDialog() {
-    final user = Provider.of<UserDataProvider>(context, listen: false).userData;
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return Dialog(
-              backgroundColor: Colors.white,
-              // insetPadding: null,
-              shape: Border.all(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 21, vertical: 12),
-                      width: double.infinity,
-                      child: FittedBox(
-                          child: Column(
-                        children: [
-                          const Text('Your diamonds are not enough'),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                'Account Balance ',
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.black38),
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Image.asset('assets/icons/ic_diamond.png',
-                                      height: 12, width: 12),
-                                  Text(
-                                    '${user?.data?.diamonds} ',
-                                    style: const TextStyle(fontSize: 12),
-                                  )
-                                ],
-                              ),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Image.asset('assets/beans.png',
-                                      height: 12, width: 12),
-                                  Text(
-                                    '${user?.data?.beans}',
-                                    style: const TextStyle(fontSize: 12),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        ],
-                      ))),
-                  const Text(
-                    '   \t Recharge By:',
-                    style: TextStyle(fontSize: 14, color: Colors.black38),
-                  ),
-                  RadioListTile<String>(
-                    activeColor: const Color(0xFFFF9933),
-                    dense: true,
-                    title: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Image.asset('assets/beans.png', height: 16, width: 16),
-                        const Text('  Beans'),
-                        const Spacer(),
-                        Image.asset('assets/icons/ic_diamond.png',
-                            height: 12, width: 12),
-                        const Text(
-                          ' 1=4 ',
-                          style: TextStyle(fontSize: 12),
-                        ),
-                        Image.asset('assets/beans.png', height: 12, width: 12),
-                      ],
-                    ),
-                    value: 'beans',
-                    groupValue: selectedPurchaseOption,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedPurchaseOption = value;
-                      });
-                    },
-                  ),
-                  RadioListTile<String>(
-                    activeColor: const Color(0xFFFF9933),
-                    dense: true,
-                    title: Row(
-                      children: [
-                        Image.asset('assets/geogle.png', height: 16, width: 16),
-                        const Text('  Geogle Wallet'),
-                        const Spacer(),
-                        Image.asset('assets/icons/ic_diamond.png',
-                            height: 12, width: 12),
-                        const Text(
-                          ' 1664 = ₹750',
-                          style: TextStyle(fontSize: 12),
-                        )
-                      ],
-                    ),
-                    value: 'geogle wallet',
-                    groupValue: selectedPurchaseOption,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedPurchaseOption = value;
-                      });
-                    },
-                  ),
-                  RadioListTile<String>(
-                    activeColor: const Color(0xFFFF9933),
-                    dense: true,
-                    title: Row(
-                      children: [
-                        Image.asset('assets/other_wallet.png',
-                            height: 16, width: 16),
-                        const Text('  Other Wallet'),
-                        const Spacer(),
-                        Image.asset('assets/icons/ic_diamond.png',
-                            height: 12, width: 12),
-                        const Text(
-                          ' 1000 = ₹750',
-                          style: TextStyle(fontSize: 12),
-                        )
-                      ],
-                    ),
-                    value: 'other wallet',
-                    groupValue: selectedPurchaseOption,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedPurchaseOption = value;
-                      });
-                    },
-                  ),
-                  Center(
-                    child: InkWell(
-                      onTap: showRechargeDailog,
-                      child: Container(
-                        margin: const EdgeInsets.only(bottom: 24, top: 12),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 30, vertical: 9),
-                        decoration: BoxDecoration(
-                            color: const Color(0xFFFF9933),
-                            borderRadius: BorderRadius.circular(12)),
-                        child: const Text(
-                          "Recharge Now",
-                          style: TextStyle(color: Colors.black, fontSize: 16),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  void showRechargeDailog() {
-    Get.back();
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return Dialog(
-              backgroundColor: Colors.white,
-              // insetPadding: null,
-              shape: Border.all(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 21, vertical: 12),
-                      width: double.infinity,
-                      child: Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.arrow_back_ios,
-                                color: Colors.black),
-                            onPressed: () {
-                              Get.back();
-                            },
-                          ),
-                          const Text('Purchase Methods',
-                              style: TextStyle(fontSize: 16)),
-                        ],
-                      )),
-                  RadioListTile<String>(
-                    activeColor: const Color(0xFFFF9933),
-                    title: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Image.asset('assets/icons/ic_diamond.png',
-                            height: 14, width: 14),
-                        const Text('  UPI  '),
-                        Container(
-                            color: const Color(0xFFFF8D5E),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 2),
-                            child: const Text('Sale +2%',
-                                style: TextStyle(
-                                    fontSize: 11, color: Colors.white)))
-                      ],
-                    ),
-                    value: 'upi',
-                    groupValue: selectedPaymentOption,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedPaymentOption = value;
-                      });
-                    },
-                  ),
-                  RadioListTile<String>(
-                    activeColor: const Color(0xFFFF9933),
-                    title: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Image.asset('assets/geogle.png', height: 14, width: 14),
-                        const Text('  Geogle Wallet  '),
-                        Container(
-                            color: const Color(0xFFFF8D5E),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 2),
-                            child: const Text('Sale +2%',
-                                style: TextStyle(
-                                    fontSize: 11, color: Colors.white)))
-                      ],
-                    ),
-                    value: 'geogle wallet',
-                    groupValue: selectedPaymentOption,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedPaymentOption = value;
-                      });
-                    },
-                  ),
-                  RadioListTile<String>(
-                    activeColor: const Color(0xFFFF9933),
-                    title: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Image.asset('assets/other_wallet.png',
-                            height: 14, width: 14),
-                        const Text('  Wallet  '),
-                        Container(
-                            color: const Color(0xFFFF8D5E),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 2),
-                            child: const Text('Sale +2%',
-                                style: TextStyle(
-                                    fontSize: 11, color: Colors.white)))
-                      ],
-                    ),
-                    value: 'wallet',
-                    groupValue: selectedPaymentOption,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedPaymentOption = value;
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 24)
-                ],
-              ),
-            );
-          },
         );
       },
     );

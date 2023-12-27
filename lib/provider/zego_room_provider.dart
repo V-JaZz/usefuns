@@ -13,7 +13,6 @@ import '../data/model/body/zego_room_model.dart';
 import '../data/model/body/zego_stream_model.dart';
 import '../data/model/response/rooms_model.dart';
 import '../data/model/response/user_data_model.dart';
-import '../data/repository/rooms_repo.dart';
 import '../screens/room/widget/seat_invitation.dart';
 import '../screens/room/widget/unlock_treasure_box.dart';
 import '../utils/common_widgets.dart';
@@ -25,7 +24,6 @@ import 'gifts_provider.dart';
 
 class ZegoRoomProvider with ChangeNotifier {
   final storageService = StorageService();
-  final RoomsRepo _roomsRepo = RoomsRepo();
 
   // zego init
   Future<void> init() async {
@@ -34,6 +32,7 @@ class ZegoRoomProvider with ChangeNotifier {
     setZegoEventCallback();
     _isMicOn = !await ZegoExpressEngine.instance.isMicrophoneMuted();
     _isSoundOn = !await ZegoExpressEngine.instance.isSpeakerMuted();
+    heartbeatJoin();
     // await ZegoExpressEngine.instance.startSoundLevelMonitor();
   }
 
@@ -55,6 +54,7 @@ class ZegoRoomProvider with ChangeNotifier {
     foregroundSvgaController = null;
     backgroundImage = null;
     foregroundImage = null;
+    heartBeat?.cancel();
     await Future.delayed(const Duration(milliseconds: 10),() =>
         notifyListeners());
   }
@@ -66,6 +66,7 @@ class ZegoRoomProvider with ChangeNotifier {
   String? backgroundImage;
   String? foregroundImage;
   late TickerProvider vsync;
+  Timer? heartBeat;
   ZegoRoomModel? zegoRoom;
   String roomID = '';
   bool isMicrophonePermissionGranted = false;
@@ -522,13 +523,15 @@ class ZegoRoomProvider with ChangeNotifier {
   Future<void> refreshTreasureBox() async {
     final data = await Provider.of<RoomsProvider>(Get.context!,listen: false).getTreasureBox(room!.id!);
       if(data!=null) {
-        if(data.treasureBoxLevel! > room!.treasureBoxLevel!){
-          Get.dialog(
-              const UnlockTreasureBox(level: 1),
+        int myLevel = room!.treasureBoxLevel!;
+        int newLevel = data.treasureBoxLevel!;
+        for(myLevel;myLevel<newLevel;myLevel++) {
+          await Get.dialog(
+              UnlockTreasureBox(level: myLevel+1),
               barrierDismissible: false
           );
         }
-        room = room?.copyWith(treasureBoxLevel: data.treasureBoxLevel, usedDaimonds: data.usedDaimonds, totalDiamonds: data.totalDiamonds);
+        room = room?.copyWith(treasureBoxLevel: newLevel, usedDaimonds: data.usedDaimonds, totalDiamonds: data.totalDiamonds);
       }
     Provider.of<GiftsProvider>(Get.context!,listen: false).getAllContribution(room!.id!);
   }
@@ -536,5 +539,34 @@ class ZegoRoomProvider with ChangeNotifier {
   Future<void> refreshAdmins() async {
     final data = await Provider.of<RoomsProvider>(Get.context!,listen: false).getAdmins(room!.id!);
     if(data!=null) room = room?.copyWith(admin: data.admin);
+  }
+
+  void heartbeatJoin(){
+
+    DateTime now = DateTime.now();
+    int currentMinute = now.minute;
+
+    // Calculate the delay until the next multiple of 5 minutes
+    int delayInMinutes = 5 - (currentMinute % 5);
+
+    // Calculate the target time for triggering the function
+    DateTime targetTime = now.add(Duration(minutes: delayInMinutes));
+    targetTime = DateTime(targetTime.year, targetTime.month, targetTime.day,
+        targetTime.hour, targetTime.minute, 1);
+
+    // Use Future.delayed to execute the function at the calculated time
+    Duration delay = targetTime.difference(now);
+    Future.delayed(delay, () {
+      // Check if the minute is still a multiple of 5 to ensure accuracy
+      DateTime currentTime = DateTime.now();
+      // Perform your action here
+      print(
+          'Function triggered at ${currentTime.hour}:${currentTime.minute}:${currentTime.second}');
+      // Call your function here
+      Provider.of<RoomsProvider>(Get.context!,listen: false).addRoomUser(room!.id!);
+      heartBeat = Timer.periodic(const Duration(minutes: 5), (timer) {
+        Provider.of<RoomsProvider>(Get.context!,listen: false).addRoomUser(room!.id!);
+      });
+    });
   }
 }

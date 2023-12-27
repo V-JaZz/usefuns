@@ -77,4 +77,20 @@ class ShopWalletRepo {
     }
   }
 
+  Future<http.Response> spendUserDiamonds(
+      {required String userId,required int diamonds}) async {
+    try {
+      http.Response response = await _httpClient.post(
+          'user/diamondUse',
+          {
+            "userId": userId,
+            "diamonds": diamonds
+          }
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
 }

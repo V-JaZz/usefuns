@@ -40,7 +40,7 @@ class StorageService {
     return _prefs.setBool(key, value);
   }
 
-  Future<void> logout() {
+  Future<void> clearStorage() {
     return _prefs.clear();
   }
 }

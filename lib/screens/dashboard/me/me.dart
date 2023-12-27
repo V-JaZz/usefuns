@@ -325,13 +325,19 @@ class _MeState extends State<Me> {
                                                 .userData?.data?.followers?.length
                                                 .toString() ??
                                             '0',
-                                        'Followers'),
+                                        'Followers',
+                                      onTap: viewUsersByIds(providerUserData
+                                          .userData?.data?.followers)
+                                    ),
                                     columnPairWidget(
                                         providerUserData
                                                 .userData?.data?.following?.length
                                                 .toString() ??
                                             '0',
-                                        'Following'),
+                                        'Following',
+                                        onTap: viewUsersByIds(providerUserData
+                                            .userData?.data?.following)
+                                    ),
                                     columnPairWidget(
                                         providerUserData.userData?.data?.likes
                                                 .toString() ??
@@ -350,11 +356,11 @@ class _MeState extends State<Me> {
                               Row(
                                   children:
                                   List.generate(providerUserData.userData!.data!.tags?.length??0, (index) =>
-                                  (providerUserData.userData?.data?.tags?[index]?.images?.first??'')!=''
+                                  (providerUserData.userData?.data?.tags?[index].images?.first??'')!=''
                                       ?Padding(
                                     padding: EdgeInsets.only(right: 8*a),
                                     child: SvgPicture.network(
-                                      providerUserData.userData!.data!.tags![index]!.images!.first,
+                                      providerUserData.userData!.data!.tags![index].images!.first,
                                       fit: BoxFit.fitHeight,
                                       height: 17 * a,
                                     )
@@ -499,38 +505,57 @@ class _MeState extends State<Me> {
     );
   }
 
-  columnPairWidget(String top, String below) {
+  columnPairWidget(String top, String below, {Widget? onTap}) {
     return Expanded(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            top,
-            textAlign: TextAlign.left,
-            style: const TextStyle(
-                color: Color.fromRGBO(0, 0, 0, 1),
-                fontFamily: 'Poppins',
-                fontSize: 12,
-                letterSpacing:
-                    0 /*percentages not used in flutter. defaulting to zero*/,
-                fontWeight: FontWeight.normal,
-                height: 1),
+      child: GestureDetector(
+        onTap: () {
+          if(onTap!=null) {
+            showModalBottomSheet(
+                backgroundColor: Colors.white,
+                shape: InputBorder.none,
+                isScrollControlled: false,
+                enableDrag: true,
+                isDismissible: true,
+                context: context,
+                builder: (context) {
+                  return onTap;
+                });
+          }
+        },
+        child: Container(
+          color: Colors.transparent,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                top,
+                textAlign: TextAlign.left,
+                style: const TextStyle(
+                    color: Color.fromRGBO(0, 0, 0, 1),
+                    fontFamily: 'Poppins',
+                    fontSize: 12,
+                    letterSpacing:
+                        0 /*percentages not used in flutter. defaulting to zero*/,
+                    fontWeight: FontWeight.normal,
+                    height: 1),
+              ),
+              const Spacer(flex: 2),
+              Text(
+                below,
+                textAlign: TextAlign.left,
+                style: const TextStyle(
+                    color: Color.fromRGBO(0, 0, 0, 1),
+                    fontFamily: 'Poppins',
+                    fontSize: 9,
+                    letterSpacing:
+                        0 /*percentages not used in flutter. defaulting to zero*/,
+                    fontWeight: FontWeight.normal,
+                    height: 1),
+              ),
+              const Spacer(),
+            ],
           ),
-          const Spacer(flex: 2),
-          Text(
-            below,
-            textAlign: TextAlign.left,
-            style: const TextStyle(
-                color: Color.fromRGBO(0, 0, 0, 1),
-                fontFamily: 'Poppins',
-                fontSize: 9,
-                letterSpacing:
-                    0 /*percentages not used in flutter. defaulting to zero*/,
-                fontWeight: FontWeight.normal,
-                height: 1),
-          ),
-          const Spacer(),
-        ],
+        ),
       ),
     );
   }

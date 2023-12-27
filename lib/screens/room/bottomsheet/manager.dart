@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:live_app/screens/room/bottomsheet/lucky_wheel.dart';
 import 'package:live_app/screens/room/bottomsheet/share.dart';
 import '../../../data/model/body/zego_stream_model.dart';
 import '../../../data/model/response/rooms_model.dart';
@@ -241,6 +242,19 @@ class LiveRoomBottomSheets {
         context: context,
         builder: (context) {
           return const Treasures();
+        });
+  }
+
+  void showLuckyWheelBottomSheet() {
+    showModalBottomSheet(
+        backgroundColor: const Color(0xFF9E26BC),
+        shape: InputBorder.none,
+        isScrollControlled: false,
+        enableDrag: true,
+        isDismissible: true,
+        context: context,
+        builder: (context) {
+          return const LuckyWheelBottomSheet();
         });
   }
 

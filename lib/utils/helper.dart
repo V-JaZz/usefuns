@@ -91,7 +91,7 @@ bool inLastSevenDays(DateTime dateToCheck) {
   return dateToCheck.isAfter(sevenDaysAgo) && dateToCheck.isBefore(now);
 }
 
-String userFrameViewPath(List<Frame>? frame){
+String userFrameViewPath(List<ItemModel>? frame){
   if(frame==null) return '';
   if(frame.isEmpty) return '';
   if(frame.firstWhereOrNull((e) => e.defaultFrame??false) != null){
@@ -99,4 +99,14 @@ String userFrameViewPath(List<Frame>? frame){
   }
   if(frame.isNotEmpty) return frame.first.images?.last??'';
   return '';
+}
+
+String formatInt(int value) {
+  if (value >= 1000) {
+    double convertedValue = value / 1000;
+    String formattedValue = convertedValue.toStringAsFixed(convertedValue.truncateToDouble() == convertedValue ? 0 : 1);
+    return '${formattedValue}k';
+  } else {
+    return value.toString();
+  }
 }

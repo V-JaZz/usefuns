@@ -24,25 +24,27 @@ class ShopCommonView extends StatelessWidget {
                 .toList() ??
             [];
 
-        return Padding(
-          padding: EdgeInsets.only(top: 15.0 * a),
-          child: itemList.isEmpty
-              ? Align(
-                  alignment: Alignment.topCenter,
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 15.0 * a),
-                    child: Text('No $type found!'),
-                  ))
-              : Align(
-                  alignment: Alignment.topCenter,
-                  child: Wrap(
-                    spacing: 20 * a,
-                    runSpacing: 30 * a,
-                    children: List.generate(itemList.length, (index) {
-                      return viewItem(itemList[index]);
-                    }),
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(top: 15.0 * a),
+            child: itemList.isEmpty
+                ? Align(
+                    alignment: Alignment.topCenter,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 15.0 * a),
+                      child: Text('No $type found!'),
+                    ))
+                : Align(
+                    alignment: Alignment.topCenter,
+                    child: Wrap(
+                      spacing: 20 * a,
+                      runSpacing: 30 * a,
+                      children: List.generate(itemList.length, (index) {
+                        return viewItem(itemList[index]);
+                      }),
+                    ),
                   ),
-                ),
+          ),
         );
       },
     );

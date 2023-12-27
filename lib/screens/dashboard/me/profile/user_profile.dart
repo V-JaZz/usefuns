@@ -1,3 +1,4 @@
+import 'package:clipboard/clipboard.dart';
 import 'package:contained_tab_bar_view/contained_tab_bar_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -92,7 +93,7 @@ class _UserProfileState extends State<UserProfile> {
                                 fontWeight: FontWeight.normal,
                                 height: 1 * a),
                           ),
-                          SizedBox(width: 12*a),
+                          SizedBox(width: 8*a),
                           if(isMine)InkWell(
                             onTap: (){
                               Get.to(()=>const UpdateProfile());
@@ -101,21 +102,43 @@ class _UserProfileState extends State<UserProfile> {
                                 color:Colors.white, child:
                             Padding(
                               padding: const EdgeInsets.all(2),
-                              child: Icon(Icons.edit,color: const Color(0xff9e26bc),size: 12*a),
+                              child: Icon(Icons.edit,color: const Color(0xff9e26bc),size: 9*a),
                             )),
                           )
                         ],
                       ),
                       SizedBox(height: 6*a),
-                      Text(
-                        user.userId??'',
-                        textAlign: TextAlign.left,
-                        style: SafeGoogleFont(
-                            color: const Color.fromRGBO(255, 255, 255, 1),
-                            'Poppins',
-                            fontSize: 11 * a,
-                            fontWeight: FontWeight.w300,
-                            height: 1 * a),
+                      Row(
+                        children: [
+                          Text(
+                            'ID: ${user.userId}',
+                            textAlign: TextAlign.left,
+                            style: SafeGoogleFont(
+                                color: const Color.fromRGBO(255, 255, 255, 1),
+                                'Poppins',
+                                fontSize: 11 * a,
+                                fontWeight: FontWeight.w300,
+                                height: 1 * a),
+                          ),
+                          SizedBox(width: 8 * a),
+                          InkWell(
+                            onTap: (){
+                              FlutterClipboard.copy('${user.userId}').then((value) {
+                                showCustomSnackBar('Copied to Clipboard!', context, isToaster: true, isError: false);
+                              });
+                            },
+                            child: Container(
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                ),
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(2),
+                                    child: Icon(Icons.copy,color: const Color(0xff9e26bc),size: 9*a),
+                                  ),
+                                )),
+                          ),
+                        ],
                       ),
                       SizedBox(height: 12*a),
                       Row(
@@ -123,15 +146,14 @@ class _UserProfileState extends State<UserProfile> {
                           Row(
                               children:
                               List.generate(user.tags?.length??0, (index) =>
-                              user.tags![index] != null
-                                  ?Padding(
+                              Padding(
                                     padding: EdgeInsets.only(right: 9*a),
                                     child: SvgPicture.network(
-                                      user.tags?[index]?.images?.first??'',
+                                      user.tags?[index].images?.first??'',
                                       fit: BoxFit.fitHeight,
                                       height: 17 * a,
                                     ),
-                                  ): const SizedBox.shrink(),
+                                  ),
                               )
                           ),
                           userLevelTag(user.level??0,14 * a,viewZero: true),
@@ -170,10 +192,10 @@ class _UserProfileState extends State<UserProfile> {
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                columnPairWidget(user.followers?.length.toString()??'0','Followers'),
-                                columnPairWidget(user.following?.length.toString()??'0','Following'),
-                                columnPairWidget(user.likes.toString()??'0','Likes'),
-                                columnPairWidget(user.views.toString()??'0','Visitors'),
+                                columnPairWidget(user.followers?.length.toString()??'0','Followers',onTap: viewUsersByIds(user.followers)),
+                                columnPairWidget(user.following?.length.toString()??'0','Following',onTap: viewUsersByIds(user.following)),
+                                columnPairWidget(user.likes?.toString()??'0','Likes'),
+                                columnPairWidget(user.views?.toString()??'0','Visitors'),
                               ])
                       ),
                       SizedBox(height: 8*a),
@@ -244,41 +266,60 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 
-  columnPairWidget(String top, String below) {
+  columnPairWidget(String top, String below, {Widget? onTap}) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
     double b = a * 0.97;
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const Spacer(),
-        Text(
-          top,
-          textAlign: TextAlign.left,
-          style: SafeGoogleFont(
-              color: const Color.fromRGBO(255, 255, 255, 1),
-              'Poppins',
-              fontSize: 12 * a,
-              letterSpacing:
-              0 /*percentages not used in flutter. defaulting to zero*/,
-              fontWeight: FontWeight.normal,
-              height: 1 * b / a)
+    return GestureDetector(
+      onTap: () {
+        if(onTap!=null) {
+          showModalBottomSheet(
+              backgroundColor: Colors.white,
+              shape: InputBorder.none,
+              isScrollControlled: false,
+              enableDrag: true,
+              isDismissible: true,
+              context: context,
+              builder: (context) {
+                return onTap;
+              });
+        }
+      },
+      child: Container(
+        color: Colors.transparent,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Spacer(),
+            Text(
+              top,
+              textAlign: TextAlign.left,
+              style: SafeGoogleFont(
+                  color: const Color.fromRGBO(255, 255, 255, 1),
+                  'Poppins',
+                  fontSize: 12 * a,
+                  letterSpacing:
+                  0 /*percentages not used in flutter. defaulting to zero*/,
+                  fontWeight: FontWeight.normal,
+                  height: 1 * b / a)
+            ),
+            const Spacer(flex:3),
+            Text(
+              below,
+              textAlign: TextAlign.left,
+              style: SafeGoogleFont(
+                  color: const Color.fromRGBO(255, 255, 255, 1),
+                  'Poppins',
+                  fontSize: 11 * a,
+                  letterSpacing:
+                  0 /*percentages not used in flutter. defaulting to zero*/,
+                  fontWeight: FontWeight.normal,
+                  height: 1 * b / a),
+            ),
+            const Spacer(),
+          ],
         ),
-        const Spacer(flex:3),
-        Text(
-          below,
-          textAlign: TextAlign.left,
-          style: SafeGoogleFont(
-              color: const Color.fromRGBO(255, 255, 255, 1),
-              'Poppins',
-              fontSize: 11 * a,
-              letterSpacing:
-              0 /*percentages not used in flutter. defaulting to zero*/,
-              fontWeight: FontWeight.normal,
-              height: 1 * b / a),
-        ),
-        const Spacer(),
-      ],
+      ),
     );
   }
 }
