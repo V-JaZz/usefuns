@@ -15,14 +15,17 @@ class ShopTheme extends StatelessWidget {
   Widget build(BuildContext context) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
-    double b = a * 0.97;
 
     return Consumer<ShopWalletProvider>(
       builder: (context, value, _) {
+        final itemList = value.items[item]?.data
+            ?.where((e) => e.isOfficial != true)
+            .toList() ??
+            [];
         return SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(top: 15.0 * a),
-            child: value.items[item]!.data!.isEmpty
+            child: itemList.isEmpty
                 ? Align(
                     alignment: Alignment.topCenter,
                     child: Padding(
@@ -35,8 +38,8 @@ class ShopTheme extends StatelessWidget {
                       spacing: 20 * a,
                       runSpacing: 30 * a,
                       children:
-                          List.generate(value.items[item]!.data!.length, (index) {
-                        return viewTheme(value.items[item]!.data![index]);
+                          List.generate(itemList.length, (index) {
+                        return viewTheme(itemList[index]);
                       }),
                     ),
                   ),

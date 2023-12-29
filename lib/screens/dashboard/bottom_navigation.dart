@@ -183,6 +183,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
                 ],
               ),
               onPressed: () {
+                value.broadcastMessageList?.clear();
                 Get.to(const LiveRoom());
               });
         })

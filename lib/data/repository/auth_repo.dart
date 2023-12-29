@@ -12,6 +12,7 @@ class AuthRepo {
     } catch (e) {
       rethrow;
     }
+
   }
 
   Future<http.Response> gmailLogin(String gmail) async {

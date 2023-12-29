@@ -43,7 +43,6 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
   void initState() {
     WakelockPlus.enable();
     zegoRoomProvider = Provider.of<ZegoRoomProvider>(context,listen: false);
-    zegoRoomProvider.broadcastMessageList?.clear();
     bs = LiveRoomBottomSheets(context);
     Permission.microphone.status.then((value) => zegoRoomProvider.isMicrophonePermissionGranted = value == PermissionStatus.granted);
     zegoRoomProvider.vsync = this;
@@ -333,7 +332,9 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                 const Spacer(flex: 2),
                                 Consumer<GiftsProvider>(
                                   builder: (context, gp, child) {
-                                    final list = gp.todayRoomContribution;
+                                    final list = gp.todayRoomContribution.isEmpty
+                                        ?gp.sevenDaysRoomContribution
+                                        :gp.todayRoomContribution;
                                     return GestureDetector(
                                       onTap: bs.showContributionBottomSheet,
                                       child: Container(
@@ -383,8 +384,8 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                                                 ),
                                                               );
                                                             case ConnectionState.done:
-                                                              if(snapshot.hasError || snapshot.data == null){
-                                                                return const Text('error!');
+                                                              if(snapshot.hasError || snapshot.data?.data == null){
+                                                                return const SizedBox.shrink();
                                                               }
                                                               return Container(
                                                                   margin: EdgeInsets.fromLTRB(

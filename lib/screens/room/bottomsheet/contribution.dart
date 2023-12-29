@@ -157,8 +157,8 @@ class _ContributionState extends State<Contribution> {
                                                 ),
                                               );
                                             case ConnectionState.done:
-                                              if(snapshot.hasError || snapshot.data == null){
-                                                return const Text('error!');
+                                              if(snapshot.hasError || snapshot.data?.data == null){
+                                                return const SizedBox.shrink();
                                               }
                                               return Column(
                                                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -273,8 +273,8 @@ class _ContributionState extends State<Contribution> {
                                             ),
                                           );
                                         case ConnectionState.done:
-                                          if(snapshot.hasError || snapshot.data == null){
-                                            return const Text('error!');
+                                          if(snapshot.hasError || snapshot.data?.data == null){
+                                            return const SizedBox.shrink();
                                           }
                                           return ListTile(
                                             dense: true,
@@ -443,8 +443,8 @@ class _ContributionState extends State<Contribution> {
                                                 ),
                                               );
                                             case ConnectionState.done:
-                                              if(snapshot.hasError || snapshot.data == null){
-                                                return const Text('error!');
+                                              if(snapshot.hasError || snapshot.data?.data == null){
+                                                return const SizedBox.shrink();
                                               }
                                               return Column(
                                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -559,8 +559,8 @@ class _ContributionState extends State<Contribution> {
                                               ),
                                             );
                                           case ConnectionState.done:
-                                            if(snapshot.hasError || snapshot.data == null){
-                                              return const Text('error!');
+                                            if(snapshot.hasError || snapshot.data?.data == null){
+                                              return const SizedBox.shrink();
                                             }
                                             return ListTile(
                                               dense: true,

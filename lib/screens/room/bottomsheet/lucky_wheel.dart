@@ -30,14 +30,14 @@ class _LuckyWheelBottomSheetState extends State<LuckyWheelBottomSheet> with Tick
   @override
   Widget build(BuildContext context) {
     final items = <String>[
-      '1',
-      '20',
-      '50',
-      '100',
+      '10000',
+      '5000',
       '1000',
-      '2000',
-      '6000',
-      '10000'
+      '500',
+      '100',
+      '50',
+      '10',
+      '5'
     ];
     return SizedBox(
       width: Get.width,
@@ -102,7 +102,7 @@ class _LuckyWheelBottomSheetState extends State<LuckyWheelBottomSheet> with Tick
                 for (int i =0 ; i < items.length ; i++)
                   FortuneItem(
                     style: FortuneItemStyle(
-                      color: i%2 == 0 ?Colors.white: const Color(0xFFffecae),
+                      color: i%2 == 0 ? const Color(0xFFffecae): Colors.white,
                       textStyle: TextStyle(
                         color: Theme.of(context).primaryColor
                       ),
@@ -133,15 +133,14 @@ class _LuckyWheelBottomSheetState extends State<LuckyWheelBottomSheet> with Tick
               onPressed: () async {
               int userD = Provider.of<UserDataProvider>(context,listen: false).userData?.data?.diamonds??0;
               if(userD<200){
-                showInsufficientDialog(context);
+                showInsufficientDialog(context,200-userD);
               }else if(!isSpinning){
                 isSpinning = true;
                 bool success = await Provider.of<ShopWalletProvider>(context,listen: false).spendUserDiamonds(200);
                 if(success) {
-                  int value = Fortune.randomInt(0, items.length-2);
-                  setState(() {
-                    selected.add(value);
-                  });
+                  final rewardPosition = [2,3,4,5,6,7,4,5,6,7];
+                  int value = rewardPosition[Random().nextInt(9)];
+                  setState(() => selected.add(value));
                   Future.delayed(
                     const Duration(seconds: 5),
                         () {
@@ -158,7 +157,7 @@ class _LuckyWheelBottomSheetState extends State<LuckyWheelBottomSheet> with Tick
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text('Spin 100'),
+                  const Text('Spin 200'),
                   Image.asset(
                     'assets/icons/ic_diamond.png',
                     height: 12,

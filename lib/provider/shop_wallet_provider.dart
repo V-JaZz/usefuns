@@ -139,6 +139,7 @@ class ShopWalletProvider with ChangeNotifier {
       CommonModel responseModel = commonModelFromJson(apiResponse.body);
       if(responseModel.status == 1){
         Provider.of<UserDataProvider>(Get.context!,listen: false).getUser();
+        showCustomSnackBar('Beans Converted!', Get.context!, isToaster: true, isError: false);
       }
     } else {
       showCustomSnackBar('Error Converting beans!', Get.context!);

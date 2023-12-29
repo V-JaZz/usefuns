@@ -275,7 +275,7 @@ class ZegoRoomProvider with ChangeNotifier {
         broadcastMessageList?.enqueue(m);
         final model = zegoBroadcastModelFromJson(m.message);
         if(model.type == 'gift'){
-          updateRoomForeground(model.gift?.giftPath??'', model.gift?.count??1);
+          updateRoomForeground(model.gift?.giftPath??'');
           if(model.gift?.toId == ZegoConfig.instance.userID){
             int points = (((model.gift?.count??1)*(model.gift?.giftPrice??1))*3).toInt();
             roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.streamID).points = (roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.streamID).points??0)+points;
@@ -453,7 +453,7 @@ class ZegoRoomProvider with ChangeNotifier {
       scrollController.animateTo(scrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 500), curve: Curves.decelerate);
     });
   }
-  void sendBroadcastGift(List<String> toName, String thumbnailPath, String giftPath, int giftPrice, int count) {
+  Future<void> sendBroadcastGift(List<String> toName, String thumbnailPath, String giftPath, int giftPrice, int count) async {
     for (var receiverName in toName) {
       final user = Provider.of<UserDataProvider>(Get.context!,listen: false).userData;
       String body = zegoBroadcastModelToJson(ZegoBroadcastModel(image: user!.data!.images!.isNotEmpty? user.data!.images!.first:null, level:user.data!.level,type: "gift",gift: ZegoGift(toName: receiverName,count: count,thumbnailPath: thumbnailPath, giftPath: giftPath, toId: roomUsersList.firstWhere((e) => e.userName == receiverName).userID,giftPrice: giftPrice),tags: [if(isOwner)'Owner',if(room!.admin!.contains(ZegoConfig.instance.streamID))'Admin']));
@@ -463,16 +463,15 @@ class ZegoRoomProvider with ChangeNotifier {
       Future.delayed(const Duration(milliseconds: 500),(){
         scrollController.animateTo(scrollController.position.maxScrollExtent, duration: const Duration(milliseconds: 500), curve: Curves.decelerate);
       });
-      updateRoomForeground(giftPath, count);
+      await updateRoomForeground(giftPath);
     }
   }
   void sendBarrageMessage(String message) {
     ZegoExpressEngine.instance.sendBarrageMessage(roomID, message);
   }
 
-  Future<void> updateRoomForeground(String url, int count) async {
+  Future<void> updateRoomForeground(String url) async {
     if(url.split('.').last.toLowerCase() == 'svga'){
-        do{
           foregroundSvgaController = SVGAAnimationController(vsync: vsync);
           foregroundSvgaController?.videoItem = await SVGAParser.shared.decodeFromURL(url);
           notifyListeners();
@@ -480,11 +479,8 @@ class ZegoRoomProvider with ChangeNotifier {
           foregroundSvgaController?.dispose();
           foregroundSvgaController = null;
           notifyListeners();
-          --count;
-        }while(count>0);
 
     }else{
-      for (var i = 0; i < count; i++) {
         foregroundImage = url;
         notifyListeners();
         await Future.delayed(const Duration(seconds: 3),() {
@@ -492,7 +488,6 @@ class ZegoRoomProvider with ChangeNotifier {
           notifyListeners();
         });
         await Future.delayed(const Duration(seconds: 1));
-      }
     }
     return;
   }

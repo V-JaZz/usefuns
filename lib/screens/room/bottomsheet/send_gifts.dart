@@ -47,7 +47,14 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
     double a = Get.width / baseWidth;
     double b = a * 0.97;
     return Consumer<GiftsProvider>(
-      builder: (context, giftProvider, _) => Container(
+      builder: (context, giftProvider, _) {
+
+        double setLevelProgressValue(int level, double xp) {
+          if(level==0) return xp/giftProvider.series![level].toInt();
+          return (xp-giftProvider.series![level-1])/(giftProvider.series![level]-giftProvider.series![level-1]).toInt();
+        }
+
+        return Container(
         color: Colors.black.withOpacity(0.7),
         child: !giftProvider.giftLoading
             ? DefaultTabController(
@@ -107,7 +114,7 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                                 child: Slider(
                                   min: 0,
                                   max: 1,
-                                  value: (up.userData?.data?.exp??0)/giftProvider.series![up.userData?.data?.level??0].toInt(),
+                                  value: setLevelProgressValue(up.userData?.data?.level??0,up.userData?.data?.exp??0),
                                   onChanged: (double value) {},
                                   inactiveColor: Colors.white,
                                   activeColor: const Color(0xff884EFF),
@@ -276,6 +283,7 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                                   ),
                                   GestureDetector(
                                     onTap: () {
+
                                       final user =
                                           Provider.of<UserDataProvider>(context,
                                                   listen: false)
@@ -288,9 +296,10 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                                         showCustomSnackBar(
                                             "no gift selected!", context,
                                             isToaster: true);
-                                      } else if ((user?.data?.diamonds ?? 0) <
+                                      } else
+                                        if ((user?.data?.diamonds ?? 0) <
                                           (selectedGiftCost ?? 0)*(_selectedStream.length)*(int.tryParse(countController.text)??1)) {
-                                        showInsufficientDialog(context);
+                                        showInsufficientDialog(context,(selectedGiftCost ?? 0)*(_selectedStream.length)*(int.tryParse(countController.text)??1)-(user?.data?.diamonds ?? 0));
                                       } else if (countController.text.trim() ==
                                               '' ||
                                           countController.text.trim() == '0' ||
@@ -348,7 +357,8 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                   children: [CircularProgressIndicator()],
                 ),
               ),
-      ),
+      );
+      },
     );
   }
 

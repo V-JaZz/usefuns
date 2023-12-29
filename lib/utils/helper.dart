@@ -86,7 +86,7 @@ bool isToday(DateTime dateToCheck) {
 
 bool inLastSevenDays(DateTime dateToCheck) {
   DateTime now = DateTime.now();
-  DateTime sevenDaysAgo = now.subtract(Duration(days: 7));
+  DateTime sevenDaysAgo = now.subtract(const Duration(days: 7));
 
   return dateToCheck.isAfter(sevenDaysAgo) && dateToCheck.isBefore(now);
 }

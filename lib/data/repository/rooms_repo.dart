@@ -89,8 +89,7 @@ class RoomsRepo {
       );
       return response;
     } catch (e) {
-      return await removeUser(roomID,userID);
-      // rethrow;
+      rethrow;
     }
   }
 
@@ -127,8 +126,8 @@ class RoomsRepo {
       http.Response response = await _httpClient.get('room/getbyRoomId/$id');
       return response;
     } catch (e) {
-      return await getRoom(id);
-      // rethrow;
+      // return await getRoom(id);
+      rethrow;
     }
   }
 
@@ -137,8 +136,8 @@ class RoomsRepo {
       http.Response response = await _httpClient.get('room/getUpdatedAdmin/$id');
       return response;
     } catch (e) {
-      return await getAdmins(id);
-      // rethrow;
+      // return await getAdmins(id);
+      rethrow;
     }
   }
 
@@ -147,8 +146,8 @@ class RoomsRepo {
       http.Response response = await _httpClient.get('room/getTreasureBoxLevel/$id');
       return response;
     } catch (e) {
-      return await getTreasureBox(id);
-      // rethrow;
+      // return await getTreasureBox(id);
+      rethrow;
     }
   }
 
@@ -157,8 +156,8 @@ class RoomsRepo {
       http.Response response = await _httpClient.get('room/getbyuserId/$id');
       return response;
     } catch (e) {
-      return await getAllMine(id);
-      // rethrow;
+      // return await getAllMine(id);
+      rethrow;
     }
   }
 

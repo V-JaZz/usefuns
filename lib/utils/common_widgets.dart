@@ -8,6 +8,7 @@ import 'package:shimmer/shimmer.dart';
 // ignore: depend_on_referenced_packages
 import 'package:svgaplayer_flutter/svgaplayer_flutter.dart';
 
+import '../provider/shop_wallet_provider.dart';
 import '../provider/user_data_provider.dart';
 import '../screens/dashboard/me/profile/user_profile.dart';
 
@@ -482,7 +483,7 @@ void rewardDialog(String path, String title, String info, void Function() onTap)
       });
 }
 
-void showInsufficientDialog(context) {
+void showInsufficientDialog(context, int reqDiamonds) {
   String? selectedPurchaseOption;
   final user = Provider.of<UserDataProvider>(context, listen: false).userData;
   showDialog(
@@ -555,9 +556,9 @@ void showInsufficientDialog(context) {
                       const Spacer(),
                       Image.asset('assets/icons/ic_diamond.png',
                           height: 12, width: 12),
-                      const Text(
-                        ' 1=4 ',
-                        style: TextStyle(fontSize: 12),
+                      Text(
+                        ' $reqDiamonds=${reqDiamonds*4} ',
+                        style: const TextStyle(fontSize: 12),
                       ),
                       Image.asset('assets/beans.png', height: 12, width: 12),
                     ],
@@ -622,7 +623,17 @@ void showInsufficientDialog(context) {
                 Center(
                   child: InkWell(
                     onTap: (){
-                      showRechargeDailog(context);
+                      if(selectedPurchaseOption=='beans'){
+                        int reqBeans = user!.data!.diamonds!*4;
+                        if(user.data!.beans!.toInt() < reqBeans){
+                          showCustomSnackBar('Insufficient beans!', context, isToaster: true);
+                        }else{
+                          Provider.of<ShopWalletProvider>(context,listen: false).convertBeans(reqDiamonds, reqBeans);
+                        }
+                        Get.back();
+                      }else{
+                        showRechargeDailog(context);
+                      }
                     },
                     child: Container(
                       margin: const EdgeInsets.only(bottom: 24, top: 12),
@@ -631,9 +642,9 @@ void showInsufficientDialog(context) {
                       decoration: BoxDecoration(
                           color: const Color(0xFFFF9933),
                           borderRadius: BorderRadius.circular(12)),
-                      child: const Text(
-                        "Recharge Now",
-                        style: TextStyle(color: Colors.black, fontSize: 16),
+                      child: Text(
+                        selectedPurchaseOption=='beans'?"Convert Beans":"Recharge Now",
+                        style: const TextStyle(color: Colors.black, fontSize: 16),
                       ),
                     ),
                   ),

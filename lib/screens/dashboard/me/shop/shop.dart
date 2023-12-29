@@ -114,7 +114,8 @@ class _ShopState extends State<Shop> {
                   text: 'Relation',
                 ),
                 Tab(
-                  text: 'Special ID',
+                  text: 'Special ID'
+                   ,
                 ),
                 Tab(
                   text: 'Room Accessories',

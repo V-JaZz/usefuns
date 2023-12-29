@@ -104,7 +104,7 @@ class _LevelPrivilegesState extends State<LevelPrivileges> {
                         child: Slider(
                           min: 0,
                           max: 1,
-                          value: (value.userData?.data?.exp??0)/series[value.userData?.data?.level??0].toInt(),
+                          value: setLevelProgressValue(value.userData?.data?.level??0,value.userData?.data?.exp??0),
                           onChanged: (double value) {},
                           inactiveColor: Colors.white,
                           activeColor: const Color(0xff884EFF),
@@ -118,7 +118,7 @@ class _LevelPrivilegesState extends State<LevelPrivileges> {
                         Padding(
                           padding: EdgeInsets.only(left: 40 * a),
                           child: Text(
-                            '${value.userData?.data?.exp} (Lv.${value.userData?.data?.level})',
+                            '${((value.userData?.data?.exp??0)-(series[(value.userData?.data?.level??0)-1])).toInt()} (Lv.${value.userData?.data?.level})',
                             textAlign: TextAlign.left,
                             style: TextStyle(
                                 color: const Color.fromRGBO(255, 255, 255, 1),
@@ -133,7 +133,7 @@ class _LevelPrivilegesState extends State<LevelPrivileges> {
                         Padding(
                           padding: EdgeInsets.only(right: 40 * a),
                           child: Text(
-                            '${series[value.userData?.data?.level??0].toInt()} (Lv.${(value.userData?.data?.level??0)+1})',
+                            '${(series[value.userData?.data?.level??0]-series[(value.userData?.data?.level??0)-1]).toInt()} (Lv.${(value.userData?.data?.level??0)+1})',
                             textAlign: TextAlign.left,
                             style: TextStyle(
                                 color: const Color.fromRGBO(255, 255, 255, 1),
@@ -362,10 +362,13 @@ class _LevelPrivilegesState extends State<LevelPrivileges> {
     for (int i = 1; i < 99; i++) {
       double lastValue = series.last;
       double newValue = lastValue + (lastValue * 0.8725173730668903);
-      print('$i+1 : $newValue');
       series.add(newValue);
     }
-
     return series;
+  }
+
+  double setLevelProgressValue(int level, double xp) {
+    if(level==0) return xp/series[level].toInt();
+    return (xp-series[level-1])/(series[level]-series[level-1]).toInt();
   }
 }
