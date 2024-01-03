@@ -8,8 +8,8 @@ import '../data/datasource/local/sharedpreferences/storage_service.dart';
 import '../data/model/response/common_model.dart';
 import '../data/model/response/register_model.dart';
 import '../data/model/response/send_otp_model.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:google_sign_in/google_sign_in.dart';
 
 import '../screens/auth/login_screen.dart';
 import '../utils/common_widgets.dart';
@@ -22,41 +22,41 @@ class AuthProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? mobile;
   String? otp;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  // final GoogleSignIn _googleSignIn = GoogleSignIn();
+  // final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<LoginModel?> signInWithGoogle() async {
-    try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) return null;
-
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-      final UserCredential authResult = await _auth.signInWithCredential(credential);
-      final User? user = authResult.user;
-      final apiResponse = await _authRepo.gmailLogin(user?.email??'');
-
-      LoginModel responseModel;
-      if (apiResponse.statusCode == 200) {
-
-        responseModel = loginModelFromJson(apiResponse.body);
-        if(responseModel.status == 1){
-          storageService.setString(Constants.id, responseModel.data!.id!);
-          storageService.setString(Constants.userId, responseModel.data!.userId!);
-          storageService.setString(Constants.token, responseModel.data!.token!);
-        }
-      } else {
-        responseModel = LoginModel(status: 0,message: apiResponse.reasonPhrase);
-      }
-      return responseModel;
-    } catch (e) {
-      print("Google Sign-In Error: $e");
-      return null;
-    }
-  }
+  // Future<LoginModel?> signInWithGoogle() async {
+  //   try {
+  //     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+  //     if (googleUser == null) return null;
+  //
+  //     final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+  //     final AuthCredential credential = GoogleAuthProvider.credential(
+  //       accessToken: googleAuth.accessToken,
+  //       idToken: googleAuth.idToken,
+  //     );
+  //     final UserCredential authResult = await _auth.signInWithCredential(credential);
+  //     final User? user = authResult.user;
+  //     final apiResponse = await _authRepo.gmailLogin(user?.email??'');
+  //
+  //     LoginModel responseModel;
+  //     if (apiResponse.statusCode == 200) {
+  //
+  //       responseModel = loginModelFromJson(apiResponse.body);
+  //       if(responseModel.status == 1){
+  //         storageService.setString(Constants.id, responseModel.data!.id!);
+  //         storageService.setString(Constants.userId, responseModel.data!.userId!);
+  //         storageService.setString(Constants.token, responseModel.data!.token!);
+  //       }
+  //     } else {
+  //       responseModel = LoginModel(status: 0,message: apiResponse.reasonPhrase);
+  //     }
+  //     return responseModel;
+  //   } catch (e) {
+  //     print("Google Sign-In Error: $e");
+  //     return null;
+  //   }
+  // }
 
   Future<SendOtpModel> sendOtp({bool? fromResend}) async {
     if(fromResend==true) resend = true;

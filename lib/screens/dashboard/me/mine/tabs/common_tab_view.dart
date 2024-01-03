@@ -115,6 +115,14 @@ class MineCommonView extends StatelessWidget {
     switch(type){
       case 'theme':
         return value.userData?.data?.roomWallpaper?.isEmpty??true;
+      case 'bubble':
+        return value.userData?.data?.profileCard?.isEmpty??true;
+      case 'vehicle':
+        return value.userData?.data?.vehicle?.isEmpty??true;
+      // case 'special ID':
+      //   return value.userData?.data?.specialId?.isEmpty??true;
+      case 'room accessories':
+        return [...(value.userData?.data?.lockRoom??[]), ...(value.userData?.data?.extraSeat??[])].isEmpty;
       default:
         return true;
     }
@@ -123,8 +131,16 @@ class MineCommonView extends StatelessWidget {
   List<ItemModel> getItemsList(context){
     final value =Provider.of<UserDataProvider>(context,listen: false);
     switch(type){
+      case 'bubble':
+        return value.userData?.data?.profileCard??[];
       case 'theme':
         return value.userData?.data?.roomWallpaper??[];
+      case 'vehicle':
+        return value.userData?.data?.vehicle??[];
+      // case 'special ID':
+      //   return value.userData?.data?.specialId??[];
+      case 'room accessories':
+        return [...(value.userData?.data?.lockRoom??[]), ...(value.userData?.data?.extraSeat??[])];
       default:
         return [];
     }

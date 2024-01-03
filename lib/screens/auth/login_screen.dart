@@ -301,12 +301,12 @@ class _LogInScreenState extends State<LogInScreen> {
               Consumer<AuthProvider>(
                 builder: (context, value, _) => GestureDetector(
                   onTap: () async {
-                    LoginModel? model = await value.signInWithGoogle();
-                    if(model?.status == 1){
-                      Get.offAll(() => const BottomNavigator());
-                    }else if(model?.status == 0){
-                      Get.off(() => const CreateProfile());
-                    }
+                    // LoginModel? model = await value.signInWithGoogle();
+                    // if(model?.status == 1){
+                    //   Get.offAll(() => const BottomNavigator());
+                    // }else if(model?.status == 0){
+                    //   Get.off(() => const CreateProfile());
+                    // }
                   },
                   child: Container(
                     margin: EdgeInsets.fromLTRB(74 * a, 0 * a, 63 * a, 35 * a),

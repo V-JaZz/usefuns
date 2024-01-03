@@ -68,7 +68,7 @@ class _RoomProfileBottomSheetState extends State<RoomProfileBottomSheet> {
                       ),
                     ),
                   ),
-                  child: value.room!.isLocked == true
+                  child: value.roomPassword != null
                       ?Align(
                     alignment: Alignment.bottomRight,
                     child: SizedBox(

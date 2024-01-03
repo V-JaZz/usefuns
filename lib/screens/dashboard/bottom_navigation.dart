@@ -40,7 +40,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   void initState() {
     checkReward();
     _fetchUserData(refresh: false);
-    timer = Timer.periodic(const Duration(seconds: 30), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 60), (timer) {
       _fetchUserData(refresh: false);
     });
     super.initState();

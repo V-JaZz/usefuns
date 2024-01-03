@@ -54,6 +54,7 @@ class ZegoRoomProvider with ChangeNotifier {
     foregroundSvgaController = null;
     backgroundImage = null;
     foregroundImage = null;
+    roomPassword = null;
     heartBeat?.cancel();
     await Future.delayed(const Duration(milliseconds: 10),() =>
         notifyListeners());
@@ -65,6 +66,7 @@ class ZegoRoomProvider with ChangeNotifier {
   SVGAAnimationController? foregroundSvgaController;
   String? backgroundImage;
   String? foregroundImage;
+  String? roomPassword;
   late TickerProvider vsync;
   Timer? heartBeat;
   ZegoRoomModel? zegoRoom;
@@ -201,6 +203,7 @@ class ZegoRoomProvider with ChangeNotifier {
           startPlayingStream(streamID);
           notifyListeners();
         }else if(updateType == ZegoUpdateType.Delete){
+          stopPlayingStream(streamID);
           roomStreamList.removeWhere((element) => element.streamId == streamID);
           notifyListeners();
         }
@@ -260,6 +263,14 @@ class ZegoRoomProvider with ChangeNotifier {
           showCustomSnackBar('Kicked by ${fromUser.userName}', Get.context!,isToaster: true);
         }else if(command.contains(ZegoConfig.instance.roomInviteSeatKey)){
           viewInviteToSeatDailog(command.substring(20),fromUser.userName);
+        }else if(command.contains(ZegoConfig.instance.roomLockRoomUpdateKey)){
+          if(command.length>25){
+            roomPassword = command.substring(25);
+            showCustomSnackBar('Room Lock Updated!', Get.context!,isToaster: true,isError: false);
+          }else{
+            roomPassword = null;
+            showCustomSnackBar('Room Unlocked!', Get.context!,isToaster: true,isError: false);
+          }
         }else if(command == ZegoConfig.instance.refreshAdminKey){
           refreshAdmins();
         }else if(command == ZegoConfig.instance.refreshTreasureKey){
@@ -414,6 +425,25 @@ class ZegoRoomProvider with ChangeNotifier {
         [ZegoUser(userID, userName)]
     );
   }
+  void updateRoomLock(String? password){
+    Provider.of<RoomsProvider>(Get.context!,listen:false).updateRoomLock(room!.id!,password: password);
+    roomPassword = password;
+    notifyListeners();
+    ZegoExpressEngine.instance.sendCustomCommand(
+        roomID,
+        '${ZegoConfig.instance.roomLockRoomUpdateKey}${password??''}',
+        []
+    );
+  }
+  void updateSeat(int newSeat){
+    if(roomStreamList.firstWhereOrNull((e) => e.seat == newSeat) == null) {
+      roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.streamID).seat = newSeat;
+      notifyStreamExtraInfoUpdate();
+      notifyListeners();
+    }else{
+      showCustomSnackBar('Seat Already Occupied!', Get.context!, isToaster: true);
+    }
+  }
   void resetCalculator(){
     for (ZegoStreamExtended user in roomStreamList) {
       user.points = 0;
@@ -516,15 +546,19 @@ class ZegoRoomProvider with ChangeNotifier {
   }
 
   Future<void> refreshTreasureBox() async {
+
     final data = await Provider.of<RoomsProvider>(Get.context!,listen: false).getTreasureBox(room!.id!);
       if(data!=null) {
-        int myLevel = room!.treasureBoxLevel!;
         int newLevel = data.treasureBoxLevel!;
-        for(myLevel;myLevel<newLevel;myLevel++) {
-          await Get.dialog(
-              UnlockTreasureBox(level: myLevel+1),
-              barrierDismissible: false
-          );
+        if(room!.treasureBoxLevel!<newLevel){
+          do{
+            room!.treasureBoxLevel = room!.treasureBoxLevel!+1;
+            room = room?.copyWith(usedDaimonds: data.usedDaimonds, totalDiamonds: data.totalDiamonds);
+            await Get.dialog(
+                UnlockTreasureBox(level: room!.treasureBoxLevel!),
+                barrierDismissible: false
+            );
+          }while(room!.treasureBoxLevel!<newLevel);
         }
         room = room?.copyWith(treasureBoxLevel: newLevel, usedDaimonds: data.usedDaimonds, totalDiamonds: data.totalDiamonds);
       }
@@ -555,12 +589,11 @@ class ZegoRoomProvider with ChangeNotifier {
       // Check if the minute is still a multiple of 5 to ensure accuracy
       DateTime currentTime = DateTime.now();
       // Perform your action here
-      print(
-          'Function triggered at ${currentTime.hour}:${currentTime.minute}:${currentTime.second}');
+      log('Function triggered at ${currentTime.hour}:${currentTime.minute}:${currentTime.second}');
       // Call your function here
-      Provider.of<RoomsProvider>(Get.context!,listen: false).addRoomUser(room!.id!);
+      Provider.of<RoomsProvider>(Get.context!,listen: false).addRoomUser(room!.id!,password: roomPassword);
       heartBeat = Timer.periodic(const Duration(minutes: 5), (timer) {
-        Provider.of<RoomsProvider>(Get.context!,listen: false).addRoomUser(room!.id!);
+        Provider.of<RoomsProvider>(Get.context!,listen: false).addRoomUser(room!.id!,password: roomPassword);
       });
     });
   }

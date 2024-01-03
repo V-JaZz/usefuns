@@ -187,40 +187,41 @@ class FramePreview extends StatelessWidget {
                   ),
                 ],
               ),
-              if(isSelected!=true)InkWell(
-                onTap: () {
-                  if(isSelected==false){
-                    Provider.of<UserDataProvider>(context,listen: false).selectFrame(frameId: frameId);
-                  }
+              if(isSelected!=true)GestureDetector(
+                onTap: () async {
                   Get.back();
+                  if(isSelected==false){
+                    final res = await Provider.of<UserDataProvider>(context,listen: false).selectFrame(frameId: frameId);
+                    if(res.status == 0) {
+                      showCustomSnackBar(res.message??'error!', context,isToaster: true);
+                    }
+                  }
                 },
-                child: Padding(
-                  padding: EdgeInsets.only(
-                      top: 12 * a, left: 0 * a, right: 0 * a),
-                  child: Container(
-                      width: 136 * a,
-                      height: 30 * a,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(9 * a),
-                          topRight: Radius.circular(9 * a),
-                          bottomLeft: Radius.circular(9 * a),
-                          bottomRight: Radius.circular(9 * a),
-                        ),
-                        color: Colors.deepOrangeAccent,
+                child: Container(
+                    width: 136 * a,
+                    height: 30 * a,
+                    margin: EdgeInsets.only(
+                        top: 12 * a, left: 0 * a, right: 0 * a),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(9 * a),
+                        topRight: Radius.circular(9 * a),
+                        bottomLeft: Radius.circular(9 * a),
+                        bottomRight: Radius.circular(9 * a),
                       ),
-                      child: Center(
-                        child: Text(
-                          isSelected==false?'Apply':'Buy Now',
-                          style: SafeGoogleFont('Poppins',
-                              fontSize: 13 * a,
-                              fontWeight: FontWeight.w500,
-                              height: 1.5 * b / a,
-                              letterSpacing: 0.48 * a,
-                              color: Colors.white),
-                        ),
-                      )),
-                ),
+                      color: Colors.deepOrangeAccent,
+                    ),
+                    child: Center(
+                      child: Text(
+                        isSelected==false?'Apply':'Buy Now',
+                        style: SafeGoogleFont('Poppins',
+                            fontSize: 13 * a,
+                            fontWeight: FontWeight.w500,
+                            height: 1.5 * b / a,
+                            letterSpacing: 0.48 * a,
+                            color: Colors.white),
+                      ),
+                    )),
               ),
               Padding(
                 padding: EdgeInsets.only(

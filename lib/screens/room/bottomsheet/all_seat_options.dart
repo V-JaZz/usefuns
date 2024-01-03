@@ -100,8 +100,7 @@ class SeatOptions extends StatelessWidget {
                           if(!p.onSeat){
                             p.startPublishingStream(index);
                           }else{
-                            p.stopPublishingStream();
-                            p.startPublishingStream(index);
+                            p.updateSeat(index);
                           }
                           Get.back();
                         },

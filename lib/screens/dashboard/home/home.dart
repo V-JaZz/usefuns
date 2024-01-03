@@ -4,10 +4,9 @@ import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:shimmer/shimmer.dart';
 import '../../../provider/rooms_provider.dart';
 import '../../../utils/common_widgets.dart';
-import '../me/profile/user_profile.dart';
+import '../../room/widget/pre_loading_dailog.dart';
 import 'create_room.dart';
 import 'ranking.dart';
 import 'search_room_user.dart';
@@ -230,7 +229,7 @@ class _HomeState extends State<Home> {
                           ),
                           child: ListTile(
                             onTap: () {
-                              value.joinRoom(room);
+                              Get.dialog(RoomPreLoadingDialog(room: room),barrierDismissible: false);
                             },
                             leading:room.images!.isEmpty
                                 ? CircleAvatar(
@@ -352,7 +351,7 @@ class _HomeState extends State<Home> {
                                                     subTitle: room.announcement,
                                                     active: room.activeUsers?.length.toString()??'0',
                                                     onTap: (){
-                                                      value.joinRoom(room);
+                                                      Get.dialog(RoomPreLoadingDialog(room: room),barrierDismissible: false);
                                                     },
                                                   );
                                                 })
@@ -402,7 +401,7 @@ class _HomeState extends State<Home> {
                                                     subTitle: room.announcement,
                                                     active: room.activeUsers?.length.toString()??'0',
                                                     onTap: (){
-                                                      value.joinRoom(room);
+                                                      Get.dialog(RoomPreLoadingDialog(room: room),barrierDismissible: false);
                                                     },
                                                   );
                                                 },
@@ -572,7 +571,7 @@ class _HomeState extends State<Home> {
                                                 subTitle: room.announcement,
                                                 active: room.activeUsers?.length.toString()??'0',
                                                 onTap: (){
-                                                  value.joinRoom(room);
+                                                  Get.dialog(RoomPreLoadingDialog(room: room),barrierDismissible: false);
                                                 },
                                               );
                                             },
@@ -639,7 +638,7 @@ class _HomeState extends State<Home> {
                                       subTitle: room.announcement,
                                       active: room.activeUsers?.length.toString()??'0',
                                       onTap: (){
-                                        value.joinRoom(room);
+                                        Get.dialog(RoomPreLoadingDialog(room: room),barrierDismissible: false);
                                       },
                                     );
                                   },

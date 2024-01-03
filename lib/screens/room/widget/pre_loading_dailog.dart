@@ -1,18 +1,22 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:live_app/data/datasource/local/sharedpreferences/storage_service.dart';
 import 'package:live_app/provider/rooms_provider.dart';
 import 'package:live_app/screens/room/live_room.dart';
 import 'package:live_app/utils/common_widgets.dart';
 import 'package:provider/provider.dart';
-
+import 'package:live_app/utils/constants.dart';
+import '../../../data/model/body/zego_room_model.dart';
+import '../../../data/model/response/rooms_model.dart';
 import '../../../provider/gifts_provider.dart';
 import '../../../provider/user_data_provider.dart';
 import '../../../provider/zego_room_provider.dart';
+import '../../../utils/utils_assets.dart';
 
 class RoomPreLoadingDialog extends StatefulWidget {
-  const RoomPreLoadingDialog({super.key});
+  final Room room;
+  const RoomPreLoadingDialog({super.key, required this.room});
 
   @override
   State<RoomPreLoadingDialog> createState() => _RoomPreLoadingDialogState();
@@ -20,9 +24,13 @@ class RoomPreLoadingDialog extends StatefulWidget {
 
 class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
   late final ZegoRoomProvider zegoRoomProvider;
+  late bool locked;
+  bool loading = true;
+  final TextEditingController textEditingController = TextEditingController();
+  String errorText = '';
 
-  String getGreeting(String? name, int i, String? owner){
-    switch(i){
+  String getGreeting(String? name, int i, String? owner) {
+    switch (i) {
       case 0:
         return 'Hi! @$name \nNice to meet you here!';
       case 1:
@@ -40,43 +48,170 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
 
   @override
   void initState() {
-    zegoRoomProvider = Provider.of<ZegoRoomProvider>(Get.context!,listen: false);
-    start();
+    locked = widget.room.isLocked ?? false;
+    zegoRoomProvider =
+        Provider.of<ZegoRoomProvider>(Get.context!, listen: false);
+    if (locked) {
+      loading = false;
+    } else {
+      join();
+    }
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    return const AlertDialog(
+    return AlertDialog(
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CircularProgressIndicator(
-            color: Color(0xff9e26bc),
-          ),
-          SizedBox(height: 16),
-          Text("Please wait..."),
+          locked
+              ? Column(
+                  children: [
+                    const SizedBox(height: 9),
+                    SizedBox(
+                      width: 190,
+                      child: TextFormField(
+                        textAlign: TextAlign.center,
+                        controller: textEditingController,
+                        style: SafeGoogleFont(
+                          'Poppins',
+                          fontSize: 15,
+                          fontWeight: FontWeight.w300,
+                          color: const Color(0x99000000),
+                        ),
+                        keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.done,
+                        decoration: InputDecoration(
+                            isDense: true,
+                            filled: true,
+                            fillColor: Colors.white,
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide:
+                                  const BorderSide(color: Colors.transparent),
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide:
+                                  const BorderSide(color: Colors.transparent),
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                            hintText: 'Enter Password',
+                            alignLabelWithHint: false),
+                        onFieldSubmitted: (value) {
+                          if(loading) return;
+                          if(textEditingController.text.isEmpty){
+                            setState(() {
+                              errorText = 'Invalid Password!';
+                            });
+                            return;
+                          }
+                          setState(() {
+                            loading = true;
+                          });
+                          join(password: textEditingController.text);
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 1),
+                    errorText.isNotEmpty
+                        ?Text(errorText,
+                        style: TextStyle(color: Theme.of(context).primaryColor))
+                        :const SizedBox(height: 9),
+                    const SizedBox(height: 3),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                            onPressed: () => Get.back(),
+                            child: const Text('Cancel')
+                        ),
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Theme.of(context).primaryColor,
+                                foregroundColor: Colors.white),
+                            onPressed: () {
+                              if(loading) return;
+                              if(textEditingController.text.isEmpty){
+                                setState(() {
+                                  errorText = 'Invalid Password!';
+                                });
+                                return;
+                              }
+                              setState(() {
+                                loading = true;
+                              });
+                              join(password: textEditingController.text);
+                            },
+                            child: loading
+                                ? Container(padding: const EdgeInsets.all(3),child: const Center(child: SizedBox( height:18, width:18, child: CircularProgressIndicator(color: Colors.white))))
+                                :const Text('Join')
+                        ),
+                      ],
+                    )
+                  ],
+                )
+              : const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(
+                      color: Color(0xff9e26bc),
+                    ),
+                    SizedBox(height: 16),
+                    Text("Please wait..."),
+                  ],
+                ),
         ],
       ),
     );
   }
 
-  void start() async {
-    final response = await Provider.of<RoomsProvider>(context,listen: false).addRoomUser(zegoRoomProvider.room!.id!);
-    if(response.status==1){
-      final me = Provider.of<UserDataProvider>(Get.context!,listen: false).userData;
+  void join({String? password}) async {
+    final response =  await Provider.of<RoomsProvider>(context, listen: false).addRoomUser(widget.room.id!, password: password);
+
+    if (response.status == 1) {
+      if (zegoRoomProvider.room != null) await zegoRoomProvider.destroy();
+      zegoRoomProvider.isOwner = widget.room.userId! == StorageService().getString(Constants.id);
+      zegoRoomProvider.room = widget.room;
+      zegoRoomProvider.roomPassword = password;
+      zegoRoomProvider.roomID = widget.room.roomId!;
+      zegoRoomProvider.zegoRoom = ZegoRoomModel(
+          totalSeats: widget.room.noOfSeats ?? 8,
+          lockedSeats: [],
+          viewCalculator: false);
       await zegoRoomProvider.init();
-      if(zegoRoomProvider.isOwner) {
-        if(me!.data!.roomWallpaper!.isNotEmpty) zegoRoomProvider.backgroundImage = me.data!.roomWallpaper!.first.images!.first;
-      }else{
-        final ownerData = await Provider.of<UserDataProvider>(Get.context!,listen: false).getUser(id: zegoRoomProvider.room!.userId!);
-        if(ownerData.data!.roomWallpaper!.isNotEmpty) zegoRoomProvider.backgroundImage = ownerData.data!.roomWallpaper!.first.images!.first;
-        zegoRoomProvider.addGreeting(getGreeting(me?.data?.name, Random().nextInt(5), ownerData.data?.name), ownerData);
+
+      final me =
+          Provider.of<UserDataProvider>(Get.context!, listen: false).userData;
+      if (zegoRoomProvider.isOwner) {
+        if (me!.data!.roomWallpaper!.isNotEmpty) {
+          zegoRoomProvider.backgroundImage =
+              me.data!.roomWallpaper!.first.images!.first;
+        }
+      } else {
+        final ownerData =
+            await Provider.of<UserDataProvider>(Get.context!, listen: false)
+                .getUser(id: zegoRoomProvider.room!.userId!);
+        if (ownerData.data!.roomWallpaper!.isNotEmpty) {
+          zegoRoomProvider.backgroundImage =
+              ownerData.data!.roomWallpaper!.first.images!.first;
+        }
+        zegoRoomProvider.addGreeting(
+            getGreeting(
+                me?.data?.name, Random().nextInt(5), ownerData.data?.name),
+            ownerData);
       }
-      Provider.of<GiftsProvider>(context, listen: false).generateSeries();
-      Get.off(()=>const LiveRoom(),transition: Transition.size);
+      Provider.of<GiftsProvider>(Get.context!, listen: false).generateSeries();
+      Get.off(() => const LiveRoom(), transition: Transition.size);
+    }
+    else if(password!=null){
+      setState(() {
+        loading = false;
+        errorText = response.message??'Invalid password!';
+      });
     }else {
       Get.back();
-      showCustomSnackBar(response.message, context,isToaster: true);
+      showCustomSnackBar(response.message, Get.context!, isToaster: true);
     }
   }
 }

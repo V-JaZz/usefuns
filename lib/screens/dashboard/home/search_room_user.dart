@@ -12,6 +12,7 @@ import '../../../data/model/response/user_search_model.dart';
 import '../../../provider/user_data_provider.dart';
 import '../../../utils/common_widgets.dart';
 import '../../../utils/constants.dart';
+import '../../room/widget/pre_loading_dailog.dart';
 import '../me/profile/user_profile.dart';
 
 class SearchRoomUser extends StatefulWidget {
@@ -226,7 +227,9 @@ class _SearchRoomUserState extends State<SearchRoomUser> {
                       children: List.generate(roomModel?.data?.length??0, (index) =>
                           Card(
                         child: ListTile(
-                          onTap: (){Provider.of<RoomsProvider>(context,listen: false).joinRoom(roomModel!.data![index]);},
+                          onTap: (){
+                            Get.dialog(RoomPreLoadingDialog(room: roomModel!.data![index]),barrierDismissible: false);
+                            },
                           leading: roomModel!.data![index].images!.isNotEmpty ? Image.network(roomModel!.data![index].images!.first):Image.asset('assets/logo_greystyle.png'),
                           title: Text(roomModel!.data![index].name!),
                           subtitle: Text((roomModel!.data![index].announcement??'') != ''?roomModel!.data![index].announcement!:'Welcome to my room!'),

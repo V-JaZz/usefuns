@@ -39,7 +39,6 @@ class UserData {
   String? userType;
   String? roomName;
   String? officialId;
-  List<dynamic>? specialId;
   String? deviceId;
   String? deviceType;
   List<dynamic>? kickedUser;
@@ -53,10 +52,12 @@ class UserData {
   int? accounts;
   List<String>? followers;
   List<String>? following;
+  List<ItemModel>? lockRoom;
+  List<ItemModel>? extraSeat;
+  List<ItemModel>? profileCard;
   List<ItemModel>? tags;
   List<ItemModel>? vehicle;
   List<ItemModel>? frame;
-  List<dynamic>? gift;
   List<ItemModel>? roomWallpaper;
   int? level;
   int? loginOtp;
@@ -91,7 +92,6 @@ class UserData {
     this.userType,
     this.roomName,
     this.officialId,
-    this.specialId,
     this.deviceId,
     this.deviceType,
     this.kickedUser,
@@ -105,10 +105,12 @@ class UserData {
     this.accounts,
     this.followers,
     this.following,
+    this.lockRoom,
+    this.extraSeat,
+    this.profileCard,
     this.tags,
     this.vehicle,
     this.frame,
-    this.gift,
     this.roomWallpaper,
     this.level,
     this.loginOtp,
@@ -144,7 +146,6 @@ class UserData {
     userType: json["user_type"],
     roomName: json["roomName"],
     officialId: json["official_id"],
-    specialId: json["special_id"] == null ? [] : List<dynamic>.from(json["special_id"]!.map((x) => x)),
     deviceId: json["device_id"],
     deviceType: json["device_type"],
     kickedUser: json["kickedUser"] == null ? [] : List<dynamic>.from(json["kickedUser"]!.map((x) => x)),
@@ -158,10 +159,12 @@ class UserData {
     accounts: json["accounts"],
     followers: json["followers"] == null ? [] : List<String>.from(json["followers"]!.map((x) => x)),
     following: json["following"] == null ? [] : List<String>.from(json["following"]!.map((x) => x)),
+    lockRoom: json["lockRoom"] == null ? [] : List<ItemModel>.from(json["lockRoom"]!.map((x) => ItemModel.fromJson(x))),
+    extraSeat: json["extraSeat"] == null ? [] : List<ItemModel>.from(json["extraSeat"]!.map((x) => ItemModel.fromJson(x))),
+    profileCard: json["profileCard"] == null ? [] : List<ItemModel>.from(json["profileCard"]!.map((x) => ItemModel.fromJson(x))),
     tags: json["tags"] == null ? [] : List<ItemModel>.from(json["tags"]!.map((x) => ItemModel.fromJson(x))),
     vehicle: json["vehicle"] == null ? [] : List<ItemModel>.from(json["vehicle"]!.map((x) => ItemModel.fromJson(x))),
     frame: json["frame"] == null ? [] : List<ItemModel>.from(json["frame"]!.map((x) => ItemModel.fromJson(x))),
-    gift: json["gift"] == null ? [] : List<dynamic>.from(json["gift"]!.map((x) => x)),
     roomWallpaper: json["roomWallpaper"] == null ? [] : List<ItemModel>.from(json["roomWallpaper"]!.map((x) => ItemModel.fromJson(x))),
     level: json["level"],
     loginOtp: json["loginOtp"],
@@ -197,7 +200,6 @@ class UserData {
     "user_type": userType,
     "roomName": roomName,
     "official_id": officialId,
-    "special_id": specialId == null ? [] : List<dynamic>.from(specialId!.map((x) => x)),
     "device_id": deviceId,
     "device_type": deviceType,
     "kickedUser": kickedUser == null ? [] : List<dynamic>.from(kickedUser!.map((x) => x)),
@@ -211,10 +213,12 @@ class UserData {
     "accounts": accounts,
     "followers": followers == null ? [] : List<dynamic>.from(followers!.map((x) => x)),
     "following": following == null ? [] : List<dynamic>.from(following!.map((x) => x)),
+    "lockRoom": lockRoom == null ? [] : List<dynamic>.from(lockRoom!.map((x) => x.toJson())),
+    "extraSeat": extraSeat == null ? [] : List<dynamic>.from(extraSeat!.map((x) => x.toJson())),
+    "profileCard": profileCard == null ? [] : List<dynamic>.from(profileCard!.map((x) => x.toJson())),
     "tags": tags == null ? [] : List<dynamic>.from(tags!.map((x) => x.toJson())),
     "vehicle": vehicle == null ? [] : List<dynamic>.from(vehicle!.map((x) => x.toJson())),
     "frame": frame == null ? [] : List<dynamic>.from(frame!.map((x) => x.toJson())),
-    "gift": gift == null ? [] : List<dynamic>.from(gift!.map((x) => x)),
     "roomWallpaper": roomWallpaper == null ? [] : List<dynamic>.from(roomWallpaper!.map((x) => x.toJson())),
     "level": level,
     "loginOtp": loginOtp,

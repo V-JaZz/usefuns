@@ -1,4 +1,4 @@
-package com.shivila.liveApp.live_app
+package com.alkb.usefuns.live_app
 
 import io.flutter.embedding.android.FlutterActivity
 

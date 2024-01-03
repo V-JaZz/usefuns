@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:live_app/provider/zego_room_provider.dart';
+import 'package:provider/provider.dart';
+import '../../../provider/user_data_provider.dart';
 import '../../../utils/utils_assets.dart';
 import '../../dashboard/me/shop/shop.dart';
 import 'manager.dart';
 
 class TopMore extends StatelessWidget {
   final bool owner;
-  const TopMore({super.key, required this.owner});
+  TopMore({super.key, required this.owner});
+  final TextEditingController textEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
     double b = a * 0.97;
+
+    bool isRoomLocked = Provider.of<ZegoRoomProvider>(context).roomPassword!=null;
+    bool hasRoomLock = Provider.of<UserDataProvider>(context).userData?.data?.lockRoom?.isNotEmpty??false;
+
     return Container(
       color: Colors.white,
       width: double.infinity,
@@ -47,8 +55,10 @@ class TopMore extends StatelessWidget {
                                         color: Colors.black),
                                   ),
                                   SizedBox(height: 3*a),
-                                  Text(
-                                    'You haven\'t purchased Room Lock yet\n       Get it now under Lock section',
+                                  if(isRoomLocked != false)Text(
+                                    isRoomLocked
+                                        ? 'Room already Locked!'
+                                        : 'You haven\'t purchased Room Lock yet\n       Get it now under Lock section',
                                     style: SafeGoogleFont('Poppins',
                                         fontSize: 10 * b,
                                         fontWeight: FontWeight.w500,
@@ -56,9 +66,49 @@ class TopMore extends StatelessWidget {
                                         letterSpacing: 0.48 * a,
                                         color: Colors.black),
                                   ),
+                                  if(hasRoomLock && !isRoomLocked)
+                                    SizedBox(
+                                      width: 190,
+                                      child: TextFormField(
+                                        textAlign: TextAlign.center,
+                                        controller: textEditingController,
+                                        style: SafeGoogleFont(
+                                          'Poppins',
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w300,
+                                          color: const Color(0x99000000),
+                                        ),
+                                        keyboardType: TextInputType.number,
+                                        textInputAction: TextInputAction.done,
+                                        decoration: InputDecoration(
+                                            isDense: true,
+                                            filled: true,
+                                            fillColor: Colors.white,
+                                            enabledBorder: UnderlineInputBorder(
+                                              borderSide:
+                                              const BorderSide(color: Colors.transparent),
+                                              borderRadius: BorderRadius.circular(50),
+                                            ),
+                                            focusedBorder: UnderlineInputBorder(
+                                              borderSide:
+                                              const BorderSide(color: Colors.transparent),
+                                              borderRadius: BorderRadius.circular(50),
+                                            ),
+                                            hintText: 'Enter Password',
+                                            alignLabelWithHint: false)
+                                      ),
+                                    ),
                                   InkWell(
                                     onTap: () {
-                                      Get.to(() => const Shop(index: 6));
+                                      if(!hasRoomLock){
+                                        Get.to(() => const Shop(index: 6));
+                                      }else if(isRoomLocked){
+                                        Provider.of<ZegoRoomProvider>(context,listen:false).updateRoomLock(null);
+                                        Get.back();
+                                      }else {
+                                        Provider.of<ZegoRoomProvider>(context,listen:false).updateRoomLock(textEditingController.text);
+                                        Get.back();
+                                      }
                                     },
                                     child: Padding(
                                       padding: EdgeInsets.only(
@@ -87,7 +137,11 @@ class TopMore extends StatelessWidget {
                                           ),
                                           child: Center(
                                             child: Text(
-                                              'SHOP',
+                                              hasRoomLock
+                                                  ?(isRoomLocked
+                                                    ?'UNLOCK'
+                                                    :'LOCK')
+                                                  :'SHOP',
                                               style: SafeGoogleFont(
                                                   'Poppins',
                                                   fontSize: 13 * a,

@@ -79,6 +79,52 @@ class RoomsRepo {
     }
   }
 
+  Future<http.Response> lockRoom(String roomID, String userID, String password, String token) async {
+    try {
+      http.Response response = await _httpClient.post('room/lock',
+          {
+            "userId": userID,
+            "roomId": roomID,
+            "password": password
+          },
+        bearerToken: token
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<http.Response> unlockRoom(String roomID, String userID, String token) async {
+    try {
+      http.Response response = await _httpClient.post('room/unlock',
+          {
+            "userId": userID,
+            "roomId": roomID
+          },
+          bearerToken: token
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<http.Response> addUserLocked(String roomID, String userID, String password) async {
+    try {
+      http.Response response = await _httpClient.post('room/activeUser/add_in_locked_room',
+          {
+            "userId": userID,
+            "roomId": roomID,
+            "password": password
+          }
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<http.Response> removeUser(String roomID, String userID) async {
     try {
       http.Response response = await _httpClient.post('room/activeUser/remove',

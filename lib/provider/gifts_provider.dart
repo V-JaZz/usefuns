@@ -40,11 +40,11 @@ class GiftsProvider with ChangeNotifier {
       do {
         await _giftsRepo.sendGift(senderId, receiverId, giftId, roomId);
         await _giftsRepo.updateTBoxLevel(roomId, giftPrice);
+        Provider.of<ZegoRoomProvider>(Get.context!, listen: false).updateTreasureBox();
         --count;
       } while (count > 0);
     }
     await Provider.of<UserDataProvider>(Get.context!, listen: false).getUser(refresh: false);
-    Provider.of<ZegoRoomProvider>(Get.context!, listen: false).updateTreasureBox();
   }
 
   Future<void> getAllContribution(String roomId) async {

@@ -1,14 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:live_app/provider/zego_room_provider.dart';
-import 'package:live_app/screens/room/widget/pre_loading_dailog.dart';
 import 'package:live_app/utils/constants.dart';
-import 'package:provider/provider.dart';
 import '../data/datasource/local/sharedpreferences/storage_service.dart';
-import '../data/model/body/zego_room_model.dart';
 import '../data/model/response/common_model.dart';
 import '../data/model/response/create_room_model.dart';
 import '../data/model/response/rooms_model.dart';
@@ -73,19 +67,23 @@ class RoomsProvider with ChangeNotifier {
     return responseModel;
   }
 
-  joinRoom(Room room) async {
-    final provider = Provider.of<ZegoRoomProvider>(Get.context!,listen: false);
-    if(provider.room != null) await provider.destroy();
-    bool isOwner = room.userId! == storageService.getString(Constants.id);
-    provider.room = room;
-    provider.roomID = room.roomId!;
-    provider.isOwner = isOwner;
-    provider.zegoRoom = ZegoRoomModel(totalSeats: room.noOfSeats??8,lockedSeats:[], viewCalculator: false);
-    Get.dialog(const RoomPreLoadingDialog(),barrierDismissible: false);
+  Future<CommonModel> updateRoomLock(String roomId, {String? password}) async {
+    final apiResponse = password==null
+        ? await _roomsRepo.unlockRoom(roomId,storageService.getString(Constants.id),storageService.getString(Constants.token))
+        : await _roomsRepo.lockRoom(roomId,storageService.getString(Constants.id), password,storageService.getString(Constants.token));
+    CommonModel responseModel;
+    if (apiResponse.statusCode == 200) {
+      responseModel = commonModelFromJson(apiResponse.body);
+    } else {
+      responseModel = CommonModel(status: 0,message: apiResponse.reasonPhrase);
+    }
+    return responseModel;
   }
 
-  Future<CommonModel> addRoomUser(String roomId) async {
-    final apiResponse = await _roomsRepo.addUser(roomId,storageService.getString(Constants.id));
+  Future<CommonModel> addRoomUser(String roomId, {String? password}) async {
+    final apiResponse = password==null
+        ? await _roomsRepo.addUser(roomId,storageService.getString(Constants.id))
+        : await _roomsRepo.addUserLocked(roomId,storageService.getString(Constants.id), password);
     CommonModel responseModel;
     if (apiResponse.statusCode == 200) {
       responseModel = commonModelFromJson(apiResponse.body);

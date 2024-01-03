@@ -9,8 +9,6 @@ import '../../../../../utils/utils_assets.dart';
 class ShopTheme extends StatelessWidget {
   const ShopTheme({super.key});
 
-  final item = 'wallpaper';
-
   @override
   Widget build(BuildContext context) {
     double baseWidth = 360;
@@ -18,7 +16,7 @@ class ShopTheme extends StatelessWidget {
 
     return Consumer<ShopWalletProvider>(
       builder: (context, value, _) {
-        final itemList = value.items[item]?.data
+        final itemList = value.items['wallpaper']?.data
             ?.where((e) => e.isOfficial != true)
             .toList() ??
             [];

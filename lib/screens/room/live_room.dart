@@ -123,8 +123,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                             ),
                                           ),
                                         ),
-                                        child: value.room!.isLocked == true
-                                            ?Align(
+                                        child: value.roomPassword != null                                          ?Align(
                                           alignment: Alignment.bottomRight,
                                           child: SizedBox(
                                             width: 24 * a,
@@ -214,7 +213,10 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                         margin: EdgeInsets.fromLTRB(
                                             0 * a, 0 * a, 0 * a, 6 * a),
                                         child: InkWell(
-                                          onTap: (){bs.showTopMoreBottomSheet(value.isOwner);},
+                                          onTap: (){
+                                            bs.showTopMoreBottomSheet(
+                                                value.isOwner);
+                                            },
                                           child: Icon(Icons.more_horiz_outlined,
                                               color: Colors.white70,
                                               size: 24 * a),
@@ -241,7 +243,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                             margin:
                                 EdgeInsets.fromLTRB(20 * a, 0 * a, 20 * a, 20 * a),
                             width: double.infinity,
-                            height: 25 * a,
+                            height: 28 * a,
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
@@ -251,8 +253,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                     // if(value.isOwner) bs.showGroupMemberBottomSheet(value.room!.groupMembers,value.room!.userId!);
                                   },
                                   child: Container(
-                                    margin:
-                                        EdgeInsets.fromLTRB(0 * a, 5 * a, 0 * a, 3 * a),
+                                    margin: EdgeInsets.fromLTRB(0 * a, 4 * a, 0 * a, 9 * a),
                                     height: double.infinity,
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
@@ -294,7 +295,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                     Get.to(() => const LiveRecord());
                                   },
                                   child: Container(
-                                    margin: EdgeInsets.fromLTRB(0 * a, 5 * a, 0 * a, 3 * a),
+                                    margin: EdgeInsets.fromLTRB(0 * a, 4 * a, 0 * a, 9 * a),
                                     height: double.infinity,
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
@@ -332,14 +333,12 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                 const Spacer(flex: 2),
                                 Consumer<GiftsProvider>(
                                   builder: (context, gp, child) {
-                                    final list = gp.todayRoomContribution.isEmpty
-                                        ?gp.sevenDaysRoomContribution
-                                        :gp.todayRoomContribution;
+                                    final list = gp.todayRoomContribution;
                                     return GestureDetector(
                                       onTap: bs.showContributionBottomSheet,
                                       child: Container(
                                         padding: EdgeInsets.fromLTRB(
-                                            12 * a, 4 * a, 9 * a, 4 * a),
+                                            4 * a, 4 * a, 9 * a, 4 * a),
                                         decoration: BoxDecoration(
                                           color: const Color(0x33000000),
                                           borderRadius: BorderRadius.circular(12 * a),
@@ -347,8 +346,8 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                         child: Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
-                                              if(list.isNotEmpty)
-                                                Row(
+                                              list.isNotEmpty
+                                                  ? Row(
                                                   children: List.generate(
                                                     list.length>2?3:list.length,
                                                         (i) {
@@ -368,15 +367,14 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                                               return const Text('active...');
                                                             case ConnectionState.waiting:
                                                               return Shimmer.fromColors(
-                                                                baseColor: const Color.fromARGB(
-                                                                    248, 188, 187, 187),
-                                                                highlightColor: Colors.white,
+                                                                baseColor: Colors.white12,
+                                                                highlightColor: Colors.transparent,
                                                                 period: const Duration(seconds: 1),
                                                                 child: Container(
                                                                   margin: EdgeInsets.fromLTRB(
-                                                                      0 * a, 0 * a, 12 * a, 0 * a),
-                                                                  width: 21 * a,
-                                                                  height: 21 * a,
+                                                                      0 * a, 0 * a, 4 * a, 0 * a),
+                                                                  width: 24 * a,
+                                                                  height: 24 * a,
                                                                   decoration: const BoxDecoration(
                                                                       shape: BoxShape.circle,
                                                                       color: Colors.white
@@ -389,12 +387,11 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                                               }
                                                               return Container(
                                                                   margin: EdgeInsets.fromLTRB(
-                                                                      0 * a, 0 * a, 12 * a, 0 * a),
-                                                                  width: 21 * a,
-                                                                  height: 21 * a,
+                                                                      0 * a, 0 * a, 4 * a, 0 * a),
+                                                                  width: 24 * a,
+                                                                  height: 24 * a,
                                                                   decoration: BoxDecoration(
-                                                                    borderRadius:
-                                                                    BorderRadius.circular(9 * a),
+                                                                    shape: BoxShape.circle,
                                                                     image: snapshot.data!.data!.images!.isNotEmpty
                                                                         ? DecorationImage(
                                                                       fit: BoxFit.cover,
@@ -411,14 +408,34 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                                       );
                                                     },
                                                   ),
+                                                )
+                                                  : Row(
+                                                children: List.generate(
+                                                  1,
+                                                      (i) {
+                                                        return Container(
+                                                          margin: EdgeInsets.fromLTRB(
+                                                              0 * a, 0 * a, 0 * a, 0 * a),
+                                                          width: 24 * a,
+                                                          height: 24 * a,
+                                                          decoration: const BoxDecoration(
+                                                            shape: BoxShape.circle,
+                                                            image: DecorationImage(
+                                                              fit: BoxFit.cover,
+                                                              image: AssetImage('assets/profile.png'),
+                                                            ),
+                                                          ),
+                                                        );
+                                                  },
                                                 ),
+                                              ),
                                               SizedBox(
                                                 width: 3 * a,
                                               ),
                                               Icon(
                                                 Icons.chevron_right_rounded,
                                                 color: Colors.white70,
-                                                size: 18 * a,
+                                                size: 21 * a,
                                               )
                                             ]),
                                       ),
@@ -429,8 +446,8 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                             ),
                           ),
                           value.zegoRoom!.totalSeats < 9
-                              ?SizedBox(height: 18*a)
-                              :SizedBox(height: 9*a),
+                              ?SizedBox(height: 15*a)
+                              :SizedBox(height: 6*a),
                           SizedBox(
                             width: 320 * a,
                             child: GridView.count(
@@ -550,8 +567,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                           if(value.isOwner || value.room!.admin!.contains(ZegoConfig.instance.streamID)) {
                                             bs.showSeatOptionsBottomSheet(i);
                                           }else if(value.onSeat && !value.zegoRoom!.lockedSeats.contains(i)){
-                                            value.stopPublishingStream();
-                                            value.startPublishingStream(i);
+                                            value.updateSeat(i);
                                           }else if(!value.zegoRoom!.lockedSeats.contains(i)){
                                             value.startPublishingStream(i);
                                           }else{
