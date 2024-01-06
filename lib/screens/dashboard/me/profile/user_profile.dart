@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:live_app/provider/rooms_provider.dart';
 import 'package:live_app/screens/dashboard/me/profile/profile_tab_view.dart';
 import 'package:live_app/subscreens/scree/homescreens/honor.dart';
 import 'package:live_app/screens/dashboard/me/profile/relationship_tab_view.dart';
@@ -11,6 +12,7 @@ import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import '../../../../data/model/response/user_data_model.dart';
 import '../../../../provider/user_data_provider.dart';
+import '../../../room/widget/pre_loading_dailog.dart';
 import 'moments_page.dart';
 import 'update_profile.dart';
 import '../../../../utils/common_widgets.dart';
@@ -27,6 +29,7 @@ class UserProfile extends StatefulWidget {
 class _UserProfileState extends State<UserProfile> {
   late UserData user;
   late bool isMine;
+  bool joining = false;
 
   @override
   Widget build(BuildContext context) {
@@ -49,161 +52,196 @@ class _UserProfileState extends State<UserProfile> {
       ),
       body: Column(
         children: [
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(8*a),
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage('assets/decoration/profile_bg.jpg'),
-                  fit: BoxFit.cover),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      onTap: (){Get.back();},
-                      child: const Icon(CupertinoIcons.back,color: Colors.white),
-                    ),
-                    Image.asset('assets/dots.png',width: 24*a),
-                  ],
+          Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(8*a),
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage('assets/decoration/profile_bg.jpg'),
+                      fit: BoxFit.cover),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12*a),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      userProfileDisplay(
-                          size: 87*a,
-                          image: user.images!.isEmpty?'':user.images?.first??'',
-                          frame: userFrameViewPath(user.frame)
-                      ),
-                      SizedBox(height: 9*a),
-                      Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: (){Get.back();},
+                          child: const Icon(CupertinoIcons.back,color: Colors.white),
+                        ),
+                        Image.asset('assets/dots.png',width: 24*a),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12*a),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            user.name??'',
-                            textAlign: TextAlign.left,
-                            style: SafeGoogleFont(
-                                color: const Color.fromRGBO(255, 255, 255, 1),
-                                'Poppins',
-                                fontSize: 16 * a,
-                                fontWeight: FontWeight.normal,
-                                height: 1 * a),
+                          userProfileDisplay(
+                              size: 87*a,
+                              image: user.images!.isEmpty?'':user.images?.first??'',
+                              frame: userFrameViewPath(user.frame)
                           ),
-                          SizedBox(width: 8*a),
-                          if(isMine)InkWell(
-                            onTap: (){
-                              Get.to(()=>const UpdateProfile());
-                            },
-                            child: Container(
-                                color:Colors.white, child:
-                            Padding(
-                              padding: const EdgeInsets.all(2),
-                              child: Icon(Icons.edit,color: const Color(0xff9e26bc),size: 9*a),
-                            )),
-                          )
-                        ],
-                      ),
-                      SizedBox(height: 6*a),
-                      Row(
-                        children: [
-                          Text(
-                            'ID: ${user.userId}',
-                            textAlign: TextAlign.left,
-                            style: SafeGoogleFont(
-                                color: const Color.fromRGBO(255, 255, 255, 1),
-                                'Poppins',
-                                fontSize: 11 * a,
-                                fontWeight: FontWeight.w300,
-                                height: 1 * a),
+                          SizedBox(height: 9*a),
+                          Row(
+                            children: [
+                              Text(
+                                user.name??'',
+                                textAlign: TextAlign.left,
+                                style: SafeGoogleFont(
+                                    color: const Color.fromRGBO(255, 255, 255, 1),
+                                    'Poppins',
+                                    fontSize: 16 * a,
+                                    fontWeight: FontWeight.normal,
+                                    height: 1 * a),
+                              ),
+                              SizedBox(width: 8*a),
+                              if(isMine)InkWell(
+                                onTap: (){
+                                  Get.to(()=>const UpdateProfile());
+                                },
+                                child: Container(
+                                    color:Colors.white, child:
+                                Padding(
+                                  padding: const EdgeInsets.all(2),
+                                  child: Icon(Icons.edit,color: const Color(0xff9e26bc),size: 9*a),
+                                )),
+                              )
+                            ],
                           ),
-                          SizedBox(width: 8 * a),
-                          InkWell(
-                            onTap: (){
-                              FlutterClipboard.copy('${user.userId}').then((value) {
-                                showCustomSnackBar('Copied to Clipboard!', context, isToaster: true, isError: false);
-                              });
-                            },
-                            child: Container(
-                                decoration: const BoxDecoration(
+                          SizedBox(height: 6*a),
+                          Row(
+                            children: [
+                              Text(
+                                'ID: ${user.userId}',
+                                textAlign: TextAlign.left,
+                                style: SafeGoogleFont(
+                                    color: const Color.fromRGBO(255, 255, 255, 1),
+                                    'Poppins',
+                                    fontSize: 11 * a,
+                                    fontWeight: FontWeight.w300,
+                                    height: 1 * a),
+                              ),
+                              SizedBox(width: 8 * a),
+                              InkWell(
+                                onTap: (){
+                                  FlutterClipboard.copy('${user.userId}').then((value) {
+                                    showCustomSnackBar('Copied to Clipboard!', context, isToaster: true, isError: false);
+                                  });
+                                },
+                                child: Container(
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                    ),
+                                    child: Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(2),
+                                        child: Icon(Icons.copy,color: const Color(0xff9e26bc),size: 9*a),
+                                      ),
+                                    )),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 12*a),
+                          Row(
+                            children: [
+                              Row(
+                                  children:
+                                  List.generate(user.tags?.length??0, (index) =>
+                                  Padding(
+                                        padding: EdgeInsets.only(right: 9*a),
+                                        child: SvgPicture.network(
+                                          user.tags?[index].images?.first??'',
+                                          fit: BoxFit.fitHeight,
+                                          height: 17 * a,
+                                        ),
+                                      ),
+                                  )
+                              ),
+                              userLevelTag(user.level??0,14 * a,viewZero: true),
+                              SizedBox(width: 9*a),
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10 * a),
                                   color: Colors.white,
                                 ),
-                                child: Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(2),
-                                    child: Icon(Icons.copy,color: const Color(0xff9e26bc),size: 9*a),
-                                  ),
-                                )),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 12*a),
-                      Row(
-                        children: [
-                          Row(
-                              children:
-                              List.generate(user.tags?.length??0, (index) =>
-                              Padding(
-                                    padding: EdgeInsets.only(right: 9*a),
-                                    child: SvgPicture.network(
-                                      user.tags?[index].images?.first??'',
-                                      fit: BoxFit.fitHeight,
-                                      height: 17 * a,
+                                width: 39 * a,
+                                height: 14 * a,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Icon(
+                                      user.gender!.toLowerCase() == 'male' ? Icons.male : Icons.female,
+                                      color: user.gender!.toLowerCase() == 'male' ? Colors.indigo : Colors.pink,
+                                      size: 14 * a,
                                     ),
-                                  ),
-                              )
-                          ),
-                          userLevelTag(user.level??0,14 * a,viewZero: true),
-                          SizedBox(width: 9*a),
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10 * a),
-                              color: Colors.white,
-                            ),
-                            width: 39 * a,
-                            height: 14 * a,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Icon(
-                                  user.gender!.toLowerCase() == 'male' ? Icons.male : Icons.female,
-                                  color: user.gender!.toLowerCase() == 'male' ? Colors.indigo : Colors.pink,
-                                  size: 14 * a,
+                                    Text(AgeCalculator.calculateAge(user.dob??DateTime.now()).toString(),style: TextStyle(fontSize: 11 * b),)
+                                  ],
                                 ),
-                                Text(AgeCalculator.calculateAge(user.dob??DateTime.now()).toString(),style: TextStyle(fontSize: 11 * b),)
-                              ],
-                            ),
+                              ),
+                              SizedBox(width: 9*a),
+                              SizedBox(
+                                  width: 25 * a,
+                                  height: 14 * a,
+                                  child: Image.asset("assets/flag.png")),
+                            ],
                           ),
-                          SizedBox(width: 9*a),
-                          SizedBox(
-                              width: 25 * a,
-                              height: 14 * a,
-                              child: Image.asset("assets/flag.png")),
+                          SizedBox(height: 16*a),
+                          Container(
+                              width: double.infinity,
+                              height: 40 * a,
+                              padding: EdgeInsets.symmetric(horizontal: 8*a),
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    columnPairWidget(user.followers?.length.toString()??'0','Followers',onTap: viewUsersByIds(user.followers)),
+                                    columnPairWidget(user.following?.length.toString()??'0','Following',onTap: viewUsersByIds(user.following)),
+                                    columnPairWidget(user.likes?.toString()??'0','Likes'),
+                                    columnPairWidget(user.views?.toString()??'0','Visitors'),
+                                  ])
+                          ),
+                          SizedBox(height: 8*a),
                         ],
                       ),
-                      SizedBox(height: 16*a),
-                      Container(
-                          width: double.infinity,
-                          height: 40 * a,
-                          padding: EdgeInsets.symmetric(horizontal: 8*a),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                columnPairWidget(user.followers?.length.toString()??'0','Followers',onTap: viewUsersByIds(user.followers)),
-                                columnPairWidget(user.following?.length.toString()??'0','Following',onTap: viewUsersByIds(user.following)),
-                                columnPairWidget(user.likes?.toString()??'0','Likes'),
-                                columnPairWidget(user.views?.toString()??'0','Visitors'),
-                              ])
-                      ),
-                      SizedBox(height: 8*a),
-                    ],
+                    )
+                  ],
+                ),
+              ),
+              if(!isMine && user.isActiveLive == true)Positioned(
+                top: 100*a,
+                right: 0,
+                child: InkWell(
+                  onTap: () async {
+                    setState(() => joining = true);
+                    final room = await Provider.of<RoomsProvider>(context,listen: false).getRoomById(user.liveHotlist!.first);
+                    setState(() => joining = false);
+                    if(room!=null) Get.dialog(RoomPreLoadingDialog(room: room),barrierDismissible: false);
+                  },
+                  child: Container(
+                    height: 30,
+                    width: 90,
+                    decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.horizontal(left: Radius.circular(9))
+                    ),
+                    alignment: Alignment.center,
+                    child: Row(
+                      children: [
+                        const Spacer(),
+                        if(!joining)Text('In Room',style: TextStyle(color: Colors.black.withOpacity(0.7))),
+                        if(joining)const SizedBox(height: 15, width: 15,child: CircularProgressIndicator(color: Colors.deepOrangeAccent,strokeWidth: 3)),
+                        const Spacer(),
+                        const SizedBox(height: 15, width: 20, child: WaveAnimation(color: Colors.deepOrangeAccent)),
+                        const SizedBox(width: 6)
+                      ],
+                    ),
                   ),
-                )
-              ],
-            ),
+                ),
+              )
+            ],
           ),
           Expanded(
             child:ContainedTabBarView(

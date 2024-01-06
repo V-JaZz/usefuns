@@ -35,8 +35,8 @@ class _CreateRoomState extends State<CreateRoom> {
         sourcePath: imagePaths!,
         aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
         compressFormat: ImageCompressFormat.jpg,
-        maxHeight: 250,
-        maxWidth: 250,
+        maxHeight: 200,
+        maxWidth: 200,
         uiSettings: [
           AndroidUiSettings(
               toolbarTitle: 'Cropper',

@@ -170,7 +170,7 @@ class _HostDataTableState extends State<HostDataTable> {
         style: const TextStyle(fontSize: 14.0),
       ),
       FutureBuilder(
-        future: Provider.of<RoomsProvider>(context,listen: false).getRoom(id),
+        future: Provider.of<RoomsProvider>(context,listen: false).getRoomByRoomId(id),
         builder: (context, snapshot) {
           if(snapshot.connectionState == ConnectionState.waiting){
             return const SizedBox(

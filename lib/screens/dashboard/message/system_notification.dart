@@ -67,9 +67,9 @@ class System extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "${m.message}, your request will be send to admins and once approved you are ready to earn target based reward and salary",
-                                maxLines: 10,
+                                "${m.message}, your request will be send to admins and once approved you are ready to earn target based reward and salary.\nTerms and Conditions :  If you join hosting then your ID will come under the agency, after that agency will not allow your ID to leave as long as the agency has you.",
                                 overflow: TextOverflow.ellipsis,
+                                maxLines: 50,
                                 style: SafeGoogleFont('Poppins',
                                     fontSize: 10 * b,
                                     height: 1.5 * b / a,
@@ -77,7 +77,7 @@ class System extends StatelessWidget {
                                     color: Colors.black.withOpacity(0.54)),
                               ),
                               Text(
-                                '5 hours ago',
+                                '${m.createdAt}',
                                 maxLines: 10,
                                 overflow: TextOverflow.ellipsis,
                                 style: SafeGoogleFont(

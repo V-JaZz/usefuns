@@ -863,9 +863,7 @@ Container viewUsersByIds(List<String>? list){
                           if (snapshot.hasError ||
                               snapshot.data?.status == 0 ||
                               snapshot.data?.data == null) {
-                            return ListTile(
-                              title: Text('Error: ${snapshot.error}'),
-                            );
+                            return const SizedBox.shrink();
                           } else {
                             final user = snapshot.data!.data;
 

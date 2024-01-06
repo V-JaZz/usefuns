@@ -3,12 +3,12 @@ import 'package:live_app/screens/room/bottomsheet/lucky_wheel.dart';
 import 'package:live_app/screens/room/bottomsheet/share.dart';
 import '../../../data/model/body/zego_stream_model.dart';
 import '../../../data/model/response/rooms_model.dart';
+import '../../dashboard/message/notifications.dart';
 import 'admins.dart';
 import 'income_expense_tabs.dart';
 import 'bottom_more.dart';
 import 'games.dart';
 import 'invite_room.dart';
-import 'notify.dart';
 import 'send_gifts.dart';
 import 'contribution.dart';
 import 'active_users.dart';
@@ -266,7 +266,7 @@ class LiveRoomBottomSheets {
       isDismissible: true,
       context: context,
       builder: (BuildContext context) {
-        return NotificationsBottomSheet();
+        return const Notifications(showAppBar: false);
       },
     );
   }

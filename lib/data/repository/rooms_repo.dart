@@ -167,9 +167,29 @@ class RoomsRepo {
     }
   }
 
-  Future<http.Response> getRoom(String id) async {
+  Future<http.Response> getRoomByRoomId(String id) async {
     try {
       http.Response response = await _httpClient.get('room/getbyRoomId/$id');
+      return response;
+    } catch (e) {
+      // return await getRoom(id);
+      rethrow;
+    }
+  }
+
+  Future<http.Response> getRoomById(String id) async {
+    try {
+      http.Response response = await _httpClient.get('room/getbyid/$id');
+      return response;
+    } catch (e) {
+      // return await getRoom(id);
+      rethrow;
+    }
+  }
+
+  Future<http.Response> getBannerList() async {
+    try {
+      http.Response response = await _httpClient.get('admin/banner/getall');
       return response;
     } catch (e) {
       // return await getRoom(id);

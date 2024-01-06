@@ -30,6 +30,7 @@ class GiftsRepo {
       String senderId,
       String receiverId,
       String giftId,
+      int count,
       String roomId
       ) async {
     try {
@@ -39,6 +40,7 @@ class GiftsRepo {
           "sender": senderId,
           "receiver": receiverId,
           "giftId": giftId,
+          "count":count,
           "roomId": roomId
         }
       );

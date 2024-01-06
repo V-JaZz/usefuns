@@ -37,8 +37,8 @@ class _RoomSettingsState extends State<RoomSettings> {
       await ImageCropper().cropImage(
         sourcePath: imagePaths!,
         compressFormat: ImageCompressFormat.jpg,
-        maxHeight: 250,
-        maxWidth: 250,
+        maxHeight: 200,
+        maxWidth: 200,
         aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
         uiSettings: [
           AndroidUiSettings(

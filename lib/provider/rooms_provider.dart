@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:live_app/utils/constants.dart';
 import '../data/datasource/local/sharedpreferences/storage_service.dart';
+import '../data/model/response/bannner_model.dart';
 import '../data/model/response/common_model.dart';
 import '../data/model/response/create_room_model.dart';
 import '../data/model/response/rooms_model.dart';
@@ -13,6 +14,8 @@ class RoomsProvider with ChangeNotifier {
   final RoomsRepo _roomsRepo = RoomsRepo();
 
   RoomsModel? _myRoom;
+  List<BannerData> bannerList = [];
+
   RoomsModel? get myRoom {
     if(_myRoom == null) getAllMine();
     return _myRoom;
@@ -40,13 +43,30 @@ class RoomsProvider with ChangeNotifier {
     return responseModel;
   }
 
-  Future<Room?> getRoom(String roomId) async {
-    final apiResponse = await _roomsRepo.getRoom(roomId);
+  Future<Room?> getRoomByRoomId(String roomId) async {
+    final apiResponse = await _roomsRepo.getRoomByRoomId(roomId);
     Room? responseModel;
     if (apiResponse.statusCode == 200) {
       responseModel = Room.fromJson(jsonDecode(apiResponse.body)['data']);
     }
     return responseModel;
+  }
+
+  Future<Room?> getRoomById(String id) async {
+    final apiResponse = await _roomsRepo.getRoomById(id);
+    Room? responseModel;
+    if (apiResponse.statusCode == 200) {
+      responseModel = Room.fromJson(jsonDecode(apiResponse.body)['data']);
+    }
+    return responseModel;
+  }
+
+  Future<void> getBannerList() async {
+    final apiResponse = await _roomsRepo.getBannerList();
+    if (apiResponse.statusCode == 200) {
+      bannerList = bannerDataModelFromJson(apiResponse.body).data??[];
+      notifyListeners();
+    }
   }
 
   Future<Room?> getAdmins(String roomId) async {
@@ -74,6 +94,7 @@ class RoomsProvider with ChangeNotifier {
     CommonModel responseModel;
     if (apiResponse.statusCode == 200) {
       responseModel = commonModelFromJson(apiResponse.body);
+      getAllMine();
     } else {
       responseModel = CommonModel(status: 0,message: apiResponse.reasonPhrase);
     }

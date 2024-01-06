@@ -115,7 +115,7 @@ class StartState extends State<SplashScreen> {
                         if (await canLaunchUrl(Uri.parse(Constants.updateUrl))) {
                         await launchUrl(Uri.parse(Constants.updateUrl), mode: LaunchMode.externalApplication);
                         } else {
-                        throw 'Could not launch $Constants.redirectUrl';
+                        throw 'Could not launch ${Constants.updateUrl}';
                         }
                       },
                       child: Padding(

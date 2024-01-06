@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:live_app/data/datasource/local/sharedpreferences/storage_service.dart';
 import 'package:live_app/provider/moments_provider.dart';
+import 'package:live_app/provider/rooms_provider.dart';
 import 'package:live_app/screens/dashboard/home/home.dart';
 import 'package:live_app/screens/room/live_room.dart';
 import 'package:live_app/utils/common_widgets.dart';
@@ -43,6 +44,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     timer = Timer.periodic(const Duration(seconds: 60), (timer) {
       _fetchUserData(refresh: false);
     });
+    Provider.of<RoomsProvider>(context, listen: false).getBannerList();
     super.initState();
   }
 

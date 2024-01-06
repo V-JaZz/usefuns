@@ -193,10 +193,23 @@ class _TreasuresState extends State<Treasures> {
     }
   ];
   int selectedBox = 0;
+  ScrollController sc = ScrollController();
   @override
   void initState() {
     int level = Provider.of<ZegoRoomProvider>(context,listen: false).room?.treasureBoxLevel??0;
     selectedBox = level==5 ?5-1 :level;
+
+    if(selectedBox>1){
+      Future.delayed(const Duration(milliseconds: 500),(){
+        double position = 0.0;
+        if(selectedBox == 2) {
+          position = sc.position.maxScrollExtent/2;
+        } else if(selectedBox >2) {
+          position = sc.position.maxScrollExtent;
+        }
+        sc.animateTo(position, duration: const Duration(milliseconds: 500), curve: Curves.decelerate);
+      });
+    }
     super.initState();
   }
   @override
@@ -281,6 +294,7 @@ class _TreasuresState extends State<Treasures> {
         ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
+          controller: sc,
           child: SizedBox(
             height: 68 * a,
             width: 95 * a * 5,
@@ -311,6 +325,13 @@ class _TreasuresState extends State<Treasures> {
                                   onTap: () {
                                     selectedBox = i;
                                     setState(() {});
+                                    double position = 0.0;
+                                    if(selectedBox == 2) {
+                                      position = sc.position.maxScrollExtent/2;
+                                    } else if(selectedBox >2) {
+                                      position = sc.position.maxScrollExtent;
+                                    }
+                                    sc.animateTo(position, duration: const Duration(milliseconds: 500), curve: Curves.decelerate);
                                   },
                                   child: Image.asset(
                                     boxes[i]['image'],

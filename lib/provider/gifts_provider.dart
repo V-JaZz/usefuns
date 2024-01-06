@@ -37,14 +37,11 @@ class GiftsProvider with ChangeNotifier {
   sendGift(String senderId, List<String> receiverIds, String giftId, int count,
       String roomId, int giftPrice) async {
     for (String receiverId in receiverIds) {
-      do {
-        await _giftsRepo.sendGift(senderId, receiverId, giftId, roomId);
-        await _giftsRepo.updateTBoxLevel(roomId, giftPrice);
+        await _giftsRepo.sendGift(senderId, receiverId, giftId,count, roomId);
+        await _giftsRepo.updateTBoxLevel(roomId, giftPrice*count);
         Provider.of<ZegoRoomProvider>(Get.context!, listen: false).updateTreasureBox();
-        --count;
-      } while (count > 0);
+        Provider.of<UserDataProvider>(Get.context!, listen: false).getUser(refresh: false);
     }
-    await Provider.of<UserDataProvider>(Get.context!, listen: false).getUser(refresh: false);
   }
 
   Future<void> getAllContribution(String roomId) async {
@@ -52,7 +49,6 @@ class GiftsProvider with ChangeNotifier {
     if (apiResponse.statusCode == 200) {
       RoomGiftHistoryModel model = roomGiftHistoryModelFromJson(apiResponse.body);
       if (model.status == 1) {
-
         List<GiftHistory> todayContribution = [];
         List<GiftHistory> sevenDaysContribution = [];
         for(GiftHistory gh in model.data!){
@@ -63,7 +59,6 @@ class GiftsProvider with ChangeNotifier {
             sevenDaysContribution.add(gh);
           }
         }
-
         final mapToday = groupBy(
           todayContribution,
           (GiftHistory gh) => gh.sender!,

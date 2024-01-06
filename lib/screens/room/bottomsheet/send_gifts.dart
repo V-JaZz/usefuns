@@ -245,8 +245,8 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                               ),
                             ),
                             Container(
-                              width: 127.79 * a,
-                              height: 28.56 * a,
+                              width: 118 * a,
+                              height: 27 * a,
                               decoration: BoxDecoration(
                                 color: const Color(0xff1877f2),
                                 borderRadius: BorderRadius.circular(3 * a),
@@ -255,7 +255,7 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Container(
-                                    width: 63 * a,
+                                    width: 52 * a,
                                     margin: EdgeInsets.all(1 * a),
                                     padding:
                                         EdgeInsets.symmetric(horizontal: 6 * a),
@@ -283,7 +283,6 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-
                                       final user =
                                           Provider.of<UserDataProvider>(context,
                                                   listen: false)
@@ -326,7 +325,8 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                                       }
                                     },
                                     child: Container(
-                                      margin: EdgeInsets.fromLTRB(
+                                      color: Colors.transparent,
+                                      padding: EdgeInsets.fromLTRB(
                                           15 * a, 0 * a, 15 * a, 0 * a),
                                       child: Text(
                                         'SEND',

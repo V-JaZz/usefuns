@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:get/get.dart';
 import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../provider/rooms_provider.dart';
 import '../../../utils/common_widgets.dart';
 import '../../room/widget/pre_loading_dailog.dart';
@@ -39,6 +42,7 @@ class _HomeState extends State<Home> {
 
     return DefaultTabController(
       length: 3,
+      initialIndex: 1,
       child: Scaffold(
         backgroundColor: Colors.white,
         resizeToAvoidBottomInset: true,
@@ -266,7 +270,7 @@ class _HomeState extends State<Home> {
                             ),
                           ),
                         );
-                      };
+                      }
                     },
                   ),
                   SizedBox(height: 10 * a),
@@ -438,13 +442,87 @@ class _HomeState extends State<Home> {
                 child: Column(
                   children: [
                     SizedBox(height: 20*a),
+                    // Padding(
+                    //   padding: EdgeInsets.symmetric(horizontal: 10*a),
+                    //   child: Image.asset(
+                    //     "assets/decoration/reward_program.png",
+                    //     width: double.infinity,
+                    //     height: 120*a,
+                    //     fit: BoxFit.contain,
+                    //   ),
+                    // ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10*a),
-                      child: Image.asset(
-                        "assets/decoration/reward_program.png",
-                        width: double.infinity,
-                        height: 120*a,
-                        fit: BoxFit.contain,
+                      child: Consumer<RoomsProvider>(
+                        builder: (context, value, child) {
+                          return value.bannerList.isEmpty
+                              ? Shimmer.fromColors(
+                            baseColor: const Color.fromARGB(
+                                248, 188, 187, 187),
+                            highlightColor: Colors.white,
+                            period: const Duration(seconds: 1),
+                                child: Container(
+                                height: Get.width/3,
+                                width: Get.width,
+                            color: Colors.white),
+                              )
+                              : Container(
+                            height: Get.width/3,
+                            width: Get.width,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(60*a),
+                            ),
+                            child: ImageSlideshow(
+                              /// Width of the [ImageSlideshow].
+                              width: Get.width,
+
+                              /// Height of the [ImageSlideshow].
+                              height: Get.width/3,
+
+                              /// The page to show when first creating the [ImageSlideshow].
+                              initialPage: 0,
+
+                              /// The color to paint the indicator.
+                              indicatorColor: Theme.of(context).primaryColor,
+
+                              /// The color to paint behind th indicator.
+                              indicatorBackgroundColor: Colors.grey,
+
+                              /// Auto scroll interval.
+                              /// Do not auto scroll with null or 0.
+                              autoPlayInterval: 3000,
+
+                              /// Loops back to first slide.
+                              isLoop: true,
+
+                              /// The widgets to display in the [ImageSlideshow].
+                              /// Add the sample image file into the images folder
+                              children: value.bannerList.isNotEmpty
+                                  ? List.generate(value.bannerList.length, (index) {
+                                return ClipRRect(
+                                  borderRadius: BorderRadius.circular(20*a),
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      String link = value.bannerList[index].link!;
+                                      if (await canLaunchUrl(Uri.parse(link))) {
+                                      await launchUrl(Uri.parse(link), mode: LaunchMode.inAppWebView);
+                                      } else {
+                                      throw 'Could not launch $link';
+                                      }
+                                    },
+                                    child: Image.network(
+                                      value.bannerList[index].images!.isEmpty
+                                          ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXia6hKP5CZMdeV1ti5ayWkDB82w-QFPm8ow&usqp=CAU'
+                                          : value.bannerList[index].images!.first,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                );
+                              })
+                                  : [],
+                            ),
+                          );
+                        },
                       ),
                     ),
                     SizedBox(

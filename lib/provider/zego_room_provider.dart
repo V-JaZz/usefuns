@@ -556,7 +556,8 @@ class ZegoRoomProvider with ChangeNotifier {
             room = room?.copyWith(usedDaimonds: data.usedDaimonds, totalDiamonds: data.totalDiamonds);
             await Get.dialog(
                 UnlockTreasureBox(level: room!.treasureBoxLevel!),
-                barrierDismissible: false
+                barrierDismissible: false,
+              barrierColor: Colors.transparent
             );
           }while(room!.treasureBoxLevel!<newLevel);
         }
