@@ -254,22 +254,21 @@ class RoomsRepo {
     }
   }
 
-  Future<http.Response> getAllPopular() async {
+  Future<http.Response> getAllPopular(int page, int limit) async {
     try {
-      http.Response response = await _httpClient.get('room/getallPopular');
+      http.Response response = await _httpClient.get('room/getallPopular?page=$page&limit=$limit');
       return response;
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<http.Response> getAllNew() async {
+  Future<http.Response> getAllNew(int page, int limit) async {
     try {
-      http.Response response = await _httpClient.get('room/getallNew');
+      http.Response response = await _httpClient.get('room/getallNew?page=$page&limit=$limit');
       return response;
     } catch (e) {
       rethrow;
     }
   }
-
 }

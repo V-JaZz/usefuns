@@ -29,7 +29,6 @@ class UserDataProvider with ChangeNotifier {
       if(responseModel.status == 1 && id==null){
         userData= responseModel;
         ZegoConfig.instance.userID = userData!.data!.id!;
-        ZegoConfig.instance.streamID = userData!.data!.id!;
         ZegoConfig.instance.userName = userData!.data!.name!;
       }else if(id==null){
         storageService.clearStorage();

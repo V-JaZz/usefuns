@@ -149,7 +149,7 @@ class _GroupMembersBottomSheetState extends State<GroupMembersBottomSheet> {
                         padding: EdgeInsets.fromLTRB(
                             4 * a, 6 * a, 0 * a, 10 * a),
                         height: double.infinity,
-                        child: widget.owner.trim() == ZegoConfig.instance.streamID?//if viewer is owner
+                        child: widget.owner.trim() == ZegoConfig.instance.userID?//if viewer is owner
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [

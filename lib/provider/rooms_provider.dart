@@ -14,8 +14,6 @@ class RoomsProvider with ChangeNotifier {
   final RoomsRepo _roomsRepo = RoomsRepo();
 
   RoomsModel? _myRoom;
-  List<BannerData> bannerList = [];
-
   RoomsModel? get myRoom {
     if(_myRoom == null) getAllMine();
     return _myRoom;
@@ -24,7 +22,8 @@ class RoomsProvider with ChangeNotifier {
     _myRoom = value;
     notifyListeners();
   }
-
+  final apiListingLimit = 10;
+  List<BannerData> bannerList = [];
   bool creatingRoom = false;
 
   Future<CreateRoomModel> create(String name, String? path) async {
@@ -226,25 +225,27 @@ class RoomsProvider with ChangeNotifier {
     return responseModel;
   }
 
-  Future<RoomsModel> getAllPopular() async {
-    final apiResponse = await _roomsRepo.getAllPopular();
+  Future<List<Room>?> getAllPopular(int page) async {
+    final apiResponse = await _roomsRepo.getAllPopular(page, apiListingLimit);
     RoomsModel responseModel;
     if (apiResponse.statusCode == 200) {
       responseModel = roomsModelFromJson(apiResponse.body);
-    } else {
-      responseModel = RoomsModel(status: 0,message: apiResponse.reasonPhrase);
+      if(responseModel.status == 1){
+        return responseModel.data??[];
+      }
     }
-    return responseModel;
+    return null;
   }
 
-  Future<RoomsModel> getAllNew() async {
-    final apiResponse = await _roomsRepo.getAllNew();
+  Future<List<Room>?> getAllNew(int page) async {
+    final apiResponse = await _roomsRepo.getAllNew(page, apiListingLimit);
     RoomsModel responseModel;
     if (apiResponse.statusCode == 200) {
       responseModel = roomsModelFromJson(apiResponse.body);
-    } else {
-      responseModel = RoomsModel(status: 0,message: apiResponse.reasonPhrase);
+      if(responseModel.status == 1){
+        return responseModel.data??[];
+      }
     }
-    return responseModel;
+    return null;
   }
 }

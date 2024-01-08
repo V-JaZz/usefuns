@@ -30,7 +30,7 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
   @override
   void initState() {
     Provider.of<GiftsProvider>(context, listen: false).getAll();
-    String? zpu = Provider.of<ZegoRoomProvider>(context,listen: false).roomStreamList.firstWhereOrNull((e) => e.streamId != ZegoConfig.instance.streamID)?.userName;
+    String? zpu = Provider.of<ZegoRoomProvider>(context,listen: false).roomStreamList.firstWhereOrNull((e) => e.streamId != ZegoConfig.instance.userID)?.userName;
     print('zpu $zpu');
     countController.text = '1';
     if (widget.selection != null) {
@@ -493,7 +493,7 @@ class CheckboxListTileWidgetState extends State<CheckboxListTileWidget> {
       builder: (context, p, child) {
         List<ZegoStreamExtended> list = p.roomStreamList
             .where(
-                (element) => element.streamId != ZegoConfig.instance.streamID)
+                (element) => element.streamId != ZegoConfig.instance.userID)
             .toList();
         return list.isNotEmpty
             ? ListView(

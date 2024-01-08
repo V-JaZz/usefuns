@@ -30,7 +30,6 @@ class ZegoConfig {
   bool enablePlatformView = false;
 
   String userID = "";
-  String streamID = "";
   String userName = "";
 
   bool isPreviewMirror = true;

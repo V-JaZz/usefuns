@@ -91,7 +91,7 @@ class ZegoRoomProvider with ChangeNotifier {
   bool get isMicOn => _isMicOn;
   set isMicOn(bool value) {
     _isMicOn = value;
-    roomStreamList.where((e) => e.streamId == ZegoConfig.instance.streamID).first.micOn = value;
+    roomStreamList.where((e) => e.streamId == ZegoConfig.instance.userID).first.micOn = value;
     notifyListeners();
     ZegoExpressEngine.instance.muteMicrophone(!value);
   }
@@ -133,10 +133,10 @@ class ZegoRoomProvider with ChangeNotifier {
   Future<void> startPublishingStream(int seat) async {
     if(roomStreamList.firstWhereOrNull((e) => e.seat == seat) == null) {
       final user = Provider.of<UserDataProvider>(Get.context!,listen: false).userData;
-      final extraInfo = ZegoStreamExtended(vip: 0,id: user?.data?.userId ,owner: isOwner,age: AgeCalculator.calculateAge(user?.data?.dob??DateTime.now()),followers: user?.data?.followers?.length??0,gender: user?.data?.gender,level: user?.data?.level,streamId: ZegoConfig.instance.streamID,userName: ZegoConfig.instance.userName,image: user!.data!.images!.isNotEmpty ? (user.data?.images?.first??''):'',seat: seat,micOn: _isMicOn&&isMicrophonePermissionGranted,frame: userFrameViewPath(user.data?.frame));
+      final extraInfo = ZegoStreamExtended(vip: 0,id: user?.data?.userId ,owner: isOwner,age: AgeCalculator.calculateAge(user?.data?.dob??DateTime.now()),followers: user?.data?.followers?.length??0,gender: user?.data?.gender,level: user?.data?.level,streamId: ZegoConfig.instance.userID,userName: ZegoConfig.instance.userName,image: user!.data!.images!.isNotEmpty ? (user.data?.images?.first??''):'',seat: seat,micOn: _isMicOn&&isMicrophonePermissionGranted,frame: userFrameViewPath(user.data?.frame));
       await ZegoExpressEngine.instance.setStreamExtraInfo(zegoStreamExtendedToJson(extraInfo));
-      await ZegoExpressEngine.instance.startPublishingStream(ZegoConfig.instance.streamID);
-      log('📤 Start publishing stream, streamID: ${ZegoConfig.instance.streamID}');
+      await ZegoExpressEngine.instance.startPublishingStream(ZegoConfig.instance.userID);
+      log('📤 Start publishing stream, streamID: ${ZegoConfig.instance.userID}');
       roomStreamList.add(extraInfo);
       onSeat=true;
       notifyListeners();
@@ -146,7 +146,7 @@ class ZegoRoomProvider with ChangeNotifier {
   }
   Future<void> stopPublishingStream() async {
     await ZegoExpressEngine.instance.stopPublishingStream();
-    roomStreamList.removeWhere((element) => element.streamId == ZegoConfig.instance.streamID);
+    roomStreamList.removeWhere((element) => element.streamId == ZegoConfig.instance.userID);
     onSeat=false;
     notifyListeners();
   }
@@ -238,23 +238,23 @@ class ZegoRoomProvider with ChangeNotifier {
             user.points = 0;
           }
         }else if(command == ZegoConfig.instance.roomMuteSeatKey){
-          roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.streamID).micPermit = false;
+          roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.userID).micPermit = false;
           showCustomSnackBar('Muted by ${fromUser.userName}', Get.context!,isToaster: true);
           notifyStreamExtraInfoUpdate();
           isMicOn = false;
         }else if(command == ZegoConfig.instance.roomUnMuteSeatKey){
-          roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.streamID).micPermit = true;
+          roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.userID).micPermit = true;
           showCustomSnackBar('Unmuted by ${fromUser.userName}', Get.context!,isToaster: true,isError: false);
           notifyStreamExtraInfoUpdate();
         }else if(command == ZegoConfig.instance.roomLockSeatKey){
           stopPublishingStream();
           showCustomSnackBar('Locked by ${fromUser.userName}', Get.context!,isToaster: true);
         }else if(command == ZegoConfig.instance.roomBanChatKey){
-          roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.streamID).chatBan = true;
+          roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.userID).chatBan = true;
           showCustomSnackBar('Banned Chat by ${fromUser.userName}', Get.context!,isToaster: true);
           notifyStreamExtraInfoUpdate();
         }else if(command == ZegoConfig.instance.roomUnBanChatKey){
-          roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.streamID).chatBan = false;
+          roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.userID).chatBan = false;
           showCustomSnackBar('Unbanned Chat by ${fromUser.userName}', Get.context!,isToaster: true,isError: false);
           notifyStreamExtraInfoUpdate();
         }else if(command == ZegoConfig.instance.roomKickSeatKey){
@@ -289,7 +289,7 @@ class ZegoRoomProvider with ChangeNotifier {
           updateRoomForeground(model.gift?.giftPath??'');
           if(model.gift?.toId == ZegoConfig.instance.userID){
             int points = (((model.gift?.count??1)*(model.gift?.giftPrice??1))*3).toInt();
-            roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.streamID).points = (roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.streamID).points??0)+points;
+            roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.userID).points = (roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.userID).points??0)+points;
             notifyStreamExtraInfoUpdate();
           }
         }
@@ -356,7 +356,7 @@ class ZegoRoomProvider with ChangeNotifier {
   }
   //notify stream user data update
   void notifyStreamExtraInfoUpdate(){
-    final extraInfo = roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.streamID);
+    final extraInfo = roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.userID);
     ZegoExpressEngine.instance.setStreamExtraInfo(zegoStreamExtendedToJson(extraInfo));
   }
   void updateTotalSeats(int total) {
@@ -437,7 +437,7 @@ class ZegoRoomProvider with ChangeNotifier {
   }
   void updateSeat(int newSeat){
     if(roomStreamList.firstWhereOrNull((e) => e.seat == newSeat) == null) {
-      roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.streamID).seat = newSeat;
+      roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.userID).seat = newSeat;
       notifyStreamExtraInfoUpdate();
       notifyListeners();
     }else{
@@ -475,7 +475,7 @@ class ZegoRoomProvider with ChangeNotifier {
   //broadcast and barrage methods
   void sendBroadcastMessage(String message) {
     final user = Provider.of<UserDataProvider>(Get.context!,listen: false).userData;
-    String body = zegoBroadcastModelToJson(ZegoBroadcastModel(message: message,image: user!.data!.images!.isNotEmpty? user.data!.images!.first:null, level:user.data!.level,type: "message",tags: [if(isOwner)'Owner',if(room!.admin!.contains(ZegoConfig.instance.streamID))'Admin']));
+    String body = zegoBroadcastModelToJson(ZegoBroadcastModel(message: message,image: user!.data!.images!.isNotEmpty? user.data!.images!.first:null, level:user.data!.level,type: "message",tags: [if(isOwner)'Owner',if(room!.admin!.contains(ZegoConfig.instance.userID))'Admin']));
     ZegoExpressEngine.instance.sendBroadcastMessage(roomID, body);
     broadcastMessageList?.enqueue(ZegoBroadcastMessageInfo(body,0,0,ZegoUser(ZegoConfig.instance.userID,ZegoConfig.instance.userName)));
     notifyListeners();
@@ -486,7 +486,7 @@ class ZegoRoomProvider with ChangeNotifier {
   Future<void> sendBroadcastGift(List<String> toName, String thumbnailPath, String giftPath, int giftPrice, int count) async {
     for (var receiverName in toName) {
       final user = Provider.of<UserDataProvider>(Get.context!,listen: false).userData;
-      String body = zegoBroadcastModelToJson(ZegoBroadcastModel(image: user!.data!.images!.isNotEmpty? user.data!.images!.first:null, level:user.data!.level,type: "gift",gift: ZegoGift(toName: receiverName,count: count,thumbnailPath: thumbnailPath, giftPath: giftPath, toId: roomUsersList.firstWhere((e) => e.userName == receiverName).userID,giftPrice: giftPrice),tags: [if(isOwner)'Owner',if(room!.admin!.contains(ZegoConfig.instance.streamID))'Admin']));
+      String body = zegoBroadcastModelToJson(ZegoBroadcastModel(image: user!.data!.images!.isNotEmpty? user.data!.images!.first:null, level:user.data!.level,type: "gift",gift: ZegoGift(toName: receiverName,count: count,thumbnailPath: thumbnailPath, giftPath: giftPath, toId: roomUsersList.firstWhere((e) => e.userName == receiverName).userID,giftPrice: giftPrice),tags: [if(isOwner)'Owner',if(room!.admin!.contains(ZegoConfig.instance.userID))'Admin']));
       ZegoExpressEngine.instance.sendBroadcastMessage(roomID, body);
       broadcastMessageList?.enqueue(ZegoBroadcastMessageInfo(body,0,0,ZegoUser(ZegoConfig.instance.userID,ZegoConfig.instance.userName)));
       notifyListeners();

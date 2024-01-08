@@ -465,10 +465,10 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                     if(user!=null) {
                                       return GestureDetector(
                                     onTap: () {
-                                      if (user.streamId == ZegoConfig.instance.streamID) {
+                                      if (user.streamId == ZegoConfig.instance.userID) {
                                         bs.showMyProfileSeatBottomSheet(user);
                                       } else {
-                                          bs.showOthersProfileSeatBottomSheet(user: user, owner: value.isOwner, admin: value.room!.admin!.contains(ZegoConfig.instance.streamID));
+                                          bs.showOthersProfileSeatBottomSheet(user: user, owner: value.isOwner, admin: value.room!.admin!.contains(ZegoConfig.instance.userID));
                                       }
                                     },
                                     child: Column(
@@ -564,7 +564,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                     }
                                     return GestureDetector(
                                       onTap: () {
-                                          if(value.isOwner || value.room!.admin!.contains(ZegoConfig.instance.streamID)) {
+                                          if(value.isOwner || value.room!.admin!.contains(ZegoConfig.instance.userID)) {
                                             bs.showSeatOptionsBottomSheet(i);
                                           }else if(value.onSeat && !value.zegoRoom!.lockedSeats.contains(i)){
                                             value.updateSeat(i);
@@ -870,7 +870,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                             margin: EdgeInsets.only(bottom: 6 * a),
                                             child: GestureDetector(
                                               onTap: () async {
-                                                final myId = ZegoConfig.instance.streamID;
+                                                final myId = ZegoConfig.instance.userID;
                                                 if(message.fromUser.userID == myId){
                                                   Get.to(()=>const UserProfile());
                                                 }else{
@@ -1105,7 +1105,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                 backgroundColor:zegoRoomProvider.isMicOn && value.isMicrophonePermissionGranted?null: Colors.white12,
                               ),
                               onPressed: () {
-                                if(value.roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.streamID).micPermit == false){
+                                if(value.roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.userID).micPermit == false){
                                   showCustomSnackBar('Muted by Admin/Owner', context,isToaster: true);
                                 }else if(!value.isMicrophonePermissionGranted){
                                   requestMicrophonePermission();

@@ -282,7 +282,7 @@ class _InviteUserBottomSheetState extends State<InviteUserBottomSheet> {
   List<ZegoUser> reorderList(
       {required String ownerId, required List<String> adminIds, required List<ZegoUser> activeNotOnSeat}) {
     //Remove the viewer
-    activeNotOnSeat.removeWhere((e) => e.userID == ZegoConfig.instance.streamID);
+    activeNotOnSeat.removeWhere((e) => e.userID == ZegoConfig.instance.userID);
 
     // Reordering the list
     List<ZegoUser> reorderedUsers = [];

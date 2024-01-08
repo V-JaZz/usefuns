@@ -169,7 +169,7 @@ class _ActiveUsersBottomSheetState extends State<ActiveUsersBottomSheet> {
                                     children: [
                                       InkWell(
                                         onTap: () async {
-                                          final myId = ZegoConfig.instance.streamID;
+                                          final myId = ZegoConfig.instance.userID;
                                           if(user.id == myId){
                                             Get.to(()=>const UserProfile());
                                             return;
@@ -309,13 +309,13 @@ class _ActiveUsersBottomSheetState extends State<ActiveUsersBottomSheet> {
                                         //if viewer is owner or admin
                                         child: (widget.ownerId.trim() ==
                                                         ZegoConfig.instance
-                                                            .streamID ||
+                                                            .userID ||
                                                     value.room!.admin!
                                                         .contains(ZegoConfig
-                                                            .instance.streamID
+                                                            .instance.userID
                                                             .trim())) &&
                                                 user.id! !=
-                                                    ZegoConfig.instance.streamID
+                                                    ZegoConfig.instance.userID
                                             ? Row(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.center,
@@ -328,7 +328,7 @@ class _ActiveUsersBottomSheetState extends State<ActiveUsersBottomSheet> {
                                                                   .trim()) &&
                                                       widget.ownerId.trim() ==
                                                           ZegoConfig.instance
-                                                              .streamID)
+                                                              .userID)
                                                     InkWell(
                                                       onTap: () =>
                                                           _showConfirmationDialog(
