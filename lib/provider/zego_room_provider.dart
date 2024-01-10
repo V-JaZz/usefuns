@@ -38,26 +38,26 @@ class ZegoRoomProvider with ChangeNotifier {
 
   // zego dispose
   Future<void> destroy() async {
-    Provider.of<RoomsProvider>(Get.context!,listen: false).removeRoomUser(_room!.id!);
+    await Provider.of<RoomsProvider>(Get.context!,listen: false).removeRoomUser(_room!.id!);
     await logoutRoom();
-    destroyEngine();
     clearZegoEventCallback();
+    destroyEngine();
+    heartBeat?.cancel();
+    triggerTimer?.cancel();
+    broadcastMessageList?.clear();
+    foregroundSvgaController?.dispose();
     roomUsersList = [];
     roomStreamList = [];
-    broadcastMessageList?.clear();
     activeCount = 0;
     onSeat=false;
     isOwner = false;
     _room= null;
     zegoRoom = null;
-    foregroundSvgaController?.dispose();
     foregroundSvgaController = null;
     backgroundImage = null;
     foregroundImage = null;
     roomPassword = null;
-    heartBeat?.cancel();
-    await Future.delayed(const Duration(milliseconds: 10),() =>
-        notifyListeners());
+    notifyListeners();
   }
 
   //Variables
@@ -67,8 +67,10 @@ class ZegoRoomProvider with ChangeNotifier {
   String? backgroundImage;
   String? foregroundImage;
   String? roomPassword;
+  String roomCountry = '';
   late TickerProvider vsync;
   Timer? heartBeat;
+  Timer? triggerTimer;
   ZegoRoomModel? zegoRoom;
   String roomID = '';
   bool isMicrophonePermissionGranted = false;
@@ -586,7 +588,7 @@ class ZegoRoomProvider with ChangeNotifier {
 
     // Use Future.delayed to execute the function at the calculated time
     Duration delay = targetTime.difference(now);
-    Future.delayed(delay, () {
+    triggerTimer = Timer(delay, () {
       // Check if the minute is still a multiple of 5 to ensure accuracy
       DateTime currentTime = DateTime.now();
       // Perform your action here

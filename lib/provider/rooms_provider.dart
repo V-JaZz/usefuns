@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:live_app/utils/constants.dart';
 import '../data/datasource/local/sharedpreferences/storage_service.dart';
 import '../data/model/response/bannner_model.dart';
@@ -8,6 +9,7 @@ import '../data/model/response/common_model.dart';
 import '../data/model/response/create_room_model.dart';
 import '../data/model/response/rooms_model.dart';
 import '../data/repository/rooms_repo.dart';
+import '../utils/common_widgets.dart';
 
 class RoomsProvider with ChangeNotifier {
   final storageService = StorageService();
@@ -46,7 +48,11 @@ class RoomsProvider with ChangeNotifier {
     final apiResponse = await _roomsRepo.getRoomByRoomId(roomId);
     Room? responseModel;
     if (apiResponse.statusCode == 200) {
-      responseModel = Room.fromJson(jsonDecode(apiResponse.body)['data']);
+      try{
+        responseModel = Room.fromJson(jsonDecode(apiResponse.body)['data']);
+      }catch(e){
+        responseModel = null;
+      }
     }
     return responseModel;
   }
@@ -92,6 +98,7 @@ class RoomsProvider with ChangeNotifier {
         : await _roomsRepo.lockRoom(roomId,storageService.getString(Constants.id), password,storageService.getString(Constants.token));
     CommonModel responseModel;
     if (apiResponse.statusCode == 200) {
+      showCustomSnackBar('Room Lock Updated!', Get.context!,isToaster: true,isError: false);
       responseModel = commonModelFromJson(apiResponse.body);
       getAllMine();
     } else {

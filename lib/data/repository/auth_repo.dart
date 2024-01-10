@@ -67,9 +67,9 @@ class AuthRepo {
     }
   }
 
-  Future<http.Response> logout(String token) async {
+  Future<http.Response> logout(String id, String token) async {
     try {
-      http.Response response = await _httpClient.post('user/logout', {},bearerToken: token);
+      http.Response response = await _httpClient.post('user/logout/$id', {},bearerToken: token);
       return response;
     } catch (e) {
       rethrow;

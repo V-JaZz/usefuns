@@ -5,12 +5,9 @@ import 'package:live_app/provider/auth_provider.dart';
 import 'package:live_app/screens/auth/verify_screen.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
-import '../../data/model/response/login_model.dart';
 import '../../data/model/response/send_otp_model.dart';
 import '../../utils/common_widgets.dart';
 import '../../utils/network_util.dart';
-import '../dashboard/bottom_navigation.dart';
-import 'create_profile.dart';
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({Key? key}) : super(key: key);
@@ -157,7 +154,6 @@ class _LogInScreenState extends State<LogInScreen> {
                       ),
                       child: CountryCodePicker(
                         onChanged: (value) {
-                          print(value.dialCode);
                           setState(() {
                             _selectedCountryCode = value.dialCode;
                           });
@@ -168,9 +164,9 @@ class _LogInScreenState extends State<LogInScreen> {
                         showDropDownButton: true,
                         padding: EdgeInsets.zero,
                         showCountryOnly: true,
-                        comparator: (a, b) => b.name!.compareTo(a.name!),
+                        countryFilter:const ['IN', 'BD', 'PK'],
                         onInit: (code) => debugPrint(
-                            "on init ${code?.name} ${code?.dialCode} ${code?.name}"),
+                            "on init ${code?.name} ${code?.dialCode} ${code?.code}"),
                       ),
                     ),
                     Container(
@@ -230,7 +226,7 @@ class _LogInScreenState extends State<LogInScreen> {
                 builder: (context, provider, child) => GestureDetector(
                   onTap: () async {
                     if(contactNumber!='' && contactNumber.length>9){
-                      provider.mobile = _selectedCountryCode!.substring(1)+contactNumber;
+                      provider.mobile = _selectedCountryCode!+contactNumber;
                       SendOtpModel otp = await provider.sendOtp();
                       if (otp.status == 1 && otp.data?.otp != null) {
                         Get.to(() => const VerifyScreen());

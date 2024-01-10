@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:live_app/screens/room/bottomsheet/lucky_wheel.dart';
 import 'package:live_app/screens/room/bottomsheet/share.dart';
 import '../../../data/model/body/zego_stream_model.dart';
-import '../../../data/model/response/rooms_model.dart';
+import '../../../data/model/response/user_data_model.dart';
 import '../../dashboard/message/notifications.dart';
 import 'admins.dart';
 import 'income_expense_tabs.dart';
@@ -85,7 +85,7 @@ class LiveRoomBottomSheets {
         });
   }
 
-  void showGroupMemberBottomSheet(List<Member>? members,String owner) {
+  void showGroupMemberBottomSheet(List<UserData>? members,String owner) {
     showModalBottomSheet(
         backgroundColor: Colors.transparent,
         isScrollControlled: false,

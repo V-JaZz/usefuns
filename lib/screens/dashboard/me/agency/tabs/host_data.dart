@@ -25,42 +25,36 @@ class _HostDataTabViewState extends State<HostDataTabView> {
       body: Consumer<SellerAgencyProvider>(
         builder: (context, value, _) => SingleChildScrollView(
           child: Column(children: [
-            // SizedBox(
-            //   height: 30 * b,
-            // ),
-            // Container(
-            //   width: 158 * a,
-            //   height: 30 * a,
-            //   color: const Color(0xffFF0000),
-            //   child: const Center(
-            //       child: Text(
-            //     'Monthly data',
-            //     style: TextStyle(color: Colors.white),
-            //   )),
-            // ),
             SizedBox(
               height: 30 * a,
             ),
-            Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Agency: ${value.agent?.data?.name}'),
-                  SizedBox(
-                    width: 30 * a,
-                  ),
-                  Text('Agency Code: ${value.agent?.data?.code}'),
-                ],
-              ),
+            Text('Agency :  ${value.agent?.data?.name}'),
+            SizedBox(
+              height: 5 * a,
             ),
+            Text('Agency Code :  ${value.agent?.data?.code}'),
             SizedBox(
               height: 20 * a,
             ),
             const Text(
-              'Monthly Data',
+              'Active Season Data',
               style: TextStyle(color: Colors.black),
             ),
-            const HostDataTable(),
+            SizedBox(
+              height: 10 * a,
+            ),
+            const HostDataTable(active: true),
+            SizedBox(
+              height: 20 * a,
+            ),
+            const Text(
+              'Last Season Data',
+              style: TextStyle(color: Colors.black),
+            ),
+            SizedBox(
+              height: 10 * a,
+            ),
+            const HostDataTable(active: false),
           ]),
         ),
       ),
@@ -69,8 +63,9 @@ class _HostDataTabViewState extends State<HostDataTabView> {
 }
 
 class HostDataTable extends StatefulWidget {
+  final bool active;
   const HostDataTable({
-    super.key,
+    super.key, required this.active,
   });
 
   @override
@@ -87,10 +82,10 @@ class _HostDataTableState extends State<HostDataTable> {
   Widget build(BuildContext context) {
     return Consumer<SellerAgencyProvider>(
       builder: (context, value, _) => Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: Container(
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.deepOrange),
+              border: Border.all(color: widget.active?Colors.deepOrange:Colors.grey),
               borderRadius: BorderRadius.circular(4)),
           child: Column(
             children: [
@@ -104,7 +99,7 @@ class _HostDataTableState extends State<HostDataTable> {
                     children: [
                       Container(
                         height: 42,
-                        decoration: const BoxDecoration(color: Colors.deepOrange),
+                        decoration: BoxDecoration(color: widget.active?Colors.deepOrange:Colors.grey),
                         alignment: Alignment.center,
                         child: const Text(
                           "Usefuns ID",
@@ -115,7 +110,7 @@ class _HostDataTableState extends State<HostDataTable> {
                       Container(
                         height: 42,
                         alignment: Alignment.center,
-                        decoration: const BoxDecoration(color: Colors.deepOrange),
+                        decoration: BoxDecoration(color: widget.active?Colors.deepOrange:Colors.grey),
                         child: const Text(
                           "Status",
                           textAlign: TextAlign.center,
@@ -125,19 +120,9 @@ class _HostDataTableState extends State<HostDataTable> {
                       Container(
                         height: 42,
                         alignment: Alignment.center,
-                        decoration: const BoxDecoration(color: Colors.deepOrange),
+                        decoration: BoxDecoration(color: widget.active?Colors.deepOrange:Colors.grey),
                         child: const Text(
-                          "Room Gifts\n(15.12.23)",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 12.0, color: Colors.white),
-                        ),
-                      ),
-                      Container(
-                        height: 42,
-                        alignment: Alignment.center,
-                        decoration: const BoxDecoration(color: Colors.deepOrange),
-                        child: const Text(
-                          "Valid Days\n(31.12.23)",
+                          "Room Gifts",
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 12.0, color: Colors.white),
                         ),
@@ -146,7 +131,7 @@ class _HostDataTableState extends State<HostDataTable> {
                   ),
                   if(value.isHostListLoaded)
                     for(HostData host in value.hostList?.data??[])
-                      tableRow('${host.userId}','${host.status}')
+                      tableRow('${host.userId}','${host.status}',widget.active)
                 ],
               ),
               if(!value.isHostListLoaded) const LinearProgressIndicator(color: Colors.black12)
@@ -157,7 +142,7 @@ class _HostDataTableState extends State<HostDataTable> {
     );
   }
 
-  TableRow tableRow(String id, String status) {
+  TableRow tableRow(String id, String status, bool active) {
     return TableRow(children: [
       Text(
         id,
@@ -173,25 +158,20 @@ class _HostDataTableState extends State<HostDataTable> {
         future: Provider.of<RoomsProvider>(context,listen: false).getRoomByRoomId(id),
         builder: (context, snapshot) {
           if(snapshot.connectionState == ConnectionState.waiting){
-            return const SizedBox(
+            return SizedBox(
               height: 21,
               child: LinearProgressIndicator(
-                color: Colors.deepOrangeAccent
+                  color: active?Colors.deepOrange:Colors.grey
               ),
             );
           }else{
             return Text(
-              '${snapshot.data?.totalDiamonds}',
+              '${active?snapshot.data?.halfMonthlyDiamonds:snapshot.data?.monthlyDiamonds}',
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 14.0),
             );
           }
         },
-      ),
-      const Text(
-        "0",
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 14.0),
       ),
     ]);
   }

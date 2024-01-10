@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/data/model/response/common_model.dart';
 import 'package:live_app/data/model/response/seller_record_model.dart';
+import 'package:live_app/provider/rooms_provider.dart';
 import 'package:live_app/utils/common_widgets.dart';
+import 'package:provider/provider.dart';
 import '../data/datasource/local/sharedpreferences/storage_service.dart';
 import '../data/model/response/agency_host_model.dart';
 import '../data/model/response/agency_login_model.dart';
@@ -120,19 +122,24 @@ class SellerAgencyProvider with ChangeNotifier {
   Future<void> inviteHost(String userId) async {
     inviteRequestLoading = true;
     notifyListeners();
-    final apiResponse = await _sellerAgencyRepo.inviteHost(userId,agent!.data!.code!);
+    final room  = await Provider.of<RoomsProvider>(Get.context!,listen: false).getRoomByRoomId(userId);
+    if(room==null){
+      showCustomSnackBar('User Don\'t have room!', Get.context!, isToaster: true);
+    }else{
+      final apiResponse = await _sellerAgencyRepo.inviteHost(userId,agent!.data!.code!);
+      if (apiResponse.statusCode == 200) {
+        CommonModel responseModel = commonModelFromJson(apiResponse.body);
+        if(responseModel.status == 1){
+          showCustomSnackBar('Request Sent!', Get.context!, isToaster: true, isError: false);
+        }else{
+          showCustomSnackBar(jsonDecode(apiResponse.body)['error'], Get.context!, isToaster: true);
+        }
+      } else {
+        showCustomSnackBar('Error! try again later', Get.context!, isToaster: true);
+      }
+    }
     inviteRequestLoading = false;
     notifyListeners();
-    if (apiResponse.statusCode == 200) {
-      CommonModel responseModel = commonModelFromJson(apiResponse.body);
-      if(responseModel.status == 1){
-        showCustomSnackBar('Request Sent!', Get.context!, isToaster: true, isError: false);
-      }else{
-        showCustomSnackBar(jsonDecode(apiResponse.body)['error'], Get.context!, isToaster: true);
-      }
-    } else {
-      showCustomSnackBar('Error! try again later', Get.context!, isToaster: true);
-    }
     return ;
   }
 

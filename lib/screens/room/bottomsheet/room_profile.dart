@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:live_app/provider/zego_room_provider.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
+import '../../../provider/user_data_provider.dart';
+import '../../../utils/helper.dart';
 import '../widget/room_settings.dart';
 
 class RoomProfileBottomSheet extends StatefulWidget {
@@ -272,7 +274,7 @@ class _RoomProfileBottomSheetState extends State<RoomProfileBottomSheet> {
                     height: 3 * a,
                   ),
                   Text(
-                    value.room?.country??'India',
+                    value.roomCountry,
                     style: SafeGoogleFont(
                       'Poppins',
                       fontSize: 12 * b,

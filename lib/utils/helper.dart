@@ -101,6 +101,24 @@ String userFrameViewPath(List<ItemModel>? frame){
   return '';
 }
 
+String getCountryByMobileNo(int? mobileNo, {bool name = false}){
+  if(mobileNo==null) return '';
+  String getCountryCode(String phoneNumber) {
+    int countryCodeLength = phoneNumber.length - 10;
+    return phoneNumber.substring(0, countryCodeLength);
+  }
+  String code = getCountryCode(mobileNo.toString());
+  switch(code){
+    case '91':
+      return name?'India':'assets/in_flag.png';
+    case '92':
+      return name?'Pakistan':'assets/pk_flag.png';
+    case '880':
+      return name?'Bangladesh':'assets/bd_flag.png';
+  }
+  return '';
+}
+
 String formatInt(int value) {
   if (value >= 1000) {
     double convertedValue = value / 1000;

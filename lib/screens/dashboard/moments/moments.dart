@@ -131,7 +131,7 @@ class _MomentsState extends State<Moments> with TickerProviderStateMixin {
               !value.emptyFollowings
                   ? (!value.isLoadedFollowing
                   ?const Center(child: CircularProgressIndicator(color: Color(0xff9e26bc)))
-                  :( value.followingMoments!.data!.isEmpty
+                  :( value.followingMoments.isEmpty
                   ?Column(
                 children: [
                   SizedBox(
@@ -166,37 +166,37 @@ class _MomentsState extends State<Moments> with TickerProviderStateMixin {
                 header: WaterDropMaterialHeader(distance: 36*a),
                 controller: refreshController2,
                     child: ListView(
-                children: List.generate(value.followingMoments?.data?.length??0,(index) {
+                children: List.generate(value.followingMoments.length,(index) {
                   return Container(
                     padding: EdgeInsets.only(
                         left: 21 * a, right: 21 * a, top: 12 * a, bottom: 12 * a),
-                    margin: (value.followingMoments!.data!.length-1)==index ? EdgeInsets.only(bottom: 63*a):null,
+                    margin: (value.followingMoments.length-1)==index ? EdgeInsets.only(bottom: 63*a):null,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        value.followingMoments!.data![index].userDetails!.isNotEmpty
+                        value.followingMoments[index].userDetails!.isNotEmpty
                             ?ListTile(
                           onTap: (){
-                            if(value.followingMoments?.data?[index].userDetails?[0].userId == myId){
+                            if(value.followingMoments[index].userDetails?[0].userId == myId){
                               Get.to(()=>const UserProfile());
                               return;
                             }
-                            Provider.of<UserDataProvider>(context,listen: false).addVisitor(value.followingMoments!.data![index].userDetails![0].id!);
-                            Get.to(()=>UserProfile(userData: value.followingMoments!.data![index].userDetails![0]));
+                            Provider.of<UserDataProvider>(context,listen: false).addVisitor(value.followingMoments[index].userDetails![0].id!);
+                            Get.to(()=>UserProfile(userData: value.followingMoments[index].userDetails![0]));
                           },
                           dense: true,
                           contentPadding: EdgeInsets.zero,
-                          leading: (value.followingMoments?.data?[index].userDetails?[0].images.toString()??'[]') == '[]'
+                          leading: (value.followingMoments[index].userDetails?[0].images.toString()??'[]') == '[]'
                               ? CircleAvatar(
                             foregroundImage: const AssetImage("assets/profile.png"),
                             radius: 22 * a,
                           )
                               :CircleAvatar(
-                            foregroundImage: NetworkImage(value.followingMoments!.data![index].userDetails!.first.images!.first),
+                            foregroundImage: NetworkImage(value.followingMoments[index].userDetails!.first.images!.first),
                             radius: 22 * a,
                           ),
                           title: Text(
-                            value.followingMoments!.data![index].userDetails![0].name!,
+                            value.followingMoments[index].userDetails![0].name!,
                             style: SafeGoogleFont(
                               'Poppins',
                               fontSize: 18 * b,
@@ -207,7 +207,7 @@ class _MomentsState extends State<Moments> with TickerProviderStateMixin {
                             ),
                           ),
                           subtitle: Text(
-                              TimeUtil.getTimeDifferenceString(value.followingMoments!.data![index].createdAt!),
+                              TimeUtil.getTimeDifferenceString(value.followingMoments[index].createdAt!),
                               overflow: TextOverflow.ellipsis,
                               style: SafeGoogleFont(
                                 'Poppins',
@@ -219,7 +219,7 @@ class _MomentsState extends State<Moments> with TickerProviderStateMixin {
                               )),
                           trailing:
                           IconButton(
-                            onPressed: () => report(value.followingMoments!.data![index].userDetails![0].id!),
+                            onPressed: () => report(value.followingMoments[index].userDetails![0].id!),
                             icon: const Icon(Icons.more_vert_rounded, color: Colors.grey),
                           ),
                         )
@@ -228,8 +228,8 @@ class _MomentsState extends State<Moments> with TickerProviderStateMixin {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            if(value.followingMoments?.data?[index].caption != null) Text(
-                              value.followingMoments!.data![index].caption.toString(),
+                            if(value.followingMoments[index].caption != null) Text(
+                              value.followingMoments[index].caption.toString(),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 5,
                               style: SafeGoogleFont(
@@ -250,11 +250,11 @@ class _MomentsState extends State<Moments> with TickerProviderStateMixin {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  (value.followingMoments?.data?[index].images?.toString()??'[]') != '[]'
+                                  (value.followingMoments[index].images?.toString()??'[]') != '[]'
                                       ?Hero(
-                                    tag: value.followingMoments!.data![index].id!,
+                                    tag: value.followingMoments[index].id!,
                                     child: Image.network(
-                                        value.followingMoments!.data![index].images!.first,
+                                        value.followingMoments[index].images!.first,
                                         loadingBuilder: (context, child, loadingProgress) {
                                           if (loadingProgress == null) {
                                             return child;
@@ -289,7 +289,7 @@ class _MomentsState extends State<Moments> with TickerProviderStateMixin {
                                           size: 27,
                                           isLiked: value.checkLike(index,all: true),
                                           onTap: (isLiked) async {
-                                            value.likePost(value.followingMoments!.data![index].id!,all: true);
+                                            value.likePost(value.followingMoments[index].id!,all: true);
                                             return !isLiked;
                                           },
                                           circleColor: const CircleColor(start: Color(0x339E26BC),end: Color(0xff9e26bc)),
@@ -298,7 +298,7 @@ class _MomentsState extends State<Moments> with TickerProviderStateMixin {
                                             Icons.thumb_up,
                                             color: isLiked ? const Color(0xff9e26bc) : Colors.grey,
                                           ),
-                                          likeCount: value.followingMoments?.data?[index].likes?.length??0,
+                                          likeCount: value.followingMoments[index].likes?.length??0,
                                           countBuilder: (int? count, bool isLiked, String text) {
                                             var color = isLiked ? const Color(0xff9e26bc)  : Colors.grey;
                                             Widget result;
@@ -317,13 +317,13 @@ class _MomentsState extends State<Moments> with TickerProviderStateMixin {
                                           },
                                         ),
                                         SizedBox(width: 15 * a),
-                                        if(value.followingMoments?.data?[index].userDetails!.first.isCommentRestricted == false)Row(
+                                        if(value.followingMoments[index].userDetails!.first.isCommentRestricted == false)Row(
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           children: [
                                             const Icon(Icons.mode_comment_outlined,color: Colors.grey),
                                             SizedBox(width: 5 * a),
                                             Text(
-                                              value.followingMoments?.data?[index].comments?.length.toString()??'0',
+                                              value.followingMoments[index].comments?.length.toString()??'0',
                                               style: SafeGoogleFont(
                                                 'Poppins',
                                                 fontSize: 16 * b,
@@ -375,7 +375,7 @@ class _MomentsState extends State<Moments> with TickerProviderStateMixin {
 
               !value.isLoadedAll
                   ?const Center(child: CircularProgressIndicator(color: Color(0xff9e26bc)))
-                  :( value.allMoments!.data!.isEmpty
+                  :( value.allMoments.isEmpty
                   ?Column(
                 children: [
                   SizedBox(
@@ -410,37 +410,37 @@ class _MomentsState extends State<Moments> with TickerProviderStateMixin {
                 header: WaterDropMaterialHeader(distance: 36*a),
                 controller: refreshController3,
                     child: ListView(
-                children: List.generate(value.allMoments?.data?.length??0, (index) {
+                children: List.generate(value.allMoments.length??0, (index) {
                     return Container(
                       padding: EdgeInsets.only(
                           left: 21 * a, right: 21 * a, top: 12 * a, bottom: 12 * a),
-                      margin: (value.allMoments!.data!.length-1)==index ? EdgeInsets.only(bottom: 63*a):null,
+                      margin: (value.allMoments.length-1)==index ? EdgeInsets.only(bottom: 63*a):null,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          value.allMoments!.data![index].userDetails!.isNotEmpty
+                          value.allMoments[index].userDetails!.isNotEmpty
                               ?ListTile(
                             onTap: (){
-                              if(value.allMoments?.data?[index].userDetails?[0].userId == myId){
+                              if(value.allMoments[index].userDetails?[0].userId == myId){
                                 Get.to(()=>const UserProfile());
                                 return;
                               }
-                              Provider.of<UserDataProvider>(context,listen: false).addVisitor(value.allMoments!.data![index].userDetails![0].id!);
-                              Get.to(()=>UserProfile(userData: value.allMoments!.data![index].userDetails![0]));
+                              Provider.of<UserDataProvider>(context,listen: false).addVisitor(value.allMoments[index].userDetails![0].id!);
+                              Get.to(()=>UserProfile(userData: value.allMoments[index].userDetails![0]));
                             },
                             dense: true,
                             contentPadding: EdgeInsets.zero,
-                            leading: (value.allMoments?.data?[index].userDetails?[0].images.toString()??'[]') == '[]'
+                            leading: (value.allMoments[index].userDetails?[0].images.toString()??'[]') == '[]'
                             ? CircleAvatar(
                           foregroundImage: const AssetImage("assets/profile.png"),
                           radius: 22 * a,
                             )
                             :CircleAvatar(
-                          foregroundImage: NetworkImage(value.allMoments!.data![index].userDetails!.first.images!.first),
+                          foregroundImage: NetworkImage(value.allMoments[index].userDetails!.first.images!.first),
                           radius: 22 * a,
                             ),
                             title: Text(
-                          value.allMoments!.data![index].userDetails![0].name!,
+                          value.allMoments[index].userDetails![0].name!,
                           style: SafeGoogleFont(
                             'Poppins',
                             fontSize: 18 * b,
@@ -451,7 +451,7 @@ class _MomentsState extends State<Moments> with TickerProviderStateMixin {
                           ),
                             ),
                             subtitle: Text(
-                            TimeUtil.getTimeDifferenceString(value.allMoments!.data![index].createdAt!),
+                            TimeUtil.getTimeDifferenceString(value.allMoments[index].createdAt!),
                             overflow: TextOverflow.ellipsis,
                             style: SafeGoogleFont(
                               'Poppins',
@@ -463,7 +463,7 @@ class _MomentsState extends State<Moments> with TickerProviderStateMixin {
                             )),
                             trailing:
                             IconButton(
-                              onPressed: () => report(value.allMoments!.data![index].userDetails![0].id!),
+                              onPressed: () => report(value.allMoments[index].userDetails![0].id!),
                               icon: const Icon(Icons.more_vert_rounded, color: Colors.grey),
                             ),
                           )
@@ -472,8 +472,8 @@ class _MomentsState extends State<Moments> with TickerProviderStateMixin {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              if(value.allMoments?.data?[index].caption != null) Text(
-                                value.allMoments!.data![index].caption.toString(),
+                              if(value.allMoments[index].caption != null) Text(
+                                value.allMoments[index].caption.toString(),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 5,
                                 style: SafeGoogleFont(
@@ -494,11 +494,11 @@ class _MomentsState extends State<Moments> with TickerProviderStateMixin {
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    (value.allMoments?.data?[index].images?.toString()??'[]') != '[]'
+                                    (value.allMoments[index].images?.toString()??'[]') != '[]'
                                         ?Hero(
-                                      tag: value.allMoments!.data![index].id!,
+                                      tag: value.allMoments[index].id!,
                                       child: Image.network(
-                                          value.allMoments!.data![index].images!.first,
+                                          value.allMoments[index].images!.first,
                                           loadingBuilder: (context, child, loadingProgress) {
                                             if (loadingProgress == null) {
                                               return child;
@@ -533,7 +533,7 @@ class _MomentsState extends State<Moments> with TickerProviderStateMixin {
                                               size: 27,
                                               isLiked: value.checkLike(index,all: true),
                                               onTap: (isLiked) async {
-                                                value.likePost(value.allMoments!.data![index].id!,all: true);
+                                                value.likePost(value.allMoments[index].id!,all: true);
                                                 return !isLiked;
                                               },
                                               circleColor: const CircleColor(start: Color(0x339E26BC),end: Color(0xff9e26bc)),
@@ -542,7 +542,7 @@ class _MomentsState extends State<Moments> with TickerProviderStateMixin {
                                               Icons.thumb_up,
                                               color: isLiked ? const Color(0xff9e26bc) : Colors.grey,
                                             ),
-                                              likeCount: value.allMoments?.data?[index].likes?.length??0,
+                                              likeCount: value.allMoments[index].likes?.length??0,
                                               countBuilder: (int? count, bool isLiked, String text) {
                                                 var color = isLiked ? const Color(0xff9e26bc)  : Colors.grey;
                                                 Widget result;
@@ -561,13 +561,13 @@ class _MomentsState extends State<Moments> with TickerProviderStateMixin {
                                               },
                                             ),
                                           SizedBox(width: 15 * a),
-                                          if(value.allMoments?.data?[index].userDetails!.first.isCommentRestricted == false)Row(
+                                          if(value.allMoments[index].userDetails!.first.isCommentRestricted == false)Row(
                                             crossAxisAlignment: CrossAxisAlignment.center,
                                             children: [
                                               const Icon(Icons.mode_comment_outlined,color: Colors.grey),
                                               SizedBox(width: 5 * a),
                                               Text(
-                                                value.allMoments?.data?[index].comments?.length.toString()??'0',
+                                                value.allMoments[index].comments?.length.toString()??'0',
                                                 style: SafeGoogleFont(
                                                   'Poppins',
                                                   fontSize: 16 * b,

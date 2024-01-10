@@ -10,6 +10,7 @@ import 'manager.dart';
 class TopMore extends StatelessWidget {
   final bool owner;
   TopMore({super.key, required this.owner});
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController textEditingController = TextEditingController();
 
   @override
@@ -67,45 +68,56 @@ class TopMore extends StatelessWidget {
                                         color: Colors.black),
                                   ),
                                   if(hasRoomLock && !isRoomLocked)
-                                    SizedBox(
-                                      width: 190,
-                                      child: TextFormField(
-                                        textAlign: TextAlign.center,
-                                        controller: textEditingController,
-                                        style: SafeGoogleFont(
-                                          'Poppins',
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w300,
-                                          color: const Color(0x99000000),
+                                    Form(
+                                      key: _formKey,
+                                      child: SizedBox(
+                                        width: 190,
+                                        child: TextFormField(
+                                          textAlign: TextAlign.center,
+                                          controller: textEditingController,
+                                          maxLength: 4,
+                                          style: SafeGoogleFont(
+                                            'Poppins',
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w300,
+                                            color: const Color(0x99000000),
+                                          ),
+                                          keyboardType: TextInputType.number,
+                                          textInputAction: TextInputAction.done,
+                                          decoration: InputDecoration(
+                                              isDense: true,
+                                              filled: true,
+                                              fillColor: Colors.white,
+                                              enabledBorder: UnderlineInputBorder(
+                                                borderSide:
+                                                const BorderSide(color: Colors.transparent),
+                                                borderRadius: BorderRadius.circular(50),
+                                              ),
+                                              focusedBorder: UnderlineInputBorder(
+                                                borderSide:
+                                                const BorderSide(color: Colors.transparent),
+                                                borderRadius: BorderRadius.circular(50),
+                                              ),
+                                              counter: const SizedBox.shrink(),
+                                              hintText: 'Enter 4 Digit PIN',
+                                              alignLabelWithHint: false),
+                                          validator: (value) {
+                                            if(value?.length!=4){
+                                              return 'Invalid PIN!';
+                                            }
+                                            return null;
+                                          },
                                         ),
-                                        keyboardType: TextInputType.number,
-                                        textInputAction: TextInputAction.done,
-                                        decoration: InputDecoration(
-                                            isDense: true,
-                                            filled: true,
-                                            fillColor: Colors.white,
-                                            enabledBorder: UnderlineInputBorder(
-                                              borderSide:
-                                              const BorderSide(color: Colors.transparent),
-                                              borderRadius: BorderRadius.circular(50),
-                                            ),
-                                            focusedBorder: UnderlineInputBorder(
-                                              borderSide:
-                                              const BorderSide(color: Colors.transparent),
-                                              borderRadius: BorderRadius.circular(50),
-                                            ),
-                                            hintText: 'Enter Password',
-                                            alignLabelWithHint: false)
                                       ),
                                     ),
-                                  InkWell(
+                                  GestureDetector(
                                     onTap: () {
                                       if(!hasRoomLock){
                                         Get.to(() => const Shop(index: 6));
                                       }else if(isRoomLocked){
                                         Provider.of<ZegoRoomProvider>(context,listen:false).updateRoomLock(null);
                                         Get.back();
-                                      }else {
+                                      }else if(_formKey.currentState!.validate()){
                                         Provider.of<ZegoRoomProvider>(context,listen:false).updateRoomLock(textEditingController.text);
                                         Get.back();
                                       }
@@ -347,7 +359,7 @@ class TopMore extends StatelessWidget {
                                         letterSpacing: 0.48 * a,
                                         color: Colors.black),
                                   ),
-                                  InkWell(
+                                  GestureDetector(
                                     onTap: () {
                                       Get.to(() => const Shop(index: 6));
                                     },

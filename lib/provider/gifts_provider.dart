@@ -40,7 +40,7 @@ class GiftsProvider with ChangeNotifier {
         await _giftsRepo.sendGift(senderId, receiverId, giftId,count, roomId);
         await _giftsRepo.updateTBoxLevel(roomId, giftPrice*count);
         Provider.of<ZegoRoomProvider>(Get.context!, listen: false).updateTreasureBox();
-        Provider.of<UserDataProvider>(Get.context!, listen: false).getUser(refresh: false);
+        Provider.of<UserDataProvider>(Get.context!, listen: false).getUser(loading: false);
     }
   }
 
@@ -88,9 +88,8 @@ class GiftsProvider with ChangeNotifier {
   Map<String, List<GiftHistory>> repositionMap(Map<String, List<GiftHistory>> inputMap) {
     // Calculate the sums of coins for each list and store them in a map
     Map<String, int> sums = {};
-
     inputMap.forEach((key, value) {
-      int sum = value.map((gh) => gh.gift!.coin!).reduce((a, b) => a + b);
+      int sum = value.map((gh) => (gh.gift!.coin! * gh.count!)).reduce((a, b) => a + b);
       sums[key] = sum;
     });
 

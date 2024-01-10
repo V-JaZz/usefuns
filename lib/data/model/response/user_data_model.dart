@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final userDataModel = userDataModelFromJson(jsonString);
-
 import 'dart:convert';
 
 UserDataModel userDataModelFromJson(String str) => UserDataModel.fromJson(json.decode(str));
@@ -43,7 +39,7 @@ class UserData {
   String? deviceType;
   List<dynamic>? kickedUser;
   int? diamonds;
-  double? beans;
+  int? beans;
   int? coins;
   int? likes;
   int? comments;
@@ -52,11 +48,17 @@ class UserData {
   int? accounts;
   List<String>? followers;
   List<String>? following;
-  List<ItemModel>? lockRoom;
-  List<ItemModel>? extraSeat;
-  List<ItemModel>? profileCard;
   List<ItemModel>? tags;
   List<ItemModel>? vehicle;
+  List<ItemModel>? profileCard;
+  List<dynamic>? vip;
+  List<dynamic>? svip;
+  List<ItemModel>? lockRoom;
+  List<ItemModel>? extraSeat;
+  List<Agency>? agency;
+  List<Admin>? admin;
+  List<SubAdmin>? subAdmin;
+  List<dynamic>? specialId;
   List<ItemModel>? frame;
   List<ItemModel>? roomWallpaper;
   int? level;
@@ -65,7 +67,7 @@ class UserData {
   double? exp;
   double? totalDiamondsUses;
   bool? isCommentRestricted;
-  List<dynamic>? liveHotlist;
+  List<String>? liveHotlist;
   List<String>? images;
   bool? isActiveUserId;
   bool? isSequrityPanel;
@@ -80,10 +82,10 @@ class UserData {
   int? mobile;
   DateTime? dob;
   String? gender;
-  List<Token>? tokens;
   DateTime? createdAt;
   DateTime? updatedAt;
   int? v;
+  String? tokens;
 
   UserData({
     this.email,
@@ -105,11 +107,17 @@ class UserData {
     this.accounts,
     this.followers,
     this.following,
-    this.lockRoom,
-    this.extraSeat,
-    this.profileCard,
     this.tags,
     this.vehicle,
+    this.profileCard,
+    this.vip,
+    this.svip,
+    this.lockRoom,
+    this.extraSeat,
+    this.agency,
+    this.admin,
+    this.subAdmin,
+    this.specialId,
     this.frame,
     this.roomWallpaper,
     this.level,
@@ -133,10 +141,10 @@ class UserData {
     this.mobile,
     this.dob,
     this.gender,
-    this.tokens,
     this.createdAt,
     this.updatedAt,
     this.v,
+    this.tokens,
   });
 
   factory UserData.fromJson(Map<String, dynamic> json) => UserData(
@@ -150,7 +158,7 @@ class UserData {
     deviceType: json["device_type"],
     kickedUser: json["kickedUser"] == null ? [] : List<dynamic>.from(json["kickedUser"]!.map((x) => x)),
     diamonds: json["diamonds"],
-    beans: json["beans"]?.toDouble(),
+    beans: json["beans"],
     coins: json["coins"],
     likes: json["likes"],
     comments: json["comments"],
@@ -159,11 +167,17 @@ class UserData {
     accounts: json["accounts"],
     followers: json["followers"] == null ? [] : List<String>.from(json["followers"]!.map((x) => x)),
     following: json["following"] == null ? [] : List<String>.from(json["following"]!.map((x) => x)),
-    lockRoom: json["lockRoom"] == null ? [] : List<ItemModel>.from(json["lockRoom"]!.map((x) => ItemModel.fromJson(x))),
-    extraSeat: json["extraSeat"] == null ? [] : List<ItemModel>.from(json["extraSeat"]!.map((x) => ItemModel.fromJson(x))),
-    profileCard: json["profileCard"] == null ? [] : List<ItemModel>.from(json["profileCard"]!.map((x) => ItemModel.fromJson(x))),
     tags: json["tags"] == null ? [] : List<ItemModel>.from(json["tags"]!.map((x) => ItemModel.fromJson(x))),
     vehicle: json["vehicle"] == null ? [] : List<ItemModel>.from(json["vehicle"]!.map((x) => ItemModel.fromJson(x))),
+    profileCard: json["profileCard"] == null ? [] : List<ItemModel>.from(json["profileCard"]!.map((x) => ItemModel.fromJson(x))),
+    vip: json["vip"] == null ? [] : List<dynamic>.from(json["vip"]!.map((x) => x)),
+    svip: json["svip"] == null ? [] : List<dynamic>.from(json["svip"]!.map((x) => x)),
+    lockRoom: json["lockRoom"] == null ? [] : List<ItemModel>.from(json["lockRoom"]!.map((x) => ItemModel.fromJson(x))),
+    extraSeat: json["extraSeat"] == null ? [] : List<ItemModel>.from(json["extraSeat"]!.map((x) => ItemModel.fromJson(x))),
+    agency: json["agency"] == null ? [] : List<Agency>.from(json["agency"]!.map((x) => Agency.fromJson(x))),
+    admin: json["admin"] == null ? [] : List<Admin>.from(json["admin"]!.map((x) => Admin.fromJson(x))),
+    subAdmin: json["subAdmin"] == null ? [] : List<SubAdmin>.from(json["subAdmin"]!.map((x) => SubAdmin.fromJson(x))),
+    specialId: json["special_id"] == null ? [] : List<dynamic>.from(json["special_id"]!.map((x) => x)),
     frame: json["frame"] == null ? [] : List<ItemModel>.from(json["frame"]!.map((x) => ItemModel.fromJson(x))),
     roomWallpaper: json["roomWallpaper"] == null ? [] : List<ItemModel>.from(json["roomWallpaper"]!.map((x) => ItemModel.fromJson(x))),
     level: json["level"],
@@ -172,7 +186,7 @@ class UserData {
     exp: json["exp"]?.toDouble(),
     totalDiamondsUses: json["totalDiamondsUses"]?.toDouble(),
     isCommentRestricted: json["is_comment_restricted"],
-    liveHotlist: json["live_hotlist"] == null ? [] : List<dynamic>.from(json["live_hotlist"]!.map((x) => x)),
+    liveHotlist: json["live_hotlist"] == null ? [] : List<String>.from(json["live_hotlist"]!.map((x) => x)),
     images: json["images"] == null ? [] : List<String>.from(json["images"]!.map((x) => x)),
     isActiveUserId: json["is_active_userId"],
     isSequrityPanel: json["is_sequrity_panel"],
@@ -187,10 +201,10 @@ class UserData {
     mobile: json["mobile"],
     dob: json["dob"] == null ? null : DateTime.parse(json["dob"]),
     gender: json["gender"],
-    tokens: json["tokens"] == null ? [] : List<Token>.from(json["tokens"]!.map((x) => Token.fromJson(x))),
     createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
     updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
     v: json["__v"],
+    tokens: json["tokens"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -213,11 +227,17 @@ class UserData {
     "accounts": accounts,
     "followers": followers == null ? [] : List<dynamic>.from(followers!.map((x) => x)),
     "following": following == null ? [] : List<dynamic>.from(following!.map((x) => x)),
-    "lockRoom": lockRoom == null ? [] : List<dynamic>.from(lockRoom!.map((x) => x.toJson())),
-    "extraSeat": extraSeat == null ? [] : List<dynamic>.from(extraSeat!.map((x) => x.toJson())),
-    "profileCard": profileCard == null ? [] : List<dynamic>.from(profileCard!.map((x) => x.toJson())),
     "tags": tags == null ? [] : List<dynamic>.from(tags!.map((x) => x.toJson())),
     "vehicle": vehicle == null ? [] : List<dynamic>.from(vehicle!.map((x) => x.toJson())),
+    "profileCard": profileCard == null ? [] : List<dynamic>.from(profileCard!.map((x) => x.toJson())),
+    "vip": vip == null ? [] : List<dynamic>.from(vip!.map((x) => x)),
+    "svip": svip == null ? [] : List<dynamic>.from(svip!.map((x) => x)),
+    "lockRoom": lockRoom == null ? [] : List<dynamic>.from(lockRoom!.map((x) => x.toJson())),
+    "extraSeat": extraSeat == null ? [] : List<dynamic>.from(extraSeat!.map((x) => x.toJson())),
+    "agency": agency == null ? [] : List<dynamic>.from(agency!.map((x) => x.toJson())),
+    "admin": admin == null ? [] : List<dynamic>.from(admin!.map((x) => x.toJson())),
+    "subAdmin": subAdmin == null ? [] : List<dynamic>.from(subAdmin!.map((x) => x.toJson())),
+    "special_id": specialId == null ? [] : List<dynamic>.from(specialId!.map((x) => x)),
     "frame": frame == null ? [] : List<dynamic>.from(frame!.map((x) => x.toJson())),
     "roomWallpaper": roomWallpaper == null ? [] : List<dynamic>.from(roomWallpaper!.map((x) => x.toJson())),
     "level": level,
@@ -241,133 +261,293 @@ class UserData {
     "mobile": mobile,
     "dob": dob?.toIso8601String(),
     "gender": gender,
-    "tokens": tokens == null ? [] : List<dynamic>.from(tokens!.map((x) => x.toJson())),
     "createdAt": createdAt?.toIso8601String(),
     "updatedAt": updatedAt?.toIso8601String(),
     "__v": v,
+    "tokens": tokens,
   };
 }
 
-class ItemModel {
-  List<String>? images;
+class Admin {
   String? id;
-  int? day;
-  int? price;
-  String? name;
-  int? level;
-  bool? isOfficial;
+  int? totalCoins;
+  bool? isBanUnban;
+  bool? mute;
+  bool? kick;
+  bool? screenshot;
+  bool? agencyban;
+  bool? dpapprove;
+  bool? isActive;
+  String? userId;
+  String? username;
+  String? password;
+  List<dynamic>? tokens;
   DateTime? createdAt;
   DateTime? updatedAt;
   int? v;
-  bool? defaultFrame;
   String? label;
   String? value;
 
-  ItemModel({
-    this.images,
+  Admin({
     this.id,
-    this.day,
-    this.price,
-    this.name,
-    this.level,
-    this.isOfficial,
+    this.totalCoins,
+    this.isBanUnban,
+    this.mute,
+    this.kick,
+    this.screenshot,
+    this.agencyban,
+    this.dpapprove,
+    this.isActive,
+    this.userId,
+    this.username,
+    this.password,
+    this.tokens,
     this.createdAt,
     this.updatedAt,
     this.v,
-    this.defaultFrame,
     this.label,
     this.value,
   });
 
-  factory ItemModel.fromJson(Map<String, dynamic> json) => ItemModel(
-    images: json["images"] == null ? [] : List<String>.from(json["images"]!.map((x) => x)),
+  factory Admin.fromJson(Map<String, dynamic> json) => Admin(
     id: json["_id"],
-    day: json["day"],
-    price: json["price"],
-    name: json["name"],
-    level: json["level"],
-    isOfficial: json["is_official"],
+    totalCoins: json["totalCoins"],
+    isBanUnban: json["is_ban_unban"],
+    mute: json["mute"],
+    kick: json["kick"],
+    screenshot: json["screenshot"],
+    agencyban: json["agencyban"],
+    dpapprove: json["dpapprove"],
+    isActive: json["is_active"],
+    userId: json["userId"],
+    username: json["username"],
+    password: json["password"],
+    tokens: json["tokens"] == null ? [] : List<dynamic>.from(json["tokens"]!.map((x) => x)),
     createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
     updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
     v: json["__v"],
-    defaultFrame: json["default_frame"],
     label: json["label"],
     value: json["value"],
   );
 
   Map<String, dynamic> toJson() => {
-    "images": images == null ? [] : List<dynamic>.from(images!.map((x) => x)),
     "_id": id,
-    "day": day,
-    "price": price,
-    "name": name,
-    "level": level,
-    "is_official": isOfficial,
+    "totalCoins": totalCoins,
+    "is_ban_unban": isBanUnban,
+    "mute": mute,
+    "kick": kick,
+    "screenshot": screenshot,
+    "agencyban": agencyban,
+    "dpapprove": dpapprove,
+    "is_active": isActive,
+    "userId": userId,
+    "username": username,
+    "password": password,
+    "tokens": tokens == null ? [] : List<dynamic>.from(tokens!.map((x) => x)),
     "createdAt": createdAt?.toIso8601String(),
     "updatedAt": updatedAt?.toIso8601String(),
     "__v": v,
-    "default_frame": defaultFrame,
     "label": label,
     "value": value,
   };
 }
 
-class GiftClass {
-  List<String>? images;
+class Agency {
   String? id;
-  int? coin;
+  List<String>? images;
+  bool? isActive;
+  String? code;
+  String? userId;
   String? name;
-  String? categoryName;
+  int? mobile;
+  String? email;
+  String? admin;
   DateTime? createdAt;
   DateTime? updatedAt;
   int? v;
+  String? label;
+  String? value;
 
-  GiftClass({
-    this.images,
+  Agency({
     this.id,
-    this.coin,
+    this.images,
+    this.isActive,
+    this.code,
+    this.userId,
     this.name,
-    this.categoryName,
+    this.mobile,
+    this.email,
+    this.admin,
     this.createdAt,
     this.updatedAt,
     this.v,
+    this.label,
+    this.value,
   });
 
-  factory GiftClass.fromJson(Map<String, dynamic> json) => GiftClass(
-    images: json["images"] == null ? [] : List<String>.from(json["images"]!.map((x) => x)),
+  factory Agency.fromJson(Map<String, dynamic> json) => Agency(
     id: json["_id"],
-    coin: json["coin"],
+    images: json["images"] == null ? [] : List<String>.from(json["images"]!.map((x) => x)),
+    isActive: json["is_active"],
+    code: json["code"],
+    userId: json["userId"],
     name: json["name"],
-    categoryName: json["category_name"],
+    mobile: json["mobile"],
+    email: json["email"],
+    admin: json["admin"],
     createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
     updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
     v: json["__v"],
+    label: json["label"],
+    value: json["value"],
   );
 
   Map<String, dynamic> toJson() => {
-    "images": images == null ? [] : List<dynamic>.from(images!.map((x) => x)),
     "_id": id,
-    "coin": coin,
+    "images": images == null ? [] : List<dynamic>.from(images!.map((x) => x)),
+    "is_active": isActive,
+    "code": code,
+    "userId": userId,
     "name": name,
-    "category_name": categoryName,
+    "mobile": mobile,
+    "email": email,
+    "admin": admin,
     "createdAt": createdAt?.toIso8601String(),
     "updatedAt": updatedAt?.toIso8601String(),
     "__v": v,
+    "label": label,
+    "value": value,
   };
 }
 
-class Token {
-  String? token;
+class ItemModel {
+  String? id;
+  List<String>? images;
+  int? price;
+  int? day;
+  String? name;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  int? v;
+  String? label;
+  String? value;
+  int? level;
+  bool? isOfficial;
+  bool? defaultFrame;
+  String? extraSeatId;
 
-  Token({
-    this.token,
+  ItemModel({
+    this.id,
+    this.images,
+    this.price,
+    this.day,
+    this.name,
+    this.createdAt,
+    this.updatedAt,
+    this.v,
+    this.label,
+    this.value,
+    this.level,
+    this.isOfficial,
+    this.defaultFrame,
+    this.extraSeatId,
   });
 
-  factory Token.fromJson(Map<String, dynamic> json) => Token(
-    token: json["token"],
+  factory ItemModel.fromJson(Map<String, dynamic> json) => ItemModel(
+    id: json["_id"],
+    images: json["images"] == null ? [] : List<String>.from(json["images"]!.map((x) => x)),
+    price: json["price"],
+    day: json["day"],
+    name: json["name"],
+    createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
+    updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
+    v: json["__v"],
+    label: json["label"],
+    value: json["value"],
+    level: json["level"],
+    isOfficial: json["is_official"],
+    defaultFrame: json["default_frame"],
+    extraSeatId: json["id"],
   );
 
   Map<String, dynamic> toJson() => {
-    "token": token,
+    "_id": id,
+    "images": images == null ? [] : List<dynamic>.from(images!.map((x) => x)),
+    "price": price,
+    "day": day,
+    "name": name,
+    "createdAt": createdAt?.toIso8601String(),
+    "updatedAt": updatedAt?.toIso8601String(),
+    "__v": v,
+    "label": label,
+    "value": value,
+    "level": level,
+    "is_official": isOfficial,
+    "default_frame": defaultFrame,
+    "id": extraSeatId,
+  };
+}
+
+class SubAdmin {
+  String? id;
+  List<String>? images;
+  bool? isActive;
+  String? userId;
+  String? username;
+  String? password;
+  String? role;
+  List<dynamic>? tokens;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  int? v;
+  String? label;
+  String? value;
+
+  SubAdmin({
+    this.id,
+    this.images,
+    this.isActive,
+    this.userId,
+    this.username,
+    this.password,
+    this.role,
+    this.tokens,
+    this.createdAt,
+    this.updatedAt,
+    this.v,
+    this.label,
+    this.value,
+  });
+
+  factory SubAdmin.fromJson(Map<String, dynamic> json) => SubAdmin(
+    id: json["_id"],
+    images: json["images"] == null ? [] : List<String>.from(json["images"]!.map((x) => x)),
+    isActive: json["is_active"],
+    userId: json["userId"],
+    username: json["username"],
+    password: json["password"],
+    role: json["role"],
+    tokens: json["tokens"] == null ? [] : List<dynamic>.from(json["tokens"]!.map((x) => x)),
+    createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
+    updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
+    v: json["__v"],
+    label: json["label"],
+    value: json["value"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "_id": id,
+    "images": images == null ? [] : List<dynamic>.from(images!.map((x) => x)),
+    "is_active": isActive,
+    "userId": userId,
+    "username": username,
+    "password": password,
+    "role": role,
+    "tokens": tokens == null ? [] : List<dynamic>.from(tokens!.map((x) => x)),
+    "createdAt": createdAt?.toIso8601String(),
+    "updatedAt": updatedAt?.toIso8601String(),
+    "__v": v,
+    "label": label,
+    "value": value,
   };
 }

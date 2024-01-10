@@ -12,9 +12,9 @@ class MomentsProvider with ChangeNotifier {
   final storageService = StorageService();
   final MomentsRepo _momentsRepo = MomentsRepo();
 
-  MomentsModel? allMoments;
-  MomentsModel? followingMoments;
-  MomentsModel? myMoments;
+  List<Moment> allMoments = [];
+  List<Moment> followingMoments = [];
+  List<Moment> myMoments = [];
   bool isLoadedFollowing = false;
   bool isLoadedAll = false;
   bool _isLoadedMy = false;
@@ -34,7 +34,7 @@ class MomentsProvider with ChangeNotifier {
       notifyListeners();
       responseModel = momentsModelFromJson(apiResponse.body);
       if(responseModel.status == 1){
-        allMoments= responseModel;
+        allMoments = responseModel.data??[];
       }
     } else {
       responseModel = MomentsModel(status: 0,message: apiResponse.reasonPhrase);
@@ -53,7 +53,7 @@ class MomentsProvider with ChangeNotifier {
       notifyListeners();
       responseModel = momentsModelFromJson(apiResponse.body);
       if(responseModel.status == 1){
-        followingMoments= responseModel;
+        followingMoments = responseModel.data??[];
       }
     } else {
       responseModel = MomentsModel(status: 0,message: apiResponse.reasonPhrase);
@@ -71,7 +71,7 @@ class MomentsProvider with ChangeNotifier {
       notifyListeners();
       responseModel = momentsModelFromJson(apiResponse.body);
       if(responseModel.status == 1 && id==null){
-        myMoments= responseModel;
+        myMoments = responseModel.data??[];
       }
     } else {
       responseModel = MomentsModel(status: 0,message: apiResponse.reasonPhrase);
@@ -120,7 +120,7 @@ class MomentsProvider with ChangeNotifier {
   }
 
   bool checkLike(int index, {bool? all, bool? following}) {
-    MomentsModel? moments;
+    List<Moment> moments;
     bool liked;
     if(all==true){
       moments = allMoments;
@@ -130,7 +130,7 @@ class MomentsProvider with ChangeNotifier {
       moments = myMoments;
     }
     try{
-    liked = moments!.data![index].likes!.contains(moments.data![index].likes!.where((element) => element.userId!.where((element) => element.id == storageService.getString(Constants.id)).isNotEmpty).first);
+    liked = moments[index].likes!.contains(moments[index].likes!.where((element) => element.userId!.where((element) => element.id == storageService.getString(Constants.id)).isNotEmpty).first);
     }catch(e){
       liked = false;
     }

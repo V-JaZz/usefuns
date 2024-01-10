@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/provider/rooms_provider.dart';
 import 'package:live_app/provider/user_data_provider.dart';
+import 'package:live_app/provider/zego_room_provider.dart';
 import 'package:live_app/screens/dashboard/me/contact_us.dart';
 import 'package:live_app/subscreens/ref_useFuns.dart';
 import 'package:live_app/subscreens/refund.dart';
@@ -238,6 +239,7 @@ class _SettingsState extends State<Settings> {
               builder: (context, value, child) => GestureDetector(
                 onTap: (){
                   Provider.of<RoomsProvider>(context,listen: false).myRoom = null;
+                  Provider.of<ZegoRoomProvider>(context,listen: false).destroy();
                   value.logout();
                 },
                 child: Container(

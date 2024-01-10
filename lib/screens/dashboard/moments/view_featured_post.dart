@@ -20,7 +20,7 @@ class ViewFeaturedPost extends StatefulWidget {
 
 class _ViewFeaturedPostState extends State<ViewFeaturedPost> {
   String? _commentValue;
-  TextEditingController _comment = TextEditingController();
+  final TextEditingController _comment = TextEditingController();
   bool submit = false;
   @override
   Widget build(BuildContext context) {
@@ -41,17 +41,17 @@ class _ViewFeaturedPostState extends State<ViewFeaturedPost> {
                         child: ListTile(
                           dense: true,
                           contentPadding: EdgeInsets.zero,
-                          leading: (value.allMoments?.data?[widget.index].userDetails?[0].images.toString()??'[]') == '[]'
+                          leading: (value.allMoments[widget.index].userDetails?[0].images.toString()??'[]') == '[]'
                               ? CircleAvatar(
                             foregroundImage: const AssetImage("assets/profile.png"),
                             radius: 22 * a,
                           )
                               :CircleAvatar(
-                            foregroundImage: NetworkImage(value.allMoments!.data![widget.index].userDetails!.first.images!.first!),
+                            foregroundImage: NetworkImage(value.allMoments[widget.index].userDetails!.first.images!.first!),
                             radius: 22 * a,
                           ),
                           title: Text(
-                            value.allMoments!.data![widget.index].userDetails![0].name!,
+                            value.allMoments[widget.index].userDetails![0].name!,
                             style: SafeGoogleFont(
                               'Poppins',
                               fontSize: 18 * b,
@@ -62,7 +62,7 @@ class _ViewFeaturedPostState extends State<ViewFeaturedPost> {
                             ),
                           ),
                           subtitle: Text(
-                              TimeUtil.getTimeDifferenceString(value.allMoments!.data![widget.index].createdAt!),
+                              TimeUtil.getTimeDifferenceString(value.allMoments[widget.index].createdAt!),
                               overflow: TextOverflow.ellipsis,
                               style: SafeGoogleFont(
                                 'Poppins',
@@ -92,19 +92,19 @@ class _ViewFeaturedPostState extends State<ViewFeaturedPost> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    (value.allMoments?.data?[widget.index].images?.toString()??'[]') != '[]'
+                    (value.allMoments[widget.index].images?.toString()??'[]') != '[]'
                         ?Hero(
-                          tag: value.allMoments!.data![widget.index].id!,
+                          tag: value.allMoments[widget.index].id!,
                           child: Image.network(
-                          value.allMoments!.data![widget.index].images!.first,
+                          value.allMoments[widget.index].images!.first,
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) {
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  value.allMoments?.data?[widget.index].caption != null
+                                  value.allMoments[widget.index].caption != null
                                       ? Text(
-                                    value.allMoments!.data![widget.index].caption.toString(),
+                                    value.allMoments[widget.index].caption.toString(),
                                     style: SafeGoogleFont(
                                       'Poppins',
                                       fontSize: 14 * b,
@@ -147,7 +147,7 @@ class _ViewFeaturedPostState extends State<ViewFeaturedPost> {
                             size: 27,
                             isLiked: value.checkLike(widget.index,all: true),
                             onTap: (isLiked) async {
-                              value.likePost(value.allMoments!.data![widget.index].id!,all: true);
+                              value.likePost(value.allMoments[widget.index].id!,all: true);
                               return !isLiked;
                             },
                             circleColor: const CircleColor(start: Color(0x339E26BC),end: Color(0xff9e26bc)),
@@ -156,7 +156,7 @@ class _ViewFeaturedPostState extends State<ViewFeaturedPost> {
                               Icons.thumb_up,
                               color: isLiked ? const Color(0xff9e26bc) : Colors.grey,
                             ),
-                            likeCount: value.allMoments?.data?[widget.index].likes?.length??0,
+                            likeCount: value.allMoments[widget.index].likes?.length??0,
                             countBuilder: (int? count, bool isLiked, String text) {
                               var color = isLiked ? const Color(0xff9e26bc)  : Colors.grey;
                               Widget result;
@@ -175,13 +175,13 @@ class _ViewFeaturedPostState extends State<ViewFeaturedPost> {
                             },
                           ),
                           SizedBox(width: 15 * a),
-                          if(value.allMoments?.data?[widget.index].userDetails!.first.isCommentRestricted == false)Row(
+                          if(value.allMoments[widget.index].userDetails!.first.isCommentRestricted == false)Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               const Icon(Icons.mode_comment_outlined,color: Colors.grey),
                               SizedBox(width: 5 * a),
                               Text(
-                                value.allMoments?.data?[widget.index].comments?.length.toString()??'0',
+                                value.allMoments[widget.index].comments?.length.toString()??'0',
                                 style: SafeGoogleFont(
                                   'Poppins',
                                   fontSize: 16 * b,
@@ -197,8 +197,8 @@ class _ViewFeaturedPostState extends State<ViewFeaturedPost> {
                       ),
                     ),
                     const Divider(),
-                    if(value.allMoments?.data?[widget.index].userDetails!.first.isCommentRestricted == false)Text(
-                      '${value.allMoments?.data?[widget.index].comments?.length} Comments',
+                    if(value.allMoments[widget.index].userDetails!.first.isCommentRestricted == false)Text(
+                      '${value.allMoments[widget.index].comments?.length} Comments',
                       style: SafeGoogleFont(
                         'Poppins',
                         fontSize: 16 * b,
@@ -208,24 +208,24 @@ class _ViewFeaturedPostState extends State<ViewFeaturedPost> {
                         color: const Color(0xff000000),
                       ),
                     ),
-                    if(value.allMoments?.data?[widget.index].userDetails!.first.isCommentRestricted == false)Column(
-                      children: List.generate(value.allMoments?.data?[widget.index].comments?.length??0, (index) {
+                    if(value.allMoments[widget.index].userDetails!.first.isCommentRestricted == false)Column(
+                      children: List.generate(value.allMoments[widget.index].comments?.length??0, (index) {
                         return ListTile(
-                          leading: (value.allMoments?.data?[widget.index].comments?[index].userId?[0].images?.toString()??'[]') == '[]'
+                          leading: (value.allMoments[widget.index].comments?[index].userId?[0].images?.toString()??'[]') == '[]'
                               ? CircleAvatar(
                             foregroundImage: const AssetImage("assets/profile.png"),
                             radius: 22 * a,
                           )
                               :CircleAvatar(
-                            foregroundImage: NetworkImage(value.allMoments!.data![widget.index].comments![index].userId![0].images!.first),
+                            foregroundImage: NetworkImage(value.allMoments[widget.index].comments![index].userId![0].images!.first),
                             radius: 22 * a,
                           ),
-                          title: Text(value.allMoments?.data?[widget.index].comments?[index].userId?[0].name??''),
-                          subtitle: Text(value.allMoments?.data?[widget.index].comments?[index].comment??''),
-                          trailing: value.allMoments?.data?[widget.index].comments?[index].userId?[0].id == value.storageService.getString(Constants.id)
+                          title: Text(value.allMoments[widget.index].comments?[index].userId?[0].name??''),
+                          subtitle: Text(value.allMoments[widget.index].comments?[index].comment??''),
+                          trailing: value.allMoments[widget.index].comments?[index].userId?[0].id == value.storageService.getString(Constants.id)
                               ?IconButton(
                             onPressed: (){
-                              value.deleteComment(widget.index,value.allMoments!.data![widget.index].id!, value.allMoments!.data![widget.index].comments![index].id!,all: true);
+                              value.deleteComment(widget.index,value.allMoments[widget.index].id!, value.allMoments[widget.index].comments![index].id!,all: true);
                             },
                             icon: const Icon(Icons.delete,color: Colors.grey),
                           )
@@ -239,7 +239,7 @@ class _ViewFeaturedPostState extends State<ViewFeaturedPost> {
               ],
             ),
           ),
-          bottomSheet: value.allMoments?.data?[widget.index].userDetails!.first.isCommentRestricted == false
+          bottomSheet: value.allMoments[widget.index].userDetails!.first.isCommentRestricted == false
               ?Container(
             width: Get.width,
             color: const Color(0xFFD9D9D9),
@@ -275,7 +275,7 @@ class _ViewFeaturedPostState extends State<ViewFeaturedPost> {
                       });
                       if(_emptyValidator(_commentValue)==null) {
                         FocusScope.of(context).unfocus();
-                        value.makeComment(widget.index,value.allMoments!.data![widget.index].id!, _commentValue!,all: true).then((value) {
+                        value.makeComment(widget.index,value.allMoments[widget.index].id!, _commentValue!,all: true).then((value) {
                           if(value){
                             _comment.clear();
                           }else{

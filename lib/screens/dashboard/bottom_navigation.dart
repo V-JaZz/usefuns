@@ -194,7 +194,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
 
   Future<void> _fetchUserData({bool refresh = true}) async {
     userDataProvider = Provider.of<UserDataProvider>(context, listen: false);
-    await userDataProvider.getUser(refresh: refresh);
+    await userDataProvider.getUser(loading: refresh);
   }
 
   void checkReward() {

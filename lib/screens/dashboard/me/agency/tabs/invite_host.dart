@@ -243,6 +243,7 @@ class _InviteHostTabViewState extends State<InviteHostTabView> {
                 Center(
                     child: GestureDetector(
                         onTap: () async {
+                          if(value.inviteRequestLoading)return;
                           if(userIdController.text.isEmpty){
                             showCustomSnackBar('Enter User ID!', Get.context!, isToaster: true);
                           }else if(user?.data==null){
@@ -284,7 +285,7 @@ class _InviteHostTabViewState extends State<InviteHostTabView> {
     if (user.data == null) {
       return Text('User ID Not Found - ${userIdController.text}');
     }
-    return Container(
+    return SizedBox(
       // padding: EdgeInsets.symmetric(horizontal: 12 * a, vertical: 3 * a),
       width: double.infinity,
       child: Row(

@@ -222,7 +222,7 @@ class _UsefunsClubState extends State<UsefunsClub>
                                                         actions: const [],
                                                       ),);
                                                       value.join(club.id!).then((value) {
-                                                        user.getUser();
+                                                        user.getUser(loading: false);
                                                         Get.back();
                                                         Get.back();
                                                         return null;

@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:live_app/utils/zego_config.dart';
-
-import '../../../data/model/response/rooms_model.dart';
+import '../../../data/model/response/user_data_model.dart';
 
 class GroupMembersBottomSheet extends StatefulWidget {
-  final List<Member>? members;
+  final List<UserData>? members;
   final String owner;
   const GroupMembersBottomSheet({Key? key, required this.members, required this.owner}) : super(key: key);
 

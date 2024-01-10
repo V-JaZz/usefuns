@@ -2,9 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/data/model/response/common_model.dart';
-import 'package:live_app/data/model/response/user_data_model.dart';
 import 'package:live_app/utils/constants.dart';
 import '../data/datasource/local/sharedpreferences/storage_service.dart';
+import '../data/model/response/user_data_model.dart';
 import '../data/repository/user_data_repo.dart';
 import '../screens/auth/login_screen.dart';
 import '../utils/zego_config.dart';
@@ -17,10 +17,10 @@ class UserDataProvider with ChangeNotifier {
   bool isUserDataLoading = true;
   bool isFollowLoading = false;
 
-  Future<UserDataModel> getUser({bool refresh = true, String? id,bool isUsefunId = false}) async {
+  Future<UserDataModel> getUser({bool loading = true, String? id,bool isUsefunId = false}) async {
     if(!isUserDataLoading&&id==null) {
       isUserDataLoading= true;
-      if(refresh)notifyListeners();
+      if(loading)notifyListeners();
     }
     final apiResponse = await _userDataRepo.getUserById(id??storageService.getString(Constants.id),isUsefunId);
     UserDataModel responseModel;
@@ -28,6 +28,10 @@ class UserDataProvider with ChangeNotifier {
       responseModel = userDataModelFromJson(apiResponse.body);
       if(responseModel.status == 1 && id==null){
         userData= responseModel;
+        if(userData?.data?.tokens == null || userData!.data!.tokens != storageService.getString(Constants.token)){
+          storageService.clearStorage();
+          Get.to(const LogInScreen());
+        }
         ZegoConfig.instance.userID = userData!.data!.id!;
         ZegoConfig.instance.userName = userData!.data!.name!;
       }else if(id==null){
@@ -67,7 +71,7 @@ class UserDataProvider with ChangeNotifier {
     if (apiResponse.statusCode == 200) {
       responseModel = commonModelFromJson(apiResponse.body);
       if(responseModel.status == 1){
-        getUser(refresh: false);
+        getUser(loading: false);
       }
     } else {
       responseModel = CommonModel(status: 0,message: apiResponse.reasonPhrase);
@@ -98,7 +102,7 @@ class UserDataProvider with ChangeNotifier {
     if (apiResponse.statusCode == 200) {
       responseModel = commonModelFromJson(apiResponse.body);
       if(responseModel.status == 1){
-        await getUser();
+        await getUser(loading: false);
       }
     } else {
       responseModel = CommonModel(status: 0,message: apiResponse.reasonPhrase);
@@ -120,7 +124,7 @@ class UserDataProvider with ChangeNotifier {
     if (apiResponse.statusCode == 200) {
       responseModel = commonModelFromJson(apiResponse.body);
       if(responseModel.status == 1){
-        await getUser();
+        await getUser(loading: false);
       }
     } else {
       responseModel = CommonModel(status: 0,message: apiResponse.reasonPhrase);
@@ -141,7 +145,7 @@ class UserDataProvider with ChangeNotifier {
     if (apiResponse.statusCode == 200) {
       responseModel = commonModelFromJson(apiResponse.body);
       if(responseModel.status == 1){
-        getUser();
+        getUser(loading: false);
       }
     } else {
       responseModel = CommonModel(status: 0,message: apiResponse.reasonPhrase);

@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:live_app/provider/rooms_provider.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -233,6 +232,9 @@ class _SearchRoomUserState extends State<SearchRoomUser> {
                           leading: roomModel!.data![index].images!.isNotEmpty ? Image.network(roomModel!.data![index].images!.first):Image.asset('assets/logo_greystyle.png'),
                           title: Text(roomModel!.data![index].name!),
                           subtitle: Text((roomModel!.data![index].announcement??'') != ''?roomModel!.data![index].announcement!:'Welcome to my room!'),
+                          trailing: roomModel?.data?[index].isLocked == true
+                              ? Icon(Icons.lock, color: const Color(0xFF9E26BC), size: 18*a)
+                              : null,
                         ),
                       )),
                     )

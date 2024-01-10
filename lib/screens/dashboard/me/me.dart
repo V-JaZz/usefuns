@@ -140,7 +140,7 @@ class _MeState extends State<Me> {
       SmartRefresher(
         enablePullDown: true,
         onRefresh: ()async{
-          await providerUserData.getUser(refresh:false);
+          await providerUserData.getUser(loading:false);
           refreshController.refreshCompleted();
           return;
         },
@@ -415,9 +415,9 @@ class _MeState extends State<Me> {
                               Container(
                                 width: 25 * a,
                                 height: 13 * a,
-                                decoration: const BoxDecoration(
+                                decoration: BoxDecoration(
                                   image: DecorationImage(
-                                      image: AssetImage('assets/flag.png'),
+                                      image: AssetImage(getCountryByMobileNo(providerUserData.userData?.data?.mobile)),
                                       fit: BoxFit.contain),
                                 ),
                               ),

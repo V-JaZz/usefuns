@@ -4,7 +4,6 @@ import 'package:like_button/like_button.dart';
 import 'package:live_app/provider/moments_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-
 import '../../../utils/common_widgets.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/helper.dart';
@@ -41,17 +40,17 @@ class _ViewFollowingPostState extends State<ViewFollowingPost> {
                         child: ListTile(
                           dense: true,
                           contentPadding: EdgeInsets.zero,
-                          leading: (value.followingMoments?.data?[widget.index].userDetails?[0].images.toString()??'[]') == '[]'
+                          leading: (value.followingMoments[widget.index].userDetails?[0].images.toString()??'[]') == '[]'
                               ? CircleAvatar(
                             foregroundImage: const AssetImage("assets/profile.png"),
                             radius: 22 * a,
                           )
                               :CircleAvatar(
-                            foregroundImage: NetworkImage(value.followingMoments!.data![widget.index].userDetails!.first.images!.first!),
+                            foregroundImage: NetworkImage(value.followingMoments[widget.index].userDetails!.first.images!.first!),
                             radius: 22 * a,
                           ),
                           title: Text(
-                            value.followingMoments!.data![widget.index].userDetails![0].name!,
+                            value.followingMoments[widget.index].userDetails![0].name!,
                             style: SafeGoogleFont(
                               'Poppins',
                               fontSize: 18 * b,
@@ -62,7 +61,7 @@ class _ViewFollowingPostState extends State<ViewFollowingPost> {
                             ),
                           ),
                           subtitle: Text(
-                              TimeUtil.getTimeDifferenceString(value.followingMoments!.data![widget.index].createdAt!),
+                              TimeUtil.getTimeDifferenceString(value.followingMoments[widget.index].createdAt!),
                               overflow: TextOverflow.ellipsis,
                               style: SafeGoogleFont(
                                 'Poppins',
@@ -92,19 +91,19 @@ class _ViewFollowingPostState extends State<ViewFollowingPost> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    (value.followingMoments?.data?[widget.index].images?.toString()??'[]') != '[]'
+                    (value.followingMoments[widget.index].images?.toString()??'[]') != '[]'
                         ?Hero(
-                          tag: value.followingMoments!.data![widget.index].id!,
+                          tag: value.followingMoments[widget.index].id!,
                           child: Image.network(
-                          value.followingMoments!.data![widget.index].images!.first,
+                          value.followingMoments[widget.index].images!.first,
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) {
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  value.followingMoments?.data?[widget.index].caption != null
+                                  value.followingMoments[widget.index].caption != null
                                       ? Text(
-                                    value.followingMoments!.data![widget.index].caption.toString(),
+                                    value.followingMoments[widget.index].caption.toString(),
                                     style: SafeGoogleFont(
                                       'Poppins',
                                       fontSize: 14 * b,
@@ -147,7 +146,7 @@ class _ViewFollowingPostState extends State<ViewFollowingPost> {
                             size: 27,
                             isLiked: value.checkLike(widget.index,all: true),
                             onTap: (isLiked) async {
-                              value.likePost(value.followingMoments!.data![widget.index].id!,all: true);
+                              value.likePost(value.followingMoments[widget.index].id!,all: true);
                               return !isLiked;
                             },
                             circleColor: const CircleColor(start: Color(0x339E26BC),end: Color(0xff9e26bc)),
@@ -156,7 +155,7 @@ class _ViewFollowingPostState extends State<ViewFollowingPost> {
                               Icons.thumb_up,
                               color: isLiked ? const Color(0xff9e26bc) : Colors.grey,
                             ),
-                            likeCount: value.followingMoments?.data?[widget.index].likes?.length??0,
+                            likeCount: value.followingMoments[widget.index].likes?.length??0,
                             countBuilder: (int? count, bool isLiked, String text) {
                               var color = isLiked ? const Color(0xff9e26bc)  : Colors.grey;
                               Widget result;
@@ -175,13 +174,13 @@ class _ViewFollowingPostState extends State<ViewFollowingPost> {
                             },
                           ),
                           SizedBox(width: 15 * a),
-                          if(value.followingMoments?.data?[widget.index].userDetails!.first.isCommentRestricted == false)Row(
+                          if(value.followingMoments[widget.index].userDetails!.first.isCommentRestricted == false)Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               const Icon(Icons.mode_comment_outlined,color: Colors.grey),
                               SizedBox(width: 5 * a),
                               Text(
-                                value.followingMoments?.data?[widget.index].comments?.length.toString()??'0',
+                                value.followingMoments[widget.index].comments?.length.toString()??'0',
                                 style: SafeGoogleFont(
                                   'Poppins',
                                   fontSize: 16 * b,
@@ -197,8 +196,8 @@ class _ViewFollowingPostState extends State<ViewFollowingPost> {
                       ),
                     ),
                     const Divider(),
-                    if(value.followingMoments?.data?[widget.index].userDetails!.first.isCommentRestricted == false)Text(
-                      '${value.followingMoments?.data?[widget.index].comments?.length} Comments',
+                    if(value.followingMoments[widget.index].userDetails!.first.isCommentRestricted == false)Text(
+                      '${value.followingMoments[widget.index].comments?.length} Comments',
                       style: SafeGoogleFont(
                         'Poppins',
                         fontSize: 16 * b,
@@ -208,24 +207,24 @@ class _ViewFollowingPostState extends State<ViewFollowingPost> {
                         color: const Color(0xff000000),
                       ),
                     ),
-                    if(value.followingMoments?.data?[widget.index].userDetails!.first.isCommentRestricted == false)Column(
-                      children: List.generate(value.followingMoments?.data?[widget.index].comments?.length??0, (index) {
+                    if(value.followingMoments[widget.index].userDetails!.first.isCommentRestricted == false)Column(
+                      children: List.generate(value.followingMoments[widget.index].comments?.length??0, (index) {
                         return ListTile(
-                          leading: (value.followingMoments?.data?[widget.index].comments?[index].userId?[0].images?.toString()??'[]') == '[]'
+                          leading: (value.followingMoments[widget.index].comments?[index].userId?[0].images?.toString()??'[]') == '[]'
                               ? CircleAvatar(
                             foregroundImage: const AssetImage("assets/profile.png"),
                             radius: 22 * a,
                           )
                               :CircleAvatar(
-                            foregroundImage: NetworkImage(value.followingMoments!.data![widget.index].comments![index].userId![0].images!.first),
+                            foregroundImage: NetworkImage(value.followingMoments[widget.index].comments![index].userId![0].images!.first),
                             radius: 22 * a,
                           ),
-                          title: Text(value.followingMoments?.data?[widget.index].comments?[index].userId?[0].name??''),
-                          subtitle: Text(value.followingMoments?.data?[widget.index].comments?[index].comment??''),
-                          trailing: value.followingMoments?.data?[widget.index].comments?[index].userId?[0].id == value.storageService.getString(Constants.id)
+                          title: Text(value.followingMoments[widget.index].comments?[index].userId?[0].name??''),
+                          subtitle: Text(value.followingMoments[widget.index].comments?[index].comment??''),
+                          trailing: value.followingMoments[widget.index].comments?[index].userId?[0].id == value.storageService.getString(Constants.id)
                               ?IconButton(
                             onPressed: (){
-                              value.deleteComment(widget.index,value.followingMoments!.data![widget.index].id!, value.followingMoments!.data![widget.index].comments![index].id!,all: true);
+                              value.deleteComment(widget.index,value.followingMoments[widget.index].id!, value.followingMoments[widget.index].comments![index].id!,all: true);
                             },
                             icon: const Icon(Icons.delete,color: Colors.grey),
                           )
@@ -239,7 +238,7 @@ class _ViewFollowingPostState extends State<ViewFollowingPost> {
               ],
             ),
           ),
-          bottomSheet: value.followingMoments?.data?[widget.index].userDetails!.first.isCommentRestricted == false
+          bottomSheet: value.followingMoments[widget.index].userDetails!.first.isCommentRestricted == false
               ?Container(
             width: Get.width,
             color: const Color(0xFFD9D9D9),
@@ -275,7 +274,7 @@ class _ViewFollowingPostState extends State<ViewFollowingPost> {
                       });
                       if(_emptyValidator(_commentValue)==null) {
                         FocusScope.of(context).unfocus();
-                        value.makeComment(widget.index,value.followingMoments!.data![widget.index].id!, _commentValue!,all: true).then((value) {
+                        value.makeComment(widget.index,value.followingMoments[widget.index].id!, _commentValue!,all: true).then((value) {
                           if(value){
                             _comment.clear();
                           }else{

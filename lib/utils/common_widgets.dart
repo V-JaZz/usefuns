@@ -171,6 +171,7 @@ Widget roomListTile(
     required String title,
     required String? subTitle,
     required String active,
+    required bool isLocked,
     required void Function() onTap}) {
   double baseWidth = 360;
   double a = Get.width / baseWidth;
@@ -179,123 +180,126 @@ Widget roomListTile(
     onTap: onTap,
     child: Container(
       margin: EdgeInsets.only(top: 8*a),
+      height: 84*a,
       decoration: BoxDecoration(
         color: const Color(0x119E26BC),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
+          Padding(
+            padding: EdgeInsets.all(6*a),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Container(
+                height: 72*a,
+                width: 72*a,
+                color: Colors.white,
+                child: image == null
+                    ? Image.asset(
+                  "assets/logo_greystyle.png",
+                  fit: BoxFit.cover,
+                )
+                    : Image.network(
+                  image,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    } else {
+                      return Shimmer.fromColors(
+                        highlightColor: Theme.of(context)
+                            .primaryColor
+                            .withOpacity(0.3),
+                        baseColor: Theme.of(context)
+                            .primaryColor
+                            .withOpacity(0.1),
+                        child: Container(
+                          color: Colors.white,
+                        ),
+                      );
+                    }
+                  },
+                  // errorBuilder: (context, error, stackTrace) => Container(
+                  //   alignment: Alignment.center,
+                  //   color: Colors.white,
+                  //   child: Text(error.toString(),
+                  //       textAlign: TextAlign.center),
+                  // ),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(width: 8*a),
           Expanded(
-            child: Row(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: EdgeInsets.all(6*a),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Container(
-                      height: 72*a,
-                      width: 72*a,
-                      color: Colors.white,
-                      child: image == null
-                          ? Image.asset(
-                        "assets/logo_greystyle.png",
-                        fit: BoxFit.cover,
-                      )
-                          : Image.network(
-                        image,
-                        fit: BoxFit.cover,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) {
-                            return child;
-                          } else {
-                            return Shimmer.fromColors(
-                              highlightColor: Theme.of(context)
-                                  .primaryColor
-                                  .withOpacity(0.3),
-                              baseColor: Theme.of(context)
-                                  .primaryColor
-                                  .withOpacity(0.1),
-                              child: Container(
-                                color: Colors.white,
-                              ),
-                            );
-                          }
-                        },
-                        errorBuilder: (context, error, stackTrace) => Container(
-                          alignment: Alignment.center,
-                          color: Colors.white,
-                          child: Text(error.toString(),
-                              textAlign: TextAlign.center),
-                        ),
-                      ),
+                SizedBox(height: 8*a),
+                SizedBox(
+                  width: double.infinity,
+                  child: Text(
+                    title,
+                    overflow: TextOverflow.ellipsis,
+                    style: SafeGoogleFont(
+                      'Poppins',
+                      fontSize: 17 * b,
+                      fontWeight: FontWeight.w400,
+                      height: 1.5 * b / a,
+                      letterSpacing: 0.64 * a,
+                      color: const Color(0xff000000),
                     ),
                   ),
                 ),
-                SizedBox(width: 8*a),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 8*a),
-                      SizedBox(
-                        width: double.infinity,
-                        child: Text(
-                          title,
-                          overflow: TextOverflow.ellipsis,
-                          style: SafeGoogleFont(
-                            'Poppins',
-                            fontSize: 17 * b,
-                            fontWeight: FontWeight.w400,
-                            height: 1.5 * b / a,
-                            letterSpacing: 0.64 * a,
-                            color: const Color(0xff000000),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: double.infinity,
-                        child: Text(
-                          subTitle == null || subTitle == ''
-                              ? 'Welcome to my room!'
-                              : subTitle,
-                          overflow: TextOverflow.ellipsis,
-                          style: SafeGoogleFont(
-                            'Poppins',
-                            fontSize: 14 * b,
-                            fontWeight: FontWeight.w400,
-                            height: 1.5 * b / a,
-                            letterSpacing: 0.48 * a,
-                            color: const Color(0x99000000),
-                          ),
-                        ),
-                      ),
-                    ],
+                SizedBox(
+                  width: double.infinity,
+                  child: Text(
+                    subTitle == null || subTitle == ''
+                        ? 'Welcome to my room!'
+                        : subTitle,
+                    overflow: TextOverflow.ellipsis,
+                    style: SafeGoogleFont(
+                      'Poppins',
+                      fontSize: 14 * b,
+                      fontWeight: FontWeight.w400,
+                      height: 1.5 * b / a,
+                      letterSpacing: 0.48 * a,
+                      color: const Color(0x99000000),
+                    ),
                   ),
-                )
+                ),
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10.0, right: 6),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 15, width: 20, child: WaveAnimation()),
-                Text(
-                  active == 'null' ? '0' : active,
-                  style: SafeGoogleFont(
-                    'Poppins',
-                    fontSize: 14 * b,
-                    fontWeight: FontWeight.w400,
-                    height: 1.5 * b / a,
-                    letterSpacing: 0.48 * a,
-                    color: const Color(0xff000000),
-                  ),
-                )
-              ],
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              if(isLocked)Padding(
+                padding: const EdgeInsets.only(top: 12,right: 6),
+                child: Icon(Icons.lock, color: const Color(0xFF9E26BC), size: 18*a),
+              ),
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10, right: 6),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 15, width: 20, child: WaveAnimation()),
+                    Text(
+                      active == 'null' ? '0' : active,
+                      style: SafeGoogleFont(
+                        'Poppins',
+                        fontSize: 14 * b,
+                        fontWeight: FontWeight.w400,
+                        height: 1.5 * b / a,
+                        letterSpacing: 0.48 * a,
+                        color: const Color(0xff000000),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),

@@ -30,13 +30,13 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
   @override
   void initState() {
     Provider.of<GiftsProvider>(context, listen: false).getAll();
-    String? zpu = Provider.of<ZegoRoomProvider>(context,listen: false).roomStreamList.firstWhereOrNull((e) => e.streamId != ZegoConfig.instance.userID)?.userName;
-    print('zpu $zpu');
+    var list = Provider.of<ZegoRoomProvider>(context,listen: false).roomStreamList.where((e) => e.streamId != ZegoConfig.instance.userID).toList();
     countController.text = '1';
     if (widget.selection != null) {
       _selectedStream.add(widget.selection!);
-    }else if(zpu!=null){
-      _selectedStream.add(zpu);
+    }else if(list.isNotEmpty){
+      list.sort((a, b) => a.seat!.compareTo(b.seat!));
+      _selectedStream.add(list.first.userName!);
     }
     super.initState();
   }
@@ -89,7 +89,7 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                                 ),
                                 const Spacer(),
                                 Text(
-                                  'Need ${giftProvider.series![up.userData?.data?.level??0].toInt()-(up.userData?.data?.exp??0)} EXP to upgrade',
+                                  'Need ${(giftProvider.series![up.userData?.data?.level??0]-(up.userData?.data?.exp??0)).toInt()} EXP to upgrade',
                                   textAlign: TextAlign.left,
                                   style: SafeGoogleFont(
                                       color: const Color.fromRGBO(255, 255, 255, 1),
@@ -244,87 +244,86 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                                 ],
                               ),
                             ),
-                            Container(
-                              width: 118 * a,
-                              height: 27 * a,
-                              decoration: BoxDecoration(
-                                color: const Color(0xff1877f2),
-                                borderRadius: BorderRadius.circular(3 * a),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    width: 52 * a,
-                                    margin: EdgeInsets.all(1 * a),
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 6 * a),
-                                    height: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xff040106),
-                                      borderRadius:
-                                          BorderRadius.circular(3 * a),
-                                    ),
-                                    child: Center(
-                                      child: TextField(
-                                        controller: countController,
-                                        decoration: textFieldDecoration(),
-                                        maxLength: 5,
-                                        keyboardType: TextInputType.number,
-                                        style: SafeGoogleFont(
-                                          'DM Sans',
-                                          fontSize: 12 * b,
-                                          fontWeight: FontWeight.w700,
-                                          height: 1.1666666667 * b / a,
-                                          color: const Color(0xffffffff),
+
+                            GestureDetector(
+                              onTap: () {
+                                final user = Provider.of<UserDataProvider>(context, listen: false).userData;
+                                if (_selectedStream.isEmpty) {
+                                  showCustomSnackBar(
+                                      "no user selected!", context,
+                                      isToaster: true);
+                                } else if (selectedGift == null) {
+                                  showCustomSnackBar(
+                                      "no gift selected!", context,
+                                      isToaster: true);
+                                } else
+                                if ((user?.data?.diamonds ?? 0) <
+                                    (selectedGiftCost ?? 0)*(_selectedStream.length)*(int.tryParse(countController.text)??1)) {
+                                  showInsufficientDialog(context,(selectedGiftCost ?? 0)*(_selectedStream.length)*(int.tryParse(countController.text)??1)-(user?.data?.diamonds ?? 0));
+                                } else if (countController.text.trim() ==
+                                    '' ||
+                                    countController.text.trim() == '0' ||
+                                    int.tryParse(countController.text
+                                        .trim()) ==
+                                        null) {
+                                  showCustomSnackBar(
+                                      "Invalid count selected!", context,
+                                      isToaster: true);
+                                } else {
+                                  giftProvider.sendGift(
+                                      user!.data!.id!,
+                                      zegoRoomProvider.roomUsersList.where((e) => _selectedStream.contains(e.userName)).map((e) => e.userID).toList(),
+                                      selectedGift!.id!,
+                                      int.parse(countController.text.trim()),
+                                      zegoRoomProvider.room!.id!,
+                                      selectedGift?.coin ?? 0);
+                                  zegoRoomProvider.sendBroadcastGift(
+                                      _selectedStream,
+                                      selectedGift!.images![1],
+                                      selectedGift!.images![0],
+                                      selectedGift!.coin??1,
+                                      int.parse(countController.text.trim()));
+                                  setState(() => selectedGift = null);
+                                }
+                              },
+                              child: Container(
+                                width: 118 * a,
+                                height: 27 * a,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xff1877f2),
+                                  borderRadius: BorderRadius.circular(3 * a),
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 52 * a,
+                                      margin: EdgeInsets.all(1 * a),
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 6 * a),
+                                      height: double.infinity,
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xff040106),
+                                        borderRadius:
+                                            BorderRadius.circular(3 * a),
+                                      ),
+                                      child: Center(
+                                        child: TextField(
+                                          controller: countController,
+                                          decoration: textFieldDecoration(),
+                                          maxLength: 5,
+                                          keyboardType: TextInputType.number,
+                                          style: SafeGoogleFont(
+                                            'DM Sans',
+                                            fontSize: 12 * b,
+                                            fontWeight: FontWeight.w700,
+                                            height: 1.1666666667 * b / a,
+                                            color: const Color(0xffffffff),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      final user =
-                                          Provider.of<UserDataProvider>(context,
-                                                  listen: false)
-                                              .userData;
-                                      if (_selectedStream.isEmpty) {
-                                        showCustomSnackBar(
-                                            "no user selected!", context,
-                                            isToaster: true);
-                                      } else if (selectedGift == null) {
-                                        showCustomSnackBar(
-                                            "no gift selected!", context,
-                                            isToaster: true);
-                                      } else
-                                        if ((user?.data?.diamonds ?? 0) <
-                                          (selectedGiftCost ?? 0)*(_selectedStream.length)*(int.tryParse(countController.text)??1)) {
-                                        showInsufficientDialog(context,(selectedGiftCost ?? 0)*(_selectedStream.length)*(int.tryParse(countController.text)??1)-(user?.data?.diamonds ?? 0));
-                                      } else if (countController.text.trim() ==
-                                              '' ||
-                                          countController.text.trim() == '0' ||
-                                          int.tryParse(countController.text
-                                                  .trim()) ==
-                                              null) {
-                                        showCustomSnackBar(
-                                            "Invalid count selected!", context,
-                                            isToaster: true);
-                                      } else {
-                                        giftProvider.sendGift(
-                                            user!.data!.id!,
-                                            zegoRoomProvider.roomUsersList.where((e) => _selectedStream.contains(e.userName)).map((e) => e.userID).toList(),
-                                            selectedGift!.id!,
-                                            int.parse(countController.text.trim()),
-                                            zegoRoomProvider.room!.id!,
-                                            selectedGift?.coin ?? 0);
-                                        zegoRoomProvider.sendBroadcastGift(
-                                            _selectedStream,
-                                            selectedGift!.images![1],
-                                            selectedGift!.images![0],
-                                            selectedGift!.coin??1,
-                                            int.parse(countController.text.trim()));
-                                      }
-                                    },
-                                    child: Container(
+                                    Container(
                                       color: Colors.transparent,
                                       padding: EdgeInsets.fromLTRB(
                                           15 * a, 0 * a, 15 * a, 0 * a),
@@ -339,8 +338,8 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ],

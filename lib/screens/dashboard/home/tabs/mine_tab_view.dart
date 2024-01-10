@@ -180,6 +180,9 @@ class _MineTabViewState extends State<MineTabView> {
                           color: const Color(0x99000000),
                         ),
                       ),
+                      trailing: room.isLocked == true
+                          ? Icon(Icons.lock, color: Colors.grey.shade600, size: 18*a)
+                          : null,
                     ),
                   );
                 }
@@ -266,6 +269,7 @@ class _MineTabViewState extends State<MineTabView> {
                                                     title: room.name.toString(),
                                                     subTitle: room.announcement,
                                                     active: room.activeUsers?.length.toString()??'0',
+                                                    isLocked: room.isLocked??false,
                                                     onTap: (){
                                                       Get.dialog(RoomPreLoadingDialog(room: room),barrierDismissible: false);
                                                     },
@@ -316,6 +320,7 @@ class _MineTabViewState extends State<MineTabView> {
                                                   title: room.name.toString(),
                                                   subTitle: room.announcement,
                                                   active: room.activeUsers?.length.toString()??'0',
+                                                  isLocked: room.isLocked??false,
                                                   onTap: (){
                                                     Get.dialog(RoomPreLoadingDialog(room: room),barrierDismissible: false);
                                                   },

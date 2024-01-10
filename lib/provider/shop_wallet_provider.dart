@@ -94,7 +94,7 @@ class ShopWalletProvider with ChangeNotifier {
         price: 0,
         method: 'reward');
     if (apiResponse.statusCode == 200) {
-      Provider.of<UserDataProvider>(Get.context!,listen: false).getUser(refresh: false);
+      Provider.of<UserDataProvider>(Get.context!,listen: false).getUser(loading: false);
       showCustomSnackBar('$diamonds diamonds added to your wallet!', Get.context!,isError: false,isToaster: true);
     }
   }
@@ -122,7 +122,7 @@ class ShopWalletProvider with ChangeNotifier {
     if (apiResponse.statusCode == 200) {
       CommonModel responseModel = commonModelFromJson(apiResponse.body);
       if(responseModel.status == 1){
-        Provider.of<UserDataProvider>(Get.context!,listen: false).getUser();
+        Provider.of<UserDataProvider>(Get.context!,listen: false).getUser(loading: false);
         return true;
       }
     }
@@ -138,7 +138,7 @@ class ShopWalletProvider with ChangeNotifier {
     if (apiResponse.statusCode == 200) {
       CommonModel responseModel = commonModelFromJson(apiResponse.body);
       if(responseModel.status == 1){
-        Provider.of<UserDataProvider>(Get.context!,listen: false).getUser();
+        Provider.of<UserDataProvider>(Get.context!,listen: false).getUser(loading: false);
         showCustomSnackBar('Beans Converted!', Get.context!, isToaster: true, isError: false);
       }
     } else {

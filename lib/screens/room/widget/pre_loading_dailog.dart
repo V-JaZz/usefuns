@@ -12,6 +12,7 @@ import '../../../data/model/response/rooms_model.dart';
 import '../../../provider/gifts_provider.dart';
 import '../../../provider/user_data_provider.dart';
 import '../../../provider/zego_room_provider.dart';
+import '../../../utils/helper.dart';
 import '../../../utils/utils_assets.dart';
 
 class RoomPreLoadingDialog extends StatefulWidget {
@@ -82,10 +83,12 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
                         ),
                         keyboardType: TextInputType.number,
                         textInputAction: TextInputAction.done,
+                        maxLength: 4,
                         decoration: InputDecoration(
                             isDense: true,
                             filled: true,
                             fillColor: Colors.white,
+                            counter: const SizedBox.shrink(),
                             enabledBorder: UnderlineInputBorder(
                               borderSide:
                                   const BorderSide(color: Colors.transparent),
@@ -96,20 +99,10 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
                                   const BorderSide(color: Colors.transparent),
                               borderRadius: BorderRadius.circular(50),
                             ),
-                            hintText: 'Enter Password',
+                            hintText: 'Enter PIN',
                             alignLabelWithHint: false),
                         onFieldSubmitted: (value) {
-                          if(loading) return;
-                          if(textEditingController.text.isEmpty){
-                            setState(() {
-                              errorText = 'Invalid Password!';
-                            });
-                            return;
-                          }
-                          setState(() {
-                            loading = true;
-                          });
-                          join(password: textEditingController.text);
+                          joinLockedRoom();
                         },
                       ),
                     ),
@@ -131,17 +124,7 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
                                 backgroundColor: Theme.of(context).primaryColor,
                                 foregroundColor: Colors.white),
                             onPressed: () {
-                              if(loading) return;
-                              if(textEditingController.text.isEmpty){
-                                setState(() {
-                                  errorText = 'Invalid Password!';
-                                });
-                                return;
-                              }
-                              setState(() {
-                                loading = true;
-                              });
-                              join(password: textEditingController.text);
+                              joinLockedRoom();
                             },
                             child: loading
                                 ? Container(padding: const EdgeInsets.all(3),child: const Center(child: SizedBox( height:18, width:18, child: CircularProgressIndicator(color: Colors.white))))
@@ -188,6 +171,7 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
           zegoRoomProvider.backgroundImage =
               me.data!.roomWallpaper!.first.images!.first;
         }
+        zegoRoomProvider.roomCountry = getCountryByMobileNo(me.data?.mobile,name: true);
       } else {
         final ownerData =
             await Provider.of<UserDataProvider>(Get.context!, listen: false)
@@ -200,6 +184,7 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
             getGreeting(
                 me?.data?.name, Random().nextInt(5), ownerData.data?.name),
             ownerData);
+        zegoRoomProvider.roomCountry = getCountryByMobileNo(ownerData.data?.mobile,name: true);
       }
       Provider.of<GiftsProvider>(Get.context!, listen: false).generateSeries();
       Get.off(() => const LiveRoom(), transition: Transition.size);
@@ -213,5 +198,19 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
       Get.back();
       showCustomSnackBar(response.message, Get.context!, isToaster: true);
     }
+  }
+
+  void joinLockedRoom() {
+    if(loading) return;
+    if(textEditingController.text.isEmpty || textEditingController.text.length != 4){
+      setState(() {
+        errorText = 'Invalid PIN!';
+      });
+      return;
+    }
+    setState(() {
+      loading = true;
+    });
+    join(password: textEditingController.text);
   }
 }

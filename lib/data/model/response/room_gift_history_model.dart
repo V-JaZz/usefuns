@@ -38,6 +38,7 @@ class GiftHistory {
   String? id;
   String? roomId;
   String? sender;
+  int? count;
   String? receiver;
   Gift? gift;
   DateTime? createdAt;
@@ -48,6 +49,7 @@ class GiftHistory {
     this.id,
     this.roomId,
     this.sender,
+    this.count,
     this.receiver,
     this.gift,
     this.createdAt,
@@ -59,6 +61,7 @@ class GiftHistory {
     id: json["_id"],
     roomId: json["roomId"],
     sender: json["sender"],
+    count: json["count"],
     receiver: json["receiver"],
     gift: json["gift"] == null ? null : Gift.fromJson(json["gift"]),
     createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
@@ -70,6 +73,7 @@ class GiftHistory {
     "_id": id,
     "roomId": roomId,
     "sender": sender,
+    "count": count,
     "receiver": receiver,
     "gift": gift?.toJson(),
     "createdAt": createdAt?.toIso8601String(),

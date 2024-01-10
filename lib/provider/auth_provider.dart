@@ -130,24 +130,14 @@ class AuthProvider with ChangeNotifier {
     return responseModel;
   }
 
-  Future<CommonModel> logout() async {
+  Future<void> logout() async {
     _isLoading = true;
     notifyListeners();
-    final apiResponse = await _authRepo.logout(storageService.getString(Constants.token));
-    CommonModel responseModel;
-    if (apiResponse.statusCode == 200) {
-      responseModel = commonModelFromJson(apiResponse.body);
-      if(responseModel.status == 1){
-        await storageService.clearStorage();
-        Get.offAll(()=>const LogInScreen());
-      }else{
-        showCustomSnackBar('Failed to logout!', Get.context!);
-      }
-    } else {
-      responseModel = CommonModel(status: 0,message: apiResponse.reasonPhrase);
-    }
+    await _authRepo.logout(storageService.getString(Constants.id),storageService.getString(Constants.token));
+    await storageService.clearStorage();
+    Get.offAll(()=>const LogInScreen());
     _isLoading = false;
     notifyListeners();
-    return responseModel;
+    return;
   }
 }

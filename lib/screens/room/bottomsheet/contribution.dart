@@ -130,7 +130,7 @@ class _ContributionState extends State<Contribution> {
                                     final List<GiftHistory> history = list[userId]!;
                                     int diamondsSum = 0;
                                     for(var g in history){
-                                      diamondsSum = diamondsSum+g.gift!.coin!;
+                                      diamondsSum = diamondsSum+(g.gift!.coin!*g.count!);
                                     }
                                     return FutureBuilder(
                                       future: Provider.of<UserDataProvider>(context,listen: false).getUser(id: userId),
@@ -248,7 +248,7 @@ class _ContributionState extends State<Contribution> {
                                   final List<GiftHistory> history = list[userId]!;
                                   int diamondsSum = 0;
                                   for(var g in history){
-                                    diamondsSum = diamondsSum+g.gift!.coin!;
+                                    diamondsSum = diamondsSum+(g.gift!.coin!*g.count!);
                                   }
                                   return FutureBuilder(
                                     future: Provider.of<UserDataProvider>(context,listen: false).getUser(id: userId),
@@ -408,7 +408,7 @@ class _ContributionState extends State<Contribution> {
                                       color: const Color(0x88000000),
                                     ))),
                               Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: List.generate(
                                     list.length>2?3:list.length,
                                         (i) {
@@ -416,7 +416,7 @@ class _ContributionState extends State<Contribution> {
                                       final List<GiftHistory> history = list[userId]!;
                                       int diamondsSum = 0;
                                       for(var g in history){
-                                        diamondsSum = diamondsSum+g.gift!.coin!;
+                                        diamondsSum = diamondsSum+(g.gift!.coin!*g.count!);
                                       }
                                       return FutureBuilder(
                                         future: Provider.of<UserDataProvider>(context,listen: false).getUser(id: userId),
@@ -534,7 +534,7 @@ class _ContributionState extends State<Contribution> {
                                     final List<GiftHistory> history = list[userId]!;
                                     int diamondsSum = 0;
                                     for(var g in history){
-                                      diamondsSum = diamondsSum+g.gift!.coin!;
+                                      diamondsSum = diamondsSum+(g.gift!.coin!*g.count!);
                                     }
                                     return FutureBuilder(
                                       future: Provider.of<UserDataProvider>(context,listen: false).getUser(id: userId),

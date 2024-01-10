@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../data/model/response/rooms_model.dart';
 import '../../../../provider/rooms_provider.dart';
@@ -39,7 +40,7 @@ class _PopularTabViewState extends State<PopularTabView> {
   }
 
   Future<void> loadData() async {
-    final data = await Provider.of<RoomsProvider>(context,listen: false).getAllNew(page);
+    final data = await Provider.of<RoomsProvider>(context,listen: false).getAllPopular(page);
     if(data == null){
       setState(() => loaded = true);
       return;
@@ -92,7 +93,14 @@ class _PopularTabViewState extends State<PopularTabView> {
               child: Consumer<RoomsProvider>(
                 builder: (context, value, child) {
                   return value.bannerList.isEmpty
-                      ? SizedBox(height: Get.width / 3, width: Get.width)
+                      ? Shimmer.fromColors(
+                      highlightColor: Theme.of(context)
+                          .primaryColor
+                          .withOpacity(0.3),
+                      baseColor: Theme.of(context)
+                          .primaryColor
+                          .withOpacity(0.1),
+                      child: Container(height: Get.width / 3, width: Get.width, color: Colors.white))
                       : ClipRRect(
                           borderRadius: BorderRadius.circular(12 * a),
                           child: SizedBox(
@@ -104,7 +112,7 @@ class _PopularTabViewState extends State<PopularTabView> {
                               initialPage: 0,
                               indicatorColor: Theme.of(context).primaryColor,
                               indicatorBackgroundColor: Colors.grey.shade400,
-                              autoPlayInterval: 3000,
+                              autoPlayInterval: 3600,
                               isLoop: true,
                               children: value.bannerList.isNotEmpty
                                   ? List.generate(value.bannerList.length,
@@ -122,6 +130,23 @@ class _PopularTabViewState extends State<PopularTabView> {
                                           }
                                         },
                                         child: Image.network(
+                                          loadingBuilder: (context, child, loadingProgress) {
+                                            if (loadingProgress == null) {
+                                              return child;
+                                            } else {
+                                              return Shimmer.fromColors(
+                                                highlightColor: Theme.of(context)
+                                                    .primaryColor
+                                                    .withOpacity(0.3),
+                                                baseColor: Theme.of(context)
+                                                    .primaryColor
+                                                    .withOpacity(0.1),
+                                                child: Container(
+                                                  color: Colors.white,
+                                                ),
+                                              );
+                                            }
+                                          },
                                           value.bannerList[index].images!
                                                   .isEmpty
                                               ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXia6hKP5CZMdeV1ti5ayWkDB82w-QFPm8ow&usqp=CAU'
@@ -253,6 +278,7 @@ class _PopularTabViewState extends State<PopularTabView> {
                                 active:
                                 room.activeUsers?.length.toString() ??
                                     '0',
+                                isLocked: room.isLocked??false,
                                 onTap: () {
                                   Get.dialog(
                                       RoomPreLoadingDialog(room: room),

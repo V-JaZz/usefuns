@@ -91,6 +91,7 @@ class _NewTabViewState extends State<NewTabView> {
                     active:
                     room.activeUsers?.length.toString() ??
                         '0',
+                    isLocked: room.isLocked??false,
                     onTap: () {
                       Get.dialog(
                           RoomPreLoadingDialog(room: room),

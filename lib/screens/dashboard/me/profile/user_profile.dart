@@ -186,7 +186,7 @@ class _UserProfileState extends State<UserProfile> {
                               SizedBox(
                                   width: 25 * a,
                                   height: 14 * a,
-                                  child: Image.asset("assets/flag.png")),
+                                  child: Image.asset(getCountryByMobileNo(user.mobile))),
                             ],
                           ),
                           SizedBox(height: 16*a),

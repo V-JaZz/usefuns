@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:live_app/provider/seller_agency_provider.dart';
 import 'package:live_app/provider/user_data_provider.dart';
 import 'package:provider/provider.dart';
+import '../../../data/model/response/rooms_model.dart';
 import '../../../provider/zego_room_provider.dart';
 
 class LiveRecord extends StatefulWidget {
@@ -12,10 +13,10 @@ class LiveRecord extends StatefulWidget {
 }
 
 class _LiveRecordState extends State<LiveRecord> {
-  String? room;
+  Room? room;
   @override
   void initState() {
-    room = Provider.of<ZegoRoomProvider>(context, listen: false).room?.roomId;
+    room = Provider.of<ZegoRoomProvider>(context, listen: false).room;
     Provider.of<SellerAgencyProvider>(context, listen: false).host = null;
     Provider.of<SellerAgencyProvider>(context, listen: false).getHostData(
         Provider.of<UserDataProvider>(context, listen: false).userData!.data!.userId!
@@ -35,129 +36,100 @@ class _LiveRecordState extends State<LiveRecord> {
           if (!value.isHostLoaded) {
             return const LinearProgressIndicator(color: Colors.deepOrange);
           }
-          if(value.host==null){
-            return const Center(child: Text('Not in Agency Yet!'));
-          }
           return SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                title('Agency Host'),
-                const SizedBox(
-                  height: 10,
-                ),
-                if (room != null)
-                  textmethod('Room id:$room', FontWeight.normal,
-                      const Color(0xff000000)),
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    textmethod('Agency: ', FontWeight.w300,
-                        const Color(0xff000000).withOpacity(0.8)),
-                    textmethod('${value.host?.agencyCode}', FontWeight.normal,
-                        const Color(0xff000000)),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    textmethod('Joining date:', FontWeight.w300,
-                        const Color(0xff000000).withOpacity(0.8)),
-                    textmethod(
-                        '${value.host?.createdAt}', FontWeight.normal, const Color(0xff000000)),
-                  ],
-                ),
-                // const SizedBox(height: 10),
-                // GestureDetector(
-                //   onTap: () async {
-                //     await value.deleteHost(value.host!.id!);
-                //     Get.back();
-                //   },
-                //   child: Container(
-                //     padding:
-                //         const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
-                //     decoration: BoxDecoration(
-                //       borderRadius: BorderRadius.circular(9),
-                //       color: const Color(0xFFFFE500),
-                //     ),
-                //     child: const Text(
-                //       'Left Agency',
-                //       style: TextStyle(color: Colors.black, fontSize: 9),
-                //     ),
-                //   ),
-                // ),
-                const SizedBox(
-                  height: 16,
-                ),
-                // title('Weekly data'),
-                // Row(
-                //   children: [
-                //     heading_widget("Week"),
-                //     heading_widget("ValidDays"),
-                //     heading_widget("Room\nGifts")
-                //   ],
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.all(15.0),
-                //   child: Table(
-                //     children: [
-                //       tablerow('05-22-05-28', '0', '0', '0'),
-                //       tablerow('05-08-05-28', '0', '0', '0'),
-                //       tablerow('07-08-05-28', '0', '0', '0'),
-                //       tablerow('03-08-05-28', '0', '0', '0'),
-                //     ],
-                //   ),
-                // ),
-                title('Monthly data'),
-                Row(
-                  children: [
-                    heading_widget("Month"),
-                    heading_widget("ValidDays"),
-                    heading_widget("Room\nGifts")
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Table(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  title('Agency Host'),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  if (room?.roomId != null)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      tablerow('November', '0', '0', '0'),
-                      tablerow('December', '0', '0', '0'),
+                      textView('Room id :  ', FontWeight.normal,
+                          const Color(0xff000000).withOpacity(0.7)),
+                      textView(room?.roomId??'', FontWeight.normal,
+                          const Color(0xff000000)),
                     ],
                   ),
-                ),
-                // title('Daily data'),
-                // const SizedBox(
-                //   height: 10,
-                // ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //   children: [
-                //     heading_widget("Data"),
-                //     heading_widget("Visitor"),
-                //     heading_widget("Room\nGifts")
-                //   ],
-                // ),
-                // Padding(
-                //   padding: const EdgeInsets.all(15.0),
-                //   child: Table(
-                //     children: [
-                //       tablerow('564756689', '0', '10', '0'),
-                //       tablerow('564756689', '0', '10', '0'),
-                //       tablerow('564756689', '0', '10', '0'),
-                //       tablerow('564756689', '0', '10', '0'),
-                //       tablerow('564756689', '0', '10', '0'),
-                //       tablerow('564756689', '0', '10', '0'),
-                //       tablerow('564756689', '0', '10', '0'),
-                //     ],
-                //   ),
-                // )
-              ],
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      textView('Agency :  ', FontWeight.normal,
+                          const Color(0xff000000).withOpacity(0.7)),
+                      textView(value.host?.agencyCode??'Not Joined', FontWeight.normal,
+                          const Color(0xff000000)),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  if(value.host!=null)Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      textView('Joining date :  ', FontWeight.normal,
+                          const Color(0xff000000).withOpacity(0.7)),
+                      textView(
+                          (value.host?.createdAt).toString().substring(0,10), FontWeight.normal, const Color(0xff000000)),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  title('Active Season Data'),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  SizedBox(
+                    height: 50,
+                    child: Row(
+                      children: [
+                        tableHeading("Month"),
+                        const SizedBox(width: 10),
+                        tableHeading("Valid Days"),
+                        const SizedBox(width: 10),
+                        tableHeading("Room Gifts")
+                      ],
+                    ),
+                  ),
+                  Table(
+                    children: [
+                      tableRow(DateFormat('MMMM').format(DateTime.now()), '0', '${room?.halfMonthlyDiamonds}'),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  title('Last Season Data'),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  SizedBox(
+                    height: 50,
+                    child: Row(
+                      children: [
+                        tableHeading("Month"),
+                        const SizedBox(width: 10),
+                        tableHeading("Valid Days"),
+                        const SizedBox(width: 10),
+                        tableHeading("Room Gifts")
+                      ],
+                    ),
+                  ),
+                  Table(
+                    children: [
+                      tableRow(DateFormat('MMMM').format(DateTime.now().subtract(const Duration(days: 30))), '0', '${room?.monthlyDiamonds}'),
+                    ],
+                  )
+                ],
+              ),
             ),
           );
         },
@@ -165,7 +137,7 @@ class _LiveRecordState extends State<LiveRecord> {
     );
   }
 
-  Text textmethod(text, fo, color) {
+  Text textView(text, fo, color) {
     return Text(
       text,
       textAlign: TextAlign.left,
@@ -192,41 +164,35 @@ class _LiveRecordState extends State<LiveRecord> {
     );
   }
 
-  Padding heading_widget(text) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
+  Widget tableHeading(text) {
+    return Expanded(
       child: Container(
-        height: 50,
-        width: 100,
-        decoration:
-            BoxDecoration(color: const Color(0xffffa600).withOpacity(0.4)),
-        child: Center(
-          child: Text(
-            text,
-            style: const TextStyle(fontSize: 12.0, color: Colors.black),
-          ),
+        decoration: BoxDecoration(color: const Color(0xffffa600).withOpacity(0.4)),
+        alignment: Alignment.center,
+        child: Text(
+          text,
+          style: const TextStyle(fontSize: 12.0, color: Colors.black),
         ),
       ),
     );
   }
 
-  TableRow tablerow(text, t1, t2, t3) {
+  TableRow tableRow(text, t1, t2) {
     return TableRow(children: [
       Text(
         text,
+        textAlign: TextAlign.center,
         style: const TextStyle(fontSize: 15.0),
       ),
-      Center(
-        child: Text(
-          t1,
-          style: const TextStyle(fontSize: 15.0),
-        ),
+      Text(
+        t1,
+        textAlign: TextAlign.center,
+        style: const TextStyle(fontSize: 15.0),
       ),
-      Center(
-        child: Text(
-          t2,
-          style: const TextStyle(fontSize: 15.0),
-        ),
+      Text(
+        t2,
+        textAlign: TextAlign.center,
+        style: const TextStyle(fontSize: 15.0),
       ),
     ]);
   }
