@@ -8,9 +8,11 @@ import 'package:shimmer/shimmer.dart';
 // ignore: depend_on_referenced_packages
 import 'package:svgaplayer_flutter/svgaplayer_flutter.dart';
 
+import '../data/datasource/local/sharedpreferences/storage_service.dart';
 import '../provider/shop_wallet_provider.dart';
 import '../provider/user_data_provider.dart';
 import '../screens/dashboard/me/profile/user_profile.dart';
+import 'constants.dart';
 
 void showCustomSnackBar(String? message, BuildContext context,
     {bool isError = true, bool isToaster = false}) {
@@ -257,6 +259,7 @@ Widget roomListTile(
                     subTitle == null || subTitle == ''
                         ? 'Welcome to my room!'
                         : subTitle,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: SafeGoogleFont(
                       'Poppins',
@@ -271,6 +274,7 @@ Widget roomListTile(
               ],
             ),
           ),
+          SizedBox(width: 4*a),
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -583,12 +587,12 @@ void showInsufficientDialog(context, int reqDiamonds) {
                       Image.asset('assets/geogle.png', height: 16, width: 16),
                       const Text('  Geogle Wallet'),
                       const Spacer(),
-                      Image.asset('assets/icons/ic_diamond.png',
-                          height: 12, width: 12),
-                      const Text(
-                        ' 1664 = ₹750',
-                        style: TextStyle(fontSize: 12),
-                      )
+                      // Image.asset('assets/icons/ic_diamond.png',
+                      //     height: 12, width: 12),
+                      // const Text(
+                      //   ' 1664 = ₹750',
+                      //   style: TextStyle(fontSize: 12),
+                      // )
                     ],
                   ),
                   value: 'geogle wallet',
@@ -608,12 +612,12 @@ void showInsufficientDialog(context, int reqDiamonds) {
                           height: 16, width: 16),
                       const Text('  Other Wallet'),
                       const Spacer(),
-                      Image.asset('assets/icons/ic_diamond.png',
-                          height: 12, width: 12),
-                      const Text(
-                        ' 1000 = ₹750',
-                        style: TextStyle(fontSize: 12),
-                      )
+                      // Image.asset('assets/icons/ic_diamond.png',
+                      //     height: 12, width: 12),
+                      // const Text(
+                      //   ' 1000 = ₹750',
+                      //   style: TextStyle(fontSize: 12),
+                      // )
                     ],
                   ),
                   value: 'other wallet',
@@ -628,16 +632,16 @@ void showInsufficientDialog(context, int reqDiamonds) {
                   child: InkWell(
                     onTap: (){
                       if(selectedPurchaseOption=='beans'){
-                        int reqBeans = user!.data!.diamonds!*4;
-                        if(user.data!.beans!.toInt() < reqBeans){
+                        int reqBeans = reqDiamonds*4;
+                        if(user!.data!.beans!.toInt() < reqBeans){
                           showCustomSnackBar('Insufficient beans!', context, isToaster: true);
                         }else{
                           Provider.of<ShopWalletProvider>(context,listen: false).convertBeans(reqDiamonds, reqBeans);
                         }
-                        Get.back();
                       }else{
-                        showRechargeDailog(context);
+                        showCustomSnackBar('Upcoming!', context, isToaster: true, isError: false);
                       }
+                      Get.back();
                     },
                     child: Container(
                       margin: const EdgeInsets.only(bottom: 24, top: 12),
@@ -662,124 +666,7 @@ void showInsufficientDialog(context, int reqDiamonds) {
   );
 }
 
-void showRechargeDailog(context) {
-  String? selectedPaymentOption;
-  Get.back();
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          return Dialog(
-            backgroundColor: Colors.white,
-            // insetPadding: null,
-            shape: Border.all(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 21, vertical: 12),
-                    width: double.infinity,
-                    child: Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.arrow_back_ios,
-                              color: Colors.black),
-                          onPressed: () {
-                            Get.back();
-                          },
-                        ),
-                        const Text('Purchase Methods',
-                            style: TextStyle(fontSize: 16)),
-                      ],
-                    )),
-                RadioListTile<String>(
-                  activeColor: const Color(0xFFFF9933),
-                  title: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Image.asset('assets/icons/ic_diamond.png',
-                          height: 14, width: 14),
-                      const Text('  UPI  '),
-                      Container(
-                          color: const Color(0xFFFF8D5E),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 2),
-                          child: const Text('Sale +2%',
-                              style: TextStyle(
-                                  fontSize: 11, color: Colors.white)))
-                    ],
-                  ),
-                  value: 'upi',
-                  groupValue: selectedPaymentOption,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedPaymentOption = value;
-                    });
-                  },
-                ),
-                RadioListTile<String>(
-                  activeColor: const Color(0xFFFF9933),
-                  title: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Image.asset('assets/geogle.png', height: 14, width: 14),
-                      const Text('  Geogle Wallet  '),
-                      Container(
-                          color: const Color(0xFFFF8D5E),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 2),
-                          child: const Text('Sale +2%',
-                              style: TextStyle(
-                                  fontSize: 11, color: Colors.white)))
-                    ],
-                  ),
-                  value: 'geogle wallet',
-                  groupValue: selectedPaymentOption,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedPaymentOption = value;
-                    });
-                  },
-                ),
-                RadioListTile<String>(
-                  activeColor: const Color(0xFFFF9933),
-                  title: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Image.asset('assets/other_wallet.png',
-                          height: 14, width: 14),
-                      const Text('  Wallet  '),
-                      Container(
-                          color: const Color(0xFFFF8D5E),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 2),
-                          child: const Text('Sale +2%',
-                              style: TextStyle(
-                                  fontSize: 11, color: Colors.white)))
-                    ],
-                  ),
-                  value: 'wallet',
-                  groupValue: selectedPaymentOption,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedPaymentOption = value;
-                    });
-                  },
-                ),
-                const SizedBox(height: 24)
-              ],
-            ),
-          );
-        },
-      );
-    },
-  );
-}
-
-Container viewUsersByIds(List<String>? list){
+Container viewUsersByIds(List<String>? list, {int popCount = 0, ScrollController? controller}){
   double baseWidth = 360;
   double a = Get.width / baseWidth;
   double b = a * 0.97;
@@ -794,8 +681,9 @@ Container viewUsersByIds(List<String>? list){
           }if(list.isEmpty){
             return const Center(child: Text('NoData!'));
           }else {
-            return ListView.builder(
+            return ListView.separated(
               itemCount: list.length,
+              controller: controller,
               itemBuilder: (context, index) {
                 return FutureBuilder(
                     future: Provider.of<UserDataProvider>(context,
@@ -813,7 +701,7 @@ Container viewUsersByIds(List<String>? list){
                               height: 70 * a,
                               decoration: BoxDecoration(
                                 border: Border(
-                                    top: BorderSide(
+                                    bottom: BorderSide(
                                         color:
                                         Colors.black.withOpacity(0.06),
                                         width: 1)),
@@ -873,40 +761,86 @@ Container viewUsersByIds(List<String>? list){
 
                             return Container(
                               width: double.infinity,
-                              height: 70 * a,
-                              decoration: BoxDecoration(
-                                border: Border(
-                                    top: BorderSide(
-                                        color:
-                                        Colors.black.withOpacity(0.06),
-                                        width: 1)),
-                              ),
+                              height: 80 * a,
                               padding: EdgeInsets.all(10 * a),
                               child: InkWell(
-                                onTap: () async {
-                                  Provider.of<UserDataProvider>(context,listen: false).addVisitor(list[index]);
-                                  Get.to(()=> UserProfile(userData: user));
+                                onTap: () {
+                                  String myId =StorageService().getString(Constants.userId);
+                                  for(popCount; popCount>0 ; popCount--) {
+                                    Get.back();
+                                  }
+                                  if(user.userId == myId){
+                                    Get.to(()=>const UserProfile());
+                                  }else{
+                                    Provider.of<UserDataProvider>(context,listen: false).addVisitor(list[index]);
+                                    Get.to(()=> UserProfile(userData: user));
+                                  }
                                 },
                                 child: Row(
                                   children: [
-                                    Container(
-                                      margin: EdgeInsets.fromLTRB(
-                                          0 * a, 0 * a, 7 * a, 0 * a),
-                                      width: 50 * a,
-                                      height: 50 * a,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        image: user!.images!.isEmpty
-                                            ? const DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: AssetImage(
-                                              'assets/profile.png'),
-                                        )
-                                            : DecorationImage(
-                                          fit: BoxFit.cover,
-                                          image: NetworkImage(
-                                              user.images!.first),
-                                        ),
+                                    SizedBox(
+                                      width: 58 * a,
+                                      height: 58 * a,
+                                      child: Stack(
+                                        children: [
+                                          Center(
+                                            child: Container(
+                                              margin: EdgeInsets.fromLTRB(
+                                                  0 * a, 0 * a, 7 * a, 0 * a),
+                                              width: 45 * a,
+                                              height: 45 * a,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                image: user!.images!.isEmpty
+                                                    ? const DecorationImage(
+                                                  fit: BoxFit.cover,
+                                                  image: AssetImage(
+                                                      'assets/profile.png'),
+                                                )
+                                                    : DecorationImage(
+                                                  fit: BoxFit.cover,
+                                                  image: NetworkImage(
+                                                      user.images!.first),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          if(user.isActiveLive == true)Container(
+                                            margin: EdgeInsets.fromLTRB(
+                                                0 * a, 0 * a, 7 * a, 0 * a),
+                                            width: 58 * a,
+                                            height: 58 * a,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                color: Theme.of(context).primaryColor,
+                                                width: 2
+                                              )
+                                            ),
+                                            alignment: Alignment.bottomCenter,
+                                            child:
+                                            Container(
+                                              height: 15*a,
+                                              width: 30*a,
+                                              decoration: BoxDecoration(
+                                                color: Theme.of(context).primaryColor,
+                                                borderRadius: BorderRadius.circular(6)
+                                              ),
+                                              child: const FittedBox(
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(1),
+                                                  child: Text(
+                                                      'LIVE',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight: FontWeight.w600
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                     Container(
@@ -939,6 +873,9 @@ Container viewUsersByIds(List<String>? list){
                       }
                     });
               },
+              separatorBuilder: (BuildContext context, int index) => Divider(height: 1,
+                    color: Colors.black.withOpacity(0.06),
+                    thickness: 1),
             );
           }
         },

@@ -56,12 +56,12 @@ class _BeanTabViewState extends State<BeanTabView> {
               ),
             ),
           ),
-          beansValueWidget('1','4'),
-          beansValueWidget('10','40'),
-          beansValueWidget('100','400'),
-          beansValueWidget('1000','4000'),
-          beansValueWidget('5000','20000'),
-          beansValueWidget('10000','40000'),
+          beansValueWidget(1,4),
+          beansValueWidget(10,40),
+          beansValueWidget(100,400),
+          beansValueWidget(1000,4000),
+          beansValueWidget(5000,20000),
+          beansValueWidget(10000,40000),
         ],
       ),
     );
@@ -72,18 +72,18 @@ class _BeanTabViewState extends State<BeanTabView> {
         style: const TextStyle(color: Colors.white),
       );
 
-  Padding beansValueWidget(diamonds,beans) {
+  Padding beansValueWidget(int diamonds,int beans) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.0,vertical: 5),
       child: SizedBox(
         width: double.infinity,
         child: ListTile(
           onTap: (){
-            if((Provider.of<UserDataProvider>(context,listen: false).userData?.data?.beans??0)>int.parse(beans)) {
+            if((Provider.of<UserDataProvider>(context,listen: false).userData?.data?.beans??0)>=beans) {
               _showConfirmationDialog(
               () {
                 Navigator.of(context).pop();
-                Provider.of<ShopWalletProvider>(context,listen: false).convertBeans(int.parse(diamonds), int.parse(beans));
+                Provider.of<ShopWalletProvider>(context,listen: false).convertBeans(diamonds,beans);
               },
               beans,
               diamonds
@@ -96,7 +96,7 @@ class _BeanTabViewState extends State<BeanTabView> {
             'assets/icons/ic_diamond.png',
             height: 24
           ),
-          title: Text(diamonds),
+          title: Text(diamonds.toString()),
           trailing: Container(
             height: 30,
             decoration: BoxDecoration(
@@ -111,7 +111,7 @@ class _BeanTabViewState extends State<BeanTabView> {
                     height: 12,
                     fit: BoxFit.fitHeight),
                 const SizedBox(width: 6),
-                Text(beans),
+                Text(beans.toString()),
                 const SizedBox(width: 12,),
               ],
             ),
@@ -121,7 +121,7 @@ class _BeanTabViewState extends State<BeanTabView> {
     );
   }
 
-  Future<void> _showConfirmationDialog(void Function() onConfirm, beans, diamonds) async {
+  Future<void> _showConfirmationDialog(void Function() onConfirm,int beans,int diamonds) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,

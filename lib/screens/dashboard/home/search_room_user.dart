@@ -342,11 +342,11 @@ class _SearchRoomUserState extends State<SearchRoomUser> {
                                                 padding: EdgeInsets.all(3*a),
                                                 child: AspectRatio(
                                                     aspectRatio: 1,
-                                                    child: CircularProgressIndicator(color: Theme.of(context).primaryColor)
+                                                    child: CircularProgressIndicator(color: follow? Theme.of(context).primaryColor : Colors.white)
                                                 ),
                                               )
                                                   : Text(
-                                                follow?'Unfollow':'Follow',
+                                                follow? 'Unfollow': 'Follow',
                                                 textAlign: TextAlign.left,
                                                 style: SafeGoogleFont(
                                                     color: follow?Colors.black:Colors.white,

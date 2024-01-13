@@ -326,8 +326,7 @@ class _MeState extends State<Me> {
                                                 .toString() ??
                                             '0',
                                         'Followers',
-                                      onTap: viewUsersByIds(providerUserData
-                                          .userData?.data?.followers)
+                                      listing: providerUserData.userData?.data?.followers
                                     ),
                                     columnPairWidget(
                                         providerUserData
@@ -335,8 +334,7 @@ class _MeState extends State<Me> {
                                                 .toString() ??
                                             '0',
                                         'Following',
-                                        onTap: viewUsersByIds(providerUserData
-                                            .userData?.data?.following)
+                                        listing: providerUserData.userData?.data?.following
                                     ),
                                     columnPairWidget(
                                         providerUserData.userData?.data?.likes
@@ -505,20 +503,23 @@ class _MeState extends State<Me> {
     );
   }
 
-  columnPairWidget(String top, String below, {Widget? onTap}) {
+  columnPairWidget(String top, String below, {List<String>? listing}) {
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          if(onTap!=null) {
+          if(listing!=null) {
             showModalBottomSheet(
                 backgroundColor: Colors.white,
                 shape: InputBorder.none,
-                isScrollControlled: false,
-                enableDrag: true,
-                isDismissible: true,
+                isScrollControlled: true,
                 context: context,
                 builder: (context) {
-                  return onTap;
+                  return DraggableScrollableSheet(
+                    expand: false,
+                      minChildSize: 0.5,
+                      snap: true,
+                      builder: (context, scrollController) => viewUsersByIds(listing,controller: scrollController,popCount: 1),
+                  );
                 });
           }
         },

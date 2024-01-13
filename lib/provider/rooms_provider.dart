@@ -16,6 +16,10 @@ class RoomsProvider with ChangeNotifier {
   final RoomsRepo _roomsRepo = RoomsRepo();
 
   RoomsModel? _myRoom;
+  List<Room> newRooms = [];
+  List<Room> popularRooms = [];
+  List<Room> recentRooms = [];
+
   RoomsModel? get myRoom {
     if(_myRoom == null) getAllMine();
     return _myRoom;
@@ -198,7 +202,7 @@ class RoomsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<RoomsModel> getAllMyRecent({bool refresh = false}) async {
+  Future<RoomsModel> getAllMyRecent() async {
     final apiResponse = await _roomsRepo.getAllMyRecent(storageService.getString(Constants.id));
     RoomsModel responseModel;
     if (apiResponse.statusCode == 200) {
@@ -206,7 +210,7 @@ class RoomsProvider with ChangeNotifier {
     } else {
       responseModel = RoomsModel(status: 0,message: apiResponse.reasonPhrase);
     }
-    if(refresh)notifyListeners();
+    recentRooms = responseModel.data??[];
     return responseModel;
   }
 
@@ -232,27 +236,41 @@ class RoomsProvider with ChangeNotifier {
     return responseModel;
   }
 
-  Future<List<Room>?> getAllPopular(int page) async {
+  Future<bool> getAllPopular(int page, bool refresh) async {
+    if(refresh){
+      popularRooms = [];
+      notifyListeners();
+    }
     final apiResponse = await _roomsRepo.getAllPopular(page, apiListingLimit);
     RoomsModel responseModel;
     if (apiResponse.statusCode == 200) {
       responseModel = roomsModelFromJson(apiResponse.body);
       if(responseModel.status == 1){
-        return responseModel.data??[];
+        if(page == 1) popularRooms = [];
+        popularRooms.addAll(responseModel.data??[]);
+        notifyListeners();
+        return true;
       }
     }
-    return null;
+    return false;
   }
 
-  Future<List<Room>?> getAllNew(int page) async {
+  Future<bool> getAllNew(int page, bool refresh) async {
+    if(refresh){
+      newRooms = [];
+      notifyListeners();
+    }
     final apiResponse = await _roomsRepo.getAllNew(page, apiListingLimit);
     RoomsModel responseModel;
     if (apiResponse.statusCode == 200) {
       responseModel = roomsModelFromJson(apiResponse.body);
       if(responseModel.status == 1){
-        return responseModel.data??[];
+        if(page == 1) newRooms = [];
+        newRooms.addAll(responseModel.data??[]);
+        notifyListeners();
+        return true;
       }
     }
-    return null;
+    return false;
   }
 }

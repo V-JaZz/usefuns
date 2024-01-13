@@ -1,6 +1,6 @@
-import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:live_app/provider/auth_provider.dart';
 import 'package:live_app/screens/auth/verify_screen.dart';
 import 'package:live_app/utils/utils_assets.dart';
@@ -17,8 +17,7 @@ class LogInScreen extends StatefulWidget {
 }
 
 class _LogInScreenState extends State<LogInScreen> {
-  String? _selectedCountryCode = '+91';
-  String contactNumber = "";
+
   @override
   void initState() {
     NetworkUtils.checkConnectivity(context);
@@ -32,8 +31,10 @@ class _LogInScreenState extends State<LogInScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
       body: Container(
-        width: double.infinity,
+        width: Get.width,
+        height: Get.height,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment(0, -1),
@@ -43,198 +44,145 @@ class _LogInScreenState extends State<LogInScreen> {
           ),
         ),
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                margin: EdgeInsets.fromLTRB(0 * a, 0 * a, 0 * a, 49 * a),
-                width: 370 * a,
-                height: 125 * a,
-                child: Stack(
-                  children: [
-                    Positioned(
-                      left: 150 * a,
-                      top: 50 * a,
-                      child: SizedBox(
-                        width: 60 * a,
-                        height: 60 * a,
-                        child: Image.asset(
-                          'assets/logo.png',
-                          fit: BoxFit.cover,
+          child:
+          Consumer<AuthProvider>(
+            builder: (context, provider, child) => Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  margin: EdgeInsets.fromLTRB(0 * a, 0 * a, 0 * a, 49 * a),
+                  width: 370 * a,
+                  height: 125 * a,
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        left: 150 * a,
+                        top: 50 * a,
+                        child: SizedBox(
+                          width: 60 * a,
+                          height: 60 * a,
+                          child: Image.asset(
+                            'assets/logo.png',
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                    ),
-                    Positioned(
-                      left: 0 * a,
-                      top: 0 * a,
-                      child: SizedBox(
-                        width: 370 * a,
-                        height: 67 * a,
-                        child: Image.asset(
-                          'assets/decoration/welcome_top.png',
+                      Positioned(
+                        left: 0 * a,
+                        top: 0 * a,
+                        child: SizedBox(
                           width: 370 * a,
                           height: 67 * a,
+                          child: Image.asset(
+                            'assets/decoration/welcome_top.png',
+                            width: 370 * a,
+                            height: 67 * a,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.fromLTRB(0 * a, 0 * a, 0 * a, 57 * a),
-                child: Text(
-                  'Meet new friends and Join live Party',
-                  style: SafeGoogleFont(
-                    'Roboto',
-                    fontSize: 12 * b,
-                    fontWeight: FontWeight.w400,
-                    height: 1.1725 * b / a,
-                    color: const Color(0xffffffff),
+                    ],
                   ),
                 ),
-              ),
-              Text(
-                'Welcome',
-                style: SafeGoogleFont(
-                  'Poppins',
-                  fontSize: 24 * b,
-                  fontWeight: FontWeight.w400,
-                  height: 1.5 * b / a,
-                  letterSpacing: 2.52 * a,
-                  color: const Color(0xffffffff),
-                ),
-              ),
-              SizedBox(height: 12 * a),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(left: 24 * a, right: 8 * a),
-                      color: Colors.white,
-                      height: 1,
-                    ),
-                  ),
-                  Text(
-                    'Enter WhatsApp number',
+                Container(
+                  margin: EdgeInsets.fromLTRB(0 * a, 0 * a, 0 * a, 57 * a),
+                  child: Text(
+                    'Meet new friends and Join live Party',
                     style: SafeGoogleFont(
                       'Roboto',
-                      fontSize: 15 * b,
+                      fontSize: 12 * b,
                       fontWeight: FontWeight.w400,
                       height: 1.1725 * b / a,
-                      letterSpacing: 1.575 * a,
                       color: const Color(0xffffffff),
                     ),
                   ),
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(left: 8 * a, right: 24 * a),
-                      color: Colors.white,
-                      height: 1,
-                    ),
+                ),
+                Text(
+                  'Welcome',
+                  style: SafeGoogleFont(
+                    'Poppins',
+                    fontSize: 24 * b,
+                    fontWeight: FontWeight.w400,
+                    height: 1.5 * b / a,
+                    letterSpacing: 2.52 * a,
+                    color: const Color(0xffffffff),
                   ),
-                ],
-              ),
-              SizedBox(height: 24 * a),
-              Container(
-                margin: EdgeInsets.fromLTRB(0 * a, 0 * a, 0 * a, 36 * a),
-                width: double.infinity,
-                height: 45 * a,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                ),
+                SizedBox(height: 12 * a),
+                Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      margin: EdgeInsets.fromLTRB(0 * a, 0 * a, 12 * a, 0 * a),
-                      width: 90 * a,
-                      decoration: BoxDecoration(
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.only(left: 24 * a, right: 8 * a),
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(12 * a),
-                      ),
-                      child: CountryCodePicker(
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedCountryCode = value.dialCode;
-                          });
-                        },
-                        initialSelection: '+91',
-                        showOnlyCountryWhenClosed: false,
-                        hideMainText: true,
-                        showDropDownButton: true,
-                        padding: EdgeInsets.zero,
-                        showCountryOnly: true,
-                        countryFilter:const ['IN', 'BD', 'PK'],
-                        onInit: (code) => debugPrint(
-                            "on init ${code?.name} ${code?.dialCode} ${code?.code}"),
+                        height: 1,
                       ),
                     ),
-                    Container(
-                      padding:
-                          EdgeInsets.fromLTRB(20 * a, 9 * a, 18 * a, 4 * a),
-                      height: double.infinity,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: const Color(0xffffffff)),
-                        borderRadius: BorderRadius.circular(52 * a),
+                    Text(
+                      'Enter WhatsApp number',
+                      style: SafeGoogleFont(
+                        'Roboto',
+                        fontSize: 15 * b,
+                        fontWeight: FontWeight.w400,
+                        height: 1.1725 * b / a,
+                        letterSpacing: 1.575 * a,
+                        color: const Color(0xffffffff),
                       ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            margin:
-                                EdgeInsets.fromLTRB(0 * a, 0 * a, 6 * a, 6 * a),
-                            child: Text(
-                              _selectedCountryCode ?? '',
-                              style: SafeGoogleFont(
-                                'Kanit',
-                                fontSize: 16 * b,
-                                fontWeight: FontWeight.w300,
-                                height: 1.495 * b / a,
-                                color: const Color(0xffffffff),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: 111 * a,
-                            margin:
-                                EdgeInsets.fromLTRB(0 * a, 0 * a, 0 * a, 6 * a),
-                            child: TextFormField(
-                              keyboardType: TextInputType.number,
-                              maxLength: 10,
-                              decoration: textFieldDecoration(),
-                              onChanged: (String text) {
-                                setState(() {
-                                  contactNumber = text;
-                                });
-                              },
-                              style: SafeGoogleFont(
-                                'Kanit',
-                                fontSize: 16 * b,
-                                fontWeight: FontWeight.w300,
-                                height: 1.5 * b / a,
-                                color: const Color(0xffffffff),
-                              ),
-                            ),
-                          ),
-                        ],
+                    ),
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.only(left: 8 * a, right: 24 * a),
+                        color: Colors.white,
+                        height: 1,
                       ),
                     ),
                   ],
                 ),
-              ),
-              Consumer<AuthProvider>(
-                builder: (context, provider, child) => GestureDetector(
+                SizedBox(height: 24 * a),
+                Container(
+                  margin: EdgeInsets.fromLTRB(36 * a, 0 * a, 36 * a, 36 * a),
+                  width: double.infinity,
+                  child: InternationalPhoneNumberInput(
+                    onInputChanged: (PhoneNumber value) {
+                      provider.number = value;
+                    },
+                    selectorConfig: const SelectorConfig(
+                      selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                    ),
+                    ignoreBlank: false,
+                    spaceBetweenSelectorAndTextField: 0,
+                    autoValidateMode: AutovalidateMode.disabled,
+                    selectorTextStyle: const TextStyle(color: Colors.white),
+                    textStyle: const TextStyle(color: Colors.white),
+                    textAlign: TextAlign.center,
+                    initialValue: provider.number,
+                    formatInput: true,
+                    keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
+                    inputDecoration: InputDecoration(
+                      isDense: true,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(30 * a),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2),
+                        borderRadius: BorderRadius.circular(30 * a),
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
                   onTap: () async {
-                    if(contactNumber!='' && contactNumber.length>9){
-                      provider.mobile = _selectedCountryCode!+contactNumber;
-                      SendOtpModel otp = await provider.sendOtp();
-                      if (otp.status == 1 && otp.data?.otp != null) {
-                        Get.to(() => const VerifyScreen());
-                      } else {
-                        showCustomSnackBar(otp.message, Get.context!);
-                      }
-                    }else{
+                    if(provider.number.phoneNumber == null || provider.number.phoneNumber?.substring(provider.number.dialCode!.length).trim() == ''){
                       showCustomSnackBar('Invalid number!', Get.context!);
+                    }else{
+                      SendOtpModel otp = await provider.sendOtp();
+                    if (otp.status == 1 && otp.data?.otp != null) {
+                      Get.to(() => const VerifyScreen());
+                    } else {
+                      showCustomSnackBar(otp.message, Get.context!);
+                    }
                     }
                   },
                   child: Container(
@@ -260,169 +208,156 @@ class _LogInScreenState extends State<LogInScreen> {
                     ),
                   ),
                 ),
-              ),
-              Container(
-                margin: EdgeInsets.fromLTRB(74 * a, 0 * a, 63 * a, 24 * a),
-                padding: EdgeInsets.fromLTRB(27 * a, 4 * a, 0 * a, 4 * a),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: const Color(0xffffffff),
-                  borderRadius: BorderRadius.circular(50 * a),
+                Container(
+                  margin: EdgeInsets.fromLTRB(74 * a, 0 * a, 63 * a, 24 * a),
+                  padding: EdgeInsets.fromLTRB(27 * a, 4 * a, 0 * a, 4 * a),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: const Color(0xffffffff),
+                    borderRadius: BorderRadius.circular(50 * a),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.fromLTRB(0 * a, 0 * a, 18 * a, 0 * a),
+                        width: 22 * a,
+                        height: 22 * a,
+                        child: Image.asset(
+                          'assets/icons/ic_fb.png',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Text(
+                        'Facebook',
+                        style: SafeGoogleFont(
+                          'Poppins',
+                          fontSize: 24 * b,
+                          fontWeight: FontWeight.w400,
+                          height: 1.5 * b / a,
+                          color: const Color(0xff000000),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.fromLTRB(0 * a, 0 * a, 18 * a, 0 * a),
-                      width: 22 * a,
-                      height: 22 * a,
-                      child: Image.asset(
-                        'assets/icons/ic_fb.png',
-                        fit: BoxFit.cover,
+                Consumer<AuthProvider>(
+                  builder: (context, value, _) => GestureDetector(
+                    onTap: () async {
+                      // LoginModel? model = await value.signInWithGoogle();
+                      // if(model?.status == 1){
+                      //   Get.offAll(() => const BottomNavigator());
+                      // }else if(model?.status == 0){
+                      //   Get.off(() => const CreateProfile());
+                      // }
+                    },
+                    child: Container(
+                      margin: EdgeInsets.fromLTRB(74 * a, 0 * a, 63 * a, 35 * a),
+                      padding: EdgeInsets.fromLTRB(27 * a, 4 * a, 0 * a, 4 * a),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: const Color(0xffffffff),
+                        borderRadius: BorderRadius.circular(50 * a),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.fromLTRB(0 * a, 0 * a, 18 * a, 0 * a),
+                            width: 22 * a,
+                            height: 22 * a,
+                            child: Image.asset(
+                              'assets/icons/ic_google.png',
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          Text(
+                            'Google',
+                            style: SafeGoogleFont(
+                              'Poppins',
+                              fontSize: 24 * b,
+                              fontWeight: FontWeight.w400,
+                              height: 1.5 * b / a,
+                              color: const Color(0xff000000),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Text(
-                      'Facebook',
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.fromLTRB(30 * a, 0 * a, 30 * a, 20 * a),
+                  child: RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
                       style: SafeGoogleFont(
-                        'Poppins',
-                        fontSize: 24 * b,
-                        fontWeight: FontWeight.w400,
-                        height: 1.5 * b / a,
+                        'Roboto',
+                        fontSize: 14 * b,
+                        fontWeight: FontWeight.w300,
+                        height: 1.1725 * b / a,
                         color: const Color(0xff000000),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              Consumer<AuthProvider>(
-                builder: (context, value, _) => GestureDetector(
-                  onTap: () async {
-                    // LoginModel? model = await value.signInWithGoogle();
-                    // if(model?.status == 1){
-                    //   Get.offAll(() => const BottomNavigator());
-                    // }else if(model?.status == 0){
-                    //   Get.off(() => const CreateProfile());
-                    // }
-                  },
-                  child: Container(
-                    margin: EdgeInsets.fromLTRB(74 * a, 0 * a, 63 * a, 35 * a),
-                    padding: EdgeInsets.fromLTRB(27 * a, 4 * a, 0 * a, 4 * a),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: const Color(0xffffffff),
-                      borderRadius: BorderRadius.circular(50 * a),
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Container(
-                          margin: EdgeInsets.fromLTRB(0 * a, 0 * a, 18 * a, 0 * a),
-                          width: 22 * a,
-                          height: 22 * a,
-                          child: Image.asset(
-                            'assets/icons/ic_google.png',
-                            fit: BoxFit.cover,
+                        TextSpan(
+                          text: 'Log in means You agree to ',
+                          style: SafeGoogleFont(
+                            'Roboto',
+                            fontSize: 14 * b,
+                            fontWeight: FontWeight.w300,
+                            height: 1.1725 * b / a,
+                            color: const Color(0xff000000),
                           ),
                         ),
-                        Text(
-                          'Google',
+                        TextSpan(
+                          text: 'Term of service, Privacy',
                           style: SafeGoogleFont(
-                            'Poppins',
-                            fontSize: 24 * b,
-                            fontWeight: FontWeight.w400,
-                            height: 1.5 * b / a,
+                            'Roboto',
+                            fontSize: 14 * b,
+                            fontWeight: FontWeight.w300,
+                            height: 1.1725 * b / a,
+                            color: const Color(0xff1877f2),
+                          ),
+                        ),
+                        TextSpan(
+                          text: ' Policy',
+                          style: SafeGoogleFont(
+                            'Roboto',
+                            fontSize: 14 * b,
+                            fontWeight: FontWeight.w300,
+                            height: 1.1725 * b / a,
+                            color: const Color(0xff1877f2),
+                          ),
+                        ),
+                        TextSpan(
+                          text: ' and',
+                          style: SafeGoogleFont(
+                            'Roboto',
+                            fontSize: 14 * b,
+                            fontWeight: FontWeight.w300,
+                            height: 1.1725 * b / a,
                             color: const Color(0xff000000),
+                          ),
+                        ),
+                        TextSpan(
+                          text: ' Community Policy',
+                          style: SafeGoogleFont(
+                            'Roboto',
+                            fontSize: 14 * b,
+                            fontWeight: FontWeight.w300,
+                            height: 1.1725 * b / a,
+                            color: const Color(0xff4285f4),
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-              ),
-              Container(
-                alignment: Alignment.center,
-                margin: EdgeInsets.fromLTRB(30 * a, 0 * a, 30 * a, 20 * a),
-                child: RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    style: SafeGoogleFont(
-                      'Roboto',
-                      fontSize: 14 * b,
-                      fontWeight: FontWeight.w300,
-                      height: 1.1725 * b / a,
-                      color: const Color(0xff000000),
-                    ),
-                    children: [
-                      TextSpan(
-                        text: 'Log in means You agree to ',
-                        style: SafeGoogleFont(
-                          'Roboto',
-                          fontSize: 14 * b,
-                          fontWeight: FontWeight.w300,
-                          height: 1.1725 * b / a,
-                          color: const Color(0xff000000),
-                        ),
-                      ),
-                      TextSpan(
-                        text: 'Term of service, Privacy',
-                        style: SafeGoogleFont(
-                          'Roboto',
-                          fontSize: 14 * b,
-                          fontWeight: FontWeight.w300,
-                          height: 1.1725 * b / a,
-                          color: const Color(0xff1877f2),
-                        ),
-                      ),
-                      TextSpan(
-                        text: ' Policy',
-                        style: SafeGoogleFont(
-                          'Roboto',
-                          fontSize: 14 * b,
-                          fontWeight: FontWeight.w300,
-                          height: 1.1725 * b / a,
-                          color: const Color(0xff1877f2),
-                        ),
-                      ),
-                      TextSpan(
-                        text: ' and',
-                        style: SafeGoogleFont(
-                          'Roboto',
-                          fontSize: 14 * b,
-                          fontWeight: FontWeight.w300,
-                          height: 1.1725 * b / a,
-                          color: const Color(0xff000000),
-                        ),
-                      ),
-                      TextSpan(
-                        text: ' Community Policy',
-                        style: SafeGoogleFont(
-                          'Roboto',
-                          fontSize: 14 * b,
-                          fontWeight: FontWeight.w300,
-                          height: 1.1725 * b / a,
-                          color: const Color(0xff4285f4),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
-
-  textFieldDecoration() {
-    return const InputDecoration(
-      isDense: true,
-      counterText: "",
-      enabledBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: Colors.transparent),
-      ),
-      focusedBorder: UnderlineInputBorder(
-        borderSide: BorderSide(color: Colors.transparent),
       ),
     );
   }

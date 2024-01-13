@@ -66,7 +66,7 @@ class _GamesState extends State<Games> {
       body: SingleChildScrollView(
         child: GestureDetector(
           onTap: (){
-            showCustomSnackBar('Requires minimum level 10 to play games!',context,isError: false);
+            showCustomSnackBar('Requires minimum level 15 to play games!',context,isError: false);
           },
           child: Column(
             children: [

@@ -1,7 +1,7 @@
 class Constants {
 
   static String baseUrl = 'http://3.111.31.215:4000/';
-  static String appVersion = '1.0.2v';
+  static String appVersion = '1.0.3v';
   static String updateUrl = 'https://usefuns.live/';
 
   // Storage service / Shared preference keys -

@@ -30,13 +30,13 @@ class UserDataProvider with ChangeNotifier {
         userData= responseModel;
         if(userData?.data?.tokens == null || userData!.data!.tokens != storageService.getString(Constants.token)){
           storageService.clearStorage();
-          Get.to(const LogInScreen());
+          Get.offAll(const LogInScreen());
         }
         ZegoConfig.instance.userID = userData!.data!.id!;
         ZegoConfig.instance.userName = userData!.data!.name!;
       }else if(id==null){
         storageService.clearStorage();
-        Get.to(const LogInScreen());
+        Get.offAll(const LogInScreen());
       }
     } else {
       responseModel = UserDataModel(status: 0,message: apiResponse.reasonPhrase);

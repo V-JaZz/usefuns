@@ -21,8 +21,7 @@ class PopularTabView extends StatefulWidget {
 class _PopularTabViewState extends State<PopularTabView> {
   RefreshController refreshController = RefreshController();
   ScrollController scrollController = ScrollController();
-  List<Room> popularRooms = [];
-  bool loaded = false;
+  bool loadedAll = false;
   int page = 1;
 
   @override
@@ -39,18 +38,17 @@ class _PopularTabViewState extends State<PopularTabView> {
     super.dispose();
   }
 
-  Future<void> loadData() async {
-    final data = await Provider.of<RoomsProvider>(context,listen: false).getAllPopular(page);
-    if(data == null){
-      setState(() => loaded = true);
-      return;
+  Future<void> loadData({bool refresh = false}) async {
+    final success = await Provider.of<RoomsProvider>(context,listen: false).getAllPopular(page,refresh);
+    if(success == false){
+      setState(() => loadedAll = true);
+    }else{
+      page++;
     }
-    setState(() => popularRooms.addAll(data));
-    page++;
   }
 
   void onScroll() {
-    if (scrollController.position.pixels == scrollController.position.maxScrollExtent && !loaded) {
+    if (scrollController.position.pixels == scrollController.position.maxScrollExtent && !loadedAll) {
       loadData();
     }
   }
@@ -64,9 +62,8 @@ class _PopularTabViewState extends State<PopularTabView> {
       enablePullDown: true,
       onRefresh: () async {
         page = 1;
-        popularRooms = [];
-        await loadData();
-        scrollController.jumpTo(0);
+        await loadData(refresh: true);
+        loadedAll = false;
         refreshController.refreshCompleted();
         return;
       },
@@ -78,16 +75,7 @@ class _PopularTabViewState extends State<PopularTabView> {
         padding: EdgeInsets.symmetric(horizontal: 10 * a),
         child: Column(
           children: [
-            SizedBox(height: 20 * a),
-            // Padding(
-            //   padding: EdgeInsets.symmetric(horizontal: 10*a),
-            //   child: Image.asset(
-            //     "assets/decoration/reward_program.png",
-            //     width: double.infinity,
-            //     height: 120*a,
-            //     fit: BoxFit.contain,
-            //   ),
-            // ),
+            SizedBox(height: 15 * a),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 10 * a),
               child: Consumer<RoomsProvider>(
@@ -112,7 +100,7 @@ class _PopularTabViewState extends State<PopularTabView> {
                               initialPage: 0,
                               indicatorColor: Theme.of(context).primaryColor,
                               indicatorBackgroundColor: Colors.grey.shade400,
-                              autoPlayInterval: 3600,
+                              autoPlayInterval: 5400,
                               isLoop: true,
                               children: value.bannerList.isNotEmpty
                                   ? List.generate(value.bannerList.length,
@@ -164,7 +152,7 @@ class _PopularTabViewState extends State<PopularTabView> {
               ),
             ),
             SizedBox(
-              height: 20 * a,
+              height: 15 * a,
             ),
             Expanded(
               child: Column(
@@ -172,7 +160,6 @@ class _PopularTabViewState extends State<PopularTabView> {
                   Row(
                     children: [
                       Expanded(
-                          flex: 3,
                           child: InkWell(
                             onTap: () {
                               showCustomSnackBar('Upcoming!', context,
@@ -198,7 +185,6 @@ class _PopularTabViewState extends State<PopularTabView> {
                             ),
                           )),
                       Expanded(
-                          flex: 5,
                           child: InkWell(
                             onTap: () {
                               //todo
@@ -226,7 +212,6 @@ class _PopularTabViewState extends State<PopularTabView> {
                             ),
                           )),
                       Expanded(
-                          flex: 2,
                           child: InkWell(
                             onTap: () {
                               //todo:
@@ -255,20 +240,20 @@ class _PopularTabViewState extends State<PopularTabView> {
                     ],
                   ),
                   SizedBox(
-                    height: 20 * a,
+                    height: 10 * a,
                   ),
                   Expanded(
                     child: Consumer<RoomsProvider>(
                       builder: (context, value, child) {
-                        if(popularRooms.isEmpty){
+                        if(value.popularRooms.isEmpty){
                           return const Center(child: CircularProgressIndicator());
                         }
                         return ListView.builder(
                           controller: scrollController,
-                          itemCount: popularRooms.length+1,
+                          itemCount: value.popularRooms.length+1,
                           itemBuilder: (context, index) {
-                            if (index < popularRooms.length){
-                              final room = popularRooms[index];
+                            if (index < value.popularRooms.length){
+                              final room = value.popularRooms[index];
                               return roomListTile(
                                 image: room.images!.isEmpty
                                     ? null
@@ -285,7 +270,7 @@ class _PopularTabViewState extends State<PopularTabView> {
                                       barrierDismissible: false);
                                 },
                               );
-                            }else if(loaded){
+                            }else if(loadedAll){
                               return null;
                             }else{
                               return const Padding(

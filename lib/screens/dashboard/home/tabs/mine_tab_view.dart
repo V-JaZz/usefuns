@@ -231,7 +231,6 @@ class _MineTabViewState extends State<MineTabView> {
                       ),
                       Expanded(
                         child: TabBarView(
-                            physics: const NeverScrollableScrollPhysics(),
                             children: [
                               Container(
                                 padding: EdgeInsets.only(
@@ -241,42 +240,36 @@ class _MineTabViewState extends State<MineTabView> {
                                   builder: (context, value, child) => FutureBuilder(
                                     future: value.getAllMyRecent(),
                                     builder: (context, snapshot) {
-                                      switch (snapshot.connectionState) {
-                                        case ConnectionState.none:
-                                          return const Text('none...');
-                                        case ConnectionState.active:
-                                          return const Text('active...');
-                                        case ConnectionState.waiting:
-                                          return const Center(child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              CircularProgressIndicator(),
-                                              SizedBox(height: 18),
-                                              Text('Loading'),
-                                            ],
-                                          ));
-                                        case ConnectionState.done:
-                                          if (snapshot.hasError) {
-                                            return Text('Error: ${snapshot.error}');
-                                          } else if((snapshot.data?.data?.length??0) == 0){
-                                            return const Center(child: Text('No Recent Rooms!'));
-                                          } else {
-                                            return ListView(
-                                                children: List.generate(snapshot.data?.data?.length??0, (index) {
-                                                  final room = snapshot.data!.data![index];
-                                                  return roomListTile(
-                                                    image: room.images!.isEmpty?null:room.images!.first,
-                                                    title: room.name.toString(),
-                                                    subTitle: room.announcement,
-                                                    active: room.activeUsers?.length.toString()??'0',
-                                                    isLocked: room.isLocked??false,
-                                                    onTap: (){
-                                                      Get.dialog(RoomPreLoadingDialog(room: room),barrierDismissible: false);
-                                                    },
-                                                  );
-                                                })
-                                            );
-                                          }
+                                      if(snapshot.connectionState == ConnectionState.waiting && value.recentRooms.isEmpty){
+                                        return const Center(child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            CircularProgressIndicator(),
+                                            SizedBox(height: 18),
+                                            Text('Loading'),
+                                          ],
+                                        ));
+                                      }
+                                      else if (snapshot.hasError) {
+                                        return Text('Error: ${snapshot.error}');
+                                      } else if(value.recentRooms.isEmpty){
+                                        return const Center(child: Text('No Recent Rooms!'));
+                                      } else {
+                                        return ListView(
+                                            children: List.generate(value.recentRooms.length, (index) {
+                                              final room = value.recentRooms[index];
+                                              return roomListTile(
+                                                image: room.images!.isEmpty?null:room.images!.first,
+                                                title: room.name.toString(),
+                                                subTitle: room.announcement,
+                                                active: room.activeUsers?.length.toString()??'0',
+                                                isLocked: room.isLocked??false,
+                                                onTap: (){
+                                                  Get.dialog(RoomPreLoadingDialog(room: room),barrierDismissible: false);
+                                                },
+                                              );
+                                            })
+                                        );
                                       }
                                     },
                                   ),

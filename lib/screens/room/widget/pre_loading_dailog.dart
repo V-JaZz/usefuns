@@ -83,6 +83,7 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
                         ),
                         keyboardType: TextInputType.number,
                         textInputAction: TextInputAction.done,
+                        obscureText: true,
                         maxLength: 4,
                         decoration: InputDecoration(
                             isDense: true,

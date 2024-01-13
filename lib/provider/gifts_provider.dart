@@ -13,7 +13,7 @@ import '../utils/helper.dart';
 class GiftsProvider with ChangeNotifier {
   final storageService = StorageService();
   final GiftsRepo _giftsRepo = GiftsRepo();
-  Map<String, List<Gift>>? allGifts;
+  Map<String, List<Gift>> allGifts = {};
   Map<String, List<GiftHistory>> todayRoomContribution = {};
   Map<String, List<GiftHistory>> sevenDaysRoomContribution = {};
   bool giftLoading = true;

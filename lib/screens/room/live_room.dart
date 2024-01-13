@@ -1253,11 +1253,11 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
   }
 
   double setTreasureBoxValue(int boxLevel, int usedDiamonds) {
-    int b1 = 3500;
-    int b2 = 13500;
-    int b3 = 28500;
-    int b4 = 50500;
-    int b5 = 80500;
+    int b1 = 10000;
+    int b2 = 20000;
+    int b3 = 30000;
+    int b4 = 40000;
+    int b5 = 50000;
     switch(boxLevel){
       case 0:
         if(usedDiamonds>=b1) return 1.0;

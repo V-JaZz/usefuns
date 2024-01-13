@@ -163,6 +163,7 @@ class LiveRoomBottomSheets {
   void showMessage({String? mention}) {
     showModalBottomSheet(
         backgroundColor: Colors.transparent,
+        barrierColor: Colors.transparent,
         isScrollControlled: false,
         enableDrag: true,
         isDismissible: true,
@@ -187,6 +188,7 @@ class LiveRoomBottomSheets {
   void showSendGiftsBottomSheet({String? selection}) {
     showModalBottomSheet(
         backgroundColor: Colors.transparent,
+        barrierColor: Colors.transparent,
         isScrollControlled: false,
         enableDrag: true,
         isDismissible: true,

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:live_app/data/model/response/login_model.dart';
 import 'package:live_app/data/repository/auth_repo.dart';
 import 'package:live_app/utils/constants.dart';
@@ -20,7 +21,7 @@ class AuthProvider with ChangeNotifier {
   bool _isLoading = false;
   bool resend = false;
   bool get isLoading => _isLoading;
-  String? mobile;
+  PhoneNumber number = PhoneNumber(isoCode: 'IN');
   String? otp;
   // final GoogleSignIn _googleSignIn = GoogleSignIn();
   // final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -62,7 +63,7 @@ class AuthProvider with ChangeNotifier {
     if(fromResend==true) resend = true;
     _isLoading = true;
     notifyListeners();
-    final apiResponse = await _authRepo.sendOtp(mobile!);
+    final apiResponse = await _authRepo.sendOtp(number.phoneNumber!);
     _isLoading = false;
     notifyListeners();
     SendOtpModel responseModel;
@@ -79,7 +80,7 @@ class AuthProvider with ChangeNotifier {
   Future<LoginModel> login() async {
     _isLoading = true;
     notifyListeners();
-    final apiResponse = await _authRepo.login(mobile!);
+    final apiResponse = await _authRepo.login(number.phoneNumber!);
     _isLoading = false;
     notifyListeners();
     LoginModel responseModel;
@@ -108,10 +109,11 @@ class AuthProvider with ChangeNotifier {
     storageService.setString(Constants.language, language??'English');
     final apiResponse = await _authRepo.register(
         name: name,
-        phone: mobile!,
+        phone: number.phoneNumber!,
         dob: dob,
         gender: gender,
-      image: image
+      image: image,
+        countryCode: number.isoCode!
     );
     _isLoading = false;
     notifyListeners();

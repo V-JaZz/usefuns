@@ -197,8 +197,8 @@ class _UserProfileState extends State<UserProfile> {
                               child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
-                                    columnPairWidget(user.followers?.length.toString()??'0','Followers',onTap: viewUsersByIds(user.followers)),
-                                    columnPairWidget(user.following?.length.toString()??'0','Following',onTap: viewUsersByIds(user.following)),
+                                    columnPairWidget(user.followers?.length.toString()??'0','Followers',listing: user.followers),
+                                    columnPairWidget(user.following?.length.toString()??'0','Following',listing: user.following),
                                     columnPairWidget(user.likes?.toString()??'0','Likes'),
                                     columnPairWidget(user.views?.toString()??'0','Visitors'),
                                   ])
@@ -304,22 +304,25 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 
-  columnPairWidget(String top, String below, {Widget? onTap}) {
+  columnPairWidget(String top, String below, {List<String>? listing}) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
     double b = a * 0.97;
     return GestureDetector(
       onTap: () {
-        if(onTap!=null) {
+        if(listing!=null) {
           showModalBottomSheet(
               backgroundColor: Colors.white,
               shape: InputBorder.none,
-              isScrollControlled: false,
-              enableDrag: true,
-              isDismissible: true,
+              isScrollControlled: true,
               context: context,
               builder: (context) {
-                return onTap;
+                return DraggableScrollableSheet(
+                  expand: false,
+                  minChildSize: 0.5,
+                  snap: true,
+                  builder: (context, scrollController) => viewUsersByIds(listing,controller: scrollController,popCount: 2),
+                );
               });
         }
       },

@@ -39,6 +39,7 @@ class AuthRepo {
         required String phone,
         required String dob,
         required String gender,
+        required String countryCode,
       String? image}) async {
     try {
       http.Response response = image == null || image == ''
@@ -48,7 +49,8 @@ class AuthRepo {
             'name': name,
             "mobile": phone,
             'dob': dob,
-            'gender': gender
+            'gender': gender,
+            'countryCode': countryCode
           })
       :await _httpClient.postMultipartFile(
           'user/register',
@@ -56,7 +58,8 @@ class AuthRepo {
             'name': name,
             "mobile": phone,
             'dob': dob,
-            'gender': gender
+            'gender': gender,
+            'countryCode': countryCode
           },
           'images',
           image

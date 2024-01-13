@@ -50,7 +50,8 @@ class _BottomNavigatorState extends State<BottomNavigator> {
 
   @override
   void dispose() {
-    timer?.cancel(); // Cancel the timer to avoid memory leaks
+    timer?.cancel();
+    Provider.of<ZegoRoomProvider>(context,listen:false).destroy();
     super.dispose();
   }
 

@@ -17,8 +17,7 @@ class NewTabView extends StatefulWidget {
 class _NewTabViewState extends State<NewTabView> {
   RefreshController refreshController = RefreshController();
   ScrollController scrollController = ScrollController();
-  List<Room> newRooms = [];
-  bool loaded = false;
+  bool loadedAll = false;
   int page = 1;
 
   @override
@@ -35,18 +34,17 @@ class _NewTabViewState extends State<NewTabView> {
     super.dispose();
   }
 
-  Future<void> loadData() async {
-    final data = await Provider.of<RoomsProvider>(context,listen: false).getAllNew(page);
-    if(data == null){
-      setState(() => loaded = true);
-      return;
+  Future<void> loadData({bool refresh = false}) async {
+    final success = await Provider.of<RoomsProvider>(context,listen: false).getAllNew(page,refresh);
+    if(success == false){
+      setState(() => loadedAll = true);
+    }else{
+      page++;
     }
-    setState(() => newRooms.addAll(data));
-    page++;
   }
 
   void onScroll() {
-    if (scrollController.position.pixels == scrollController.position.maxScrollExtent && !loaded) {
+    if (scrollController.position.pixels == scrollController.position.maxScrollExtent && !loadedAll) {
       loadData();
     }
   }
@@ -60,16 +58,15 @@ class _NewTabViewState extends State<NewTabView> {
       EdgeInsets.symmetric(horizontal: 18 * a),
       child: Consumer<RoomsProvider>(
         builder: (context, value, child) {
-          if(newRooms.isEmpty){
+          if(value.newRooms.isEmpty){
             return const Center(child: CircularProgressIndicator());
           }
           return SmartRefresher(
             enablePullDown: true,
             onRefresh: () async {
               page = 1;
-              newRooms = [];
-              await loadData();
-              scrollController.jumpTo(0);
+              await loadData(refresh: true);
+              loadedAll = false;
               refreshController.refreshCompleted();
               return;
             },
@@ -78,10 +75,10 @@ class _NewTabViewState extends State<NewTabView> {
             controller: refreshController,
             child: ListView.builder(
               controller: scrollController,
-              itemCount: newRooms.length+1,
+              itemCount: value.newRooms.length+1,
               itemBuilder: (context, index) {
-                if (index < newRooms.length){
-                  final room = newRooms[index];
+                if (index < value.newRooms.length){
+                  final room = value.newRooms[index];
                   return roomListTile(
                     image: room.images!.isEmpty
                         ? null
@@ -98,7 +95,7 @@ class _NewTabViewState extends State<NewTabView> {
                           barrierDismissible: false);
                     },
                   );
-                }else if(loaded){
+                }else if(loadedAll){
                   return null;
                 }else {
                   return const Padding(

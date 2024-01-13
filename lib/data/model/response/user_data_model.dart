@@ -82,6 +82,7 @@ class UserData {
   int? mobile;
   DateTime? dob;
   String? gender;
+  String? countryCode;
   DateTime? createdAt;
   DateTime? updatedAt;
   int? v;
@@ -141,6 +142,7 @@ class UserData {
     this.mobile,
     this.dob,
     this.gender,
+    this.countryCode,
     this.createdAt,
     this.updatedAt,
     this.v,
@@ -201,6 +203,7 @@ class UserData {
     mobile: json["mobile"],
     dob: json["dob"] == null ? null : DateTime.parse(json["dob"]),
     gender: json["gender"],
+    countryCode: json["countryCode"],
     createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
     updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
     v: json["__v"],
@@ -261,6 +264,7 @@ class UserData {
     "mobile": mobile,
     "dob": dob?.toIso8601String(),
     "gender": gender,
+    "countryCode": countryCode,
     "createdAt": createdAt?.toIso8601String(),
     "updatedAt": updatedAt?.toIso8601String(),
     "__v": v,

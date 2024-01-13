@@ -64,22 +64,22 @@ class StartState extends State<SplashScreen> {
     return Scaffold(
       body: SizedBox(
         width: double.infinity,
-        child: GestureDetector(
-          onTap: (){
-            noInternetDialog();
-          },
-          child: Container(
-            padding: EdgeInsets.only(bottom: Get.height/9),
-            alignment: Alignment.bottomCenter,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: AssetImage(
-                  'assets/splash.jpg',
-                ),
+        child: Container(
+          alignment: Alignment.bottomCenter,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              image: AssetImage(
+                'assets/splash.jpg',
               ),
             ),
-            child: const CircularProgressIndicator(),
+          ),
+          child: const Column(
+            children: [
+              Spacer(flex: 9),
+              CircularProgressIndicator(),
+              Spacer(flex: 1),
+            ],
           ),
         ),
       ),
