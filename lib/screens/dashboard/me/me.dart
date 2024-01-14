@@ -18,6 +18,7 @@ import '../../../utils/common_widgets.dart';
 import '../../../utils/helper.dart';
 import 'agency/agency.dart';
 import 'security_pannel.dart';
+import 'package:country_flags/country_flags.dart';
 
 class Me extends StatefulWidget {
   const Me({super.key});
@@ -367,7 +368,7 @@ class _MeState extends State<Me> {
                               ),
                               userLevelTag(
                                   providerUserData.userData?.data?.level??0,
-                                  14 * a,
+                                  15 * a,
                                   viewZero: true),
                               SizedBox(width: 8*a),
                               Container(
@@ -396,28 +397,26 @@ class _MeState extends State<Me> {
                                                   'male'
                                               ? Icons.male
                                               : Icons.female,
-                                          size: 10 * a,
+                                          size: 11 * a,
                                         ),
-                                        SizedBox(width: 3 * a),
+                                        const SizedBox(width: 1),
                                         Text(
                                           AgeCalculator.calculateAge(
                                                   providerUserData
                                                           .userData?.data?.dob ??
                                                       DateTime.now())
                                               .toString(),
-                                          style: TextStyle(fontSize: 8 * a),
+                                          style: TextStyle(fontSize: 9 * a),
                                         ),
                                         SizedBox(width: 4 * a)
                                       ])),
                               SizedBox(width: 8*a),
-                              Container(
-                                width: 25 * a,
-                                height: 13 * a,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      image: AssetImage(getCountryByMobileNo(providerUserData.userData?.data?.mobile)),
-                                      fit: BoxFit.contain),
-                                ),
+                              CountryFlag.fromCountryCode(
+                                providerUserData
+                                    .userData?.data?.countryCode??'IN',
+                                height: 14*a,
+                                width: 21*a,
+                                borderRadius: 4,
                               ),
                             ],
                           ),

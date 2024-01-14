@@ -67,7 +67,6 @@ class ZegoRoomProvider with ChangeNotifier {
   String? backgroundImage;
   String? foregroundImage;
   String? roomPassword;
-  String roomCountry = '';
   late TickerProvider vsync;
   Timer? heartBeat;
   Timer? triggerTimer;
@@ -76,6 +75,7 @@ class ZegoRoomProvider with ChangeNotifier {
   bool isMicrophonePermissionGranted = false;
   double treasureProgress = 0.0;
   int activeCount = 1;
+  bool minimized = false;
   String? newUser;
   List<ZegoUser> roomUsersList = [];
   final scrollController = ScrollController();
@@ -199,7 +199,6 @@ class ZegoRoomProvider with ChangeNotifier {
         log('🚩 🚪 Room stream update, roomID: $roomID, updateType: $updateType streamID:$streamID');
 
         if (updateType == ZegoUpdateType.Add) {
-          print('extraInfo11 ${stream.extraInfo}');
           final extraInfo = zegoStreamExtendedFromJson(stream.extraInfo);
           roomStreamList.add(extraInfo);
           startPlayingStream(streamID);
@@ -552,7 +551,7 @@ class ZegoRoomProvider with ChangeNotifier {
     final data = await Provider.of<RoomsProvider>(Get.context!,listen: false).getTreasureBox(room!.id!);
       if(data!=null) {
         int newLevel = data.treasureBoxLevel!;
-        if(room!.treasureBoxLevel!<newLevel){
+        if(room!.treasureBoxLevel!<newLevel && !minimized){
           do{
             room!.treasureBoxLevel = room!.treasureBoxLevel!+1;
             room = room?.copyWith(usedDaimonds: data.usedDaimonds, totalDiamonds: data.totalDiamonds);

@@ -543,7 +543,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                               Icon(CupertinoIcons.star_circle_fill,size: 11*a,color: Colors.white),
                                               SizedBox(width: 2 * a),
                                               Text(
-                                              formatInt(user.points??0),
+                                                formatNumber(user.points??0),
                                                 textAlign: TextAlign.center,
                                                 style: SafeGoogleFont(
                                                   'Poppins',

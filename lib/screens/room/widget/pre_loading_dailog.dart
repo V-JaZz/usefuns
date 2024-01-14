@@ -172,7 +172,6 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
           zegoRoomProvider.backgroundImage =
               me.data!.roomWallpaper!.first.images!.first;
         }
-        zegoRoomProvider.roomCountry = getCountryByMobileNo(me.data?.mobile,name: true);
       } else {
         final ownerData =
             await Provider.of<UserDataProvider>(Get.context!, listen: false)
@@ -185,7 +184,6 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
             getGreeting(
                 me?.data?.name, Random().nextInt(5), ownerData.data?.name),
             ownerData);
-        zegoRoomProvider.roomCountry = getCountryByMobileNo(ownerData.data?.mobile,name: true);
       }
       Provider.of<GiftsProvider>(Get.context!, listen: false).generateSeries();
       Get.off(() => const LiveRoom(), transition: Transition.size);

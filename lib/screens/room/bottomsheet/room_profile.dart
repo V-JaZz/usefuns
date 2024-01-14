@@ -273,17 +273,17 @@ class _RoomProfileBottomSheetState extends State<RoomProfileBottomSheet> {
                   SizedBox(
                     height: 3 * a,
                   ),
-                  Text(
-                    value.roomCountry,
-                    style: SafeGoogleFont(
-                      'Poppins',
-                      fontSize: 12 * b,
-                      fontWeight: FontWeight.w400,
-                      height: 1.5 * b / a,
-                      letterSpacing: 0.48 * a,
-                      color: const Color(0xff000000),
-                    ),
-                  ),
+                  // Text(
+                  //   value.roomCountry,
+                  //   style: SafeGoogleFont(
+                  //     'Poppins',
+                  //     fontSize: 12 * b,
+                  //     fontWeight: FontWeight.w400,
+                  //     height: 1.5 * b / a,
+                  //     letterSpacing: 0.48 * a,
+                  //     color: const Color(0xff000000),
+                  //   ),
+                  // ),
                   SizedBox(
                     height: 12 * a,
                   ),

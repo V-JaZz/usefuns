@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../data/model/response/room_gift_history_model.dart';
 import '../../../provider/gifts_provider.dart';
+import '../../../utils/helper.dart';
 
 
 class Contribution extends StatefulWidget {
@@ -213,7 +214,7 @@ class _ContributionState extends State<Contribution> {
                                                           ),
                                                         ),
                                                         Text(
-                                                          diamondsSum.toString(),
+                                                          formatNumber(diamondsSum),
                                                           style: SafeGoogleFont(
                                                             'Poppins',
                                                             fontSize: 9 * b,
@@ -333,7 +334,7 @@ class _ContributionState extends State<Contribution> {
                                                   ),
                                                 ),
                                                 Text(
-                                                  diamondsSum.toString(),
+                                                  formatNumber(diamondsSum),
                                                   style: SafeGoogleFont(
                                                     'Poppins',
                                                     fontSize: 9 * b,
@@ -499,7 +500,7 @@ class _ContributionState extends State<Contribution> {
                                                         ),
                                                       ),
                                                       Text(
-                                                        diamondsSum.toString(),
+                                                        formatNumber(diamondsSum),
                                                         style: SafeGoogleFont(
                                                           'Poppins',
                                                           fontSize: 9 * b,
@@ -619,7 +620,7 @@ class _ContributionState extends State<Contribution> {
                                                     ),
                                                   ),
                                                   Text(
-                                                    diamondsSum.toString(),
+                                                    formatNumber(diamondsSum),
                                                     style: SafeGoogleFont(
                                                       'Poppins',
                                                       fontSize: 9 * b,

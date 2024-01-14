@@ -1,4 +1,6 @@
 
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 
 import '../data/model/response/user_data_model.dart';
@@ -101,30 +103,20 @@ String userFrameViewPath(List<ItemModel>? frame){
   return '';
 }
 
-String getCountryByMobileNo(int? mobileNo, {bool name = false}){
-  if(mobileNo==null) return '';
-  String getCountryCode(String phoneNumber) {
-    int countryCodeLength = phoneNumber.length - 10;
-    return phoneNumber.substring(0, countryCodeLength);
+String formatNumber(int number) {
+  if (number.abs() < 1000) {
+    return number.toString();
   }
-  String code = getCountryCode(mobileNo.toString());
-  switch(code){
-    case '91':
-      return name?'India':'assets/in_flag.png';
-    case '92':
-      return name?'Pakistan':'assets/pk_flag.png';
-    case '880':
-      return name?'Bangladesh':'assets/bd_flag.png';
-  }
-  return '';
-}
+  const suffixes = ["", "K", "M", "B", "T", "P", "E", "Z", "Y"];
 
-String formatInt(int value) {
-  if (value >= 1000) {
-    double convertedValue = value / 1000;
-    String formattedValue = convertedValue.toStringAsFixed(convertedValue.truncateToDouble() == convertedValue ? 0 : 1);
-    return '${formattedValue}k';
-  } else {
-    return value.toString();
+  int magnitude = (log(number.abs()) / log(10) / 3).floor();
+  double shortenedNumber = number / pow(10, magnitude * 3);
+
+  String formattedNumber = shortenedNumber.toStringAsFixed(1);
+
+  if (formattedNumber.endsWith('.0')) {
+    formattedNumber = formattedNumber.substring(0, formattedNumber.length - 2);
   }
+
+  return '$formattedNumber${suffixes[magnitude]}';
 }

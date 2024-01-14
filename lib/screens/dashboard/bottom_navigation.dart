@@ -41,7 +41,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   void initState() {
     checkReward();
     _fetchUserData(refresh: false);
-    timer = Timer.periodic(const Duration(seconds: 60), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 30), (timer) {
       _fetchUserData(refresh: false);
     });
     Provider.of<RoomsProvider>(context, listen: false).getBannerList();
@@ -175,8 +175,12 @@ class _BottomNavigatorState extends State<BottomNavigator> {
                         decoration: BoxDecoration(
                             image: DecorationImage(
                                 image: NetworkImage(
-                                    value.room?.images?.first ?? '')),
-                            borderRadius: BorderRadius.circular(15))),
+                                    value.room?.images?.first ?? ''
+                                )
+                            ),
+                            borderRadius: BorderRadius.circular(15)
+                        )
+                    ),
                   Center(
                       child: SizedBox(
                           height: 30,
@@ -186,6 +190,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
                 ],
               ),
               onPressed: () {
+                value.minimized = false;
                 value.broadcastMessageList?.clear();
                 Get.to(const LiveRoom());
               });

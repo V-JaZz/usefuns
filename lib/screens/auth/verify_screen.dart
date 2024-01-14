@@ -7,8 +7,10 @@ import 'package:live_app/screens/dashboard/bottom_navigation.dart';
 
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../data/model/response/send_otp_model.dart';
 import '../../utils/common_widgets.dart';
+import '../../utils/constants.dart';
 import 'create_profile.dart';
 
 class VerifyScreen extends StatefulWidget {
@@ -147,8 +149,12 @@ class _VerifyScreenState extends State<VerifyScreen> {
 
                     if(model.status == 1){
                       Get.offAll(() => const BottomNavigator());
-                    }else{
+                    }else if(model.message == "Invalid credentials."){
                       Get.off(() => const CreateProfile());
+                    }else if(model.message == "Your account has been deactivated."){
+                      viewBannedDialog();
+                    }else{
+                      showCustomSnackBar('Error! ${model.message}', Get.context!, isError: false);
                     }
                   }else{
                     showCustomSnackBar('Invalid OTP!', Get.context!);
@@ -184,5 +190,33 @@ class _VerifyScreenState extends State<VerifyScreen> {
         ),
       ),
     );
+  }
+
+  void viewBannedDialog() {
+    showDialog(context: context, builder: (context) => AlertDialog(
+      title: const Text('Account Banned!'),
+      content: const Text('Due to violations of Usefuns Community Regulations and Terms & Conditions.'),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Get.back();
+            Get.back();
+          },
+          child: const Text('OK'),
+        ),
+        TextButton(
+          onPressed: () async {
+            if (await canLaunchUrl(Uri.parse(Constants.appealLink))) {
+              await launchUrl(Uri.parse(Constants.appealLink), mode: LaunchMode.externalApplication);
+            } else {
+              throw 'Could not launch ${Constants.appealLink}';
+            }
+            Get.back();
+            Get.back();
+          },
+          child: const Text('Appeal'),
+        ),
+      ],
+    ));
   }
 }

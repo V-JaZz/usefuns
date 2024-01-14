@@ -6,6 +6,7 @@ import 'package:live_app/utils/constants.dart';
 import '../data/datasource/local/sharedpreferences/storage_service.dart';
 import '../data/model/response/user_data_model.dart';
 import '../data/repository/user_data_repo.dart';
+import '../screens/auth/banned_countdown.dart';
 import '../screens/auth/login_screen.dart';
 import '../utils/zego_config.dart';
 
@@ -31,6 +32,10 @@ class UserDataProvider with ChangeNotifier {
         if(userData?.data?.tokens == null || userData!.data!.tokens != storageService.getString(Constants.token)){
           storageService.clearStorage();
           Get.offAll(const LogInScreen());
+        }
+        if(userData?.data?.isActiveUserId == false ||userData?.data?.isActiveDeviceId == false){
+          storageService.clearStorage();
+          Get.offAll(const BannedCountdown());
         }
         ZegoConfig.instance.userID = userData!.data!.id!;
         ZegoConfig.instance.userName = userData!.data!.name!;

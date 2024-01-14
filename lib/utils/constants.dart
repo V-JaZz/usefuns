@@ -3,13 +3,13 @@ class Constants {
   static String baseUrl = 'http://3.111.31.215:4000/';
   static String appVersion = '1.0.3v';
   static String updateUrl = 'https://usefuns.live/';
+  static String appealLink = 'https://forms.gle/mm7b9QdRiJjs7UsZA';
 
   // Storage service / Shared preference keys -
   static String id = 'ID';
   static String userId = 'USER_ID';
   static String token = 'TOKEN';
   static String language = 'LANGUAGE';
-  static String recentRooms = 'RECENT_ROOMS';
 
   //policies
   static String aboutUs = """About Us

@@ -37,6 +37,7 @@ void viewPowerDailog(){
                     ),
                     child: IconButton(
                       onPressed: () {
+                        Provider.of<ZegoRoomProvider>(context,listen:false).minimized = true;
                         Get.back();
                         Get.back();
                       },
@@ -73,8 +74,7 @@ void viewPowerDailog(){
                         Provider.of<ZegoRoomProvider>(context,listen:false).destroy();
                       },
                       icon: Icon(
-                          Icons
-                              .power_settings_new_sharp,
+                          Icons.power_settings_new_sharp,
                           size: 70 * a,color: Colors.deepOrangeAccent),
                     ),
                   ),

@@ -6,6 +6,7 @@ import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/common_widgets.dart';
+import '../../../utils/helper.dart';
 
 class LevelPrivileges extends StatefulWidget {
   final double trackHeight;
@@ -118,7 +119,7 @@ class _LevelPrivilegesState extends State<LevelPrivileges> {
                         Padding(
                           padding: EdgeInsets.only(left: 40 * a),
                           child: Text(
-                            '${((value.userData?.data?.exp??0)-(series[(value.userData?.data?.level??0)-1])).toInt()} (Lv.${value.userData?.data?.level})',
+                            '${formatNumber(((value.userData?.data?.exp??0)-(series[(value.userData?.data?.level??0)-1])).toInt())} (Lv.${value.userData?.data?.level})',
                             textAlign: TextAlign.left,
                             style: TextStyle(
                                 color: const Color.fromRGBO(255, 255, 255, 1),
@@ -133,7 +134,7 @@ class _LevelPrivilegesState extends State<LevelPrivileges> {
                         Padding(
                           padding: EdgeInsets.only(right: 40 * a),
                           child: Text(
-                            '${(series[value.userData?.data?.level??0]-series[(value.userData?.data?.level??0)-1]).toInt()} (Lv.${(value.userData?.data?.level??0)+1})',
+                            '${formatNumber((series[value.userData?.data?.level??0]-series[(value.userData?.data?.level??0)-1]).toInt())} (Lv.${(value.userData?.data?.level??0)+1})',
                             textAlign: TextAlign.left,
                             style: TextStyle(
                                 color: const Color.fromRGBO(255, 255, 255, 1),

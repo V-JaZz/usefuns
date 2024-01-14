@@ -1,5 +1,6 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:contained_tab_bar_view/contained_tab_bar_view.dart';
+import 'package:country_flags/country_flags.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -183,10 +184,12 @@ class _UserProfileState extends State<UserProfile> {
                                 ),
                               ),
                               SizedBox(width: 9*a),
-                              SizedBox(
-                                  width: 25 * a,
-                                  height: 14 * a,
-                                  child: Image.asset(getCountryByMobileNo(user.mobile))),
+                              CountryFlag.fromCountryCode(
+                                user.countryCode??'IN',
+                                height: 16*a,
+                                width: 24*a,
+                                borderRadius: 4,
+                              ),
                             ],
                           ),
                           SizedBox(height: 16*a),

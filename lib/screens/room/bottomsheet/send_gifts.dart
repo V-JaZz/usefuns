@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../data/model/body/zego_stream_model.dart';
 import '../../../data/model/response/gifts_model.dart';
+import '../../../utils/helper.dart';
 
 
 class SendGiftsBottomSheet extends StatefulWidget {
@@ -96,7 +97,7 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    'Need ${(giftProvider.series![up.userData?.data?.level??0]-(up.userData?.data?.exp??0)).toInt()} diamonds to achieve Lv.${(up.userData?.data?.level??0)+1}',
+                                    'Need ${formatNumber((giftProvider.series![up.userData?.data?.level??0]-(up.userData?.data?.exp??0)).toInt())} diamonds to achieve Lv.${(up.userData?.data?.level??0)+1}',
                                     textAlign: TextAlign.left,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
