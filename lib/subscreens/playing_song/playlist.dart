@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/utils/utils_assets.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 
 class Playlist1 extends StatefulWidget {
   const Playlist1({super.key});
@@ -10,7 +11,38 @@ class Playlist1 extends StatefulWidget {
 }
 
 class _Playlist1State extends State<Playlist1> {
-  double _currentSliderValue = 20;
+  // Main method.
+  final OnAudioQuery _audioQuery = OnAudioQuery();
+  // Indicate if application has permission to the library.
+  bool _hasPermission = false;
+  double _currentSliderValue = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    // (Optinal) Set logging level. By default will be set to 'WARN'.
+    //
+    // Log will appear on:
+    //  * XCode: Debug Console
+    //  * VsCode: Debug Console
+    //  * Android Studio: Debug and Logcat Console
+    LogConfig logConfig = LogConfig(logType: LogType.DEBUG);
+    _audioQuery.setLogConfig(logConfig);
+
+    // Check and request for permission.
+    checkAndRequestPermissions();
+  }
+
+  checkAndRequestPermissions({bool retry = false}) async {
+    // The param 'retryRequest' is false, by default.
+    _hasPermission = await _audioQuery.checkAndRequest(
+      retryRequest: retry,
+    );
+
+    // Only call update the UI if application has all required permissions.
+    _hasPermission ? setState(() {}) : null;
+  }
+
   @override
   Widget build(BuildContext context) {
     double baseWidth = 360;
@@ -22,18 +54,60 @@ class _Playlist1State extends State<Playlist1> {
           automaticallyImplyLeading: true,
           backgroundColor: const Color(0xff9E26BC).withOpacity(0.2),
           title: const Text(
-            'Playlist',
+            'Songs',
           ),
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(children: [
-            playmethod('Over the Horizon', 'samsung'),
-            playmethod('Calm', 'samsung'),
-            playmethod('Music Box', 'samsung'),
-            playmethod('Nudge', 'samsung'),
-            playmethod('PiggyBank', 'samsung'),
-          ]),
+          child: Center(
+            child: !_hasPermission
+                ? noAccessToLibraryWidget()
+                : FutureBuilder<List<SongModel>>(
+                    // Default values:
+                    future: _audioQuery.querySongs(
+                      sortType: null,
+                      orderType: OrderType.ASC_OR_SMALLER,
+                      uriType: UriType.EXTERNAL,
+                      ignoreCase: true,
+                    ),
+                    builder: (context, item) {
+                      // Display error, if any.
+                      if (item.hasError) {
+                        return Text(item.error.toString());
+                      }
+
+                      // Waiting content.
+                      if (item.data == null) {
+                        return const CircularProgressIndicator();
+                      }
+
+                      // 'Library' is empty.
+                      if (item.data!.isEmpty)
+                        return const Text("Nothing found!");
+
+                      // You can use [item.data!] direct or you can create a:
+                      // List<SongModel> songs = item.data!;
+                      return ListView.builder(
+                        itemCount: item.data!.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text(item.data![index].title),
+                            subtitle:
+                                Text(item.data![index].artist ?? "No Artist"),
+                            trailing: const Icon(Icons.arrow_forward_rounded),
+                            // This Widget will query/load image.
+                            // You can use/create your own widget/method using [queryArtwork].
+                            leading: QueryArtworkWidget(
+                              controller: _audioQuery,
+                              id: item.data![index].id,
+                              type: ArtworkType.AUDIO,
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+          ),
         ),
         bottomNavigationBar: Container(
           height: 91 * a,
@@ -146,6 +220,27 @@ class _Playlist1State extends State<Playlist1> {
             color: Colors.white,
           )),
         ),
+      ),
+    );
+  }
+
+  Widget noAccessToLibraryWidget() {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.redAccent.withOpacity(0.5),
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text("Doesn't have access to the library"),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: () => checkAndRequestPermissions(retry: true),
+            child: const Text("Allow"),
+          ),
+        ],
       ),
     );
   }

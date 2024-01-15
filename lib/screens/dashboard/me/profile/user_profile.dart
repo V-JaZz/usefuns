@@ -186,8 +186,8 @@ class _UserProfileState extends State<UserProfile> {
                               SizedBox(width: 9*a),
                               CountryFlag.fromCountryCode(
                                 user.countryCode??'IN',
-                                height: 16*a,
-                                width: 24*a,
+                                height: 15*a,
+                                width: 22.5*a,
                                 borderRadius: 4,
                               ),
                             ],

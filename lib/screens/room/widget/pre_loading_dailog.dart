@@ -54,6 +54,10 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
         Provider.of<ZegoRoomProvider>(Get.context!, listen: false);
     if (locked) {
       loading = false;
+      if(widget.room.userId! == StorageService().getString(Constants.id)){
+        textEditingController.text = widget.room.password??'';
+        joinLockedRoom();
+      }
     } else {
       join();
     }

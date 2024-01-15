@@ -3,11 +3,13 @@ import 'package:get/get.dart';
 import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/subscreens/mess/usefuns_teams.dart';
 import 'package:live_app/screens/dashboard/me/profile/user_profile.dart';
+import 'package:live_app/utils/constants.dart';
 
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../../provider/messages_provider.dart';
+import '../../web/web_view.dart';
 import 'activity.dart';
 import 'system_notification.dart';
 import 'usefuns_club_notifications.dart';
@@ -99,7 +101,8 @@ class _NotificationsState extends State<Notifications> {
               "color": 0xff14ae80,
               "icon": Icons.headset_mic_outlined,
               "onTap": () {
-                Get.to(() => const UsefunsTeam());
+                // Get.to(() => const UsefunsTeam());
+                Get.to(()=>WebPageViewer(url: Constants.ufTeamSupportChat));
               },
               "unread": 0
             },

@@ -164,7 +164,6 @@ class ZegoRoomProvider with ChangeNotifier {
   Future<void> stopPlayingStream(String streamID) async {
     await ZegoExpressEngine.instance.stopPlayingStream(streamID);
   }
-
   void destroyEngine() async {
     await ZegoExpressEngine.destroyEngine()
         .then((ret) => log('already destroy engine'));

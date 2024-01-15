@@ -7,8 +7,8 @@ import 'package:live_app/utils/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../data/model/response/app_version_config.dart';
-import 'auth/login_screen.dart';
+import '../../data/model/response/app_version_config.dart';
+import '../auth/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -31,7 +31,7 @@ class StartState extends State<SplashScreen> {
         };
 
         var response = await http.get(
-          Uri.parse('http://3.111.31.215:4000/admin/appVersion/getall'),
+          Uri.parse('http://3.110.28.102:4000/admin/appVersion/getall'),
           headers: headers,
         ).timeout(const Duration(seconds: 20));
 
@@ -47,6 +47,7 @@ class StartState extends State<SplashScreen> {
             }
           }
         } else {
+          configVersion();
           print(response.reasonPhrase);
         }
       } catch (e) {

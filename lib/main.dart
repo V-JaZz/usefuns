@@ -12,7 +12,7 @@ import 'package:live_app/provider/seller_agency_provider.dart';
 import 'package:live_app/provider/shop_wallet_provider.dart';
 import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/provider/zego_room_provider.dart';
-import 'package:live_app/screens/splash_screen.dart';
+import 'package:live_app/screens/splash/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'data/datasource/local/sharedpreferences/storage_service.dart';
 

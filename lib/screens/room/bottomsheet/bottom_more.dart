@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../subscreens/aristrocracy/tab_bar.dart';
+import '../../../subscreens/playing_song/local.dart';
 import '../../../subscreens/playing_song/playlist.dart';
 import '../../../subscreens/tasks/dailyTask.dart';
 import '../../../utils/utils_assets.dart';

@@ -271,11 +271,11 @@ class _TreasuresState extends State<Treasures> {
 6. The Key's progress bar resets every day at midnight, 1:00 am.
 7. This game is not affiliated with Google or Apple Inc. (AAPL).
 8. Opening any box requires Diamonds:
-   - Box 1 requires 10000 Diamonds
-   - Box 2 requires 20000 Diamonds
-   - Box 3 requires 30000 Diamonds
-   - Box 4 requires 40000 Diamonds
-   - Box 5 requires 50000 Diamonds"""),
+   - Box 1 requires 10k Diamonds
+   - Box 2 requires 20k Diamonds
+   - Box 3 requires 40k Diamonds
+   - Box 4 requires 60k Diamonds
+   - Box 5 requires 100k Diamonds"""),
                     confirm: Container(
                       margin: EdgeInsets.only(bottom: 9*a),
                       width: double.infinity,
@@ -649,10 +649,10 @@ class _TreasuresState extends State<Treasures> {
 
   double setValue(int selectedBox, int usedDiamonds) {
     int b1 = 10000;
-    int b2 = 20000;
-    int b3 = 30000;
-    int b4 = 40000;
-    int b5 = 50000;
+    int b2 = 30000;
+    int b3 = 70000;
+    int b4 = 130000;
+    int b5 = 230000;
     switch(selectedBox){
       case 0:
         if(usedDiamonds>=b1) return 1.0;

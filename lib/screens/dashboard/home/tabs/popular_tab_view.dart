@@ -11,6 +11,7 @@ import '../../../../provider/rooms_provider.dart';
 import '../../../../utils/common_widgets.dart';
 import '../../../auth/banned_countdown.dart';
 import '../../../room/widget/pre_loading_dailog.dart';
+import '../../../web/web_view.dart';
 
 class PopularTabView extends StatefulWidget {
   const PopularTabView({super.key});
@@ -108,15 +109,8 @@ class _PopularTabViewState extends State<PopularTabView> {
                                       (index) {
                                       return GestureDetector(
                                         onTap: () async {
-                                          String link =
-                                              value.bannerList[index].link!;
-                                          if (await canLaunchUrl(
-                                              Uri.parse(link))) {
-                                            await launchUrl(Uri.parse(link),
-                                                mode: LaunchMode.inAppWebView);
-                                          } else {
-                                            throw 'Could not launch $link';
-                                          }
+                                          String link = value.bannerList[index].link!;
+                                          Get.to(()=>WebPageViewer(url: link));
                                         },
                                         child: Image.network(
                                           loadingBuilder: (context, child, loadingProgress) {

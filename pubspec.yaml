@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: "none"
 
-version: 1.0.3+2
+version: 1.0.4+3
 
 environment:
   sdk: ">=3.0.2 <4.0.0"
@@ -49,6 +49,8 @@ dependencies:
   intl_phone_number_input: ^0.7.3+1
   country_flags: ^2.2.0
   country_codes: ^2.2.0
+  webview_flutter: ^3.0.0
+  on_audio_query: ^2.9.0
 #  firebase_core: ^2.21.0
 #  firebase_auth: ^4.12.1
 #  google_sign_in: ^6.1.5
