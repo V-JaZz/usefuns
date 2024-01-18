@@ -26,7 +26,7 @@ class ZegoConfig {
   // It is required for web and is recommended for native but not required.
   String token = "";
 
-  ZegoScenario scenario = ZegoScenario.StandardChatroom;
+  ZegoScenario scenario = ZegoScenario.HighQualityChatroom;
   bool enablePlatformView = false;
 
   String userID = "";

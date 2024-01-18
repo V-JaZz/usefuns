@@ -121,7 +121,7 @@ class HttpApiClient {
     }
   }
 
-  Future<http.Response> postMultipart(String path, Map<String, String> fields, {String? bearerToken,String? method}) async {
+  Future<http.Response> postMultipart(String path, Map<String, dynamic> fields, {String? bearerToken,String? method}) async {
     try {
       final headers = _buildHeaders(bearerToken, 'multipart/form-data');
 
@@ -147,7 +147,7 @@ class HttpApiClient {
     }
   }
 
-  Future<http.Response> postMultipartFile(String path, Map<String, String> fields, String fileKey, String filePath, {String? bearerToken,String? method}) async {
+  Future<http.Response> postMultipartFile(String path, Map<String, dynamic> fields, String fileKey, String filePath, {String? bearerToken,String? method}) async {
     try {
       final headers = _buildHeaders(bearerToken, 'multipart/form-data');
 

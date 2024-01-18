@@ -63,7 +63,7 @@ class AuthProvider with ChangeNotifier {
     if(fromResend==true) resend = true;
     _isLoading = true;
     notifyListeners();
-    final apiResponse = await _authRepo.sendOtp(number.phoneNumber!);
+    final apiResponse = await _authRepo.sendOtp(int.parse(number.phoneNumber!.substring(1)));
     _isLoading = false;
     notifyListeners();
     SendOtpModel responseModel;
@@ -80,7 +80,7 @@ class AuthProvider with ChangeNotifier {
   Future<LoginModel> login() async {
     _isLoading = true;
     notifyListeners();
-    final apiResponse = await _authRepo.login(number.phoneNumber!);
+    final apiResponse = await _authRepo.login(int.parse(number.phoneNumber!.substring(1)));
     _isLoading = false;
     notifyListeners();
     LoginModel responseModel;
@@ -109,7 +109,7 @@ class AuthProvider with ChangeNotifier {
     storageService.setString(Constants.language, language??'English');
     final apiResponse = await _authRepo.register(
         name: name,
-        phone: number.phoneNumber!,
+        phone: int.parse(number.phoneNumber!.substring(1)),
         dob: dob,
         gender: gender,
       image: image,

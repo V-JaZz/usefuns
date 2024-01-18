@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:live_app/provider/rooms_provider.dart';
 import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/screens/dashboard/bottom_navigation.dart';
+import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
 import '../data/datasource/local/sharedpreferences/storage_service.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
@@ -40,6 +41,7 @@ class ZegoRoomProvider with ChangeNotifier {
   Future<void> destroy() async {
     await Provider.of<RoomsProvider>(Get.context!,listen: false).removeRoomUser(_room!.id!);
     await logoutRoom();
+    if(mediaPlayer!=null) ZegoExpressEngine.instance.destroyMediaPlayer(mediaPlayer!);
     clearZegoEventCallback();
     destroyEngine();
     heartBeat?.cancel();
@@ -48,10 +50,13 @@ class ZegoRoomProvider with ChangeNotifier {
     foregroundSvgaController?.dispose();
     roomUsersList = [];
     roomStreamList = [];
+    minimized = false;
+    mediaPlayer = null;
     activeCount = 0;
     onSeat=false;
     isOwner = false;
     _room= null;
+    _loadedTrack = null;
     zegoRoom = null;
     foregroundSvgaController = null;
     backgroundImage = null;
@@ -63,24 +68,61 @@ class ZegoRoomProvider with ChangeNotifier {
   //Variables
   bool isOwner = false;
   bool onSeat = false;
-  SVGAAnimationController? foregroundSvgaController;
-  String? backgroundImage;
-  String? foregroundImage;
+
+  bool isMicrophonePermissionGranted = false;
+  ZegoRoomModel? zegoRoom;
   String? roomPassword;
-  late TickerProvider vsync;
   Timer? heartBeat;
   Timer? triggerTimer;
-  ZegoRoomModel? zegoRoom;
   String roomID = '';
-  bool isMicrophonePermissionGranted = false;
   double treasureProgress = 0.0;
   int activeCount = 1;
-  bool minimized = false;
   String? newUser;
   List<ZegoUser> roomUsersList = [];
-  final scrollController = ScrollController();
   List<ZegoStreamExtended> roomStreamList = [];
+  final scrollController = ScrollController();
   FixedLengthQueue? broadcastMessageList = FixedLengthQueue<ZegoBroadcastMessageInfo>(50);
+
+   // room foreground and background
+  late TickerProvider vsync;
+  String? backgroundImage;
+  String? foregroundImage;
+  SVGAAnimationController? foregroundSvgaController;
+
+   // room music
+  bool _minimized = false;
+  bool get minimized => _minimized;
+  set minimized(bool value) {
+    _minimized = value;
+    notifyListeners();
+  }
+  ZegoMediaPlayer? mediaPlayer;
+  bool _isPlaying = false;
+  bool get isPlaying => _isPlaying;
+  set isPlaying(bool value) {
+    _isPlaying = value;
+    notifyListeners();
+  }
+  SongModel? _loadedTrack;
+  SongModel? get loadedTrack => _loadedTrack;
+  set loadedTrack(SongModel? value) {
+    _loadedTrack = value;
+    notifyListeners();
+  }
+  bool _inLoop = false;
+  bool get inLoop => _inLoop;
+  set inLoop(bool value) {
+    _inLoop = value;
+    notifyListeners();
+    mediaPlayer?.enableRepeat(value);
+  }
+  int _trackVolume = 60;
+  int get trackVolume => _trackVolume;
+  set trackVolume(int value) {
+    _trackVolume = value;
+    notifyListeners();
+    mediaPlayer?.setPlayVolume(value);
+  }
 
   //Getter Setters
   Room? _room;
@@ -153,16 +195,31 @@ class ZegoRoomProvider with ChangeNotifier {
     notifyListeners();
   }
   Future<void> startPlayingStream(String streamID) async {
-    Future<void> startPlayingStream(int viewID, String streamID) async {
-      ZegoCanvas canvas = ZegoCanvas.view(viewID);
-      await ZegoExpressEngine.instance.startPlayingStream(streamID, canvas: canvas);
-    }
-    await ZegoExpressEngine.instance.createCanvasView((viewID) {
-      startPlayingStream(viewID, streamID);
-    });
+    await ZegoExpressEngine.instance.startPlayingStream(streamID);
   }
   Future<void> stopPlayingStream(String streamID) async {
     await ZegoExpressEngine.instance.stopPlayingStream(streamID);
+  }
+  Future<void> initMediaPlayer() async {
+    mediaPlayer = await ZegoExpressEngine.instance.createMediaPlayer();
+    if (mediaPlayer != null) {
+      log("init media player success");
+      await mediaPlayer!.enableAux(true);
+    } else {
+      log("init media player failed");
+    }
+  }
+  Future<bool> loadLocalMedia(SongModel song) async {
+    mediaPlayer?.stop();
+    final result = await mediaPlayer!.loadResourceWithConfig(ZegoMediaPlayerResource(ZegoMultimediaLoadType.FilePath,filePath: song.data));
+    if(result.errorCode == 0){
+      loadedTrack = song;
+      return true;
+    } else {
+      loadedTrack = null;
+      showCustomSnackBar('Error loading audio file!', Get.context!,isToaster: true);
+      return false;
+    }
   }
   void destroyEngine() async {
     await ZegoExpressEngine.destroyEngine()
@@ -574,6 +631,7 @@ class ZegoRoomProvider with ChangeNotifier {
   void heartbeatJoin(){
 
     DateTime now = DateTime.now();
+    print(now);
     int currentMinute = now.minute;
 
     // Calculate the delay until the next multiple of 5 minutes

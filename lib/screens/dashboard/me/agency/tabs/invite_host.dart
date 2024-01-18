@@ -124,13 +124,13 @@ class _InviteHostTabViewState extends State<InviteHostTabView> {
                 title(
                     'Invite host to join your agency :', Alignment.centerLeft),
                 para(
-                  '1. In june you can invite 144 more host. (all the hodt under application. Under audition anf audition failed will your invited Host. ',
+                  '1. In june you can invite 144 more host. (All the host under application, audition and audition failed will your invited host.) ',
                 ),
                 para(
                   '2. Host basic Requirements: Host age should be 22 Years old above, or will be rejected He/she has not add any other agency yet He/she Completed His/Her Bio .',
                 ),
                 para(
-                  '3. Agency Invite host Process:  Fill your invited host usefun id and Watsapp number ask he/her to fill the application form on app  Wait for official team’s audition result within 48 hours',
+                  '3. Agency Invite host Process:  Fill your invited host usefuns ID and ask he/her to accept the invite request from app notifications. Wait for official team’s audition result within 48 hours',
                 ),
                 SizedBox(
                   height: 20 * a,

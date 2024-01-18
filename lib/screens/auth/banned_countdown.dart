@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:provider/provider.dart';
+import '../../provider/zego_room_provider.dart';
 import 'login_screen.dart';
 
 class BannedCountdown extends StatefulWidget {
@@ -16,6 +17,8 @@ class BannedCountdownState extends State<BannedCountdown> {
 
   @override
   void initState() {
+    final zp = Provider.of<ZegoRoomProvider>(context,listen:false);
+    if(zp.room != null)zp.destroy();
     super.initState();
     startLogoutTimer();
   }

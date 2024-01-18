@@ -262,6 +262,7 @@ class _MineTabViewState extends State<MineTabView> {
                                                 image: room.images!.isEmpty?null:room.images!.first,
                                                 title: room.name.toString(),
                                                 subTitle: room.announcement,
+                                                iso: room.countryCode,
                                                 active: room.activeUsers?.length.toString()??'0',
                                                 isLocked: room.isLocked??false,
                                                 onTap: (){
@@ -312,6 +313,7 @@ class _MineTabViewState extends State<MineTabView> {
                                                   image: room.images!.isEmpty?null:room.images!.first,
                                                   title: room.name.toString(),
                                                   subTitle: room.announcement,
+                                                  iso: room.countryCode,
                                                   active: room.activeUsers?.length.toString()??'0',
                                                   isLocked: room.isLocked??false,
                                                   onTap: (){

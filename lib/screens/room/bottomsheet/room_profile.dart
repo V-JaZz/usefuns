@@ -55,6 +55,7 @@ class _RoomProfileBottomSheetState extends State<RoomProfileBottomSheet> {
                 Container(
                     height: 64 * a,
                     width: 64 * a,
+                  padding: const EdgeInsets.only(right: 6, bottom: 6),
                   decoration: BoxDecoration(
                     image: value.room!.images!.isEmpty
                         ? const DecorationImage(
@@ -74,11 +75,11 @@ class _RoomProfileBottomSheetState extends State<RoomProfileBottomSheet> {
                       ?Align(
                     alignment: Alignment.bottomRight,
                     child: SizedBox(
-                      width: 24 * a,
-                      height: 14 * a,
+                      width: 15 * a,
+                      height: 18 * a,
                       child: Image.asset(
                         'assets/room_icons/lock.png',
-                        fit: BoxFit.contain,
+                        fit: BoxFit.fitHeight,
                       ),
                     ),
                   )
@@ -273,17 +274,17 @@ class _RoomProfileBottomSheetState extends State<RoomProfileBottomSheet> {
                   SizedBox(
                     height: 3 * a,
                   ),
-                  // Text(
-                  //   value.roomCountry,
-                  //   style: SafeGoogleFont(
-                  //     'Poppins',
-                  //     fontSize: 12 * b,
-                  //     fontWeight: FontWeight.w400,
-                  //     height: 1.5 * b / a,
-                  //     letterSpacing: 0.48 * a,
-                  //     color: const Color(0xff000000),
-                  //   ),
-                  // ),
+                  Text(
+                    getCountryName(value.room?.countryCode??'IN'),
+                    style: SafeGoogleFont(
+                      'Poppins',
+                      fontSize: 12 * b,
+                      fontWeight: FontWeight.w400,
+                      height: 1.5 * b / a,
+                      letterSpacing: 0.48 * a,
+                      color: const Color(0xff000000),
+                    ),
+                  ),
                   SizedBox(
                     height: 12 * a,
                   ),

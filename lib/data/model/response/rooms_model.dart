@@ -74,6 +74,7 @@ class Room {
   DateTime? createdAt;
   DateTime? updatedAt;
   int? v;
+  String? countryCode;
 
   Room({
     this.announcement,
@@ -106,6 +107,7 @@ class Room {
     this.createdAt,
     this.updatedAt,
     this.v,
+    this.countryCode,
   });
 
   Room copyWith({
@@ -139,6 +141,7 @@ class Room {
     DateTime? createdAt,
     DateTime? updatedAt,
     int? v,
+    String? countryCode,
   }) =>
       Room(
         announcement: announcement ?? this.announcement,
@@ -171,6 +174,7 @@ class Room {
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
         v: v ?? this.v,
+        countryCode: countryCode ?? this.countryCode,
       );
 
   factory Room.fromJson(Map<String, dynamic> json) => Room(
@@ -204,6 +208,7 @@ class Room {
     createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
     updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
     v: json["__v"],
+    countryCode: json["countryCode"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -237,5 +242,6 @@ class Room {
     "createdAt": createdAt?.toIso8601String(),
     "updatedAt": updatedAt?.toIso8601String(),
     "__v": v,
+    "countryCode": countryCode,
   };
 }

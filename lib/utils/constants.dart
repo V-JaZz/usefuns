@@ -1,7 +1,7 @@
 class Constants {
 
-  static String baseUrl = 'http://3.110.28.102:4000/';
-  static String appVersion = '1.0.4v';
+  static String baseUrl = 'http://techc2.be:4000/';
+  static String appVersion = '1.0.5v';
   static String updateUrl = 'https://usefuns.live/';
   static String appealLink = 'https://forms.gle/mm7b9QdRiJjs7UsZA';
   static String ufTeamSupportChat = 'https://tawk.to/chat/659e69db0ff6374032be6775/default';

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:live_app/data/datasource/local/sharedpreferences/storage_service.dart';
-import 'package:live_app/provider/moments_provider.dart';
 import 'package:live_app/provider/rooms_provider.dart';
 import 'package:live_app/screens/dashboard/home/home.dart';
 import 'package:live_app/screens/room/live_room.dart';
@@ -51,7 +50,8 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   @override
   void dispose() {
     timer?.cancel();
-    Provider.of<ZegoRoomProvider>(context,listen:false).destroy();
+    final zp = Provider.of<ZegoRoomProvider>(context,listen:false);
+    if(zp.room != null)zp.destroy();
     super.dispose();
   }
 
@@ -59,7 +59,6 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   Widget build(BuildContext context) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
-    double b = a * 0.97;
     return Scaffold(
         body: Consumer<UserDataProvider>(
           builder: (context, value, child) => Center(
@@ -138,23 +137,6 @@ class _BottomNavigatorState extends State<BottomNavigator> {
             selectedIndex: _selectedIndex,
             onTabChange: (index) {
               if (index != _selectedIndex) {
-                switch (index) {
-                  case 0:
-                    print('Home');
-                    break;
-                  case 1:
-                    print('Games');
-                    break;
-                  case 2:
-                    print('Message');
-                    break;
-                  case 3:
-                    print('Moments');
-                    break;
-                  case 4:
-                    print('Me');
-                    break;
-                }
                 setState(() {
                   _selectedIndex = index;
                 });
@@ -164,7 +146,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
         ),
         floatingActionButton:
         Consumer<ZegoRoomProvider>(builder: (context, value, child) {
-          if(value.room==null) return const SizedBox.shrink();
+          if(!value.minimized) return const SizedBox.shrink();
           bool roomIcon = value.room!.images!.isNotEmpty;
           return FloatingActionButton(
               tooltip: 'Goto Room',

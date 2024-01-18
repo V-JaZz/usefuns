@@ -33,7 +33,7 @@ class UserDataProvider with ChangeNotifier {
           storageService.clearStorage();
           Get.offAll(const LogInScreen());
         }
-        if(userData?.data?.isActiveUserId == false ||userData?.data?.isActiveDeviceId == false){
+        if(userData?.data?.isActiveUserId == false || userData?.data?.isActiveDeviceId == false){
           storageService.clearStorage();
           Get.offAll(const BannedCountdown());
         }

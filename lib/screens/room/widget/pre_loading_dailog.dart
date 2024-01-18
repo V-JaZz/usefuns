@@ -12,7 +12,6 @@ import '../../../data/model/response/rooms_model.dart';
 import '../../../provider/gifts_provider.dart';
 import '../../../provider/user_data_provider.dart';
 import '../../../provider/zego_room_provider.dart';
-import '../../../utils/helper.dart';
 import '../../../utils/utils_assets.dart';
 
 class RoomPreLoadingDialog extends StatefulWidget {
@@ -50,8 +49,7 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
   @override
   void initState() {
     locked = widget.room.isLocked ?? false;
-    zegoRoomProvider =
-        Provider.of<ZegoRoomProvider>(Get.context!, listen: false);
+    zegoRoomProvider = Provider.of<ZegoRoomProvider>(context, listen: false);
     if (locked) {
       loading = false;
       if(widget.room.userId! == StorageService().getString(Constants.id)){
@@ -155,10 +153,12 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
   }
 
   void join({String? password}) async {
-    final response =  await Provider.of<RoomsProvider>(context, listen: false).addRoomUser(widget.room.id!, password: password);
+
+    if (zegoRoomProvider.room != null) await zegoRoomProvider.destroy();
+
+    final response =  await Provider.of<RoomsProvider>(Get.context!, listen: false).addRoomUser(widget.room.id!, password: password);
 
     if (response.status == 1) {
-      if (zegoRoomProvider.room != null) await zegoRoomProvider.destroy();
       zegoRoomProvider.isOwner = widget.room.userId! == StorageService().getString(Constants.id);
       zegoRoomProvider.room = widget.room;
       zegoRoomProvider.roomPassword = password;
@@ -169,8 +169,7 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
           viewCalculator: false);
       await zegoRoomProvider.init();
 
-      final me =
-          Provider.of<UserDataProvider>(Get.context!, listen: false).userData;
+      final me = Provider.of<UserDataProvider>(Get.context!, listen: false).userData;
       if (zegoRoomProvider.isOwner) {
         if (me!.data!.roomWallpaper!.isNotEmpty) {
           zegoRoomProvider.backgroundImage =
@@ -190,9 +189,9 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
             ownerData);
       }
       Provider.of<GiftsProvider>(Get.context!, listen: false).generateSeries();
-      Get.off(() => const LiveRoom(), transition: Transition.size);
-    }
-    else if(password!=null){
+      Get.back();
+      Get.to(() => const LiveRoom(), transition: Transition.size);
+    }else if(locked && password!=null){
       setState(() {
         loading = false;
         errorText = response.message??'Invalid password!';

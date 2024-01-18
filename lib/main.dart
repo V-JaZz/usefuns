@@ -13,6 +13,7 @@ import 'package:live_app/provider/shop_wallet_provider.dart';
 import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/provider/zego_room_provider.dart';
 import 'package:live_app/screens/splash/splash_screen.dart';
+import 'package:live_app/provider/connection_provider.dart';
 import 'package:provider/provider.dart';
 import 'data/datasource/local/sharedpreferences/storage_service.dart';
 
@@ -26,18 +27,17 @@ void main() async {
     DeviceOrientation.portraitUp, // Allow only portrait mode
     DeviceOrientation.portraitDown,
   ]).then((_) {
-    runApp(const MyApp());
+    runApp(MyApp());
   });
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-
+  MyApp({super.key});
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => ConnectionProvider()),
         ChangeNotifierProvider(create: (context) => AuthProvider()),
         ChangeNotifierProvider(create: (context) => UserDataProvider()),
         ChangeNotifierProvider(create: (context) => MomentsProvider()),

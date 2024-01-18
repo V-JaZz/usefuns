@@ -103,10 +103,9 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                     InkWell(
                                       onTap: bs.showRoomProfileBottomSheet,
                                       child: Container(
-                                        padding: EdgeInsets.fromLTRB(
-                                            13 * a, 23 * a, 1 * a, 1 * a),
                                         height: 38 * a,
                                         width: 38 * a,
+                                        padding: const EdgeInsets.only(right: 4, bottom: 4),
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(3),
                                           image: value.room!.images!.isEmpty
@@ -123,17 +122,16 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                             ),
                                           ),
                                         ),
-                                        child: value.roomPassword != null                                          ?Align(
-                                          alignment: Alignment.bottomRight,
-                                          child: SizedBox(
-                                            width: 24 * a,
-                                            height: 14 * a,
-                                            child: Image.asset(
-                                              'assets/room_icons/lock.png',
-                                              fit: BoxFit.contain,
-                                            ),
-                                          ),
-                                        )
+                                        alignment: Alignment.bottomRight,
+                                        child: value.roomPassword != null
+                                            ?SizedBox(
+                                              width: 12 * a,
+                                              height: 15 * a,
+                                              child: Image.asset(
+                                                'assets/room_icons/lock.png',
+                                                fit: BoxFit.fitHeight,
+                                              ),
+                                            )
                                             :null,
                                       ),
                                     ),

@@ -85,6 +85,7 @@ class _NewTabViewState extends State<NewTabView> {
                         : room.images!.first,
                     title: room.name.toString(),
                     subTitle: room.announcement,
+                    iso: room.countryCode,
                     active:
                     room.activeUsers?.length.toString() ??
                         '0',

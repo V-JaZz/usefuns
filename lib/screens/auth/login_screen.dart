@@ -7,7 +7,6 @@ import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import '../../data/model/response/send_otp_model.dart';
 import '../../utils/common_widgets.dart';
-import '../../utils/network_util.dart';
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({Key? key}) : super(key: key);
@@ -17,10 +16,9 @@ class LogInScreen extends StatefulWidget {
 }
 
 class _LogInScreenState extends State<LogInScreen> {
-
+  final focusNode = FocusNode();
   @override
   void initState() {
-    NetworkUtils.checkConnectivity(context);
     super.initState();
   }
   @override
@@ -144,6 +142,7 @@ class _LogInScreenState extends State<LogInScreen> {
                   margin: EdgeInsets.fromLTRB(36 * a, 0 * a, 36 * a, 36 * a),
                   width: double.infinity,
                   child: InternationalPhoneNumberInput(
+                    focusNode: focusNode,
                     onInputChanged: (PhoneNumber value) {
                       provider.number = value;
                     },
@@ -174,6 +173,7 @@ class _LogInScreenState extends State<LogInScreen> {
                 ),
                 GestureDetector(
                   onTap: () async {
+                    FocusScope.of(context).unfocus();
                     if(provider.number.phoneNumber == null || provider.number.phoneNumber?.substring(provider.number.dialCode!.length).trim() == ''){
                       showCustomSnackBar('Invalid number!', Get.context!);
                     }else{

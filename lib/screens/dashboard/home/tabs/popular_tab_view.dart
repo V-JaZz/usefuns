@@ -255,6 +255,7 @@ class _PopularTabViewState extends State<PopularTabView> {
                                     : room.images!.first,
                                 title: room.name.toString(),
                                 subTitle: room.announcement,
+                                iso: room.countryCode,
                                 active:
                                 room.activeUsers?.length.toString() ??
                                     '0',

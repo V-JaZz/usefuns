@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:live_app/data/datasource/local/sharedpreferences/storage_service.dart';
 import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../data/model/response/room_gift_history_model.dart';
 import '../../../provider/gifts_provider.dart';
+import '../../../utils/constants.dart';
 import '../../../utils/helper.dart';
+import '../../dashboard/me/profile/user_profile.dart';
 
 
 class Contribution extends StatefulWidget {
@@ -164,31 +167,43 @@ class _ContributionState extends State<Contribution> {
                                               return Column(
                                                   crossAxisAlignment: CrossAxisAlignment.center,
                                                   children: [
-                                                    SizedBox(
-                                                      height: 58 * a,
-                                                      child: Stack(
-                                                        children: [
-                                                          snapshot.data!.data!.images!.isNotEmpty
-                                                            ? CircleAvatar(
-                                                            foregroundImage:NetworkImage(snapshot.data!.data!.images!.first),
-                                                            radius: 25 * a,
-                                                          )
-                                                              : CircleAvatar(
-                                                            foregroundImage:const AssetImage('assets/profile.png'),
-                                                            radius: 25 * a,
-                                                          ),
-                                                          Positioned(
-                                                            left: 29 * a,
-                                                            top: 34 * a,
-                                                            child: CircleAvatar(
-                                                              backgroundColor:
-                                                              Colors.transparent,
-                                                              foregroundImage: AssetImage(
-                                                                  'assets/decoration/top_${i + 1}.png'),
-                                                              radius: 12,
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        Get.back();
+                                                        String myId = StorageService().getString(Constants.userId);
+                                                        if(snapshot.data!.data!.userId == myId){
+                                                          Get.to(()=>const UserProfile());
+                                                          return;
+                                                        }
+                                                        Provider.of<UserDataProvider>(context,listen: false).addVisitor(snapshot.data!.data!.id!);
+                                                        Get.to(()=>UserProfile(userData: snapshot.data!.data!));
+                                                      },
+                                                      child: SizedBox(
+                                                        height: 58 * a,
+                                                        child: Stack(
+                                                          children: [
+                                                            snapshot.data!.data!.images!.isNotEmpty
+                                                              ? CircleAvatar(
+                                                              foregroundImage:NetworkImage(snapshot.data!.data!.images!.first),
+                                                              radius: 25 * a,
+                                                            )
+                                                                : CircleAvatar(
+                                                              foregroundImage:const AssetImage('assets/profile.png'),
+                                                              radius: 25 * a,
                                                             ),
-                                                          ),
-                                                        ],
+                                                            Positioned(
+                                                              left: 29 * a,
+                                                              top: 34 * a,
+                                                              child: CircleAvatar(
+                                                                backgroundColor:
+                                                                Colors.transparent,
+                                                                foregroundImage: AssetImage(
+                                                                    'assets/decoration/top_${i + 1}.png'),
+                                                                radius: 12,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
                                                       ),
                                                     ),
                                                     Text(
@@ -281,6 +296,16 @@ class _ContributionState extends State<Contribution> {
                                             dense: true,
                                             minVerticalPadding: 26 * a,
                                             contentPadding: EdgeInsets.zero,
+                                            onTap: () {
+                                              Get.back();
+                                              String myId = StorageService().getString(Constants.userId);
+                                              if(snapshot.data!.data!.userId == myId){
+                                                Get.to(()=>const UserProfile());
+                                                return;
+                                              }
+                                              Provider.of<UserDataProvider>(context,listen: false).addVisitor(snapshot.data!.data!.id!);
+                                              Get.to(()=>UserProfile(userData: snapshot.data!.data!));
+                                            },
                                             leading: Row(
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
@@ -450,31 +475,43 @@ class _ContributionState extends State<Contribution> {
                                               return Column(
                                                 crossAxisAlignment: CrossAxisAlignment.center,
                                                 children: [
-                                                  SizedBox(
-                                                    height: 58 * a,
-                                                    child: Stack(
-                                                      children: [
-                                                        snapshot.data!.data!.images!.isNotEmpty
-                                                            ? CircleAvatar(
-                                                          foregroundImage:NetworkImage(snapshot.data!.data!.images!.first),
-                                                          radius: 25 * a,
-                                                        )
-                                                            : CircleAvatar(
-                                                          foregroundImage:const AssetImage('assets/profile.png'),
-                                                          radius: 25 * a,
-                                                        ),
-                                                        Positioned(
-                                                          left: 29 * a,
-                                                          top: 34 * a,
-                                                          child: CircleAvatar(
-                                                            backgroundColor:
-                                                            Colors.transparent,
-                                                            foregroundImage: AssetImage(
-                                                                'assets/decoration/top_${i + 1}.png'),
-                                                            radius: 12,
+                                                  GestureDetector(
+                                                    onTap:() {
+                                                      Get.back();
+                                                      String myId = StorageService().getString(Constants.userId);
+                                                      if(snapshot.data!.data!.userId == myId){
+                                                        Get.to(()=>const UserProfile());
+                                                        return;
+                                                      }
+                                                      Provider.of<UserDataProvider>(context,listen: false).addVisitor(snapshot.data!.data!.id!);
+                                                      Get.to(()=>UserProfile(userData: snapshot.data!.data!));
+                                                    },
+                                                    child: SizedBox(
+                                                      height: 58 * a,
+                                                      child: Stack(
+                                                        children: [
+                                                          snapshot.data!.data!.images!.isNotEmpty
+                                                              ? CircleAvatar(
+                                                            foregroundImage:NetworkImage(snapshot.data!.data!.images!.first),
+                                                            radius: 25 * a,
+                                                          )
+                                                              : CircleAvatar(
+                                                            foregroundImage:const AssetImage('assets/profile.png'),
+                                                            radius: 25 * a,
                                                           ),
-                                                        ),
-                                                      ],
+                                                          Positioned(
+                                                            left: 29 * a,
+                                                            top: 34 * a,
+                                                            child: CircleAvatar(
+                                                              backgroundColor:
+                                                              Colors.transparent,
+                                                              foregroundImage: AssetImage(
+                                                                  'assets/decoration/top_${i + 1}.png'),
+                                                              radius: 12,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
                                                   ),
                                                   Text(
@@ -567,6 +604,16 @@ class _ContributionState extends State<Contribution> {
                                               dense: true,
                                               minVerticalPadding: 26 * a,
                                               contentPadding: EdgeInsets.zero,
+                                              onTap: () {
+                                                Get.back();
+                                                String myId = StorageService().getString(Constants.userId);
+                                                if(snapshot.data!.data!.userId == myId){
+                                                  Get.to(()=>const UserProfile());
+                                                  return;
+                                                }
+                                                Provider.of<UserDataProvider>(context,listen: false).addVisitor(snapshot.data!.data!.id!);
+                                                Get.to(()=>UserProfile(userData: snapshot.data!.data!));
+                                              },
                                               leading: Row(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [

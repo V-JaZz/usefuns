@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:live_app/provider/zego_room_provider.dart';
+import 'package:provider/provider.dart';
 import '../../../subscreens/aristrocracy/tab_bar.dart';
-import '../../../subscreens/playing_song/local.dart';
-import '../../../subscreens/playing_song/playlist.dart';
 import '../../../subscreens/tasks/dailyTask.dart';
 import '../../../utils/utils_assets.dart';
+import '../../../utils/zego_config.dart';
 import '../../dashboard/me/shop/shop.dart';
+import '../widget/media_player.dart';
 import 'manager.dart';
 
 class BottomMoreBottomSheet extends StatelessWidget {
@@ -16,63 +18,66 @@ class BottomMoreBottomSheet extends StatelessWidget {
     double baseWidth = 420;
     double a = Get.width / baseWidth;
     double b = a * 0.97;
-    return Container(
-      color: Colors.white,
-      width: double.infinity,
-      child: Padding(
-        padding:
-        EdgeInsets.symmetric(horizontal: 19.0 * a, vertical: 15 * a),
-        child: Wrap(
-          alignment: WrapAlignment.start,
-          crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            SizedBox(
-              width: 10 * a,
-            ),
-            InkWell(
-              onTap: () {
-                Get.to(() => const DailyTask());
-              },
-              child: iconTextRow(
-                  a, b, 'Daily\nTasks', 'assets/room_icons/b1.png'),
-            ),
-            SizedBox(
-              width: 20 * a,
-            ),
-            InkWell(
-              onTap: LiveRoomBottomSheets(context).showIncomeExpenseBottomSheet,
-              child: iconTextRow(a, b, 'Income &\nExpenditure',
-                  'assets/room_icons/b2.png'),
-            ),
-            SizedBox(
-              width: 20 * a,
-            ),
-            InkWell(
-              onTap: () {
-                Get.to(() => const Shop());
-              },
-              child: iconTextRow(a, b, 'Shop', 'assets/homeim.png'),
-            ),
-            SizedBox(
-              width: 20 * a,
-            ),
-            InkWell(
-              onTap: () {
-                Get.to(() => const TabsBar());
-              },
-              child: iconTextRow(
-                  a, b, 'Aristocracy', 'assets/room_icons/b4.png'),
-            ),
-            SizedBox(
-              width: 10 * a,
-            ),
-            InkWell(
-              onTap: () {
-                Get.to(() => const Playlist1());
-              },
-              child: iconTextRow(a, b, 'Music', 'assets/musicc.png'),
-            ),
-          ],
+    return Consumer<ZegoRoomProvider>(
+      builder: (context, value, child) => Container(
+        color: Colors.white,
+        width: double.infinity,
+        child: Padding(
+          padding:
+          EdgeInsets.symmetric(horizontal: 19.0 * a, vertical: 15 * a),
+          child: Wrap(
+            alignment: WrapAlignment.start,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              SizedBox(
+                width: 10 * a,
+              ),
+              InkWell(
+                onTap: () {
+                  Get.to(() => const DailyTask());
+                },
+                child: iconTextRow(
+                    a, b, 'Daily\nTasks', 'assets/room_icons/b1.png'),
+              ),
+              SizedBox(
+                width: 20 * a,
+              ),
+              InkWell(
+                onTap: LiveRoomBottomSheets(context).showIncomeExpenseBottomSheet,
+                child: iconTextRow(a, b, 'Income &\nExpenditure',
+                    'assets/room_icons/b2.png'),
+              ),
+              SizedBox(
+                width: 20 * a,
+              ),
+              InkWell(
+                onTap: () {
+                  Get.to(() => const Shop());
+                },
+                child: iconTextRow(a, b, 'Shop', 'assets/homeim.png'),
+              ),
+              SizedBox(
+                width: 20 * a,
+              ),
+              // InkWell(
+              //   onTap: () {
+              //     Get.to(() => const TabsBar());
+              //   },
+              //   child: iconTextRow(
+              //       a, b, 'Aristocracy', 'assets/room_icons/b4.png'),
+              // ),
+              // SizedBox(
+              //   width: 10 * a,
+              // ),
+              value.onSeat && (value.isOwner || value.room!.admin!.contains(ZegoConfig.instance.userID))? InkWell(
+                onTap: () {
+                  Get.back();
+                  Get.to(() => const RoomMediaPlayer());
+                },
+                child: iconTextRow(a, b, 'Music', 'assets/musicc.png'),
+              ):const SizedBox.shrink(),
+            ],
+          ),
         ),
       ),
     );

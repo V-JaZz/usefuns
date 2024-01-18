@@ -1,3 +1,4 @@
+import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:ui' as ui;
@@ -172,6 +173,7 @@ Widget roomListTile(
     {required String? image,
     required String title,
     required String? subTitle,
+    required String? iso,
     required String active,
     required bool isLocked,
     required void Function() onTap}) {
@@ -259,7 +261,7 @@ Widget roomListTile(
                     subTitle == null || subTitle == ''
                         ? 'Welcome to my room!'
                         : subTitle,
-                    maxLines: 2,
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: SafeGoogleFont(
                       'Poppins',
@@ -271,6 +273,13 @@ Widget roomListTile(
                     ),
                   ),
                 ),
+                SizedBox(height: 2*a),
+                CountryFlag.fromCountryCode(
+                  iso??'IN',
+                  height: 14*a,
+                  width: 21*a,
+                  borderRadius: 4,
+                )
               ],
             ),
           ),

@@ -151,7 +151,7 @@ class SellerAgencyProvider with ChangeNotifier {
       if(responseModel.status == 1){
         showCustomSnackBar('Request Accepted!', Get.context!, isToaster: true, isError: false);
       }else{
-        showCustomSnackBar('Error! try again later', Get.context!, isToaster: true);
+        showCustomSnackBar('Error! ${responseModel.message}', Get.context!, isToaster: true);
       }
     } else {
       responseModel = CommonModel(status: 0);

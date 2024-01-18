@@ -396,6 +396,7 @@ class MyProfileSeatBottomSheet extends StatelessWidget {
                 image: value.userData!.data!.images!.isEmpty?'':value.userData!.data!.images?.first??'',
                 frame: userFrameViewPath(value.userData!.data!.frame),
                 onTap: (){
+                  Get.back();
                   Get.to(()=>const UserProfile());
                 },
             ),
@@ -778,6 +779,7 @@ class _OthersProfileSeatBottomSheetState extends State<OthersProfileSeatBottomSh
               image: widget.user.image??'',
               frame: widget.user.frame??'',
               onTap: () async {
+                Get.back();
                 final user = await Provider.of<UserDataProvider>(context,listen: false).addVisitor(widget.user.streamId!);
                 Get.to(()=>UserProfile(userData: user.data!));
               },

@@ -12,6 +12,7 @@ import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import '../../data/model/response/register_model.dart';
 import '../../utils/common_widgets.dart';
+import '../../utils/helper.dart';
 import '../dashboard/bottom_navigation.dart';
 
 class CreateProfile extends StatefulWidget {
@@ -516,17 +517,21 @@ class _CreateProfileState extends State<CreateProfile> {
                       const SizedBox(height: 32),
                       TextButton(
                         onPressed: () async {
+                          bool ageRestricted = false;
+                          if(selectedDate !=null)ageRestricted = AgeCalculator.calculateAge(selectedDate!)<18;
                           if((croppedImagePaths??imagePaths)== null){
-                            showCustomSnackBar('Profile Picture is Required!', Get.context!);
+                            showCustomSnackBar('Profile Picture is Required!', context);
+                          }else if(ageRestricted){
+                            showCustomSnackBar('Your age is not eligible to join!', context);
                           }else if(name!='' && name!=null && selectedDate !=null && gender!='' && gender!=null){
                             RegisterModel model = await value.register(name: name!, dob: DateFormat('MM-dd-yyyy').format(selectedDate!), gender: gender!,image: croppedImagePaths??imagePaths,language: selectedLanguage);
                             if (model.status == 1) {
                           Get.offAll(() => const BottomNavigator());
                             } else {
-                              showCustomSnackBar(model.message, Get.context!);
+                              showCustomSnackBar(model.message, context);
                             }
                           }else{
-                            showCustomSnackBar('All fields are required!', Get.context!);
+                            showCustomSnackBar('All fields are required!', context);
                           }
                         },
                         style: TextButton.styleFrom(

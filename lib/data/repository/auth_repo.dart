@@ -5,7 +5,7 @@ class AuthRepo {
 
   final HttpApiClient _httpClient = HttpApiClient();
 
-  Future<http.Response> sendOtp(String phone) async {
+  Future<http.Response> sendOtp(int phone) async {
     try {
       http.Response response = await _httpClient.post('user/getotp', {"mobile": phone});
       return response;
@@ -25,7 +25,7 @@ class AuthRepo {
     }
   }
 
-  Future<http.Response> login(String phone) async {
+  Future<http.Response> login(int phone) async {
     try {
       http.Response response = await _httpClient.post('user/loginmobile', {"mobile": phone});
       return response;
@@ -36,7 +36,7 @@ class AuthRepo {
 
   Future<http.Response> register(
       {required String name,
-        required String phone,
+        required int phone,
         required String dob,
         required String gender,
         required String countryCode,

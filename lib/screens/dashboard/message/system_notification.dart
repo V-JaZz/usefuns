@@ -94,8 +94,7 @@ class System extends StatelessWidget {
                         ],
                       ),
                     ),
-                    if (m.message!.contains('invited to join the host'))
-                      Row(
+                    Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           ElevatedButton(
@@ -105,7 +104,7 @@ class System extends StatelessWidget {
                                   foregroundColor: Colors.white),
                               onPressed: () async {
                                 String uid = Provider.of<UserDataProvider>(context,listen: false).userData!.data!.userId!;
-                                String code = m.message!.split(' ').first;
+                                String code = m.message!.split(' ').last;
                                 final model = await Provider.of<SellerAgencyProvider>(context,listen: false).addHost(uid,code);
                                 if(model.status==1) value.deleteNotification(m.id!,uid);
                               },
