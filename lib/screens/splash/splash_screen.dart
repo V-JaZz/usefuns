@@ -35,7 +35,7 @@ class StartState extends State<SplashScreen> {
         };
 
         var response = await http.get(
-          Uri.parse('http://techc2.be:4000/admin/appVersion/getall'),
+          Uri.parse('https://techc2.be/admin/appVersion/getall'),
           headers: headers,
         ).timeout(const Duration(seconds: 20));
 

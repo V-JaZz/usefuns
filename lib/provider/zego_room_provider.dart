@@ -175,7 +175,11 @@ class ZegoRoomProvider with ChangeNotifier {
    await ZegoExpressEngine.instance.logoutRoom(roomID);
   }
   Future<void> startPublishingStream(int seat) async {
-    if(roomStreamList.firstWhereOrNull((e) => e.seat == seat) == null) {
+    if(roomStreamList.firstWhereOrNull((e) => e.seat == seat) != null) {
+      showCustomSnackBar('Seat Already Occupied!', Get.context!, isToaster: true);
+    }else if(onSeat) {
+      updateSeat(seat);
+    }else{
       final user = Provider.of<UserDataProvider>(Get.context!,listen: false).userData;
       final extraInfo = ZegoStreamExtended(vip: 0,id: user?.data?.userId ,owner: isOwner,age: AgeCalculator.calculateAge(user?.data?.dob??DateTime.now()),followers: user?.data?.followers?.length??0,gender: user?.data?.gender,level: user?.data?.level,streamId: ZegoConfig.instance.userID,userName: ZegoConfig.instance.userName,image: user!.data!.images!.isNotEmpty ? (user.data?.images?.first??''):'',seat: seat,micOn: _isMicOn&&isMicrophonePermissionGranted,frame: userFrameViewPath(user.data?.frame));
       await ZegoExpressEngine.instance.setStreamExtraInfo(zegoStreamExtendedToJson(extraInfo));
@@ -184,8 +188,6 @@ class ZegoRoomProvider with ChangeNotifier {
       roomStreamList.add(extraInfo);
       onSeat=true;
       notifyListeners();
-    }else{
-      showCustomSnackBar('Seat Already Occupied!', Get.context!, isToaster: true);
     }
   }
   Future<void> stopPublishingStream() async {

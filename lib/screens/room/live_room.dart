@@ -564,8 +564,6 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                       onTap: () {
                                           if(value.isOwner || value.room!.admin!.contains(ZegoConfig.instance.userID)) {
                                             bs.showSeatOptionsBottomSheet(i);
-                                          }else if(value.onSeat && !value.zegoRoom!.lockedSeats.contains(i)){
-                                            value.updateSeat(i);
                                           }else if(!value.zegoRoom!.lockedSeats.contains(i)){
                                             value.startPublishingStream(i);
                                           }else{

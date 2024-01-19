@@ -65,7 +65,6 @@ Widget loadingWidget() {
 Widget userLevelTag(int level, double height, {bool viewZero = false}) {
   double width = height * 3.357;
   if (!viewZero && level == 0) return const SizedBox.shrink();
-
   Image getBg() {
     int i = 1;
     switch (level) {
@@ -101,7 +100,6 @@ Widget userLevelTag(int level, double height, {bool viewZero = false}) {
       fit: BoxFit.cover,
     );
   }
-
   return Stack(
     children: [
       SizedBox(height: height, width: width, child: getBg()),
@@ -120,6 +118,7 @@ Widget userLevelTag(int level, double height, {bool viewZero = false}) {
       ),
     ],
   );
+
 }
 
 Widget userProfileDisplay(
@@ -323,7 +322,6 @@ Widget roomListTile(
 class WaveAnimation extends StatefulWidget {
   final Color? color;
   const WaveAnimation({Key? key, this.color}) : super(key: key);
-
   @override
   WaveAnimationState createState() => WaveAnimationState();
 }
@@ -411,11 +409,11 @@ class AnimatedBar extends StatelessWidget {
   }
 }
 
-void rewardDialog(String path, String title, String info, void Function() onTap){
+Future<void> rewardDialog(String path, String title, String info, void Function()? onTap, {bool smallIcon = false}) async {
   double baseWidth = 360;
   double a = Get.width / baseWidth;
   double b = a * 0.97;
-  showDialog(
+  await showDialog(
       context: Get.context!,
       barrierDismissible: false,
       builder: (context) {
@@ -438,7 +436,7 @@ void rewardDialog(String path, String title, String info, void Function() onTap)
                   SizedBox(height: 3*a),
                   Image.asset(
                       path,
-                    height: 136 * a,
+                    height: smallIcon ? 60 * a : 136 *a,
                     fit: BoxFit.fitHeight,
                   ),
                   SizedBox(height: 9*a),
@@ -452,7 +450,7 @@ void rewardDialog(String path, String title, String info, void Function() onTap)
                         letterSpacing: 0.48 * a,
                         color: Colors.black),
                   ),
-                  InkWell(
+                  GestureDetector(
                     onTap: onTap,
                     child: Padding(
                       padding: EdgeInsets.only(
@@ -498,6 +496,7 @@ void rewardDialog(String path, String title, String info, void Function() onTap)
               )),
         );
       });
+  return;
 }
 
 void showInsufficientDialog(context, int reqDiamonds) {

@@ -103,13 +103,13 @@ class AuthProvider with ChangeNotifier {
         required String dob,
         required String gender,
         String? language,
-        String? image}) async {
+        required String image}) async {
     _isLoading = true;
     notifyListeners();
     storageService.setString(Constants.language, language??'English');
     final apiResponse = await _authRepo.register(
         name: name,
-        phone: int.parse(number.phoneNumber!.substring(1)),
+        phone: number.phoneNumber!.substring(1),
         dob: dob,
         gender: gender,
       image: image,
@@ -124,7 +124,6 @@ class AuthProvider with ChangeNotifier {
         storageService.setString(Constants.id, responseModel.data!.id!);
         storageService.setString(Constants.userId, responseModel.data!.userId!);
         storageService.setString(Constants.token, responseModel.data!.token!);
-        storageService.setBool('NEW_USER',true);
       }
     } else {
       responseModel = RegisterModel(status: 0,message: apiResponse.reasonPhrase);

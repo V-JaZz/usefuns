@@ -1,13 +1,10 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:live_app/provider/auth_provider.dart';
-
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import '../../data/model/response/register_model.dart';
@@ -524,9 +521,11 @@ class _CreateProfileState extends State<CreateProfile> {
                           }else if(ageRestricted){
                             showCustomSnackBar('Your age is not eligible to join!', context);
                           }else if(name!='' && name!=null && selectedDate !=null && gender!='' && gender!=null){
-                            RegisterModel model = await value.register(name: name!, dob: DateFormat('MM-dd-yyyy').format(selectedDate!), gender: gender!,image: croppedImagePaths??imagePaths,language: selectedLanguage);
+                            RegisterModel model = await value.register(name: name!, dob: DateFormat('MM-dd-yyyy').format(selectedDate!), gender: gender!,image: croppedImagePaths??imagePaths!,language: selectedLanguage);
                             if (model.status == 1) {
                           Get.offAll(() => const BottomNavigator());
+                          viewRegistrationReward();
+                          //todo reward frame
                             } else {
                               showCustomSnackBar(model.message, context);
                             }
@@ -636,4 +635,33 @@ class _CreateProfileState extends State<CreateProfile> {
       },
     );
   }
+
+  Future<void> viewRegistrationReward() async {
+    await Future.delayed(
+        const Duration(seconds: 2),
+            () async {
+          await rewardDialog('assets/frame_early_access.png', 'Free Frame',
+              'Congratulations, you have been\nrewarded free frame as you are\njoining in early access period.',
+                  () {
+                Get.back();
+              });
+        });
+    await rewardDialog(
+        'assets/room_bg_early_access.jpg',
+        'Free Room Theme',
+        'Congratulations, you have been\nrewarded free room theme as you\nare joining in early access period.',
+            () {
+          Get.back();
+        });
+    await rewardDialog(
+        'assets/icons/ic_diamond.png',
+        'Free 100 Diamonds',
+        'Congratulations, you have been\nrewarded free 100 diamonds as you\nare joining in early access period.',
+            () {
+          Get.back();
+        },
+        smallIcon: true
+    );
+  }
+
 }

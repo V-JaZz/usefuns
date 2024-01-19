@@ -36,23 +36,14 @@ class AuthRepo {
 
   Future<http.Response> register(
       {required String name,
-        required int phone,
+        required String phone,
         required String dob,
         required String gender,
         required String countryCode,
-      String? image}) async {
+      required String image}) async {
+
     try {
-      http.Response response = image == null || image == ''
-          ? await _httpClient.postMultipart(
-          'user/register',
-          {
-            'name': name,
-            "mobile": phone,
-            'dob': dob,
-            'gender': gender,
-            'countryCode': countryCode
-          })
-      :await _httpClient.postMultipartFile(
+      http.Response response = await _httpClient.postMultipartFile(
           'user/register',
           {
             'name': name,

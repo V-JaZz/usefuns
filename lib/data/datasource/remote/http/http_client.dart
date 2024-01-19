@@ -9,7 +9,7 @@ import 'package:http_parser/http_parser.dart';
 
 class HttpApiClient {
   final String baseUrl = Constants.baseUrl;
-  final int requestTimeout = 60;
+  final int requestTimeout = 30;
 
   HttpApiClient();
 
@@ -147,7 +147,7 @@ class HttpApiClient {
     }
   }
 
-  Future<http.Response> postMultipartFile(String path, Map<String, dynamic> fields, String fileKey, String filePath, {String? bearerToken,String? method}) async {
+  Future<http.Response> postMultipartFile(String path, Map<String, String> fields, String fileKey, String filePath, {String? bearerToken,String? method}) async {
     try {
       final headers = _buildHeaders(bearerToken, 'multipart/form-data');
 

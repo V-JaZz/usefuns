@@ -4,6 +4,7 @@ import 'package:live_app/screens/dashboard/home/tabs/mine_tab_view.dart';
 import 'package:live_app/screens/dashboard/home/tabs/new_tab_view.dart';
 import 'package:live_app/screens/dashboard/home/tabs/popular_tab_view.dart';
 import 'package:live_app/utils/utils_assets.dart';
+import '../../../utils/common_widgets.dart';
 import 'search_room_user.dart';
 
 class Home extends StatelessWidget {
@@ -101,4 +102,5 @@ class Home extends StatelessWidget {
       ),
     );
   }
+
 }

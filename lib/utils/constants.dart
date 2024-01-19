@@ -1,19 +1,19 @@
 class Constants {
 
-  static String baseUrl = 'http://techc2.be:4000/';
-  static String appVersion = '1.0.5v';
-  static String updateUrl = 'https://usefuns.live/';
-  static String appealLink = 'https://forms.gle/mm7b9QdRiJjs7UsZA';
-  static String ufTeamSupportChat = 'https://tawk.to/chat/659e69db0ff6374032be6775/default';
+  static const String baseUrl = 'https://techc2.be/';
+  static const String appVersion = '1.0.7v';
+  static const String updateUrl = 'https://usefuns.live/';
+  static const String appealLink = 'https://forms.gle/mm7b9QdRiJjs7UsZA';
+  static const String ufTeamSupportChat = 'https://tawk.to/chat/659e69db0ff6374032be6775/default';
 
   // Storage service / Shared preference keys -
-  static String id = 'ID';
-  static String userId = 'USER_ID';
-  static String token = 'TOKEN';
-  static String language = 'LANGUAGE';
+  static const String id = 'ID';
+  static const String userId = 'USER_ID';
+  static const String token = 'TOKEN';
+  static const String language = 'LANGUAGE';
 
   //policies
-  static String aboutUs = """About Us
+  static const String aboutUs = """About Us
 
 ALKB DEVELOPMENT COMPANY. is a fast-growing Internet company . We are focus on voice entertainment related product and services.
 
@@ -29,7 +29,7 @@ Alongside from stranger chat, cool entrance effects are offered in UseFun Chat R
 
 Send the gifts you want, talk to stranger you want, play the games you want, and enjoy the chatroom you want. Now, we have no limitation on creating a new room!
 """;
-  static String communityPolicy = """This Community Policy (“Policy”) sets out the expectations and rules that apply to you when using the Platform (as defined in the Terms of Service). The aim of this Policy is to provide for the enjoyment of users by establishing what is expected of you when using the Platform and outlining the consequences for non-compliance.
+  static const String communityPolicy = """This Community Policy (“Policy”) sets out the expectations and rules that apply to you when using the Platform (as defined in the Terms of Service). The aim of this Policy is to provide for the enjoyment of users by establishing what is expected of you when using the Platform and outlining the consequences for non-compliance.
 
 This Policy should be read together with the Terms of Service. The terms used in this Policy have the meaning given to them in the Terms of Service. To the extent there is any inconsistency between this Policy and the Terms of Service, the Terms of Service shall prevail. This Policy may also be amended and updated from time to time. Your continued use of the Platform following the implementation of such changes means that you agree to comply with the changes. If you do not agree to any changes, you must stop using the Platform.
 
@@ -293,7 +293,7 @@ Do not modify, adapt, translate, reverse engineer, disassemble, decompile, or cr
 Do not use automated scripts to collect information from Amor
 Thank you for being a part of our vibrant global community and working with us to maintain a safe space for all users. If you come across content or accounts that you believe may violate our Community Guidelines, please let us know so we can review and take appropriate action.
 """;
-  static String contactUs = """CONTACT US
+  static const String contactUs = """CONTACT US
 
 If you have any questions or concerns, please do not hesitate to contact us.
 
@@ -301,14 +301,14 @@ We would love to hear from you, contact us on:
 
 Email: usefuns.media@gmail.com
 """;
-  static String intellectualPropertyRights = """INTELLECTUAL PROPERTY RIGHTS
+  static const String intellectualPropertyRights = """INTELLECTUAL PROPERTY RIGHTS
 
 
 In the event of any concerns or complaints about possible violation of intellectual property rights, please sendus an email at ip@usefuns.live, identifying with specificity the rights alleged to be violated and the accused products.
 
 Note: This email address is just for intellectual property rights and legal issues, other requests may not get respondence.
 """;
-  static String privacyPolicy = """Welcome to UseFuns App (the “Platform” or “UseFuns”).
+  static const String privacyPolicy = """Welcome to UseFuns App (the “Platform” or “UseFuns”).
 We are committed to protecting and respecting your privacy. This policy explains our practices concerning the personal data we collect from you, or that you provide to us. If you do not agree with this policy, you should not use the Platform.
 If you have any questions about how we use your personal data, please contact support@usefuns.live.
 
@@ -422,7 +422,7 @@ We will generally notify all users of any material changes to this policy, throu
 12. Contact
 Questions, comments and requests regarding this policy should be addressed to support@usefuns.live.
 """;
-  static String refundPolicy = """Refund Policy:
+  static const String refundPolicy = """Refund Policy:
 Reading refund policy of this website means that you agree to and electronically sign the refund policy and terms of use and privacy policy.
 
 
@@ -459,7 +459,7 @@ Third Policy:
 
 This website reserves the right to change and/or modify and/or edit the Money Back Policy and/or Refund Policy at any time without prior notice and/or inform the customer and visitor before and/or after.
 """;
-  static String termsOfService = """1. Your Relationship With Us
+  static const String termsOfService = """1. Your Relationship With Us
 Welcome to UseFuns App(the “Platform” or “UseFuns”).
 You are reading the terms of service (the “Terms”), which govern the relationship and serve as an agreement between you and us and set forth the terms and conditions by which you may access and use the Platform and our related websites, services, applications, products and content (collectively, the “Services”). Our Services are provided for private, non-commercial use. For purposes of these Terms, “you” and “your” means you as the user of the Services.
 The Terms form a legally binding agreement between you and us. Please take the time to read them carefully.

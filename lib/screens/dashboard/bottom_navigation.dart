@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:live_app/data/datasource/local/sharedpreferences/storage_service.dart';
 import 'package:live_app/provider/rooms_provider.dart';
 import 'package:live_app/screens/dashboard/home/home.dart';
 import 'package:live_app/screens/room/live_room.dart';
@@ -38,7 +37,6 @@ class _BottomNavigatorState extends State<BottomNavigator> {
 
   @override
   void initState() {
-    checkReward();
     _fetchUserData(refresh: false);
     timer = Timer.periodic(const Duration(seconds: 30), (timer) {
       _fetchUserData(refresh: false);
@@ -183,36 +181,5 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   Future<void> _fetchUserData({bool refresh = true}) async {
     userDataProvider = Provider.of<UserDataProvider>(context, listen: false);
     await userDataProvider.getUser(loading: refresh);
-  }
-
-  void checkReward() {
-    if (StorageService().getBool('NEW_USER')) {
-      StorageService().setBool('NEW_USER', false);
-      Future.delayed(
-          const Duration(seconds: 2),
-          () => rewardDialog('assets/frame_early_access.png', 'Free Frame',
-                  'Congratulations, you have been\nrewarded free frame as you are\njoining in early access period.',
-                  () {
-                Get.back();
-                Future.delayed(
-                    const Duration(seconds: 2),
-                    () => rewardDialog(
-                            'assets/room_bg_early_access.jpg',
-                            'Free Room Theme',
-                            'Congratulations, you have been\nrewarded free room theme as you\nare joining in early access period.',
-                            () {
-                          Get.back();
-                          Future.delayed(
-                              const Duration(seconds: 2),
-                              () => rewardDialog(
-                                      'assets/icons/ic_diamond.png',
-                                      'Free 100 Diamonds',
-                                      'Congratulations, you have been\nrewarded free 100 diamonds as you\nare joining in early access period.',
-                                      () {
-                                    Get.back();
-                                  }));
-                        }));
-              }));
-    }
   }
 }

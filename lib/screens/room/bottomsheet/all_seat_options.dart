@@ -97,11 +97,7 @@ class SeatOptions extends StatelessWidget {
                         icon: Icon(Icons.mic_external_on_rounded,
                             color: Colors.black, size: 24 * a),
                         onPressed: () {
-                          if(!p.onSeat){
-                            p.startPublishingStream(index);
-                          }else{
-                            p.updateSeat(index);
-                          }
+                          p.startPublishingStream(index);
                           Get.back();
                         },
                       ),
