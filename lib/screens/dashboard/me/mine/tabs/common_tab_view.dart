@@ -128,7 +128,7 @@ class MineCommonView extends StatelessWidget {
     }
   }
 
-  List<ItemModel> getItemsList(context){
+  List<UserItem> getItemsList(context){
     final value =Provider.of<UserDataProvider>(context,listen: false);
     switch(type){
       case 'bubble':

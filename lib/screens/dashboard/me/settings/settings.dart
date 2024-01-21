@@ -3,17 +3,10 @@ import 'package:get/get.dart';
 import 'package:live_app/provider/rooms_provider.dart';
 import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/provider/zego_room_provider.dart';
-import 'package:live_app/screens/dashboard/me/contact_us.dart';
-import 'package:live_app/subscreens/ref_useFuns.dart';
-import 'package:live_app/subscreens/refund.dart';
-import 'package:live_app/subscreens/sanitize.dart';
 import 'package:live_app/utils/constants.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import '../../../../provider/auth_provider.dart';
-import '../../../../subscreens/intellectual.dart';
-import '../../../../utils/common_widgets.dart';
-import '../../../auth/login_screen.dart';
 import 'info_text_view.dart';
 
 class Settings extends StatefulWidget {

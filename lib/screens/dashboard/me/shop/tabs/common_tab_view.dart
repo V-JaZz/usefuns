@@ -5,7 +5,7 @@ import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import '../../../../../data/model/response/shop_items_model.dart';
-import '../../mine/tabs/frame_tab_view.dart';
+import '../../../../../utils/common_widgets.dart';
 
 class ShopCommonView extends StatelessWidget {
   final String type;
@@ -20,7 +20,7 @@ class ShopCommonView extends StatelessWidget {
     return Consumer<ShopWalletProvider>(
       builder: (context, value, _) {
         final itemList = value.items[type]?.data
-                ?.where((e) => e.isOfficial != true)
+                ?.where((e) => e.isOfficial == true)
                 .toList() ??
             [];
 
@@ -90,7 +90,7 @@ class ShopCommonView extends StatelessWidget {
               ),
               SizedBox(width: 3 * a),
               Text(
-                '${item.price}/${item.day} Days',
+                '${item.priceAndvalidity?.first.price}/${item.priceAndvalidity?.first.validity} Days',
                 style: SafeGoogleFont(
                   'Poppins',
                   fontSize: 10 * b,
@@ -108,7 +108,7 @@ class ShopCommonView extends StatelessWidget {
                     context: Get.context!,
                     barrierDismissible: false,
                     builder: (context) {
-                      return FramePreview(title: item.name.toString() ,path: item.images!.last,price: '${item.price}/${item.day} Days',frameId: item.id!);
+                      return ItemBuyPreview(item: item,type: type);
                     });
               }
             },
@@ -139,6 +139,161 @@ class ShopCommonView extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+
+class ItemBuyPreview extends StatefulWidget {
+  final Items item;
+  final String type;
+  const ItemBuyPreview({super.key, required this.item, required this.type});
+
+  @override
+  State<ItemBuyPreview> createState() => _ItemBuyPreviewState();
+}
+
+class _ItemBuyPreviewState extends State<ItemBuyPreview> {
+
+  int selectedPriceIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    double baseWidth = 360;
+    double a = Get.width / baseWidth;
+    double b = a * 0.97;
+    return AlertDialog(
+      backgroundColor: Colors.white,
+      content: Consumer<ShopWalletProvider>(
+        builder: (context, value, _) {
+          return SizedBox(
+            width: 50 * a,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '${widget.item.name}',
+                  style: SafeGoogleFont('Poppins',
+                      fontSize: 16 * b,
+                      fontWeight: FontWeight.w600,
+                      height: 1.5 * b / a,
+                      letterSpacing: 0.48 * a,
+                      color: Colors.black),
+                ),
+                SizedBox(height: 3 * a),
+                userProfileDisplay(
+                    size: 100*a,
+                    image: Provider.of<UserDataProvider>(context,listen: false).userData!.data!.images!.isEmpty?'':Provider.of<UserDataProvider>(context,listen: false).userData?.data?.images?.first??'',
+                    frame: '${widget.item.images?.last}'
+                ),
+                SizedBox(height: 3 * a),
+
+                // Radio selection for price options
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    for (int i = 0; i < widget.item.priceAndvalidity!.length; i++)
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Radio(
+                            value: i,
+                            groupValue: selectedPriceIndex,
+                            activeColor: Colors.deepOrangeAccent,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedPriceIndex = value as int;
+                              });
+                            },
+                          ),
+                          Image.asset(
+                            'assets/icons/ic_diamond.png',
+                            height: 12 * a,
+                            fit: BoxFit.fitHeight,
+                          ),
+                          SizedBox(width: 3 * a),
+                          Text(
+                            '${widget.item.priceAndvalidity![i].price}/${widget.item.priceAndvalidity![i].validity} Days',
+                            style: TextStyle(
+                              fontSize: 10 * b,
+                              fontWeight: FontWeight.w400,
+                              height: 1.1725 * b / a,
+                              color: const Color.fromARGB(255, 11, 11, 11),
+                            ),
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    if(!value.isBuying){
+                      final success = await value.buy(
+                          widget.type,
+                          widget.item.priceAndvalidity?[selectedPriceIndex].price??100,
+                          widget.item,
+                          widget.item.priceAndvalidity?[selectedPriceIndex].validity??1);
+                      Get.back();
+                      if(success) {
+                        showCustomSnackBar('Buying Successful!', Get.context!,isError: false,isToaster: true);
+                      }else{
+                        showCustomSnackBar('Error Buying!', Get.context!,isToaster: true);
+                      }
+                    }
+                  },
+                  child: Container(
+                      width: 136 * a,
+                      height: 30 * a,
+                      margin: EdgeInsets.only(
+                          top: 12 * a, left: 0 * a, right: 0 * a),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(9 * a),
+                          topRight: Radius.circular(9 * a),
+                          bottomLeft: Radius.circular(9 * a),
+                          bottomRight: Radius.circular(9 * a),
+                        ),
+                        color: Colors.deepOrangeAccent,
+                      ),
+                      child: Center(
+                        child: value.isBuying
+                            ? const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: FittedBox(child: CircularProgressIndicator(color: Colors.white,strokeWidth: 8)),
+                            )
+                            : Text(
+                          'Buy Now',
+                          style: SafeGoogleFont('Poppins',
+                              fontSize: 13 * a,
+                              fontWeight: FontWeight.w500,
+                              height: 1.5 * b / a,
+                              letterSpacing: 0.48 * a,
+                              color: Colors.white),
+                        ),
+                      )),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: 12 * a, left: 0 * a, right: 0 * a),
+                  child: GestureDetector(
+                    onTap: () {
+                      Get.back();
+                    },
+                    child: Text(
+                      'Back',
+                      style: SafeGoogleFont('Poppins',
+                          fontSize: 13 * a,
+                          fontWeight: FontWeight.w500,
+                          height: 1.5 * b / a,
+                          letterSpacing: 0.48 * a,
+                          color: const Color.fromARGB(255, 64, 63, 63)),
+                    ),
+                  ),
+                ),
+              ],
+            ));
+        },
       ),
     );
   }

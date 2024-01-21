@@ -1,12 +1,11 @@
 import 'package:contained_tab_bar_view/contained_tab_bar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:live_app/subscreens/aristrocracy/aristrocracy_centre.dart';
-import 'package:live_app/subscreens/aristrocracy/bubble.dart';
-import 'package:live_app/subscreens/aristrocracy/duke.dart';
-import 'package:live_app/subscreens/aristrocracy/marquis.dart';
 
-import '../../screens/dashboard/me/me.dart';
+import 'aristrocracy_centre.dart';
+import 'bubble.dart';
+import 'duke.dart';
+import 'marquis.dart';
 
 class TabsBar extends StatefulWidget {
   const TabsBar({super.key});

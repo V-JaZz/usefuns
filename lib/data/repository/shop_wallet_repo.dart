@@ -25,15 +25,15 @@ class ShopWalletRepo {
   }
 
   Future<http.Response> shop(
-      {required String userId,required String product, required int amount, required String method}) async {
+      {required String userId,required Map<String, dynamic> item, required int price, required String type}) async {
     try {
       http.Response response = await _httpClient.post(
         'user/shop',
           {
             "userId": userId,
-            "product": "car",
-            "shop_amount": amount,
-            "shop_method": method
+            "item": item,
+            "price": price,
+            "itemType": type
           }
       );
       return response;

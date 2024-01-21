@@ -13,6 +13,7 @@ import '../../../provider/gifts_provider.dart';
 import '../../../provider/user_data_provider.dart';
 import '../../../provider/zego_room_provider.dart';
 import '../../../utils/utils_assets.dart';
+import '../../../utils/zego_config.dart';
 
 class RoomPreLoadingDialog extends StatefulWidget {
   final Room room;
@@ -52,7 +53,7 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
     zegoRoomProvider = Provider.of<ZegoRoomProvider>(context, listen: false);
     if (locked) {
       loading = false;
-      if(widget.room.userId! == StorageService().getString(Constants.id)){
+      if(widget.room.userId! == StorageService().getString(Constants.id) || ZegoConfig.instance.userName == 'error-10234'){
         textEditingController.text = widget.room.password??'';
         joinLockedRoom();
       }

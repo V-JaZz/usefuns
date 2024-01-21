@@ -15,7 +15,7 @@ void viewInviteToSeatDailog(String seatInfo, String from){
           foregroundColor: Colors.white
         ),
           onPressed: (){
-          value.startPublishingStream(int.parse(seatInfo));
+          value.publishStream(int.parse(seatInfo));
           Get.back();
           },
           child: const Text('Accept')),

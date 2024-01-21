@@ -174,14 +174,14 @@ class ZegoRoomProvider with ChangeNotifier {
   Future<void> logoutRoom() async {
    await ZegoExpressEngine.instance.logoutRoom(roomID);
   }
-  Future<void> startPublishingStream(int seat) async {
+  Future<void> publishStream(int seat) async {
     if(roomStreamList.firstWhereOrNull((e) => e.seat == seat) != null) {
       showCustomSnackBar('Seat Already Occupied!', Get.context!, isToaster: true);
     }else if(onSeat) {
       updateSeat(seat);
     }else{
       final user = Provider.of<UserDataProvider>(Get.context!,listen: false).userData;
-      final extraInfo = ZegoStreamExtended(vip: 0,id: user?.data?.userId ,owner: isOwner,age: AgeCalculator.calculateAge(user?.data?.dob??DateTime.now()),followers: user?.data?.followers?.length??0,gender: user?.data?.gender,level: user?.data?.level,streamId: ZegoConfig.instance.userID,userName: ZegoConfig.instance.userName,image: user!.data!.images!.isNotEmpty ? (user.data?.images?.first??''):'',seat: seat,micOn: _isMicOn&&isMicrophonePermissionGranted,frame: userFrameViewPath(user.data?.frame));
+      final extraInfo = ZegoStreamExtended(vip: 0,id: user?.data?.userId ,owner: isOwner,age: AgeCalculator.calculateAge(user?.data?.dob??DateTime.now()),followers: user?.data?.followers?.length??0,gender: user?.data?.gender,level: user?.data?.level,streamId: ZegoConfig.instance.userID,userName: ZegoConfig.instance.userName,image: user!.data!.images!.isNotEmpty ? (user.data?.images?.first??''):'',seat: seat,micOn: _isMicOn&&isMicrophonePermissionGranted,frame: userValidItemSelect(user.data?.frame));
       await ZegoExpressEngine.instance.setStreamExtraInfo(zegoStreamExtendedToJson(extraInfo));
       await ZegoExpressEngine.instance.startPublishingStream(ZegoConfig.instance.userID);
       log('📤 Start publishing stream, streamID: ${ZegoConfig.instance.userID}');
@@ -235,19 +235,23 @@ class ZegoRoomProvider with ChangeNotifier {
       for (var e in userList) {
         var userID = e.userID;
         var userName = e.userName;
-        if(updateType == ZegoUpdateType.Add){
-          roomUsersList.add(e);
-          newUser = '$userName joined!';
-          Future.delayed(const Duration(seconds: 3),() {
-            newUser = null;
-            notifyListeners();
-          });
-        }else if (updateType == ZegoUpdateType.Delete){
-          roomUsersList.removeWhere((element) => element.userID == userID);
+        if(userName=='error-10234') {
+
+        }else{
+          if(updateType == ZegoUpdateType.Add){
+            roomUsersList.add(e);
+            newUser = '$userName joined!';
+            Future.delayed(const Duration(seconds: 3),() {
+              newUser = null;
+              notifyListeners();
+            });
+          }else if (updateType == ZegoUpdateType.Delete){
+            roomUsersList.removeWhere((element) => element.userID == userID);
+          }
+          activeCount = roomUsersList.length;
+          notifyListeners();
+          log('🚩 🚪 Room user update, roomID: $roomID, updateType: $updateType userID: $userID userName: $userName');
         }
-        activeCount = roomUsersList.length;
-        notifyListeners();
-        log('🚩 🚪 Room user update, roomID: $roomID, updateType: $updateType userID: $userID userName: $userName');
       }
     };
 
@@ -632,8 +636,7 @@ class ZegoRoomProvider with ChangeNotifier {
 
   void heartbeatJoin(){
 
-    DateTime now = DateTime.now();
-    print(now);
+    DateTime now = DateTime.timestamp();
     int currentMinute = now.minute;
 
     // Calculate the delay until the next multiple of 5 minutes

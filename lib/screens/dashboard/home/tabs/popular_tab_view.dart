@@ -5,11 +5,8 @@ import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:url_launcher/url_launcher.dart';
-import '../../../../data/model/response/rooms_model.dart';
 import '../../../../provider/rooms_provider.dart';
 import '../../../../utils/common_widgets.dart';
-import '../../../auth/banned_countdown.dart';
 import '../../../room/widget/pre_loading_dailog.dart';
 import '../../../web/web_view.dart';
 

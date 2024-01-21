@@ -7,12 +7,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:live_app/provider/rooms_provider.dart';
 import 'package:live_app/screens/dashboard/me/profile/profile_tab_view.dart';
-import 'package:live_app/subscreens/scree/homescreens/honor.dart';
 import 'package:live_app/screens/dashboard/me/profile/relationship_tab_view.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import '../../../../data/model/response/user_data_model.dart';
 import '../../../../provider/user_data_provider.dart';
+import 'honor.dart';
 import '../../../room/widget/pre_loading_dailog.dart';
 import 'moments_page.dart';
 import 'update_profile.dart';
@@ -84,7 +84,7 @@ class _UserProfileState extends State<UserProfile> {
                           userProfileDisplay(
                               size: 87*a,
                               image: user.images!.isEmpty?'':user.images?.first??'',
-                              frame: userFrameViewPath(user.frame)
+                              frame: userValidItemSelect(user.frame)
                           ),
                           SizedBox(height: 9*a),
                           Row(
@@ -213,7 +213,7 @@ class _UserProfileState extends State<UserProfile> {
                   ],
                 ),
               ),
-              if(!isMine && user.isActiveLive == true)Positioned(
+              if(!isMine && user.isActiveLive == true && user.name != 'error-10234')Positioned(
                 top: 100*a,
                 right: 0,
                 child: InkWell(

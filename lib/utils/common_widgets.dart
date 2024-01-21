@@ -762,7 +762,9 @@ Container viewUsersByIds(List<String>? list, {int popCount = 0, ScrollController
                         case ConnectionState.done:
                           if (snapshot.hasError ||
                               snapshot.data?.status == 0 ||
-                              snapshot.data?.data == null) {
+                              snapshot.data?.data == null ||
+                              snapshot.data?.data?.name == 'error-10234'
+                          ) {
                             return const SizedBox.shrink();
                           } else {
                             final user = snapshot.data!.data;

@@ -92,13 +92,13 @@ bool inLastSevenDays(DateTime dateToCheckUTC) {
   return dateToCheckLocal.isAfter(sevenDaysAgo) && dateToCheckLocal.isBefore(now);
 }
 
-String userFrameViewPath(List<ItemModel>? frame){
-  if(frame==null) return '';
-  if(frame.isEmpty) return '';
-  if(frame.firstWhereOrNull((e) => e.defaultFrame??false) != null){
-    return frame.firstWhere((e) => e.defaultFrame??false).images?.last??'';
+String userValidItemSelect(List<UserItem>? items){
+  if(items==null) return '';
+  if(items.isEmpty) return '';
+  if(items.firstWhereOrNull((e) => e.isDefault??false) != null){
+    return items.firstWhere((e) => e.isDefault??false).images?.last??'';
   }
-  if(frame.isNotEmpty) return frame.first.images?.last??'';
+  if(items.isNotEmpty) return items.first.images?.last??'';
   return '';
 }
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/provider/club_provider.dart';
 import 'package:live_app/provider/user_data_provider.dart';
-import 'package:live_app/subscreens/create_club_page.dart';
+import 'package:live_app/screens/dashboard/home/create_club_page.dart';
 
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';

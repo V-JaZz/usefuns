@@ -8,8 +8,8 @@ class Constants {
 
   // Storage service / Shared preference keys -
   static const String id = 'ID';
-  static const String userId = 'USER_ID';
   static const String token = 'TOKEN';
+  static const String userId = 'USER_ID';
   static const String language = 'LANGUAGE';
 
   //policies

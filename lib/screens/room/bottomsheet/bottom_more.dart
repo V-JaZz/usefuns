@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/provider/zego_room_provider.dart';
 import 'package:provider/provider.dart';
-import '../../../subscreens/aristrocracy/tab_bar.dart';
-import '../../../subscreens/tasks/dailyTask.dart';
 import '../../../utils/utils_assets.dart';
 import '../../../utils/zego_config.dart';
 import '../../dashboard/me/shop/shop.dart';
+import '../../dashboard/me/tasks/dailyTask.dart';
 import '../widget/media_player.dart';
 import 'manager.dart';
 

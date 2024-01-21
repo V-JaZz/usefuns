@@ -81,7 +81,7 @@ class ShopRoomAccessories extends StatelessWidget {
                 fit: BoxFit.fitHeight,
               ),
               Text(
-                '${item.price}/${item.day} Days',
+                '${item.priceAndvalidity?.first.price}/${item.priceAndvalidity?.first.validity} Days',
                 style: SafeGoogleFont(
                   'Poppins',
                   fontSize: 10 * b,

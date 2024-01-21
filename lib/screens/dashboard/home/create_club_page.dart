@@ -1,17 +1,13 @@
-import 'dart:ffi';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/utils/common_widgets.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
-
-import '../provider/club_provider.dart';
+import '../../../provider/club_provider.dart';
 
 class CreateClubScreen extends StatefulWidget {
   const CreateClubScreen({Key? key}) : super(key: key);

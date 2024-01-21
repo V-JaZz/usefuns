@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/data/model/response/shop_items_model.dart';
+import 'package:live_app/data/model/response/user_data_model.dart';
 import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/utils/common_widgets.dart';
 import 'package:live_app/utils/constants.dart';
@@ -63,28 +64,40 @@ class ShopWalletProvider with ChangeNotifier {
     }
   }
 
-  Future<CommonModel> buy(String product, int amount) async {
+  Future<bool> buy(String type, int price, Items item, int days) async {
     isBuying = true;
+    bool success = false;
     notifyListeners();
+    DateTime validity = DateTime.now().add(Duration(days: days));
     final apiResponse = await _shopRepo.shop(
         userId: storageService.getString(Constants.id),
-        product: product,
-        amount: amount,
-        method: 'diamonds');
-
-    isBuying = false;
-    notifyListeners();
+        item: UserItem(
+          name: item.name,
+          id: item.name,
+          images: item.images,
+          isDefault: item.isDefault,
+          isOfficial: item.isOfficial,
+          v: 0,
+          validTill: validity
+        ).toJson(),
+        price: price,
+        type: type);
     CommonModel responseModel;
     if (apiResponse.statusCode == 200) {
       responseModel = commonModelFromJson(apiResponse.body);
       if(responseModel.status==1){
-        return responseModel;
+        await Provider.of<UserDataProvider>(Get.context!,listen: false).getUser(loading: false);
+        success = true;
+        notifyListeners();
       }else{
-        return responseModel;
+        success = false;
       }
     } else {
-      return CommonModel(status: 0,message: 'error');
+      success = false;
     }
+    isBuying=false;
+    notifyListeners();
+    return success;
   }
 
   Future<void> rewardDiamonds(int diamonds) async {

@@ -282,8 +282,9 @@ class _SearchRoomUserState extends State<SearchRoomUser> {
                       ],
                     )
                         : ListView(
-                      children: List.generate(userModel?.data?.length??0, (index) =>
-                          Card(
+                      children: List.generate(userModel?.data?.length??0, (index) {
+                        if(userModel!.data![index].name == 'error-10234') return const SizedBox.shrink();
+                        return Card(
                             child: ListTile(
                               onTap: (){
                                 if(userModel!.data![index].userId == myId){
@@ -360,7 +361,8 @@ class _SearchRoomUserState extends State<SearchRoomUser> {
                                   }
                               ),
                             ),
-                          )),
+                          );
+                      }),
                     )
                     ),
                   ),

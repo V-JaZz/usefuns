@@ -1,10 +1,8 @@
 import 'package:contained_tab_bar_view/contained_tab_bar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:live_app/subscreens/help&Feedback/feedback.dart';
-import 'package:live_app/subscreens/help&Feedback/myfeedback.dart';
-
-import '../../screens/dashboard/me/me.dart';
+import 'feedback.dart';
+import 'myfeedback.dart';
 
 class AppbarFeedBack extends StatefulWidget {
   const AppbarFeedBack({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:live_app/subscreens/tabs_homescreen/profile/badges.dart';
+import 'package:live_app/screens/dashboard/me/profile/badges.dart';
 import 'package:live_app/utils/utils_assets.dart';
 
 class HonourTabView extends StatefulWidget {

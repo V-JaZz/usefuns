@@ -42,7 +42,7 @@ class MineFrameTabView extends StatelessWidget {
                       return viewFrameWidget(
                           list[index].name!,
                           list[index].images!,
-                          list[index].defaultFrame??false,
+                          list[index].isDefault??false,
                           list[index].id!
                       );
                     }),
@@ -95,7 +95,7 @@ class MineFrameTabView extends StatelessWidget {
                   context: Get.context!,
                   barrierDismissible: false,
                   builder: (context) {
-                    return FramePreview(title: name ,path: image.last, isSelected: isSelected, frameId: frameId);
+                    return MineFramePreview(title: name ,path: image.last, isSelected: isSelected, frameId: frameId);
                   });
             },
             child: Container(
@@ -130,13 +130,12 @@ class MineFrameTabView extends StatelessWidget {
   }
 }
 
-class FramePreview extends StatelessWidget {
+class MineFramePreview extends StatelessWidget {
   final String path;
   final String title;
   final String frameId;
-  final String? price;
   final bool? isSelected;
-  const FramePreview({super.key, required this.path, required this.title, this.price, this.isSelected, required this.frameId});
+  const MineFramePreview({super.key, required this.path, required this.title, this.isSelected, required this.frameId});
 
   @override
   Widget build(BuildContext context) {
@@ -166,27 +165,6 @@ class FramePreview extends StatelessWidget {
                   frame: path
               ),
               SizedBox(height: 3 * a),
-              if(price!=null)Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/icons/ic_diamond.png',
-                    height: 12 * a,
-                    fit: BoxFit.fitHeight,
-                  ),
-                  SizedBox(width: 3 * a),
-                  Text(
-                    price!,
-                    style: SafeGoogleFont(
-                      'Poppins',
-                      fontSize: 10 * b,
-                      fontWeight: FontWeight.w400,
-                      height: 1.1725 * b / a,
-                      color: const Color.fromARGB(255, 11, 11, 11),
-                    ),
-                  ),
-                ],
-              ),
               if(isSelected!=true)GestureDetector(
                 onTap: () async {
                   Get.back();

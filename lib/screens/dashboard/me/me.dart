@@ -7,7 +7,6 @@ import 'package:live_app/screens/dashboard/me/profile/moments_page.dart';
 import 'package:live_app/screens/dashboard/me/settings/settings.dart';
 import 'package:live_app/screens/dashboard/me/shop/shop.dart';
 import 'package:live_app/screens/dashboard/me/wallet/wallet.dart';
-import 'package:live_app/subscreens/help&Feedback/appbar_feedback.dart';
 import 'package:live_app/screens/dashboard/me/diamond_seller/diamond_seller.dart';
 import 'package:live_app/screens/dashboard/me/profile/user_profile.dart';
 import 'package:live_app/screens/dashboard/me/levelPriveleges.dart';
@@ -17,6 +16,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../../utils/common_widgets.dart';
 import '../../../utils/helper.dart';
 import 'agency/agency.dart';
+import 'help&Feedback/appbar_feedback.dart';
 import 'security_pannel.dart';
 import 'package:country_flags/country_flags.dart';
 
@@ -228,7 +228,7 @@ class _MeState extends State<Me> {
                                 userProfileDisplay(
                                   size: 87*a,
                                   image: providerUserData.userData!.data!.images!.isEmpty?'':providerUserData.userData?.data?.images?.first??'',
-                                  frame: userFrameViewPath(providerUserData.userData?.data?.frame)
+                                  frame: userValidItemSelect(providerUserData.userData?.data?.frame)
                                 ),
                                 SizedBox(width: 8*a),
                                 Column(

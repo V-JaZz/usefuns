@@ -107,7 +107,7 @@ class ShopTheme extends StatelessWidget {
                       ),
                       Expanded(
                         child: Text(
-                          '${item.price}/${item.day} Days',
+                          '${item.priceAndvalidity?.first.price}/${item.priceAndvalidity?.first.validity} Days',
                           maxLines: 2,
                           style: SafeGoogleFont(
                             'Poppins',

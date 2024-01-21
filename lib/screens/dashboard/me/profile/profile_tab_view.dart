@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:live_app/subscreens/scree/ranking.dart';
+import 'package:live_app/screens/dashboard/me/profile/ranking.dart';
 import '../../../../data/model/response/user_data_model.dart';
 import '../../../../utils/utils_assets.dart';
 
