@@ -33,7 +33,6 @@ class StartState extends State<SplashScreen> {
         var headers = {
           'Authorization': 'Bearer 1|muZM8iV2IQxqSVMRABSpBp58YkoPBonozCCSTdya'
         };
-
         var response = await http.get(
           Uri.parse('https://techc2.be/admin/appVersion/getall'),
           headers: headers,

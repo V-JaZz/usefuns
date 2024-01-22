@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
@@ -49,13 +48,13 @@ class ConnectionProvider extends ChangeNotifier {
 
   void noInternetMessage() {
     Get.snackbar(
-      'Internet Issue!',
+      'Network Error!',
       'Retrying...',
       icon: const Icon(Icons.network_check_rounded, color: Colors.black87),
-      mainButton: TextButton(
-          onPressed: () => _checkConnection(),
-          child: const Text('Retry')
-      ),
+      // mainButton: TextButton(
+      //     onPressed: () => _checkConnection(),
+      //     child: const Text('Retry')
+      // ),
       isDismissible: false,
       backgroundColor: Colors.white70,
       duration: const Duration(seconds: 5)

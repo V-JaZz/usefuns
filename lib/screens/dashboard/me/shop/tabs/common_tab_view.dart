@@ -2,24 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/provider/shop_wallet_provider.dart';
 import 'package:live_app/provider/user_data_provider.dart';
+import 'package:live_app/utils/helper.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import '../../../../../data/model/response/shop_items_model.dart';
 import '../../../../../utils/common_widgets.dart';
 
-class ShopCommonView extends StatelessWidget {
+class ShopCommonView extends StatefulWidget {
   final String type;
   const ShopCommonView({super.key, required this.type});
 
   @override
+  State<ShopCommonView> createState() => _ShopCommonViewState();
+}
+
+class _ShopCommonViewState extends State<ShopCommonView> {
+  @override
   Widget build(BuildContext context) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
-    double b = a * 0.97;
 
     return Consumer<ShopWalletProvider>(
       builder: (context, value, _) {
-        final itemList = value.items[type]?.data
+        final itemList = value.items[widget.type]?.data
                 ?.where((e) => e.isOfficial == true)
                 .toList() ??
             [];
@@ -32,7 +37,7 @@ class ShopCommonView extends StatelessWidget {
                     alignment: Alignment.topCenter,
                     child: Padding(
                       padding: EdgeInsets.only(top: 15.0 * a),
-                      child: Text('No $type found!'),
+                      child: Text('No ${widget.type} found!'),
                     ))
                 : Align(
                     alignment: Alignment.topCenter,
@@ -51,6 +56,17 @@ class ShopCommonView extends StatelessWidget {
   }
 
   Widget viewItem(Items item) {
+    bool checkAlreadyOwned() {
+      final ud = Provider.of<UserDataProvider>(context,listen: false).userData?.data;
+      final similarFrames = ud!.frame!.where((e) => e.id == item.id);
+      if(similarFrames.isEmpty){
+        return false;
+      }else if(similarFrames.where((e) => isValidValidity(e.validTill!)).isNotEmpty){
+        return true;
+      }
+      return false;
+    }
+    bool owned = checkAlreadyOwned();
     double baseWidth = 360;
     double a = Get.width / baseWidth;
     double b = a * 0.97;
@@ -89,7 +105,7 @@ class ShopCommonView extends StatelessWidget {
                 fit: BoxFit.fitHeight,
               ),
               SizedBox(width: 3 * a),
-              Text(
+              if(item.priceAndvalidity!.isNotEmpty)Text(
                 '${item.priceAndvalidity?.first.price}/${item.priceAndvalidity?.first.validity} Days',
                 style: SafeGoogleFont(
                   'Poppins',
@@ -103,30 +119,32 @@ class ShopCommonView extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              if (type == 'frame') {
+              if (!owned) {
                 showDialog(
                     context: Get.context!,
                     barrierDismissible: false,
                     builder: (context) {
-                      return ItemBuyPreview(item: item,type: type);
+                      return ItemBuyPreview(item: item,type: widget.type);
                     });
               }
             },
             child: Container(
               width: 70 * a,
               height: 16 * a,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(9),
                   topRight: Radius.circular(9),
                   bottomLeft: Radius.circular(9),
                   bottomRight: Radius.circular(9),
                 ),
-                color: Color.fromRGBO(255, 229, 0, 1),
+                color: owned
+                    ?const Color.fromRGBO(124, 255, 146, 1)
+                    :const Color.fromRGBO(255, 229, 0, 1),
               ),
               child: Center(
                 child: Text(
-                  'PREVIEW',
+                  owned?'OWNED':'PREVIEW',
                   style: SafeGoogleFont(
                     'Poppins',
                     fontSize: 10 * b,
@@ -155,14 +173,15 @@ class ItemBuyPreview extends StatefulWidget {
 }
 
 class _ItemBuyPreviewState extends State<ItemBuyPreview> {
-
   int selectedPriceIndex = 0;
+  late bool owned;
 
   @override
   Widget build(BuildContext context) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
     double b = a * 0.97;
+
     return AlertDialog(
       backgroundColor: Colors.white,
       content: Consumer<ShopWalletProvider>(
@@ -174,7 +193,8 @@ class _ItemBuyPreviewState extends State<ItemBuyPreview> {
               children: [
                 Text(
                   '${widget.item.name}',
-                  style: SafeGoogleFont('Poppins',
+                  style: SafeGoogleFont(
+                      'Poppins',
                       fontSize: 16 * b,
                       fontWeight: FontWeight.w600,
                       height: 1.5 * b / a,
@@ -190,7 +210,7 @@ class _ItemBuyPreviewState extends State<ItemBuyPreview> {
                 SizedBox(height: 3 * a),
 
                 // Radio selection for price options
-                Column(
+                if(widget.item.priceAndvalidity!.isNotEmpty)Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     for (int i = 0; i < widget.item.priceAndvalidity!.length; i++)

@@ -762,8 +762,7 @@ Container viewUsersByIds(List<String>? list, {int popCount = 0, ScrollController
                         case ConnectionState.done:
                           if (snapshot.hasError ||
                               snapshot.data?.status == 0 ||
-                              snapshot.data?.data == null ||
-                              snapshot.data?.data?.name == 'error-10234'
+                              snapshot.data?.data == null
                           ) {
                             return const SizedBox.shrink();
                           } else {
@@ -815,7 +814,7 @@ Container viewUsersByIds(List<String>? list, {int popCount = 0, ScrollController
                                               ),
                                             ),
                                           ),
-                                          if(user.isActiveLive == true)Container(
+                                          if(user.isActiveLive == true && user.name != 'error-10234')Container(
                                             margin: EdgeInsets.fromLTRB(
                                                 0 * a, 0 * a, 7 * a, 0 * a),
                                             width: 58 * a,

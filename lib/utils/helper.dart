@@ -33,6 +33,7 @@ class AgeCalculator {
     return age;
   }
 }
+
 class FixedLengthQueue<T> {
   final int maxLength;
   final List<T> _queue = [];
@@ -77,6 +78,11 @@ class FixedLengthQueue<T> {
   int get length => _queue.length;
 }
 
+bool isValidValidity(DateTime validity) {
+  DateTime currentDateTime = DateTime.now();
+  bool isValid = currentDateTime.isBefore(validity) || currentDateTime.isAtSameMomentAs(validity);
+  return isValid;
+}
 bool isToday(DateTime dateToCheckUTC) {
   DateTime dateToCheckLocal = dateToCheckUTC.toLocal();
   DateTime now = DateTime.now();

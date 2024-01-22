@@ -72,13 +72,13 @@ class ShopWalletProvider with ChangeNotifier {
     final apiResponse = await _shopRepo.shop(
         userId: storageService.getString(Constants.id),
         item: UserItem(
-          name: item.name,
-          id: item.name,
-          images: item.images,
-          isDefault: item.isDefault,
-          isOfficial: item.isOfficial,
-          v: 0,
-          validTill: validity
+            id: item.id,
+            name: item.name,
+            images: item.images,
+            isDefault: item.isDefault,
+            isOfficial: item.isOfficial,
+            v: 0,
+            validTill: validity
         ).toJson(),
         price: price,
         type: type);
