@@ -78,11 +78,6 @@ class FixedLengthQueue<T> {
   int get length => _queue.length;
 }
 
-bool isValidValidity(DateTime validity) {
-  DateTime currentDateTime = DateTime.now();
-  bool isValid = currentDateTime.isBefore(validity) || currentDateTime.isAtSameMomentAs(validity);
-  return isValid;
-}
 bool isToday(DateTime dateToCheckUTC) {
   DateTime dateToCheckLocal = dateToCheckUTC.toLocal();
   DateTime now = DateTime.now();
@@ -98,14 +93,49 @@ bool inLastSevenDays(DateTime dateToCheckUTC) {
   return dateToCheckLocal.isAfter(sevenDaysAgo) && dateToCheckLocal.isBefore(now);
 }
 
-String userValidItemSelect(List<UserItem>? items){
-  if(items==null) return '';
-  if(items.isEmpty) return '';
+String userValidItemSelection(List<UserItem>? allItems){
+  if(allItems==null) return '';
+  if(allItems.isEmpty) return '';
+
+  final items = allItems.where((e) => isValidValidity(e.validTill));
   if(items.firstWhereOrNull((e) => e.isDefault??false) != null){
     return items.firstWhere((e) => e.isDefault??false).images?.last??'';
   }
   if(items.isNotEmpty) return items.first.images?.last??'';
   return '';
+}
+
+bool isValidValidity(DateTime? validity) {
+  if(validity==null) return true;
+  DateTime currentDateTime = DateTime.now();
+  bool isValid = currentDateTime.isBefore(validity) || currentDateTime.isAtSameMomentAs(validity);
+  return isValid;
+}
+
+String calculateRemainingTime(DateTime? validity) {
+  if(validity==null) return '';
+  DateTime currentDateTime = DateTime.now();
+  Duration difference = validity.difference(currentDateTime);
+
+  if (difference.isNegative) {
+    return 'Expired';
+  }
+
+  int days = difference.inDays;
+  int hours = difference.inHours % 24;
+  int minutes = difference.inMinutes % 60;
+
+  if (days > 1) {
+    return '$days days';
+  }else if (days > 0) {
+    return '$days day';
+  } else if (hours > 1) {
+    return '$hours hours';
+  } else if (hours > 0) {
+    return '$hours hour';
+  } else {
+    return '$minutes min';
+  }
 }
 
 String formatNumber(int number) {

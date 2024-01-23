@@ -26,7 +26,7 @@ void main() async {
     DeviceOrientation.portraitUp, // Allow only portrait mode
     DeviceOrientation.portraitDown,
   ]).then((_) {
-    runApp(MyApp());
+    runApp(const MyApp());
   });
 }
 

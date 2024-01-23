@@ -68,7 +68,9 @@ class Items {
     createdAt: json["createdAt"] == null ? null : DateTime.parse(json["createdAt"]),
     updatedAt: json["updatedAt"] == null ? null : DateTime.parse(json["updatedAt"]),
     v: json["__v"],
-    priceAndvalidity: json["priceAndvalidity"] == null ? [] : List<PriceAndvalidity>.from(json["priceAndvalidity"]!.map((x) => PriceAndvalidity.fromJson(x))),
+    priceAndvalidity: json["priceAndvalidity"] == null
+        ? []
+        : List<PriceAndvalidity>.from(PriceAndvalidity.listFromJson(json["priceAndvalidity"][0])),
     label: json["label"],
     value: json["value"],
   );
@@ -98,12 +100,19 @@ class PriceAndvalidity {
   });
 
   factory PriceAndvalidity.fromJson(Map<String, dynamic> json) => PriceAndvalidity(
-    price: json["price"],
-    validity: json["validity"],
+    price: int.tryParse(json["price"]),
+    validity: int.tryParse(json["validity"]),
   );
 
   Map<String, dynamic> toJson() => {
     "price": price,
     "validity": validity,
   };
+
+  static List<PriceAndvalidity> listFromJson(String list) {
+    List<dynamic> decodedList = jsonDecode(list);
+    return decodedList
+        .map((item) => PriceAndvalidity.fromJson(item))
+        .toList();
+  }
 }

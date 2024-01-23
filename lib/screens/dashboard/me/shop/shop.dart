@@ -9,7 +9,6 @@ import '../../../../utils/utils_assets.dart';
 import 'tabs/accessories.dart';
 import 'tabs/common_tab_view.dart';
 import 'tabs/special_id.dart';
-import 'tabs/theme.dart';
 
 class Shop extends StatefulWidget {
   final int? index;
@@ -124,7 +123,7 @@ class _ShopState extends State<Shop> {
               contents: const [
                 ShopCommonView(type: 'frame'),
                 ShopCommonView(type: 'chatBubble'),
-                ShopTheme(),
+                ShopCommonView(type: 'theme'),
                 ShopCommonView(type: 'vehicle'),
                 ShopCommonView(type: 'relationship'),
                 ShopSpecialId(),

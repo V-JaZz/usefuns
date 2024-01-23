@@ -181,7 +181,7 @@ class ZegoRoomProvider with ChangeNotifier {
       updateSeat(seat);
     }else{
       final user = Provider.of<UserDataProvider>(Get.context!,listen: false).userData;
-      final extraInfo = ZegoStreamExtended(vip: 0,id: user?.data?.userId ,owner: isOwner,age: AgeCalculator.calculateAge(user?.data?.dob??DateTime.now()),followers: user?.data?.followers?.length??0,gender: user?.data?.gender,level: user?.data?.level,streamId: ZegoConfig.instance.userID,userName: ZegoConfig.instance.userName,image: user!.data!.images!.isNotEmpty ? (user.data?.images?.first??''):'',seat: seat,micOn: _isMicOn&&isMicrophonePermissionGranted,frame: userValidItemSelect(user.data?.frame));
+      final extraInfo = ZegoStreamExtended(vip: 0,id: user?.data?.userId ,owner: isOwner,age: AgeCalculator.calculateAge(user?.data?.dob??DateTime.now()),followers: user?.data?.followers?.length??0,gender: user?.data?.gender,level: user?.data?.level,streamId: ZegoConfig.instance.userID,userName: ZegoConfig.instance.userName,image: user!.data!.images!.isNotEmpty ? (user.data?.images?.first??''):'',seat: seat,micOn: _isMicOn&&isMicrophonePermissionGranted,frame: userValidItemSelection(user.data?.frame));
       await ZegoExpressEngine.instance.setStreamExtraInfo(zegoStreamExtendedToJson(extraInfo));
       await ZegoExpressEngine.instance.startPublishingStream(ZegoConfig.instance.userID);
       log('📤 Start publishing stream, streamID: ${ZegoConfig.instance.userID}');

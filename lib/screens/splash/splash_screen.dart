@@ -41,7 +41,7 @@ class StartState extends State<SplashScreen> {
         if (response.statusCode == 200) {
           AppVersionConfigModel model = appVersionConfigModelFromJson(response.body);
           if(model.status == 1){
-            if(model.data!.last.name == Constants.appVersion){
+            if(model.data!.where((e) => e.name == Constants.appVersion).isNotEmpty){
               Get.off(() {
                 return StorageService().getString(Constants.id) == ''?const LogInScreen():const BottomNavigator();
               });

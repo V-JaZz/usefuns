@@ -24,9 +24,9 @@ class _ShopCommonViewState extends State<ShopCommonView> {
 
     return Consumer<ShopWalletProvider>(
       builder: (context, value, _) {
-        final itemList = value.items[widget.type]?.data
-                ?.where((e) => e.isOfficial == true)
-                .toList() ??
+        final itemList = value.items[widget.type]?.data??
+                // ?.where((e) => e.isOfficial != true)
+                // .toList() ??
             [];
 
         return SingleChildScrollView(
@@ -61,7 +61,7 @@ class _ShopCommonViewState extends State<ShopCommonView> {
       final similarFrames = ud!.frame!.where((e) => e.id == item.id);
       if(similarFrames.isEmpty){
         return false;
-      }else if(similarFrames.where((e) => isValidValidity(e.validTill!)).isNotEmpty){
+      }else if(similarFrames.where((e) => isValidValidity(e.validTill)).isNotEmpty){
         return true;
       }
       return false;
@@ -70,65 +70,65 @@ class _ShopCommonViewState extends State<ShopCommonView> {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
     double b = a * 0.97;
-    return SizedBox(
-      width: 90 * a,
-      child: Column(
-        children: [
-          Image.network(
-            item.images!.first,
-            width: 90 * a,
-            height: 90 * a,
-            errorBuilder: (context, error, stackTrace) => Container(
+    return GestureDetector(
+      onTap: (){
+        if (!owned) {
+          showDialog(
+              context: Get.context!,
+              barrierDismissible: false,
+              builder: (context) {
+                return ItemBuyPreview(item: item,type: widget.type);
+              });
+        }
+      },
+      child: SizedBox(
+        width: 90 * a,
+        child: Column(
+          children: [
+            Image.network(
+              item.images!.first,
               width: 90 * a,
               height: 90 * a,
-              padding: EdgeInsets.all(8 * a),
-              child: Text(error.toString()),
-            ),
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) {
-                return child;
-              }
-              return SizedBox(
+              errorBuilder: (context, error, stackTrace) => Container(
                 width: 90 * a,
                 height: 90 * a,
-                child: const Center(child: CircularProgressIndicator()),
-              );
-            },
-          ),
-          Text(item.name.toString()),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/icons/ic_diamond.png',
-                height: 12 * a,
-                fit: BoxFit.fitHeight,
+                padding: EdgeInsets.all(8 * a),
+                child: Text(error.toString()),
               ),
-              SizedBox(width: 3 * a),
-              if(item.priceAndvalidity!.isNotEmpty)Text(
-                '${item.priceAndvalidity?.first.price}/${item.priceAndvalidity?.first.validity} Days',
-                style: SafeGoogleFont(
-                  'Poppins',
-                  fontSize: 10 * b,
-                  fontWeight: FontWeight.w400,
-                  height: 1.1725 * b / a,
-                  color: const Color.fromARGB(255, 11, 11, 11),
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) {
+                  return child;
+                }
+                return SizedBox(
+                  width: 90 * a,
+                  height: 90 * a,
+                  child: const Center(child: CircularProgressIndicator()),
+                );
+              },
+            ),
+            Text(item.name.toString()),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/icons/ic_diamond.png',
+                  height: 12 * a,
+                  fit: BoxFit.fitHeight,
                 ),
-              ),
-            ],
-          ),
-          GestureDetector(
-            onTap: () {
-              if (!owned) {
-                showDialog(
-                    context: Get.context!,
-                    barrierDismissible: false,
-                    builder: (context) {
-                      return ItemBuyPreview(item: item,type: widget.type);
-                    });
-              }
-            },
-            child: Container(
+                SizedBox(width: 3 * a),
+                if(item.priceAndvalidity!.isNotEmpty)Text(
+                  '${item.priceAndvalidity?.first.price}/${item.priceAndvalidity?.first.validity} Days',
+                  style: SafeGoogleFont(
+                    'Poppins',
+                    fontSize: 10 * b,
+                    fontWeight: FontWeight.w400,
+                    height: 1.1725 * b / a,
+                    color: const Color.fromARGB(255, 11, 11, 11),
+                  ),
+                ),
+              ],
+            ),
+            Container(
               width: 70 * a,
               height: 16 * a,
               decoration: BoxDecoration(
@@ -155,8 +155,8 @@ class _ShopCommonViewState extends State<ShopCommonView> {
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -199,99 +199,111 @@ class _ItemBuyPreviewState extends State<ItemBuyPreview> {
                       fontWeight: FontWeight.w600,
                       height: 1.5 * b / a,
                       letterSpacing: 0.48 * a,
-                      color: Colors.black),
-                ),
-                SizedBox(height: 3 * a),
-                userProfileDisplay(
-                    size: 100*a,
-                    image: Provider.of<UserDataProvider>(context,listen: false).userData!.data!.images!.isEmpty?'':Provider.of<UserDataProvider>(context,listen: false).userData?.data?.images?.first??'',
-                    frame: '${widget.item.images?.last}'
+                      color: Colors.black
+                  ),
                 ),
                 SizedBox(height: 3 * a),
 
+                showPreview(),
+
+                SizedBox(height: 3 * a),
+
                 // Radio selection for price options
-                if(widget.item.priceAndvalidity!.isNotEmpty)Column(
+                if(widget.item.priceAndvalidity!.isNotEmpty)
+                  Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     for (int i = 0; i < widget.item.priceAndvalidity!.length; i++)
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Radio(
-                            value: i,
-                            groupValue: selectedPriceIndex,
-                            activeColor: Colors.deepOrangeAccent,
-                            onChanged: (value) {
-                              setState(() {
-                                selectedPriceIndex = value as int;
-                              });
-                            },
-                          ),
-                          Image.asset(
-                            'assets/icons/ic_diamond.png',
-                            height: 12 * a,
-                            fit: BoxFit.fitHeight,
-                          ),
-                          SizedBox(width: 3 * a),
-                          Text(
-                            '${widget.item.priceAndvalidity![i].price}/${widget.item.priceAndvalidity![i].validity} Days',
-                            style: TextStyle(
-                              fontSize: 10 * b,
-                              fontWeight: FontWeight.w400,
-                              height: 1.1725 * b / a,
-                              color: const Color.fromARGB(255, 11, 11, 11),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedPriceIndex = i;
+                          });
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Radio(
+                              value: i,
+                              groupValue: selectedPriceIndex,
+                              visualDensity: VisualDensity.comfortable,
+                              activeColor: Colors.deepOrangeAccent,
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedPriceIndex = value as int;
+                                });
+                              },
                             ),
-                          ),
-                        ],
+                            Image.asset(
+                              'assets/icons/ic_diamond.png',
+                              height: 12 * a,
+                              fit: BoxFit.fitHeight,
+                            ),
+                            SizedBox(width: 3 * a),
+                            Text(
+                              '${widget.item.priceAndvalidity![i].price}/${widget.item.priceAndvalidity![i].validity} Days',
+                              style: TextStyle(
+                                fontSize: 10 * b,
+                                fontWeight: FontWeight.w400,
+                                height: 1.1725 * b / a,
+                                color: Colors.black87
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                   ],
                 ),
-                GestureDetector(
-                  onTap: () async {
-                    if(!value.isBuying){
-                      final success = await value.buy(
-                          widget.type,
-                          widget.item.priceAndvalidity?[selectedPriceIndex].price??100,
-                          widget.item,
-                          widget.item.priceAndvalidity?[selectedPriceIndex].validity??1);
-                      Get.back();
-                      if(success) {
-                        showCustomSnackBar('Buying Successful!', Get.context!,isError: false,isToaster: true);
-                      }else{
-                        showCustomSnackBar('Error Buying!', Get.context!,isToaster: true);
+                Consumer<UserDataProvider>(
+                  builder: (context, udp, _) => GestureDetector(
+                    onTap: () async {
+                      if((udp.userData?.data?.diamonds??0) < (widget.item.priceAndvalidity?[selectedPriceIndex].price??100)){
+                        showInsufficientDialog(context,(widget.item.priceAndvalidity?[selectedPriceIndex].price??100)-(udp.userData?.data?.diamonds??0));
+                      }else if(!value.isBuying){
+                        final success = await value.buy(
+                            widget.type,
+                            widget.item.priceAndvalidity?[selectedPriceIndex].price??100,
+                            widget.item,
+                            widget.item.priceAndvalidity?[selectedPriceIndex].validity??1);
+                        Get.back();
+                        if(success) {
+                          showCustomSnackBar('Buying Successful!', Get.context!,isError: false,isToaster: true);
+                        }else{
+                          showCustomSnackBar('Error Buying!', Get.context!,isToaster: true);
+                        }
                       }
-                    }
-                  },
-                  child: Container(
-                      width: 136 * a,
-                      height: 30 * a,
-                      margin: EdgeInsets.only(
-                          top: 12 * a, left: 0 * a, right: 0 * a),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(9 * a),
-                          topRight: Radius.circular(9 * a),
-                          bottomLeft: Radius.circular(9 * a),
-                          bottomRight: Radius.circular(9 * a),
+                    },
+                    child: Container(
+                        width: 136 * a,
+                        height: 30 * a,
+                        margin: EdgeInsets.only(
+                            top: 12 * a, left: 0 * a, right: 0 * a),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(9 * a),
+                            topRight: Radius.circular(9 * a),
+                            bottomLeft: Radius.circular(9 * a),
+                            bottomRight: Radius.circular(9 * a),
+                          ),
+                          color: Colors.deepOrangeAccent,
                         ),
-                        color: Colors.deepOrangeAccent,
-                      ),
-                      child: Center(
-                        child: value.isBuying
-                            ? const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: FittedBox(child: CircularProgressIndicator(color: Colors.white,strokeWidth: 8)),
-                            )
-                            : Text(
-                          'Buy Now',
-                          style: SafeGoogleFont('Poppins',
-                              fontSize: 13 * a,
-                              fontWeight: FontWeight.w500,
-                              height: 1.5 * b / a,
-                              letterSpacing: 0.48 * a,
-                              color: Colors.white),
-                        ),
-                      )),
+                        child: Center(
+                          child: value.isBuying
+                              ? const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: FittedBox(child: CircularProgressIndicator(color: Colors.white,strokeWidth: 8)),
+                              )
+                              : Text(
+                            'Buy Now',
+                            style: SafeGoogleFont('Poppins',
+                                fontSize: 13 * a,
+                                fontWeight: FontWeight.w500,
+                                height: 1.5 * b / a,
+                                letterSpacing: 0.48 * a,
+                                color: Colors.white),
+                          ),
+                        )),
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(
@@ -316,5 +328,35 @@ class _ItemBuyPreviewState extends State<ItemBuyPreview> {
         },
       ),
     );
+  }
+
+  Widget showPreview() {
+    double baseWidth = 360;
+    double a = Get.width / baseWidth;
+
+    switch(widget.type){
+      case 'frame':
+        return userProfileDisplay(
+            size: 100*a,
+            image: Provider.of<UserDataProvider>(context,listen: false).userData!.data!.images!.isEmpty?'':Provider.of<UserDataProvider>(context,listen: false).userData?.data?.images?.first??'',
+            frame: '${widget.item.images?.last}'
+        );
+      //   case 'bubble':
+    //     return value.userData?.data?.profileCard??[];
+    //   case 'theme':
+    //     return value.userData?.data?.roomWallpaper??[];
+    //   case 'vehicle':
+    //     return value.userData?.data?.vehicle??[];
+    // // case 'special ID':
+    // //   return value.userData?.data?.specialId??[];
+    //   case 'room accessories':
+    //     return [...(value.userData?.data?.lockRoom??[]), ...(value.userData?.data?.extraSeat??[])];
+      default:
+        return Image.network(
+          '${widget.item.images?.last}',
+          height: 100*a,
+          width: 100*a,
+        );
+    }
   }
 }

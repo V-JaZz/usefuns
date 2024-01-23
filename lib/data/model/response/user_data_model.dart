@@ -180,7 +180,7 @@ class UserData {
     admin: json["admin"] == null ? [] : List<Admin>.from(json["admin"]!.map((x) => Admin.fromJson(x))),
     subAdmin: json["subAdmin"] == null ? [] : List<SubAdmin>.from(json["subAdmin"]!.map((x) => SubAdmin.fromJson(x))),
     specialId: json["special_id"] == null ? [] : List<dynamic>.from(json["special_id"]!.map((x) => x)),
-    frame: json["frame"] == null ? [] : List<UserItem>.from(json["frame"]!.map((x) => UserItem.fromJson(x))),
+    frame: json["frame"] == null ? [] : List<UserItem>.from(json["frame"]!.map((x) =>x==null ? UserItem() : UserItem.fromJson(x))),
     roomWallpaper: json["roomWallpaper"] == null ? [] : List<UserItem>.from(json["roomWallpaper"]!.map((x) => UserItem.fromJson(x))),
     level: json["level"],
     loginOtp: json["loginOtp"],

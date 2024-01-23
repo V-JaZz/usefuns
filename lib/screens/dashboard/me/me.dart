@@ -78,14 +78,14 @@ class _MeState extends State<Me> {
             Get.to(() => const SecurityPanel());
           }
         },
-      {
-        "icon": "assets/icons/ic_aristocracy.png",
-        "title": "Aristocracy",
-        "onTap": () {
-          showCustomSnackBar('Upcoming', context,isError: false);
-          // Get.to(() => const TabsBar());
-        }
-      },
+      // {
+      //   "icon": "assets/icons/ic_aristocracy.png",
+      //   "title": "Aristocracy",
+      //   "onTap": () {
+      //     showCustomSnackBar('Upcoming', context,isError: false);
+      //     // Get.to(() => const TabsBar());
+      //   }
+      // },
       {
         "icon": "assets/icons/ic_star.png",
         "title": "Svip",
@@ -228,7 +228,7 @@ class _MeState extends State<Me> {
                                 userProfileDisplay(
                                   size: 87*a,
                                   image: providerUserData.userData!.data!.images!.isEmpty?'':providerUserData.userData?.data?.images?.first??'',
-                                  frame: userValidItemSelect(providerUserData.userData?.data?.frame)
+                                  frame: userValidItemSelection(providerUserData.userData?.data?.frame)
                                 ),
                                 SizedBox(width: 8*a),
                                 Column(

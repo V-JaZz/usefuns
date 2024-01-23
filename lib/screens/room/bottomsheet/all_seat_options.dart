@@ -390,7 +390,7 @@ class MyProfileSeatBottomSheet extends StatelessWidget {
             child: userProfileDisplay(
                 size: 100*a,
                 image: value.userData!.data!.images!.isEmpty?'':value.userData!.data!.images?.first??'',
-                frame: userValidItemSelect(value.userData!.data!.frame),
+                frame: userValidItemSelection(value.userData!.data!.frame),
                 onTap: (){
                   Get.back();
                   Get.to(()=>const UserProfile());

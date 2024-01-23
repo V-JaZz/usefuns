@@ -84,7 +84,7 @@ class _UserProfileState extends State<UserProfile> {
                           userProfileDisplay(
                               size: 87*a,
                               image: user.images!.isEmpty?'':user.images?.first??'',
-                              frame: userValidItemSelect(user.frame)
+                              frame: userValidItemSelection(user.frame)
                           ),
                           SizedBox(height: 9*a),
                           Row(

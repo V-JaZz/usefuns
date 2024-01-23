@@ -6,7 +6,6 @@ import '../../../../provider/user_data_provider.dart';
 import '../../../../utils/utils_assets.dart';
 import '../shop/shop.dart';
 import 'tabs/common_tab_view.dart';
-import 'tabs/frame_tab_view.dart';
 
 class Mine extends StatefulWidget {
   final int? index;
@@ -113,7 +112,7 @@ class _MineState extends State<Mine> {
                 ),
               ],
               contents: const [
-                MineFrameTabView(),
+                MineCommonView(type: 'frame'),
                 MineCommonView(type: 'bubble'),
                 MineCommonView(type: 'theme'),
                 MineCommonView(type: 'vehicle'),
