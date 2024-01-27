@@ -44,6 +44,7 @@ class ZegoRoomProvider with ChangeNotifier {
     if(mediaPlayer!=null) ZegoExpressEngine.instance.destroyMediaPlayer(mediaPlayer!);
     clearZegoEventCallback();
     destroyEngine();
+    Provider.of<GiftsProvider>(Get.context!,listen: false).clearContribution();
     heartBeat?.cancel();
     triggerTimer?.cancel();
     broadcastMessageList?.clear();

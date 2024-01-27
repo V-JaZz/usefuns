@@ -34,7 +34,7 @@ class GiftsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  sendGift(String senderId, List<String> receiverIds, String giftId, int count,
+  void sendGift(String senderId, List<String> receiverIds, String giftId, int count,
       String roomId, int giftPrice) async {
     for (String receiverId in receiverIds) {
         await _giftsRepo.sendGift(senderId, receiverId, giftId,count, roomId);
@@ -74,7 +74,7 @@ class GiftsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  generateSeries() {
+  void generateSeries() {
     if(series == null){
       List<double> s = [100];
       for (int i = 1; i < 99; i++) {
@@ -85,6 +85,7 @@ class GiftsProvider with ChangeNotifier {
       series = s;
     }
   }
+
   Map<String, List<GiftHistory>> repositionMap(Map<String, List<GiftHistory>> inputMap) {
     // Calculate the sums of coins for each list and store them in a map
     Map<String, int> sums = {};
@@ -104,5 +105,10 @@ class GiftsProvider with ChangeNotifier {
     }
 
     return repositionedMap;
+  }
+
+  void clearContribution(){
+    todayRoomContribution.clear();
+    sevenDaysRoomContribution.clear();
   }
 }

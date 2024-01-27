@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/data/model/response/shop_items_model.dart';
@@ -10,15 +11,24 @@ import '../data/datasource/local/sharedpreferences/storage_service.dart';
 import '../data/model/response/common_model.dart';
 import '../data/model/response/diamond_value_model.dart';
 import '../data/repository/shop_wallet_repo.dart';
+import 'package:in_app_purchase/in_app_purchase.dart';
 
 class ShopWalletProvider with ChangeNotifier {
 
+  ShopWalletProvider() {
+    _initializePurchaseStream();
+    _initStoreInfo();
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
+
   final storageService = StorageService();
   final ShopWalletRepo _shopRepo = ShopWalletRepo();
-
   bool isBuying = false;
-  bool isWalletLoaded = false;
-
   double? loadingShopProgress = 0.0;
   late Map<String , ShopItemsModel?> items = {
     'frame':null,
@@ -30,7 +40,101 @@ class ShopWalletProvider with ChangeNotifier {
     'lockRoom':null,
     'extraSeat':null,
   };
-  List<DiamondValue>? diamondValueList;
+
+
+  //In-App-Purchase
+
+  final InAppPurchase _iap = InAppPurchase.instance;
+  late StreamSubscription<List<PurchaseDetails>> _subscription;
+  List<ProductDetails>? iapDiamondsList;
+  bool iapAvailable = false;
+  bool iapLoading = true;
+
+
+  void _initializePurchaseStream() {
+    final Stream<List<PurchaseDetails>> purchaseUpdated = _iap.purchaseStream;
+    _subscription = purchaseUpdated.listen((List<PurchaseDetails> purchaseDetailsList) {
+      _listenToPurchaseUpdated(purchaseDetailsList);
+    }, onDone: () {
+      _subscription.cancel();
+    }, onError: (Object error) {
+      // Handle error here
+      showCustomSnackBar('purchase init error!', Get.context!,isToaster: true);
+    });
+  }
+
+  Future<void> _initStoreInfo() async {
+    iapAvailable = await _iap.isAvailable();
+    if(iapAvailable){
+      _fetchProductList();
+    }
+    iapLoading = false;
+    notifyListeners();
+  }
+
+  void _fetchProductList() async {
+
+    final diamondValue = await getDiamondValueList();
+    Set<String> ids = diamondValue.map((e) => e.id!).toSet();
+
+    final response = await _iap.queryProductDetails(ids);
+    for (var element in response.notFoundIDs) {
+      print('Purchase $element not found');
+    }
+    if(response.error == null){
+
+    }else{
+      print('Products fetch error');
+    }
+
+    iapDiamondsList = response.productDetails;
+    notifyListeners();
+  }
+
+  void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
+    purchaseDetailsList.forEach((purchaseDetails) {
+      switch(purchaseDetails.status){
+        case PurchaseStatus.pending:
+          showCustomDialog(
+              'Purchase pending!',
+            'Please wait few minutes in app until purchase finished.',
+            Icons.access_time
+          );
+          break;
+        case PurchaseStatus.error:
+          showCustomDialog(
+              'Purchase failed!',
+              'Please try again.',
+              Icons.cancel,
+              icColor: Colors.red
+          );
+          break;
+        case PurchaseStatus.purchased:
+          rewardDiamonds(int.parse(iapDiamondsList!.firstWhere((e) => e.id == purchaseDetails.productID).title.split(' ').first));
+          showCustomDialog(
+              'Purchase Success!',
+              null,
+              Icons.check_circle,
+              icColor: Colors.green
+          );
+          break;
+        default:
+          break;
+      }
+    });
+  }
+
+  Future<void> purchaseDiamonds(ProductDetails productDetails) async {
+    PurchaseParam purchaseParam;
+
+    purchaseParam = PurchaseParam(
+      productDetails: productDetails,
+    );
+
+    await _iap.buyConsumable(purchaseParam: purchaseParam);
+  }
+
+
 
   Future<void> getAll() async {
     await Future.delayed(const Duration(milliseconds: 500));
@@ -64,7 +168,7 @@ class ShopWalletProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> buy(String type, int price, Items item, int days) async {
+  Future<bool> buyItem(String type, int price, Items item, int days) async {
     isBuying = true;
     bool success = false;
     notifyListeners();
@@ -112,20 +216,18 @@ class ShopWalletProvider with ChangeNotifier {
     }
   }
 
-  Future<void> getDiamondValueList() async {
-    isWalletLoaded = false;
+  Future<List<DiamondValue>> getDiamondValueList() async {
     await Future.delayed(const Duration(milliseconds: 500));
     final apiResponse = await _shopRepo.getDiamondValue();
     if (apiResponse.statusCode == 200) {
       DiamondValueModel responseModel = diamondValueModelFromJson(apiResponse.body);
       if(responseModel.status == 1){
-        diamondValueList = responseModel.data;
+        return responseModel.data??[];
       }
     } else {
       showCustomSnackBar('Error Getting data!', Get.context!);
     }
-    isWalletLoaded = true;
-    notifyListeners();
+    return [];
   }
 
   Future<bool> spendUserDiamonds(int diamonds) async {

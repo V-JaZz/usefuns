@@ -454,6 +454,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                 crossAxisSpacing: 4*a,
                                 mainAxisSpacing: 0,
                                 shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
                                 children: List.generate(
                                   value.zegoRoom!.totalSeats,
                                   (i) {

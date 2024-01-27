@@ -55,7 +55,7 @@ class StartState extends State<SplashScreen> {
         }
       } on TimeoutException catch (_) {
         // Handle timeout exception
-        maintenanceDialog();
+        noInternetDialog();
       } on SocketException catch (_) {
         // Handle socket exception (no internet)
         noInternetDialog();
@@ -121,12 +121,8 @@ class StartState extends State<SplashScreen> {
                           color: Colors.black),
                     ),
                     GestureDetector(
-                      onTap: () async {
-                        if (await canLaunchUrl(Uri.parse(Constants.updateUrl))) {
-                        await launchUrl(Uri.parse(Constants.updateUrl), mode: LaunchMode.externalApplication);
-                        } else {
-                        throw 'Could not launch ${Constants.updateUrl}';
-                        }
+                      onTap: () {
+                        _launchPlayStore();
                       },
                       child: Padding(
                         padding: EdgeInsets.only(
@@ -257,6 +253,22 @@ class StartState extends State<SplashScreen> {
         });
   }
 
+  Future<void> _launchPlayStore() async {
+    if (await canLaunchUrl(Uri.parse(Constants.playStoreLaunchUrl))) {
+      await launchUrl(Uri.parse(Constants.playStoreLaunchUrl), mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not launch ${Constants.playStoreLaunchUrl}';
+    }
+  }
+
+  Future<void> _launchWebsite() async {
+    if (await canLaunchUrl(Uri.parse(Constants.webUrl))) {
+      await launchUrl(Uri.parse(Constants.webUrl), mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not launch ${Constants.webUrl}';
+    }
+  }
+
   void maintenanceDialog({String? e}) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
@@ -336,5 +348,4 @@ class StartState extends State<SplashScreen> {
           );
         });
   }
-
 }

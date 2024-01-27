@@ -5,8 +5,11 @@ import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/utils/helper.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../../../data/model/response/shop_items_model.dart';
 import '../../../../../utils/common_widgets.dart';
+// ignore: depend_on_referenced_packages
+import 'package:svgaplayer_flutter/svgaplayer_flutter.dart';
 
 class ShopCommonView extends StatefulWidget {
   final String type;
@@ -24,14 +27,14 @@ class _ShopCommonViewState extends State<ShopCommonView> {
 
     return Consumer<ShopWalletProvider>(
       builder: (context, value, _) {
-        final itemList = value.items[widget.type]?.data??
-                // ?.where((e) => e.isOfficial != true)
-                // .toList() ??
-            [];
+        final itemList = value.items[widget.type]?.data
+            ?.where((e) => e.isOfficial != true)
+            .toList()
+                ?? [];
 
         return SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.only(top: 15.0 * a),
+            padding: EdgeInsets.only(top: 15.0 * a,bottom: 30.0 * a),
             child: itemList.isEmpty
                 ? Align(
                     alignment: Alignment.topCenter,
@@ -89,24 +92,26 @@ class _ShopCommonViewState extends State<ShopCommonView> {
               item.images!.first,
               width: 90 * a,
               height: 90 * a,
-              errorBuilder: (context, error, stackTrace) => Container(
-                width: 90 * a,
-                height: 90 * a,
-                padding: EdgeInsets.all(8 * a),
-                child: Text(error.toString()),
-              ),
               loadingBuilder: (context, child, loadingProgress) {
                 if (loadingProgress == null) {
                   return child;
+                } else {
+                  return Shimmer.fromColors(
+                    highlightColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                    baseColor: Colors.transparent,
+                    child: Container(
+                      width: 90 * a,
+                      height: 90 * a,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                    ),
+                  );
                 }
-                return SizedBox(
-                  width: 90 * a,
-                  height: 90 * a,
-                  child: const Center(child: CircularProgressIndicator()),
-                );
               },
             ),
-            Text(item.name.toString()),
+            Text(capitalizeText(item.name!)),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -192,7 +197,7 @@ class _ItemBuyPreviewState extends State<ItemBuyPreview> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  '${widget.item.name}',
+                  capitalizeText(widget.item.name!),
                   style: SafeGoogleFont(
                       'Poppins',
                       fontSize: 16 * b,
@@ -211,7 +216,7 @@ class _ItemBuyPreviewState extends State<ItemBuyPreview> {
                 // Radio selection for price options
                 if(widget.item.priceAndvalidity!.isNotEmpty)
                   Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     for (int i = 0; i < widget.item.priceAndvalidity!.length; i++)
                       GestureDetector(
@@ -243,7 +248,7 @@ class _ItemBuyPreviewState extends State<ItemBuyPreview> {
                             Text(
                               '${widget.item.priceAndvalidity![i].price}/${widget.item.priceAndvalidity![i].validity} Days',
                               style: TextStyle(
-                                fontSize: 10 * b,
+                                fontSize: 12 * b,
                                 fontWeight: FontWeight.w400,
                                 height: 1.1725 * b / a,
                                 color: Colors.black87
@@ -260,7 +265,7 @@ class _ItemBuyPreviewState extends State<ItemBuyPreview> {
                       if((udp.userData?.data?.diamonds??0) < (widget.item.priceAndvalidity?[selectedPriceIndex].price??100)){
                         showInsufficientDialog(context,(widget.item.priceAndvalidity?[selectedPriceIndex].price??100)-(udp.userData?.data?.diamonds??0));
                       }else if(!value.isBuying){
-                        final success = await value.buy(
+                        final success = await value.buyItem(
                             widget.type,
                             widget.item.priceAndvalidity?[selectedPriceIndex].price??100,
                             widget.item,
@@ -341,12 +346,45 @@ class _ItemBuyPreviewState extends State<ItemBuyPreview> {
             image: Provider.of<UserDataProvider>(context,listen: false).userData!.data!.images!.isEmpty?'':Provider.of<UserDataProvider>(context,listen: false).userData?.data?.images?.first??'',
             frame: '${widget.item.images?.last}'
         );
-      //   case 'bubble':
-    //     return value.userData?.data?.profileCard??[];
+        case 'chatBubble':
+          return SizedBox(
+            height: 90*a,
+            width: 120*a,
+            child: Stack(
+              children: [
+                Image.network(
+                  '${widget.item.images?.last}',
+                  height: 90*a,
+                  width: 120*a,
+                  fit: BoxFit.fitWidth,
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    height: 90*a,
+                    width: 120*a,
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Hii! how are you?',
+                      style: SafeGoogleFont('Poppins',
+                          fontSize: 9 * a,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 0.48 * a,
+                          color: Colors.white),),
+                  ),
+                )
+              ],
+            ),
+          );
     //   case 'theme':
     //     return value.userData?.data?.roomWallpaper??[];
-    //   case 'vehicle':
-    //     return value.userData?.data?.vehicle??[];
+      case 'vehicle':
+        return SizedBox(
+            width: 100*a,
+            height: 100*a,
+            child:SVGASimpleImage(
+              resUrl: '${widget.item.images?.last}',
+            ));
     // // case 'special ID':
     // //   return value.userData?.data?.specialId??[];
     //   case 'room accessories':

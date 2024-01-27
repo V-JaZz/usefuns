@@ -69,7 +69,7 @@ class _BeanTabViewState extends State<BeanTabView> {
 
   Text beansWidget(text) => Text(
         text.toString(),
-        style: const TextStyle(color: Colors.white),
+    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 18),
       );
 
   Padding beansValueWidget(int diamonds,int beans) {

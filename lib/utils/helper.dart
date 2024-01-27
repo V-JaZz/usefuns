@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:collection/collection.dart';
+import 'package:get/get.dart';
 import '../data/model/response/user_data_model.dart';
 
 
@@ -125,17 +126,25 @@ String calculateRemainingTime(DateTime? validity) {
   int hours = difference.inHours % 24;
   int minutes = difference.inMinutes % 60;
 
-  if (days > 1) {
-    return '$days days';
-  }else if (days > 0) {
-    return '$days day';
-  } else if (hours > 1) {
-    return '$hours hours';
-  } else if (hours > 0) {
-    return '$hours hour';
+  if (days > 0) {
+    return '${days}d ${hours}h';
+  }if (hours > 0) {
+    return '${hours}h ${minutes}m';
   } else {
-    return '$minutes min';
+    return '${minutes}m';
   }
+}
+
+String capitalizeText(String text){
+  final splitText = text.split(' ');
+  for (int i = 0 ; i<splitText.length ; i++){
+    if (splitText[i].length<3){
+      splitText[i] = splitText[i].toUpperCase();
+    }else{
+      splitText[i] = splitText[i][0].toUpperCase() + splitText[i].substring(1);
+    }
+  }
+  return splitText.join(' ');
 }
 
 String formatNumber(int number) {

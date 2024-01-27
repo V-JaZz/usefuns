@@ -139,11 +139,12 @@ class UserDataProvider with ChangeNotifier {
     return responseModel;
   }
 
-  Future<CommonModel> selectFrame(
-      {required String frameId}) async {
-    final apiResponse = await _userDataRepo.selectFrame(
+  Future<CommonModel> makeItemDefault(
+      {required String itemId, required String type}) async {
+    final apiResponse = await _userDataRepo.makeItemDefault(
         userId: storageService.getString(Constants.userId),
-        frameId: frameId,
+        itemId: itemId,
+      type: type,
       token: storageService.getString(Constants.token)
     );
     CommonModel responseModel;

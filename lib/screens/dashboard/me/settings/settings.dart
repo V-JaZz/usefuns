@@ -262,6 +262,22 @@ class _SettingsState extends State<Settings> {
           ],
         ),
       ),
+      bottomSheet: SizedBox(
+        height: 36*a,
+        child: Center(
+          child: Text(
+            'App version : ${Constants.appVersion}',
+            style: SafeGoogleFont(
+              'Poppins',
+              fontSize: 12 * b,
+              fontWeight: FontWeight.w400,
+              height: 1.5 * b / a,
+              letterSpacing: 0.36 * a,
+              color: const Color(0x99000000),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

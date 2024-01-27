@@ -24,6 +24,11 @@ class _ShopState extends State<Shop> {
     Provider.of<ShopWalletProvider>(context, listen: false).getAll();
     super.initState();
   }
+  @override
+  void dispose() {
+    Provider.of<ShopWalletProvider>(context, listen: false).loadingShopProgress=0;
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +46,7 @@ class _ShopState extends State<Shop> {
             onPressed: () {
               Get.back();
             },
-            icon:
-                const Icon(Icons.arrow_back_ios_rounded, color: Colors.white)),
+            icon: const Icon(Icons.arrow_back_ios_rounded, color: Colors.white)),
         title: const Text(
           'SHOP',
           style: TextStyle(color: Colors.white, fontSize: 18),
@@ -123,7 +127,7 @@ class _ShopState extends State<Shop> {
               contents: const [
                 ShopCommonView(type: 'frame'),
                 ShopCommonView(type: 'chatBubble'),
-                ShopCommonView(type: 'theme'),
+                ShopCommonView(type: 'wallpaper'),
                 ShopCommonView(type: 'vehicle'),
                 ShopCommonView(type: 'relationship'),
                 ShopSpecialId(),

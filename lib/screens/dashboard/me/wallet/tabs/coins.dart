@@ -118,6 +118,6 @@ class _WalletState extends State<CoinsTabView> {
 
   Text coinsWidget(text) => Text(
         text,
-        style: const TextStyle(color: Colors.white),
+    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 18),
       );
 }

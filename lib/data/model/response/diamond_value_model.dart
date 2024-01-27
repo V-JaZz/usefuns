@@ -34,7 +34,7 @@ class DiamondValueModel {
 
 class DiamondValue {
   String? id;
-  int? price;
+  num? price;
   int? diamond;
   DateTime? createdAt;
   DateTime? updatedAt;

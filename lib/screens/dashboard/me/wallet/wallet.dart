@@ -1,7 +1,6 @@
 import 'package:contained_tab_bar_view/contained_tab_bar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:live_app/screens/dashboard/me/me.dart';
 import 'tabs/coins.dart';
 import 'tabs/beans.dart';
 import 'tabs/diamond.dart';

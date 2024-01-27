@@ -38,7 +38,7 @@ class _LogInScreenState extends State<LogInScreen> {
             begin: Alignment(0, -1),
             end: Alignment(0, 1),
             colors: <Color>[Color(0xff101137), Color(0x005034ff)],
-            stops: <double>[0, 1],
+            stops: <double>[0, 1]
           ),
         ),
         child: Consumer<AuthProvider>(

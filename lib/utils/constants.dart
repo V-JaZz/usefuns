@@ -1,8 +1,9 @@
 class Constants {
 
   static const String baseUrl = 'https://techc2.be/';
-  static const String appVersion = '1.0.7v';
-  static const String updateUrl = 'https://usefuns.live/';
+  static const String appVersion = '1.0.8v';
+  static const String webUrl = 'https://usefuns.live/';
+  static const String playStoreLaunchUrl = "https://play.google.com/store/apps/details?id=com.alkb.usefuns.live_app";
   static const String appealLink = 'https://forms.gle/mm7b9QdRiJjs7UsZA';
   static const String ufTeamSupportChat = 'https://tawk.to/chat/659e69db0ff6374032be6775/default';
 

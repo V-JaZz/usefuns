@@ -88,14 +88,15 @@ class UserDataRepo {
     }
   }
 
-  Future<http.Response> selectFrame(
-      {required String userId, required String frameId, required String token}) async {
+  Future<http.Response> makeItemDefault(
+      {required String userId, required String itemId, required String type, required String token}) async {
     try {
       http.Response response = await _httpClient.post(
-        'user/set_default_frame',
+        'user/set_default_item',
         {
           "userId": userId,
-          "frame_id": frameId
+          "item_id": itemId,
+          "type": type
         },
         bearerToken: token
       );

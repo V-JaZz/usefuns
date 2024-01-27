@@ -13,6 +13,7 @@ import '../data/datasource/local/sharedpreferences/storage_service.dart';
 import '../provider/shop_wallet_provider.dart';
 import '../provider/user_data_provider.dart';
 import '../screens/dashboard/me/profile/user_profile.dart';
+import '../screens/dashboard/me/wallet/wallet.dart';
 import 'constants.dart';
 
 void showCustomSnackBar(String? message, BuildContext context,
@@ -33,6 +34,99 @@ void showCustomSnackBar(String? message, BuildContext context,
       duration: const Duration(seconds: 2),
     ));
   }
+}
+
+Future<void> showCustomDialog(String title, String? subtitle,IconData? ic, {bool barrierDismissible = true, Color? icColor}) async {
+  double baseWidth = 360;
+  double a = Get.width / baseWidth;
+  double b = a * 0.97;
+  await showDialog(
+      context: Get.context!,
+      barrierDismissible: barrierDismissible,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          content: SizedBox(
+              width: 50 * a,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    title,
+                    style: SafeGoogleFont('Poppins',
+                        fontSize: 16 * b,
+                        fontWeight: FontWeight.w600,
+                        height: 1.5 * b / a,
+                        letterSpacing: 0.48 * a,
+                        color: Colors.black),
+                  ),
+                  SizedBox(height: 3*a),
+                  if(ic!=null)Icon(
+                      ic,
+                    size: 50*a,
+                    color: icColor??Colors.deepOrangeAccent,
+                  ),
+                  SizedBox(height: 9*a),
+                  if(subtitle!=null)Text(
+                    subtitle,
+                    textAlign: TextAlign.center,
+                    style: SafeGoogleFont('Poppins',
+                        fontSize: 10 * b,
+                        fontWeight: FontWeight.w500,
+                        height: 1.5 * b / a,
+                        letterSpacing: 0.48 * a,
+                        color: Colors.black),
+                  ),
+                  GestureDetector(
+                    onTap: (){
+                      Get.back();
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          top: 12 * a,
+                          left: 0 * a,
+                          right: 0 * a),
+                      child: Container(
+                          width: 136 * a,
+                          height: 30 * a,
+                          decoration: BoxDecoration(
+                            borderRadius:
+                            BorderRadius.only(
+                              topLeft: Radius.circular(
+                                  9 * a),
+                              topRight: Radius.circular(
+                                  9 * a),
+                              bottomLeft:
+                              Radius.circular(
+                                  9 * a),
+                              bottomRight:
+                              Radius.circular(
+                                  9 * a),
+                            ),
+                            color: Colors.deepOrangeAccent,
+                          ),
+                          child: Center(
+                            child: Text(
+                              'OKAY',
+                              style: SafeGoogleFont(
+                                  'Poppins',
+                                  fontSize: 13 * a,
+                                  fontWeight:
+                                  FontWeight.w500,
+                                  height: 1.5 * b / a,
+                                  letterSpacing:
+                                  0.48 * a,
+                                  color: Colors.white),
+                            ),
+                          )),
+                    ),
+                  ),
+                ],
+              )),
+        );
+      });
+  return;
 }
 
 Widget loadingWidget() {
@@ -500,7 +594,7 @@ Future<void> rewardDialog(String path, String title, String info, void Function(
 }
 
 void showInsufficientDialog(context, int reqDiamonds) {
-  String? selectedPurchaseOption;
+  String selectedPurchaseOption = 'beans';
   final user = Provider.of<UserDataProvider>(context, listen: false).userData;
   showDialog(
     context: context,
@@ -583,31 +677,7 @@ void showInsufficientDialog(context, int reqDiamonds) {
                   groupValue: selectedPurchaseOption,
                   onChanged: (value) {
                     setState(() {
-                      selectedPurchaseOption = value;
-                    });
-                  },
-                ),
-                RadioListTile<String>(
-                  activeColor: const Color(0xFFFF9933),
-                  dense: true,
-                  title: Row(
-                    children: [
-                      Image.asset('assets/geogle.png', height: 16, width: 16),
-                      const Text('  Geogle Wallet'),
-                      const Spacer(),
-                      // Image.asset('assets/icons/ic_diamond.png',
-                      //     height: 12, width: 12),
-                      // const Text(
-                      //   ' 1664 = ₹750',
-                      //   style: TextStyle(fontSize: 12),
-                      // )
-                    ],
-                  ),
-                  value: 'geogle wallet',
-                  groupValue: selectedPurchaseOption,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedPurchaseOption = value;
+                      selectedPurchaseOption = value as String;
                     });
                   },
                 ),
@@ -618,7 +688,7 @@ void showInsufficientDialog(context, int reqDiamonds) {
                     children: [
                       Image.asset('assets/other_wallet.png',
                           height: 16, width: 16),
-                      const Text('  Other Wallet'),
+                      const Text('  Wallet'),
                       const Spacer(),
                       // Image.asset('assets/icons/ic_diamond.png',
                       //     height: 12, width: 12),
@@ -628,16 +698,16 @@ void showInsufficientDialog(context, int reqDiamonds) {
                       // )
                     ],
                   ),
-                  value: 'other wallet',
+                  value: 'wallet',
                   groupValue: selectedPurchaseOption,
                   onChanged: (value) {
                     setState(() {
-                      selectedPurchaseOption = value;
+                      selectedPurchaseOption = value as String;
                     });
                   },
                 ),
                 Center(
-                  child: InkWell(
+                  child: GestureDetector(
                     onTap: (){
                       if(selectedPurchaseOption=='beans'){
                         int reqBeans = reqDiamonds*4;
@@ -646,10 +716,11 @@ void showInsufficientDialog(context, int reqDiamonds) {
                         }else{
                           Provider.of<ShopWalletProvider>(context,listen: false).convertBeans(reqDiamonds, reqBeans);
                         }
+                        Get.back();
                       }else{
-                        showCustomSnackBar('Upcoming!', context, isToaster: true, isError: false);
+                        Get.back();
+                        Get.to(()=>const Wallet());
                       }
-                      Get.back();
                     },
                     child: Container(
                       margin: const EdgeInsets.only(bottom: 24, top: 12),
@@ -659,7 +730,7 @@ void showInsufficientDialog(context, int reqDiamonds) {
                           color: const Color(0xFFFF9933),
                           borderRadius: BorderRadius.circular(12)),
                       child: Text(
-                        selectedPurchaseOption=='beans'?"Convert Beans":"Recharge Now",
+                        selectedPurchaseOption=='beans'?"Convert Beans":"Wallet",
                         style: const TextStyle(color: Colors.black, fontSize: 16),
                       ),
                     ),

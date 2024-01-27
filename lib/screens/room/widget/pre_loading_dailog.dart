@@ -197,7 +197,8 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
         loading = false;
         errorText = response.message??'Invalid password!';
       });
-    }else {
+    }
+    else {
       Get.back();
       showCustomSnackBar(response.message, Get.context!, isToaster: true);
     }

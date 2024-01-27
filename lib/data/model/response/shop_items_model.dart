@@ -100,8 +100,8 @@ class PriceAndvalidity {
   });
 
   factory PriceAndvalidity.fromJson(Map<String, dynamic> json) => PriceAndvalidity(
-    price: int.tryParse(json["price"]),
-    validity: int.tryParse(json["validity"]),
+    price: json["price"] is int ? json["price"] : int.tryParse(json["price"]),
+    validity: json["validity"] is int ? json["validity"] : int.tryParse(json["validity"]),
   );
 
   Map<String, dynamic> toJson() => {

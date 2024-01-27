@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:live_app/provider/shop_wallet_provider.dart';
 import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
-
-import '../../../../../data/model/response/shop_items_model.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../../../data/model/response/user_data_model.dart';
 import '../../../../../utils/common_widgets.dart';
 import '../../../../../utils/helper.dart';
+// ignore: depend_on_referenced_packages
+import 'package:svgaplayer_flutter/svgaplayer_flutter.dart';
 
 class MineCommonView extends StatelessWidget {
   final String type;
   const MineCommonView({super.key, required this.type});
+
   @override
   Widget build(BuildContext context) {
     double baseWidth = 360;
@@ -25,27 +26,30 @@ class MineCommonView extends StatelessWidget {
 
         final list = getItemsList(context,value);
 
-        return Padding(
-          padding: EdgeInsets.only(top: 15.0 * a),
-          child: isNullOrEmpty
-              ? Align(
-                  alignment: Alignment.topCenter,
-                  child: Padding(
-                    padding: EdgeInsets.only(top:15.0 * a ),
-                    child: Text('No $type found!'),
-                  ))
-              : Align(
-                  alignment: Alignment.topCenter,
-                  child: Wrap(
-                    spacing: 20 * a,
-                    runSpacing: 30 * a,
-                    children: List.generate(list.length, (i) {
-                      int index = list.length-i-1;
-                      return viewItem(list[index]);
-                    }),
+        return SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(top: 15.0 * a,bottom: 30.0 * a),
+            child: isNullOrEmpty
+                ? Align(
+                    alignment: Alignment.topCenter,
+                    child: Padding(
+                      padding: EdgeInsets.only(top:15.0 * a ),
+                      child: Text('No $type found!'),
+                    ))
+                : Align(
+                    alignment: Alignment.topCenter,
+                    child: Wrap(
+                      spacing: 20 * a,
+                      runSpacing: 30 * a,
+                      children: List.generate(list.length, (i) {
+                        int index = list.length-i-1;
+                        return viewItem(list[index]);
+                      }),
+                    ),
                   ),
-                ),
+          ),
         );
+
       },
     );
 
@@ -59,6 +63,7 @@ class MineCommonView extends StatelessWidget {
     String timeLeft = calculateRemainingTime(item.validTill);
 
     return GestureDetector(
+
       onTap: () {
         if(timeLeft!='Expired' || official) {
           Get.dialog(MineItemDialog(
@@ -67,15 +72,14 @@ class MineCommonView extends StatelessWidget {
             frameId: item.id??'',
             isSelected: isSelected,
             type: type
-        )
-        );
+        ));
         }
       },
       child: Container(
         width: 100 * a,
         padding: EdgeInsets.all(5*a),
         decoration: BoxDecoration(
-            color: timeLeft=='Expired' && !official ?Colors.grey.shade300:isSelected? const Color(0xFF7926BC).withOpacity(0.1): Colors.white,
+            color: timeLeft=='Expired' && !official ?Colors.grey.shade100:isSelected? const Color(0xFF7926BC).withOpacity(0.1): Colors.white,
             borderRadius: BorderRadius.circular(3),
             border: Border.all(color: isSelected? const Color(0xFF7926BC): Colors.white)
         ),
@@ -86,15 +90,25 @@ class MineCommonView extends StatelessWidget {
               width: 90 * a,
               height: 90 * a,
               loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null){return child;}
-                return SizedBox(
-                  width: 90 * a,
-                  height: 90 * a,
-                  child: const Center(child: CircularProgressIndicator()),
-                );
+                if (loadingProgress == null) {
+                  return child;
+                } else {
+                  return Shimmer.fromColors(
+                    highlightColor: const Color(0xFF7926BC).withOpacity(0.1),
+                    baseColor: Colors.transparent,
+                    child: Container(
+                      width: 90 * a,
+                      height: 90 * a,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                    ),
+                  );
+                }
               },
             ),
-            Text('${item.name}',textAlign: TextAlign.center),
+            Text(capitalizeText(item.name!),textAlign: TextAlign.center),
             official
                 ? const Row(
                   mainAxisSize: MainAxisSize.min,
@@ -146,8 +160,8 @@ class MineCommonView extends StatelessWidget {
         return value.userData?.data?.roomWallpaper??[];
       case 'vehicle':
         return value.userData?.data?.vehicle??[];
-      // case 'special ID':
-      //   return value.userData?.data?.specialId??[];
+      case 'special ID':
+        return value.userData?.data?.specialId??[];
       case 'room accessories':
         return [...(value.userData?.data?.lockRoom??[]), ...(value.userData?.data?.extraSeat??[])];
       default:
@@ -178,7 +192,7 @@ class MineItemDialog extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                title,
+                capitalizeText(title),
                 style: SafeGoogleFont('Poppins',
                     fontSize: 16 * b,
                     fontWeight: FontWeight.w600,
@@ -193,7 +207,7 @@ class MineItemDialog extends StatelessWidget {
                 onTap: () async {
                   Get.back();
                   if(isSelected==false){
-                    final res = await Provider.of<UserDataProvider>(context,listen: false).selectFrame(frameId: frameId);
+                    final res = await Provider.of<UserDataProvider>(context,listen: false).makeItemDefault(itemId: frameId, type: type);
                     if(res.status == 0) {
                       showCustomSnackBar(res.message??'error!', Get.context!,isToaster: true);
                     }
@@ -259,12 +273,45 @@ class MineItemDialog extends StatelessWidget {
             image: Provider.of<UserDataProvider>(context,listen: false).userData!.data!.images!.isEmpty?'':Provider.of<UserDataProvider>(context,listen: false).userData?.data?.images?.first??'',
             frame: path
         );
-    //   case 'bubble':
-    //     return value.userData?.data?.profileCard??[];
-    //   case 'theme':
-    //     return value.userData?.data?.roomWallpaper??[];
-    //   case 'vehicle':
-    //     return value.userData?.data?.vehicle??[];
+      case 'bubble':
+        return SizedBox(
+          height: 90*a,
+          width: 120*a,
+          child: Stack(
+            children: [
+              Image.network(
+                path,
+                height: 90*a,
+                width: 120*a,
+                fit: BoxFit.fitWidth,
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  height: 90*a,
+                  width: 120*a,
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Hii! how are you?',
+                    style: SafeGoogleFont('Poppins',
+                        fontSize: 9 * a,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 0.48 * a,
+                        color: Colors.white),),
+                ),
+              )
+            ],
+          ),
+        );
+      // case 'theme':
+    // //   return value.userData?.data?.specialId??[];
+      case 'vehicle':
+        return SizedBox(
+            width: 100*a,
+            height: 100*a,
+            child:SVGASimpleImage(
+              resUrl: path,
+            ));
     // // case 'special ID':
     // //   return value.userData?.data?.specialId??[];
     //   case 'room accessories':
