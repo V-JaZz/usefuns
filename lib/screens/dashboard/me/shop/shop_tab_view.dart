@@ -6,20 +6,22 @@ import 'package:live_app/utils/helper.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../../../../data/model/response/shop_items_model.dart';
-import '../../../../../utils/common_widgets.dart';
+import '../../../../data/model/response/shop_items_model.dart';
+import '../../../../utils/common_widgets.dart';
 // ignore: depend_on_referenced_packages
 import 'package:svgaplayer_flutter/svgaplayer_flutter.dart';
 
 class ShopCommonView extends StatefulWidget {
   final String type;
-  const ShopCommonView({super.key, required this.type});
+  final String? type2;
+  const ShopCommonView({super.key, required this.type, this.type2});
 
   @override
   State<ShopCommonView> createState() => _ShopCommonViewState();
 }
 
 class _ShopCommonViewState extends State<ShopCommonView> {
+  late List<Items> itemList;
   @override
   Widget build(BuildContext context) {
     double baseWidth = 360;
@@ -27,10 +29,15 @@ class _ShopCommonViewState extends State<ShopCommonView> {
 
     return Consumer<ShopWalletProvider>(
       builder: (context, value, _) {
-        final itemList = value.items[widget.type]?.data
-            ?.where((e) => e.isOfficial != true)
-            .toList()
-                ?? [];
+
+        if(widget.type2 == null) {
+          itemList = value.items[widget.type]?.data
+              ?.where((e) => e.isOfficial != true)
+              .toList()
+              ?? [];
+        }else{
+          itemList = [...(value.items[widget.type]?.data??[]), ...(value.items[widget.type2]?.data??[])];
+        }
 
         return SingleChildScrollView(
           child: Padding(
@@ -48,7 +55,7 @@ class _ShopCommonViewState extends State<ShopCommonView> {
                       spacing: 20 * a,
                       runSpacing: 30 * a,
                       children: List.generate(itemList.length, (index) {
-                        return viewItem(itemList[index]);
+                        return viewItem(itemList[index],widget.type2 != null && index==1);
                       }),
                     ),
                   ),
@@ -58,7 +65,7 @@ class _ShopCommonViewState extends State<ShopCommonView> {
     );
   }
 
-  Widget viewItem(Items item) {
+  Widget viewItem(Items item, bool type2) {
     bool checkAlreadyOwned() {
       final ud = Provider.of<UserDataProvider>(context,listen: false).userData?.data;
       final similarFrames = ud!.frame!.where((e) => e.id == item.id);
@@ -80,7 +87,7 @@ class _ShopCommonViewState extends State<ShopCommonView> {
               context: Get.context!,
               barrierDismissible: false,
               builder: (context) {
-                return ItemBuyPreview(item: item,type: widget.type);
+                return ItemBuyPreview(item: item, type: type2 ? widget.type2! : widget.type);
               });
         }
       },
@@ -248,7 +255,7 @@ class _ItemBuyPreviewState extends State<ItemBuyPreview> {
                             Text(
                               '${widget.item.priceAndvalidity![i].price}/${widget.item.priceAndvalidity![i].validity} Days',
                               style: TextStyle(
-                                fontSize: 12 * b,
+                                fontSize: 13 * b,
                                 fontWeight: FontWeight.w400,
                                 height: 1.1725 * b / a,
                                 color: Colors.black87

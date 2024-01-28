@@ -248,6 +248,10 @@ class _InviteHostTabViewState extends State<InviteHostTabView> {
                             showCustomSnackBar('Enter User ID!', Get.context!, isToaster: true);
                           }else if(user?.data==null){
                             showCustomSnackBar('Please Confirm User!', Get.context!, isToaster: true);
+                          }else if(user!.data!.roomName!.isEmpty){
+                            showCustomSnackBar('User Don\'t have room!', Get.context!, isToaster: true);
+                          }else if(user!.data!.countryCode != Provider.of<UserDataProvider>(context, listen: false).userData!.data!.countryCode){
+                            showCustomSnackBar('User Belongs to different region!', Get.context!, isToaster: true);
                           }else{
                             await value.inviteHost(userIdController.text.trim());
                             setState(() {

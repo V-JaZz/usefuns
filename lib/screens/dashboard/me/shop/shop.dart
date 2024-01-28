@@ -6,9 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:vertical_tabs_flutter/vertical_tabs.dart';
 import '../../../../provider/user_data_provider.dart';
 import '../../../../utils/utils_assets.dart';
-import 'tabs/accessories.dart';
-import 'tabs/common_tab_view.dart';
-import 'tabs/special_id.dart';
+import 'shop_tab_view.dart';
 
 class Shop extends StatefulWidget {
   final int? index;
@@ -130,8 +128,8 @@ class _ShopState extends State<Shop> {
                 ShopCommonView(type: 'wallpaper'),
                 ShopCommonView(type: 'vehicle'),
                 ShopCommonView(type: 'relationship'),
-                ShopSpecialId(),
-                ShopRoomAccessories()
+                ShopCommonView(type: 'special ID'),
+                ShopCommonView(type: 'lockRoom', type2: 'extraSeat'),
               ],
             )
           : Center(

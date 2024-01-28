@@ -5,7 +5,7 @@ import 'package:vertical_tabs_flutter/vertical_tabs.dart';
 import '../../../../provider/user_data_provider.dart';
 import '../../../../utils/utils_assets.dart';
 import '../shop/shop.dart';
-import 'tabs/common_tab_view.dart';
+import 'mine_tab_view.dart';
 
 class Mine extends StatefulWidget {
   final int? index;

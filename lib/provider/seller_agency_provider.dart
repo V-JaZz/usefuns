@@ -122,21 +122,16 @@ class SellerAgencyProvider with ChangeNotifier {
   Future<void> inviteHost(String userId) async {
     inviteRequestLoading = true;
     notifyListeners();
-    final room  = await Provider.of<RoomsProvider>(Get.context!,listen: false).getRoomByRoomId(userId);
-    if(room==null){
-      showCustomSnackBar('User Don\'t have room!', Get.context!, isToaster: true);
-    }else{
-      final apiResponse = await _sellerAgencyRepo.inviteHost(userId,agent!.data!.code!);
-      if (apiResponse.statusCode == 200) {
-        CommonModel responseModel = commonModelFromJson(apiResponse.body);
-        if(responseModel.status == 1){
-          showCustomSnackBar('Request Sent!', Get.context!, isToaster: true, isError: false);
-        }else{
-          showCustomSnackBar(jsonDecode(apiResponse.body)['error'], Get.context!, isToaster: true);
-        }
-      } else {
-        showCustomSnackBar('Error! try again later', Get.context!, isToaster: true);
+    final apiResponse = await _sellerAgencyRepo.inviteHost(userId,agent!.data!.code!);
+    if (apiResponse.statusCode == 200) {
+      CommonModel responseModel = commonModelFromJson(apiResponse.body);
+      if(responseModel.status == 1){
+        showCustomSnackBar('Request Sent!', Get.context!, isToaster: true, isError: false);
+      }else{
+        showCustomSnackBar(jsonDecode(apiResponse.body)['error'], Get.context!, isToaster: true);
       }
+    } else {
+      showCustomSnackBar('Error! try again later', Get.context!, isToaster: true);
     }
     inviteRequestLoading = false;
     notifyListeners();

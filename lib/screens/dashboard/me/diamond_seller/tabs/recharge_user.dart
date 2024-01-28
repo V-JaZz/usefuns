@@ -43,9 +43,7 @@ class _RechargeUserTabViewState extends State<RechargeUserTabView> {
                     ),
                     InkWell(
                         onTap: () async {
-                          final ud = await Provider.of<UserDataProvider>(
-                                  context,
-                                  listen: false)
+                          final ud = await Provider.of<UserDataProvider>(context, listen: false)
                               .getUser(
                                   id: userIdController.text, isUsefunId: true);
                           setState(() {
@@ -95,6 +93,8 @@ class _RechargeUserTabViewState extends State<RechargeUserTabView> {
                 showCustomSnackBar('Please Confirm User!', context);
               }else if(amountController.text.isEmpty){
                 showCustomSnackBar('Enter Amount!', context);
+              }else if(user!.data!.countryCode != Provider.of<UserDataProvider>(context, listen: false).userData!.data!.countryCode){
+                showCustomSnackBar('User Belongs to different region!', Get.context!, isToaster: true);
               }else{
                 _showConfirmationDialog(() {
                   Get.back();
@@ -153,31 +153,15 @@ class _RechargeUserTabViewState extends State<RechargeUserTabView> {
                     radius: 18 * a),
           ),
           SizedBox(width: 6 * a),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '${user.data?.name} (${user.data?.userId})',
-                textAlign: TextAlign.left,
-                style: SafeGoogleFont(
-                    color: Colors.black.withOpacity(0.7),
-                    'Poppins',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    height: 1),
-              ),
-              SizedBox(height: 3 * a),
-              Text(
-                '${user.data?.diamonds} Diamonds',
-                textAlign: TextAlign.left,
-                style: SafeGoogleFont(
-                    color: Colors.black.withOpacity(0.7),
-                    'Poppins',
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    height: 1),
-              ),
-            ],
+          Text(
+            '${user.data?.name} (${user.data?.userId})',
+            textAlign: TextAlign.left,
+            style: SafeGoogleFont(
+                color: Colors.black.withOpacity(0.7),
+                'Poppins',
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                height: 1),
           ),
           const Spacer(),
           IconButton(

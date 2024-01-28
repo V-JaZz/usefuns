@@ -51,16 +51,16 @@ class UserData {
   List<UserItem>? tags;
   List<UserItem>? vehicle;
   List<UserItem>? profileCard;
-  List<dynamic>? vip;
-  List<dynamic>? svip;
   List<UserItem>? lockRoom;
   List<UserItem>? extraSeat;
+  List<UserItem>? frame;
+  List<UserItem>? specialId;
+  List<UserItem>? roomWallpaper;
+  List<dynamic>? vip;
+  List<dynamic>? svip;
   List<Agency>? agency;
   List<Admin>? admin;
   List<SubAdmin>? subAdmin;
-  List<dynamic>? specialId;
-  List<UserItem>? frame;
-  List<UserItem>? roomWallpaper;
   int? level;
   int? loginOtp;
   int? vipLevel;
@@ -179,7 +179,7 @@ class UserData {
     agency: json["agency"] == null ? [] : List<Agency>.from(json["agency"]!.map((x) => Agency.fromJson(x))),
     admin: json["admin"] == null ? [] : List<Admin>.from(json["admin"]!.map((x) => Admin.fromJson(x))),
     subAdmin: json["subAdmin"] == null ? [] : List<SubAdmin>.from(json["subAdmin"]!.map((x) => SubAdmin.fromJson(x))),
-    specialId: json["special_id"] == null ? [] : List<dynamic>.from(json["special_id"]!.map((x) => x)),
+    specialId: json["special_id"] == null ? [] : List<UserItem>.from(json["special_id"]!.map((x) => UserItem.fromJson(x))),
     frame: json["frame"] == null ? [] : List<UserItem>.from(json["frame"]!.map((x) =>x==null ? UserItem() : UserItem.fromJson(x))),
     roomWallpaper: json["roomWallpaper"] == null ? [] : List<UserItem>.from(json["roomWallpaper"]!.map((x) => UserItem.fromJson(x))),
     level: json["level"],
@@ -240,7 +240,7 @@ class UserData {
     "agency": agency == null ? [] : List<dynamic>.from(agency!.map((x) => x.toJson())),
     "admin": admin == null ? [] : List<dynamic>.from(admin!.map((x) => x.toJson())),
     "subAdmin": subAdmin == null ? [] : List<dynamic>.from(subAdmin!.map((x) => x.toJson())),
-    "special_id": specialId == null ? [] : List<dynamic>.from(specialId!.map((x) => x)),
+    "special_id": specialId == null ? [] : List<dynamic>.from(specialId!.map((x) => x.toJson())),
     "frame": frame == null ? [] : List<dynamic>.from(frame!.map((x) => x.toJson())),
     "roomWallpaper": roomWallpaper == null ? [] : List<dynamic>.from(roomWallpaper!.map((x) => x.toJson())),
     "level": level,

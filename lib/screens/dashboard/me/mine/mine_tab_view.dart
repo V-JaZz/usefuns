@@ -4,9 +4,9 @@ import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import '../../../../../data/model/response/user_data_model.dart';
-import '../../../../../utils/common_widgets.dart';
-import '../../../../../utils/helper.dart';
+import '../../../../data/model/response/user_data_model.dart';
+import '../../../../utils/common_widgets.dart';
+import '../../../../utils/helper.dart';
 // ignore: depend_on_referenced_packages
 import 'package:svgaplayer_flutter/svgaplayer_flutter.dart';
 
