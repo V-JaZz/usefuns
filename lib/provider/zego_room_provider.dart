@@ -424,6 +424,15 @@ class ZegoRoomProvider with ChangeNotifier {
     ZegoExpressEngine.instance.setStreamExtraInfo(zegoStreamExtendedToJson(extraInfo));
   }
   void updateTotalSeats(int total) {
+    Provider.of<RoomsProvider>(Get.context!,listen:false).updateRoomTotalSeats(roomID,total);
+    if(total == 8){
+      final users = roomStreamList.where((e) => e.seat! > 7).toList();
+      if(users.isNotEmpty){
+        for(var user in users){
+          lockStreamer(user.streamId!,user.userName!);
+        }
+      }
+    }
     zegoRoom!.totalSeats = total;
     notifyListeners();
     notifyRoomUpdate();
@@ -539,7 +548,7 @@ class ZegoRoomProvider with ChangeNotifier {
   //broadcast and barrage methods
   void sendBroadcastMessage(String message) {
     final user = Provider.of<UserDataProvider>(Get.context!,listen: false).userData;
-    String body = zegoBroadcastModelToJson(ZegoBroadcastModel(message: message,image: user!.data!.images!.isNotEmpty? user.data!.images!.first:null, level:user.data!.level,type: "message",tags: [if(isOwner)'Owner',if(room!.admin!.contains(ZegoConfig.instance.userID))'Admin']));
+    String body = zegoBroadcastModelToJson(ZegoBroadcastModel(message: message,userImage: user!.data!.images!.isNotEmpty? user.data!.images!.first:null, level:user.data!.level,type: "message",tags: [if(isOwner)'Owner',if(room!.admin!.contains(ZegoConfig.instance.userID))'Admin'], bubble: userValidItemSelection(user.data?.chatBubble)));
     ZegoExpressEngine.instance.sendBroadcastMessage(roomID, body);
     broadcastMessageList?.enqueue(ZegoBroadcastMessageInfo(body,0,0,ZegoUser(ZegoConfig.instance.userID,ZegoConfig.instance.userName)));
     notifyListeners();
@@ -550,7 +559,7 @@ class ZegoRoomProvider with ChangeNotifier {
   Future<void> sendBroadcastGift(List<String> toName, String thumbnailPath, String giftPath, int giftPrice, int count) async {
     for (var receiverName in toName) {
       final user = Provider.of<UserDataProvider>(Get.context!,listen: false).userData;
-      String body = zegoBroadcastModelToJson(ZegoBroadcastModel(image: user!.data!.images!.isNotEmpty? user.data!.images!.first:null, level:user.data!.level,type: "gift",gift: ZegoGift(toName: receiverName,count: count,thumbnailPath: thumbnailPath, giftPath: giftPath, toId: roomUsersList.firstWhere((e) => e.userName == receiverName).userID,giftPrice: giftPrice),tags: [if(isOwner)'Owner',if(room!.admin!.contains(ZegoConfig.instance.userID))'Admin']));
+      String body = zegoBroadcastModelToJson(ZegoBroadcastModel(userImage: user!.data!.images!.isNotEmpty? user.data!.images!.first:null, level:user.data!.level,type: "gift",gift: ZegoGift(toName: receiverName,count: count,thumbnailPath: thumbnailPath, giftPath: giftPath, toId: roomUsersList.firstWhere((e) => e.userName == receiverName).userID,giftPrice: giftPrice),tags: [if(isOwner)'Owner',if(room!.admin!.contains(ZegoConfig.instance.userID))'Admin'], bubble: userValidItemSelection(user.data?.chatBubble)));
       ZegoExpressEngine.instance.sendBroadcastMessage(roomID, body);
       broadcastMessageList?.enqueue(ZegoBroadcastMessageInfo(body,0,0,ZegoUser(ZegoConfig.instance.userID,ZegoConfig.instance.userName)));
       notifyListeners();
@@ -605,7 +614,7 @@ class ZegoRoomProvider with ChangeNotifier {
   }
 
   void addGreeting(String message, UserDataModel owner) {
-    String body = zegoBroadcastModelToJson(ZegoBroadcastModel(message: message,image: owner.data!.images!.isNotEmpty? owner.data!.images!.first:null, level:owner.data!.level,type: "message",tags: ['Owner']));
+    String body = zegoBroadcastModelToJson(ZegoBroadcastModel(message: message,userImage: owner.data!.images!.isNotEmpty? owner.data!.images!.first:null, level:owner.data!.level,type: "message",tags: ['Owner'], bubble: userValidItemSelection(owner.data?.chatBubble)));
     broadcastMessageList?.enqueue(ZegoBroadcastMessageInfo(body,0,0,ZegoUser(owner.data!.id!,owner.data!.name!)));
   }
 

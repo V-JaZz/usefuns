@@ -54,6 +54,7 @@ class UserData {
   List<UserItem>? lockRoom;
   List<UserItem>? extraSeat;
   List<UserItem>? frame;
+  List<UserItem>? chatBubble;
   List<UserItem>? specialId;
   List<UserItem>? roomWallpaper;
   List<dynamic>? vip;
@@ -120,6 +121,7 @@ class UserData {
     this.subAdmin,
     this.specialId,
     this.frame,
+    this.chatBubble,
     this.roomWallpaper,
     this.level,
     this.loginOtp,
@@ -180,7 +182,8 @@ class UserData {
     admin: json["admin"] == null ? [] : List<Admin>.from(json["admin"]!.map((x) => Admin.fromJson(x))),
     subAdmin: json["subAdmin"] == null ? [] : List<SubAdmin>.from(json["subAdmin"]!.map((x) => SubAdmin.fromJson(x))),
     specialId: json["special_id"] == null ? [] : List<UserItem>.from(json["special_id"]!.map((x) => UserItem.fromJson(x))),
-    frame: json["frame"] == null ? [] : List<UserItem>.from(json["frame"]!.map((x) =>x==null ? UserItem() : UserItem.fromJson(x))),
+    frame: json["frame"] == null ? [] : List<UserItem>.from(json["frame"]!.map((x) => UserItem.fromJson(x))),
+    chatBubble: json["chatBubble"] == null ? [] : List<UserItem>.from(json["chatBubble"]!.map((x) => UserItem.fromJson(x))),
     roomWallpaper: json["roomWallpaper"] == null ? [] : List<UserItem>.from(json["roomWallpaper"]!.map((x) => UserItem.fromJson(x))),
     level: json["level"],
     loginOtp: json["loginOtp"],
@@ -242,6 +245,7 @@ class UserData {
     "subAdmin": subAdmin == null ? [] : List<dynamic>.from(subAdmin!.map((x) => x.toJson())),
     "special_id": specialId == null ? [] : List<dynamic>.from(specialId!.map((x) => x.toJson())),
     "frame": frame == null ? [] : List<dynamic>.from(frame!.map((x) => x.toJson())),
+    "chatBubble": chatBubble == null ? [] : List<dynamic>.from(chatBubble!.map((x) => x.toJson())),
     "roomWallpaper": roomWallpaper == null ? [] : List<dynamic>.from(roomWallpaper!.map((x) => x.toJson())),
     "level": level,
     "loginOtp": loginOtp,

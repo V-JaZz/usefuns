@@ -10,8 +10,8 @@ String zegoBroadcastModelToJson(ZegoBroadcastModel data) => json.encode(data.toJ
 
 class ZegoBroadcastModel {
     int? level;
-    String? image;
-    String? frame;
+    String? userImage;
+    String? bubble;
     List<String>? tags;
     String? message;
     String? type;
@@ -19,8 +19,8 @@ class ZegoBroadcastModel {
 
     ZegoBroadcastModel({
         this.level,
-        this.image,
-        this.frame,
+        this.userImage,
+        this.bubble,
         this.tags,
         this.message,
         this.type,
@@ -29,8 +29,8 @@ class ZegoBroadcastModel {
 
     factory ZegoBroadcastModel.fromJson(Map<String, dynamic> json) => ZegoBroadcastModel(
         level: json["level"],
-        image: json["image"],
-        frame: json["frame"],
+        userImage: json["userImage"],
+        bubble: json["bubble"],
         tags: json["tags"] == null ? [] : List<String>.from(json["tags"]!.map((x) => x)),
         message: json["message"],
         type: json["type"],
@@ -39,8 +39,8 @@ class ZegoBroadcastModel {
 
     Map<String, dynamic> toJson() => {
         "level": level,
-        "image": image,
-        "frame": frame,
+        "userImage": userImage,
+        "bubble": bubble,
         "tags": tags == null ? [] : List<dynamic>.from(tags!.map((x) => x)),
         "message": message,
         "type": type,

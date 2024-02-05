@@ -24,7 +24,8 @@ class _ShopState extends State<Shop> {
   }
   @override
   void dispose() {
-    Provider.of<ShopWalletProvider>(context, listen: false).loadingShopProgress=0;
+    final p = Provider.of<ShopWalletProvider>(Get.context!, listen: false);
+    if(p.loadingShopProgress != null) p.loadingShopProgress=0;
     super.dispose();
   }
 
@@ -128,7 +129,7 @@ class _ShopState extends State<Shop> {
                 ShopCommonView(type: 'wallpaper'),
                 ShopCommonView(type: 'vehicle'),
                 ShopCommonView(type: 'relationship'),
-                ShopCommonView(type: 'special ID'),
+                ShopCommonView(type: 'specialId'),
                 ShopCommonView(type: 'lockRoom', type2: 'extraSeat'),
               ],
             )

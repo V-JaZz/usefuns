@@ -32,6 +32,7 @@ class RoomsProvider with ChangeNotifier {
   List<BannerData> bannerList = [];
   bool creatingRoom = false;
 
+  //Room
   Future<CreateRoomModel> create(String name, String? path) async {
     creatingRoom = true;
     notifyListeners();
@@ -103,6 +104,19 @@ class RoomsProvider with ChangeNotifier {
     CommonModel responseModel;
     if (apiResponse.statusCode == 200) {
       showCustomSnackBar('Room Lock Updated!', Get.context!,isToaster: true,isError: false);
+      responseModel = commonModelFromJson(apiResponse.body);
+      getAllMine();
+    } else {
+      responseModel = CommonModel(status: 0,message: apiResponse.reasonPhrase);
+    }
+    return responseModel;
+  }
+
+  Future<CommonModel> updateRoomTotalSeats(String roomId, int totalSeats) async {
+    final apiResponse = await _roomsRepo.updateRoomTotalSeats(roomId, totalSeats);
+    CommonModel responseModel;
+    if (apiResponse.statusCode == 200) {
+      showCustomSnackBar('Extra Seat Updated!', Get.context!,isToaster: true,isError: false);
       responseModel = commonModelFromJson(apiResponse.body);
       getAllMine();
     } else {

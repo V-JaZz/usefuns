@@ -271,7 +271,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                           ),
                                           SizedBox(width: 3 * a),
                                           Text(
-                                            value.room?.groupName ?? 'GP1',
+                                            'Group : ${value.room?.groupMembers?.length??0}',
                                             style: SafeGoogleFont(
                                               'Poppins',
                                               fontSize: 9 * b,
@@ -281,7 +281,6 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                               color: const Color(0xffffffff),
                                             ),
                                           ),
-                                          SizedBox(width: 6 * a),
                                         ],
                                       ),
                                     ),
@@ -880,7 +879,13 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                                     8 * a, 4 * a, 8 * a, 4 * a),
                                                 decoration: BoxDecoration(
                                                   borderRadius: BorderRadius.circular(4),
-                                                  color: const Color(0x66090000),
+                                                  color: (body.bubble??'').isEmpty ?const Color(0x66090000):null,
+                                                  image: (body.bubble??'').isNotEmpty ? DecorationImage(
+                                                      image: NetworkImage(
+                                                        body.bubble!,
+                                                      ),
+                                                    fit: BoxFit.fill
+                                                  ):null
                                                 ),
                                                 child: Row(
                                                   crossAxisAlignment:
@@ -889,7 +894,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                                     Padding(
                                                       padding: EdgeInsets.only(top: 6 * a),
                                                       child:
-                                                      body.image == null
+                                                      body.userImage == null
                                                           ?CircleAvatar(
                                                         foregroundImage: const AssetImage(
                                                           'assets/profile.png',
@@ -898,7 +903,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                                       )
                                                           :CircleAvatar(
                                                         foregroundImage: NetworkImage(
-                                                          body.image!,
+                                                          body.userImage!,
                                                         ),
                                                         radius: 15 * a,
                                                       ),

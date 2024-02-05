@@ -125,7 +125,7 @@ class _LiveRecordState extends State<LiveRecord> {
                   ),
                   Table(
                     children: [
-                      tableRow(DateFormat('MMMM').format(DateTime.now().subtract(const Duration(days: 30))), '0', '${room?.monthlyDiamonds}'),
+                      tableRow(DateFormat('MMMM').format(DateTime.now().subtract(const Duration(days: 31))), '0', '${room?.monthlyDiamonds}'),
                     ],
                   )
                 ],

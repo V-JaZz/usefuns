@@ -9,6 +9,7 @@ import 'income_expense_tabs.dart';
 import 'bottom_more.dart';
 import 'games.dart';
 import 'invite_room.dart';
+import 'joy_games.dart';
 import 'send_gifts.dart';
 import 'contribution.dart';
 import 'active_users.dart';
@@ -207,6 +208,18 @@ class LiveRoomBottomSheets {
         context: context,
         builder: (context) {
           return GamesBottomSheet(owner: owner);
+        });
+  }
+
+  void showJoyGamesBottomSheet(int gameId, {int? mini, String? language}) {
+    showModalBottomSheet(
+        backgroundColor: Colors.transparent,
+        isScrollControlled: false,
+        enableDrag: true,
+        isDismissible: true,
+        context: context,
+        builder: (context) {
+          return JoyGames(gameId: gameId, mini: mini, language: language);
         });
   }
 

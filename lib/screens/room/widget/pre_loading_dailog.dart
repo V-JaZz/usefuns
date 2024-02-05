@@ -12,6 +12,7 @@ import '../../../data/model/response/rooms_model.dart';
 import '../../../provider/gifts_provider.dart';
 import '../../../provider/user_data_provider.dart';
 import '../../../provider/zego_room_provider.dart';
+import '../../../utils/helper.dart';
 import '../../../utils/utils_assets.dart';
 import '../../../utils/zego_config.dart';
 
@@ -165,7 +166,7 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
       zegoRoomProvider.roomPassword = password;
       zegoRoomProvider.roomID = widget.room.roomId!;
       zegoRoomProvider.zegoRoom = ZegoRoomModel(
-          totalSeats: widget.room.noOfSeats ?? 8,
+          totalSeats: 8,
           lockedSeats: [],
           viewCalculator: false);
       await zegoRoomProvider.init();
@@ -173,16 +174,22 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
       final me = Provider.of<UserDataProvider>(Get.context!, listen: false).userData;
       if (zegoRoomProvider.isOwner) {
         if (me!.data!.roomWallpaper!.isNotEmpty) {
-          zegoRoomProvider.backgroundImage =
-              me.data!.roomWallpaper!.first.images!.first;
+          String image = userValidItemSelection(me.data!.roomWallpaper!);
+          zegoRoomProvider.backgroundImage = image.isNotEmpty?image:null;
+        }
+        if(me.data!.extraSeat!.isNotEmpty){
+          zegoRoomProvider.zegoRoom?.totalSeats = (userValidItemSelection(me.data!.extraSeat!).isNotEmpty ? widget.room.noOfSeats : 8)! ;
         }
       } else {
         final ownerData =
             await Provider.of<UserDataProvider>(Get.context!, listen: false)
                 .getUser(id: zegoRoomProvider.room!.userId!);
         if (ownerData.data!.roomWallpaper!.isNotEmpty) {
-          zegoRoomProvider.backgroundImage =
-              ownerData.data!.roomWallpaper!.first.images!.first;
+          String image = userValidItemSelection(ownerData.data!.roomWallpaper!);
+          zegoRoomProvider.backgroundImage = image.isNotEmpty?image:null;
+          if(ownerData.data!.extraSeat!.isNotEmpty){
+            zegoRoomProvider.zegoRoom?.totalSeats = (userValidItemSelection(ownerData.data!.extraSeat!).isNotEmpty ? widget.room.noOfSeats : 8)! ;
+          }
         }
         zegoRoomProvider.addGreeting(
             getGreeting(

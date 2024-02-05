@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:live_app/provider/zego_room_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../provider/user_data_provider.dart';
+import '../../../utils/helper.dart';
 import '../../../utils/utils_assets.dart';
 import '../../dashboard/me/shop/shop.dart';
 import 'manager.dart';
@@ -20,7 +21,9 @@ class TopMore extends StatelessWidget {
     double b = a * 0.97;
 
     bool isRoomLocked = Provider.of<ZegoRoomProvider>(context).roomPassword!=null;
-    bool hasRoomLock = Provider.of<UserDataProvider>(context).userData?.data?.lockRoom?.isNotEmpty??false;
+    bool hasRoomLock = Provider.of<UserDataProvider>(context).userData?.data?.lockRoom?.where((e) => isValidValidity(e.validTill)).isNotEmpty??false;
+    bool extraSeatAdded = Provider.of<ZegoRoomProvider>(context).zegoRoom?.totalSeats==12;
+    bool hasExtraSeat = Provider.of<UserDataProvider>(context).userData?.data?.extraSeat?.where((e) => isValidValidity(e.validTill)).isNotEmpty??false;
 
     return Container(
       color: Colors.white,
@@ -57,7 +60,7 @@ class TopMore extends StatelessWidget {
                                   ),
                                   SizedBox(height: 3*a),
                                   if(isRoomLocked != false)Text(
-                                    isRoomLocked
+                                    hasRoomLock
                                         ? 'Room already Locked!'
                                         : 'You haven\'t purchased Room Lock yet\n       Get it now under Lock section',
                                     style: SafeGoogleFont('Poppins',
@@ -129,7 +132,7 @@ class TopMore extends StatelessWidget {
                                           right: 0 * a),
                                       child: Container(
                                           width: 136 * a,
-                                          height: 27 * a,
+                                          height: 30 * a,
                                           decoration: BoxDecoration(
                                             borderRadius:
                                             BorderRadius.only(
@@ -144,8 +147,7 @@ class TopMore extends StatelessWidget {
                                               Radius.circular(
                                                   9 * a),
                                             ),
-                                            color: const Color.fromRGBO(
-                                                255, 229, 0, 1),
+                                            color: Theme.of(context).primaryColor,
                                           ),
                                           child: Center(
                                             child: Text(
@@ -162,11 +164,7 @@ class TopMore extends StatelessWidget {
                                                   height: 1.5 * b / a,
                                                   letterSpacing:
                                                   0.48 * a,
-                                                  color: const Color.fromARGB(
-                                                      255,
-                                                      250,
-                                                      249,
-                                                      249)),
+                                                  color: Colors.white),
                                             ),
                                           )),
                                     ),
@@ -341,7 +339,7 @@ class TopMore extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    'Extra Seats',
+                                    'Extra Seat',
                                     style: SafeGoogleFont('Poppins',
                                         fontSize: 16 * b,
                                         fontWeight: FontWeight.w600,
@@ -350,8 +348,10 @@ class TopMore extends StatelessWidget {
                                         color: Colors.black),
                                   ),
                                   SizedBox(height: 3*a),
-                                  Text(
-                                    'Buy extra seats from shop.',
+                                  if(extraSeatAdded != false)Text(
+                                    hasExtraSeat
+                                        ? 'Extra seats already added!'
+                                        : 'You haven\'t purchased Extra Seat yet\n       Get it now under Extra Seat section',
                                     style: SafeGoogleFont('Poppins',
                                         fontSize: 10 * b,
                                         fontWeight: FontWeight.w500,
@@ -361,7 +361,15 @@ class TopMore extends StatelessWidget {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      Get.to(() => const Shop(index: 6));
+                                      if(!hasExtraSeat){
+                                        Get.to(() => const Shop(index: 6));
+                                      }else if(extraSeatAdded){
+                                        Provider.of<ZegoRoomProvider>(context,listen:false).updateTotalSeats(8);
+                                        Get.back();
+                                      }else{
+                                        Provider.of<ZegoRoomProvider>(context,listen:false).updateTotalSeats(12);
+                                        Get.back();
+                                      }
                                     },
                                     child: Padding(
                                       padding: EdgeInsets.only(
@@ -370,7 +378,7 @@ class TopMore extends StatelessWidget {
                                           right: 0 * a),
                                       child: Container(
                                           width: 136 * a,
-                                          height: 27 * a,
+                                          height: 30 * a,
                                           decoration: BoxDecoration(
                                             borderRadius:
                                             BorderRadius.only(
@@ -385,12 +393,15 @@ class TopMore extends StatelessWidget {
                                               Radius.circular(
                                                   9 * a),
                                             ),
-                                            color: const Color.fromRGBO(
-                                                255, 229, 0, 1),
+                                            color: Theme.of(context).primaryColor,
                                           ),
                                           child: Center(
                                             child: Text(
-                                              'SHOP',
+                                              hasRoomLock
+                                                  ?(extraSeatAdded
+                                                  ?'REMOVE'
+                                                  :'ADD')
+                                                  :'SHOP',
                                               style: SafeGoogleFont(
                                                   'Poppins',
                                                   fontSize: 13 * a,
@@ -399,11 +410,7 @@ class TopMore extends StatelessWidget {
                                                   height: 1.5 * b / a,
                                                   letterSpacing:
                                                   0.48 * a,
-                                                  color: const Color.fromARGB(
-                                                      255,
-                                                      250,
-                                                      249,
-                                                      249)),
+                                                  color: Colors.white),
                                             ),
                                           )),
                                     ),

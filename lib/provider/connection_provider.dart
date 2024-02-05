@@ -7,6 +7,7 @@ class ConnectionProvider extends ChangeNotifier {
   InternetConnectionStatus _connectionStatus = InternetConnectionStatus.connected;
   StreamSubscription? _connectionSubscription;
   Timer? timer;
+  int failCount = 0;
 
   ConnectionProvider() {
     _connectionSubscription = InternetConnectionCheckerPlus().onStatusChange.listen(
@@ -33,6 +34,7 @@ class ConnectionProvider extends ChangeNotifier {
         _checkConnection();
       });
     } else {
+      failCount=0;
       timer?.cancel();
     }
   }
@@ -47,7 +49,9 @@ class ConnectionProvider extends ChangeNotifier {
   InternetConnectionStatus get connectionStatus => _connectionStatus;
 
   void noInternetMessage() {
-    Get.snackbar(
+    failCount++;
+    if(failCount>1) {
+      Get.snackbar(
       'Network Error!',
       'Retrying...',
       icon: const Icon(Icons.network_check_rounded, color: Colors.black87),
@@ -55,9 +59,10 @@ class ConnectionProvider extends ChangeNotifier {
       //     onPressed: () => _checkConnection(),
       //     child: const Text('Retry')
       // ),
-      isDismissible: false,
+      isDismissible: true,
       backgroundColor: Colors.white70,
       duration: const Duration(seconds: 5)
     );
+    }
   }
 }

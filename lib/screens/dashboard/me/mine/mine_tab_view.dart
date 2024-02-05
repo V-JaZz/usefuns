@@ -58,28 +58,32 @@ class MineCommonView extends StatelessWidget {
   Widget viewItem(UserItem item) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
-    bool official = (item.isOfficial??false) && item.validTill==null;
+    bool permanent = (item.isOfficial??false) && item.validTill==null;
     bool isSelected = item.isDefault == true ? isValidValidity(item.validTill) : false;
     String timeLeft = calculateRemainingTime(item.validTill);
 
     return GestureDetector(
 
       onTap: () {
-        if(timeLeft!='Expired' || official) {
-          Get.dialog(MineItemDialog(
-            title: item.name??'',
-            path: item.images?.last??'',
-            frameId: item.id??'',
-            isSelected: isSelected,
-            type: type
-        ));
+        if((timeLeft!='Expired' || permanent)) {
+          if(type == 'room accessories'){
+            showCustomSnackBar('Use ${item.name??''} in your room!', Get.context!,isError: false, isToaster: true);
+          }else{
+            Get.dialog(MineItemDialog(
+                title: item.name??'',
+                path: item.images?.last??'',
+                frameId: item.id??'',
+                isSelected: isSelected,
+                type: type
+            ));
+          }
         }
       },
       child: Container(
         width: 100 * a,
         padding: EdgeInsets.all(5*a),
         decoration: BoxDecoration(
-            color: timeLeft=='Expired' && !official ?Colors.grey.shade100:isSelected? const Color(0xFF7926BC).withOpacity(0.1): Colors.white,
+            color: timeLeft=='Expired' && !permanent ?Colors.grey.shade100:isSelected? const Color(0xFF7926BC).withOpacity(0.1): Colors.white,
             borderRadius: BorderRadius.circular(3),
             border: Border.all(color: isSelected? const Color(0xFF7926BC): Colors.white)
         ),
@@ -109,7 +113,7 @@ class MineCommonView extends StatelessWidget {
               },
             ),
             Text(capitalizeText(item.name!),textAlign: TextAlign.center),
-            official
+            permanent
                 ? const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -135,13 +139,13 @@ class MineCommonView extends StatelessWidget {
     switch(type){
       case 'frame':
         return value.userData?.data?.frame?.isEmpty??true;
-      case 'theme':
+      case 'wallpaper':
         return value.userData?.data?.roomWallpaper?.isEmpty??true;
-      case 'bubble':
-        return value.userData?.data?.profileCard?.isEmpty??true;
+      case 'chatBubble':
+        return value.userData?.data?.chatBubble?.isEmpty??true;
       case 'vehicle':
         return value.userData?.data?.vehicle?.isEmpty??true;
-      // case 'special ID':
+      // case 'specialId':
       //   return value.userData?.data?.specialId?.isEmpty??true;
       case 'room accessories':
         return [...(value.userData?.data?.lockRoom??[]), ...(value.userData?.data?.extraSeat??[])].isEmpty;
@@ -150,17 +154,17 @@ class MineCommonView extends StatelessWidget {
     }
   }
 
-  List<UserItem> getItemsList(context, value){
+  List<UserItem> getItemsList(context,UserDataProvider value){
     switch(type){
       case 'frame':
         return value.userData?.data?.frame??[];
-      case 'bubble':
-        return value.userData?.data?.profileCard??[];
-      case 'theme':
+      case 'chatBubble':
+        return value.userData?.data?.chatBubble??[];
+      case 'wallpaper':
         return value.userData?.data?.roomWallpaper??[];
       case 'vehicle':
         return value.userData?.data?.vehicle??[];
-      case 'special ID':
+      case 'specialId':
         return value.userData?.data?.specialId??[];
       case 'room accessories':
         return [...(value.userData?.data?.lockRoom??[]), ...(value.userData?.data?.extraSeat??[])];
@@ -273,7 +277,7 @@ class MineItemDialog extends StatelessWidget {
             image: Provider.of<UserDataProvider>(context,listen: false).userData!.data!.images!.isEmpty?'':Provider.of<UserDataProvider>(context,listen: false).userData?.data?.images?.first??'',
             frame: path
         );
-      case 'bubble':
+      case 'chatBubble':
         return SizedBox(
           height: 90*a,
           width: 120*a,
@@ -292,7 +296,8 @@ class MineItemDialog extends StatelessWidget {
                   width: 120*a,
                   alignment: Alignment.center,
                   child: Text(
-                    'Hii! how are you?',
+                    'Hii! welcome to my room.',
+                    textAlign: TextAlign.center,
                     style: SafeGoogleFont('Poppins',
                         fontSize: 9 * a,
                         fontWeight: FontWeight.w500,
@@ -303,7 +308,7 @@ class MineItemDialog extends StatelessWidget {
             ],
           ),
         );
-      // case 'theme':
+      // case 'wallpaper':
     // //   return value.userData?.data?.specialId??[];
       case 'vehicle':
         return SizedBox(
@@ -312,7 +317,7 @@ class MineItemDialog extends StatelessWidget {
             child:SVGASimpleImage(
               resUrl: path,
             ));
-    // // case 'special ID':
+    // // case 'specialId':
     // //   return value.userData?.data?.specialId??[];
     //   case 'room accessories':
     //     return [...(value.userData?.data?.lockRoom??[]), ...(value.userData?.data?.extraSeat??[])];

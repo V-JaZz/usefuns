@@ -113,11 +113,11 @@ class _MineState extends State<Mine> {
               ],
               contents: const [
                 MineCommonView(type: 'frame'),
-                MineCommonView(type: 'bubble'),
-                MineCommonView(type: 'theme'),
+                MineCommonView(type: 'chatBubble'),
+                MineCommonView(type: 'wallpaper'),
                 MineCommonView(type: 'vehicle'),
                 MineCommonView(type: 'relation'),
-                MineCommonView(type: 'special ID'),
+                MineCommonView(type: 'specialId'),
                 MineCommonView(type: 'room accessories'),
               ],
             )

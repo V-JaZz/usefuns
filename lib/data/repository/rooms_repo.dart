@@ -110,6 +110,20 @@ class RoomsRepo {
     }
   }
 
+  Future<http.Response> updateRoomTotalSeats(String roomID, int totalSeats) async {
+    try {
+      http.Response response = await _httpClient.put('room/addSeat',
+          {
+            "roomId": roomID,
+            "count": totalSeats
+          },
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<http.Response> addUserLocked(String roomID, String userID, String password) async {
     try {
       http.Response response = await _httpClient.post('room/activeUser/add_in_locked_room',

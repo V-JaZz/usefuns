@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:live_app/provider/zego_room_provider.dart';
 import 'package:live_app/screens/room/bottomsheet/manager.dart';
 import 'package:provider/provider.dart';
-
 import '../../../utils/utils_assets.dart';
+import 'joy_games.dart';
 
 class GamesBottomSheet extends StatelessWidget {
   final bool owner;
@@ -12,24 +12,43 @@ class GamesBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    LiveRoomBottomSheets bs = LiveRoomBottomSheets(context);
     final List<Map> gamesList = [
       {
         "image": 'assets/Crazy_racing.png',
         "name": "Crazy racing",
         "rank": "516",
-        "onTap" : (){}
+        "onTap" : (){
+          Get.back();
+          bs.showJoyGamesBottomSheet(10002);
+        }
       },
       {
         "image": 'assets/Grady_bord.png',
-        "name": "Grady bord",
+        "name": "Greedy",
         "rank": "412",
-        "onTap" : (){}
+        "onTap" : (){
+          Get.back();
+          bs.showJoyGamesBottomSheet(14);
+        }
       },
       {
         "image": 'assets/Lucky_7.png',
         "name": "Lucky 7",
         "rank": "510",
-        "onTap" : (){}
+        "onTap" : (){
+          Get.back();
+          bs.showJoyGamesBottomSheet(17);
+        }
+      },
+      {
+        "image": 'assets/dias.png',
+        "name": "Dice",
+        "rank": "440",
+        "onTap" : (){
+          Get.back();
+          bs.showJoyGamesBottomSheet(601);
+        }
       },
       {
         "image": 'assets/wheel.gif',
@@ -37,14 +56,8 @@ class GamesBottomSheet extends StatelessWidget {
         "rank": "524",
         "onTap" : (){
           Get.back();
-          LiveRoomBottomSheets(context).showLuckyWheelBottomSheet();
+          bs.showLuckyWheelBottomSheet();
         }
-      },
-      {
-        "image": 'assets/dias.png',
-        "name": "Ludo Dias",
-        "rank": "440",
-        "onTap" : (){}
       },
       if(owner){
         "image": 'assets/star.gif',

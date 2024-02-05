@@ -7,6 +7,7 @@ import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../data/model/response/shop_items_model.dart';
+import '../../../../data/model/response/user_data_model.dart';
 import '../../../../utils/common_widgets.dart';
 // ignore: depend_on_referenced_packages
 import 'package:svgaplayer_flutter/svgaplayer_flutter.dart';
@@ -67,11 +68,10 @@ class _ShopCommonViewState extends State<ShopCommonView> {
 
   Widget viewItem(Items item, bool type2) {
     bool checkAlreadyOwned() {
-      final ud = Provider.of<UserDataProvider>(context,listen: false).userData?.data;
-      final similarFrames = ud!.frame!.where((e) => e.id == item.id);
-      if(similarFrames.isEmpty){
+      final similarItem = getItemsList(type2 ? widget.type2! : widget.type).where((e) => e.id == item.id);
+      if(similarItem.isEmpty){
         return false;
-      }else if(similarFrames.where((e) => isValidValidity(e.validTill)).isNotEmpty){
+      }else if(similarItem.where((e) => isValidValidity(e.validTill)).isNotEmpty){
         return true;
       }
       return false;
@@ -172,8 +172,33 @@ class _ShopCommonViewState extends State<ShopCommonView> {
       ),
     );
   }
-}
 
+
+  List<UserItem> getItemsList(type){
+    final value = Provider.of<UserDataProvider>(context,listen: false);
+    switch(type){
+      case 'frame':
+        return value.userData?.data?.frame??[];
+      case 'chatBubble':
+        return value.userData?.data?.chatBubble??[];
+      case 'wallpaper':
+        return value.userData?.data?.roomWallpaper??[];
+      case 'vehicle':
+        return value.userData?.data?.vehicle??[];
+      case 'relationship':
+        return [];
+      case 'specialId':
+        return value.userData?.data?.specialId??[];
+      case 'lockRoom':
+        return value.userData?.data?.lockRoom??[];
+      case 'extraSeat':
+        return value.userData?.data?.extraSeat??[];
+      default:
+        return [];
+    }
+  }
+
+}
 
 class ItemBuyPreview extends StatefulWidget {
   final Items item;
@@ -372,7 +397,8 @@ class _ItemBuyPreviewState extends State<ItemBuyPreview> {
                     width: 120*a,
                     alignment: Alignment.center,
                     child: Text(
-                      'Hii! how are you?',
+                      'Hii! welcome to my room.',
+                      textAlign: TextAlign.center,
                       style: SafeGoogleFont('Poppins',
                           fontSize: 9 * a,
                           fontWeight: FontWeight.w500,

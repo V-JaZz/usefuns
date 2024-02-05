@@ -525,9 +525,8 @@ class _CreateProfileState extends State<CreateProfile> {
                             if (model.status == 1) {
                           Get.offAll(() => const BottomNavigator());
                           viewRegistrationReward();
-                          //todo reward frame
                             } else {
-                              showCustomSnackBar(model.message, context);
+                              showCustomSnackBar(model.message, Get.context!);
                             }
                           }else{
                             showCustomSnackBar('All fields are required!', context);
@@ -636,32 +635,20 @@ class _CreateProfileState extends State<CreateProfile> {
     );
   }
 
-  Future<void> viewRegistrationReward() async {
-    await Future.delayed(
+  void viewRegistrationReward() {
+    Future.delayed(
         const Duration(seconds: 2),
-            () async {
-          await rewardDialog('assets/frame_early_access.png', 'Free Frame',
-              'Congratulations, you have been\nrewarded free frame as you are\njoining in early access period.',
-                  () {
-                Get.back();
-              });
-        });
-    await rewardDialog(
-        'assets/room_bg_early_access.jpg',
-        'Free Room Theme',
-        'Congratulations, you have been\nrewarded free room theme as you\nare joining in early access period.',
             () {
-          Get.back();
+              rewardDialog(
+                  'assets/icons/ic_diamond.png',
+                  'Free 400 Diamonds',
+                  'Congratulations, you have been\nrewarded free 400 diamonds as you\nare joining in early access period.',
+                      () {
+                    Get.back();
+                  },
+                  smallIcon: true
+              );
         });
-    await rewardDialog(
-        'assets/icons/ic_diamond.png',
-        'Free 100 Diamonds',
-        'Congratulations, you have been\nrewarded free 100 diamonds as you\nare joining in early access period.',
-            () {
-          Get.back();
-        },
-        smallIcon: true
-    );
   }
 
 }
