@@ -8,7 +8,7 @@ class Constants {
   static const String ufTeamSupportChat = 'https://tawk.to/chat/659e69db0ff6374032be6775/default';
 
   //joy mini games
-  static const String joyAppKey = 'appKey';
+  static const String joyAppKey = 'wecvrz5jklxib98iu10i';
   static const String joyGameBaseURL = 'https://test.joysdk.com/';
 
   // Storage service / Shared preference keys -

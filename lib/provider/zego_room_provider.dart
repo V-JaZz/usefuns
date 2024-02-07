@@ -646,29 +646,33 @@ class ZegoRoomProvider with ChangeNotifier {
 
   void heartbeatJoin(){
 
-    DateTime now = DateTime.timestamp();
-    int currentMinute = now.minute;
+    const int heartBeatDelay = 5;
+    DateTime now = DateTime.now();
 
-    // Calculate the delay until the next multiple of 5 minutes
-    int delayInMinutes = 5 - (currentMinute % 5);
+    // Calculate the next trigger time that is a multiple of 5 minutes and 01 second
+    DateTime next = now.add(Duration(minutes: heartBeatDelay - now.minute % heartBeatDelay, seconds: 1 - now.second));
+    // Calculate the delay in seconds between now and next
+    int delayInSec = next.difference(now).inSeconds;
 
-    // Calculate the target time for triggering the function
-    DateTime targetTime = now.add(Duration(minutes: delayInMinutes));
-    targetTime = DateTime(targetTime.year, targetTime.month, targetTime.day,
-        targetTime.hour, targetTime.minute, 1);
+    triggerTimer = Timer(Duration(seconds: delayInSec), () {
+      // Get the current time in local time zone
+      DateTime locale = DateTime.now();
 
-    // Use Future.delayed to execute the function at the calculated time
-    Duration delay = targetTime.difference(now);
-    triggerTimer = Timer(delay, () {
-      // Check if the minute is still a multiple of 5 to ensure accuracy
-      DateTime currentTime = DateTime.now();
       // Perform your action here
-      log('Function triggered at ${currentTime.hour}:${currentTime.minute}:${currentTime.second}');
+      print('Function triggered at Locale ${locale.hour}:${locale.minute}:${locale.second}');
+
       // Call your function here
       Provider.of<RoomsProvider>(Get.context!,listen: false).addRoomUser(room!.id!,password: roomPassword);
-      heartBeat = Timer.periodic(const Duration(minutes: 5), (timer) {
+      heartBeat = Timer.periodic(const Duration(minutes: heartBeatDelay), (timer) {
+        // Get the current time in local time zone
+        DateTime locale = DateTime.now();
+
+        // Perform your action here
+        print('Function triggered at Locale ${locale.hour}:${locale.minute}:${locale.second}');
+
         Provider.of<RoomsProvider>(Get.context!,listen: false).addRoomUser(room!.id!,password: roomPassword);
       });
     });
   }
+
 }

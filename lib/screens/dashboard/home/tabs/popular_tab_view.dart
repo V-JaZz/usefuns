@@ -19,37 +19,21 @@ class PopularTabView extends StatefulWidget {
 
 class _PopularTabViewState extends State<PopularTabView> {
   RefreshController refreshController = RefreshController();
-  ScrollController scrollController = ScrollController();
-  bool loadedAll = false;
-  int page = 1;
 
   @override
   void initState() {
     loadData();
-    scrollController.addListener(onScroll);
     super.initState();
   }
 
   @override
   void dispose() {
     refreshController.dispose();
-    scrollController.dispose();
     super.dispose();
   }
 
   Future<void> loadData({bool refresh = false}) async {
-    final success = await Provider.of<RoomsProvider>(context,listen: false).getAllPopular(page,refresh);
-    if(success == false){
-      setState(() => loadedAll = true);
-    }else{
-      page++;
-    }
-  }
-
-  void onScroll() {
-    if (scrollController.position.pixels == scrollController.position.maxScrollExtent && !loadedAll) {
-      loadData();
-    }
+    await Provider.of<RoomsProvider>(context,listen: false).getAllPopular(refresh);
   }
 
   @override
@@ -60,9 +44,7 @@ class _PopularTabViewState extends State<PopularTabView> {
     return SmartRefresher(
       enablePullDown: true,
       onRefresh: () async {
-        page = 1;
         await loadData(refresh: true);
-        loadedAll = false;
         refreshController.refreshCompleted();
         return;
       },
@@ -241,38 +223,26 @@ class _PopularTabViewState extends State<PopularTabView> {
                           return const Center(child: CircularProgressIndicator());
                         }
                         return ListView.builder(
-                          controller: scrollController,
-                          itemCount: value.popularRooms.length+1,
+                          itemCount: value.popularRooms.length,
                           itemBuilder: (context, index) {
-                            if (index < value.popularRooms.length){
-                              final room = value.popularRooms[index];
-                              return roomListTile(
-                                image: room.images!.isEmpty
-                                    ? null
-                                    : room.images!.first,
-                                title: room.name.toString(),
-                                subTitle: room.announcement,
-                                iso: room.countryCode,
-                                active:
-                                room.activeUsers?.length.toString() ??
-                                    '0',
-                                isLocked: room.isLocked??false,
-                                onTap: () {
-                                  Get.dialog(
-                                      RoomPreLoadingDialog(room: room),
-                                      barrierDismissible: false);
-                                },
-                              );
-                            }else if(loadedAll){
-                              return null;
-                            }else{
-                              return const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              );
-                            }
+                            final room = value.popularRooms[index];
+                            return roomListTile(
+                              image: room.images!.isEmpty
+                                  ? null
+                                  : room.images!.first,
+                              title: room.name.toString(),
+                              subTitle: room.announcement,
+                              iso: room.countryCode,
+                              active:
+                              room.activeUsers?.length.toString() ??
+                                  '0',
+                              isLocked: room.isLocked??false,
+                              onTap: () {
+                                Get.dialog(
+                                    RoomPreLoadingDialog(room: room),
+                                    barrierDismissible: false);
+                              },
+                            );
                           },
                         );
                       },

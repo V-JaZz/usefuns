@@ -250,18 +250,17 @@ class RoomsProvider with ChangeNotifier {
     return responseModel;
   }
 
-  Future<bool> getAllPopular(int page, bool refresh) async {
+  Future<bool> getAllPopular(bool refresh) async {
     if(refresh){
       popularRooms = [];
       notifyListeners();
     }
-    final apiResponse = await _roomsRepo.getAllPopular(page, apiListingLimit);
+    final apiResponse = await _roomsRepo.getAllPopular(1, 20);
     RoomsModel responseModel;
     if (apiResponse.statusCode == 200) {
       responseModel = roomsModelFromJson(apiResponse.body);
       if(responseModel.status == 1){
-        if(page == 1) popularRooms = [];
-        popularRooms.addAll(responseModel.data??[]);
+        popularRooms = responseModel.data??[];
         notifyListeners();
         return true;
       }

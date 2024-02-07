@@ -83,7 +83,7 @@ class _LevelPrivilegesState extends State<LevelPrivileges> {
                       height: 12 * a,
                     ),
                     Text(
-                      'You need ${(series[value.userData?.data?.level??0]-(value.userData?.data?.exp??0.0)).toInt()} EXP to upgrade Level',
+                      'You need ${(series[value.userData?.data?.level??0].ceil()-(value.userData?.data?.exp??0.0)).toInt()} EXP to upgrade Level',
                       textAlign: TextAlign.left,
                       style: SafeGoogleFont(
                           color: const Color.fromRGBO(255, 255, 255, 1),
