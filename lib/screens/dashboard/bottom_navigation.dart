@@ -37,7 +37,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
 
   @override
   void initState() {
-    _fetchUserData(refresh: false);
+    _fetchUserData(refresh: false, initLoad: true);
     timer = Timer.periodic(const Duration(seconds: 30), (timer) {
       _fetchUserData(refresh: false);
     });
@@ -178,8 +178,9 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     );
   }
 
-  Future<void> _fetchUserData({bool refresh = true}) async {
+  Future<void> _fetchUserData({bool refresh = true, bool initLoad = false}) async {
     userDataProvider = Provider.of<UserDataProvider>(context, listen: false);
     await userDataProvider.getUser(loading: refresh);
+    if(initLoad) Provider.of<RoomsProvider>(Get.context!,listen: false).selectedCountryCode = Provider.of<UserDataProvider>(Get.context!,listen: false).userData?.data?.countryCode??'All';
   }
 }

@@ -78,7 +78,6 @@ class ZegoRoomProvider with ChangeNotifier {
   String roomID = '';
   double treasureProgress = 0.0;
   int activeCount = 1;
-  String? newUser;
   List<ZegoUser> roomUsersList = [];
   List<ZegoStreamExtended> roomStreamList = [];
   final scrollController = ScrollController();
@@ -236,16 +235,11 @@ class ZegoRoomProvider with ChangeNotifier {
       for (var e in userList) {
         var userID = e.userID;
         var userName = e.userName;
-        if(userName=='error-10234') {
+        if(userName.contains('#icognito')) {
 
         }else{
           if(updateType == ZegoUpdateType.Add){
             roomUsersList.add(e);
-            newUser = '$userName joined!';
-            Future.delayed(const Duration(seconds: 3),() {
-              newUser = null;
-              notifyListeners();
-            });
           }else if (updateType == ZegoUpdateType.Delete){
             roomUsersList.removeWhere((element) => element.userID == userID);
           }
@@ -325,6 +319,10 @@ class ZegoRoomProvider with ChangeNotifier {
           Get.offAll(const BottomNavigator(),transition: Transition.noTransition);
           destroy();
           showCustomSnackBar('Kicked by ${fromUser.userName}', Get.context!,isToaster: true);
+        }else if(command == ZegoConfig.instance.refreshAdminKey){
+          refreshAdmins();
+        }else if(command == ZegoConfig.instance.refreshTreasureKey){
+          refreshTreasureBox();
         }else if(command.contains(ZegoConfig.instance.roomInviteSeatKey)){
           viewInviteToSeatDailog(command.substring(20),fromUser.userName);
         }else if(command.contains(ZegoConfig.instance.roomLockRoomUpdateKey)){
@@ -335,10 +333,8 @@ class ZegoRoomProvider with ChangeNotifier {
             roomPassword = null;
             showCustomSnackBar('Room Unlocked!', Get.context!,isToaster: true,isError: false);
           }
-        }else if(command == ZegoConfig.instance.refreshAdminKey){
-          refreshAdmins();
-        }else if(command == ZegoConfig.instance.refreshTreasureKey){
-          refreshTreasureBox();
+        }else if(command.contains(ZegoConfig.instance.roomEntry)){
+          updateRoomForeground(command.substring(10));
         }
       notifyListeners();
     };
@@ -529,12 +525,12 @@ class ZegoRoomProvider with ChangeNotifier {
     );
   }
   void updateAdminList(){
+    refreshAdmins();
     ZegoExpressEngine.instance.sendCustomCommand(
         roomID,
         ZegoConfig.instance.refreshAdminKey,
         []
     );
-    refreshAdmins();
   }
   void updateTreasureBox(){
     ZegoExpressEngine.instance.sendCustomCommand(
@@ -543,6 +539,15 @@ class ZegoRoomProvider with ChangeNotifier {
         []
     );
     refreshTreasureBox();
+  }
+
+  void roomVehicleEntryEffect(String url){
+    ZegoExpressEngine.instance.sendCustomCommand(
+        roomID,
+        ZegoConfig.instance.roomEntry+url,
+        []
+    );
+    Future.delayed(const Duration(seconds: 2),() => updateRoomForeground(url));
   }
 
   //broadcast and barrage methods
@@ -615,7 +620,7 @@ class ZegoRoomProvider with ChangeNotifier {
 
   void addGreeting(String message, UserDataModel owner) {
     String body = zegoBroadcastModelToJson(ZegoBroadcastModel(message: message,userImage: owner.data!.images!.isNotEmpty? owner.data!.images!.first:null, level:owner.data!.level,type: "message",tags: ['Owner'], bubble: userValidItemSelection(owner.data?.chatBubble)));
-    broadcastMessageList?.enqueue(ZegoBroadcastMessageInfo(body,0,0,ZegoUser(owner.data!.id!,owner.data!.name!)));
+    broadcastMessageList?.enqueue(ZegoBroadcastMessageInfo(body,0,0,ZegoUser(owner.data!.id!,owner.data!.name!.contains('#icognito')?owner.data!.name!.split('#').first:owner.data!.name!)));
   }
 
   Future<void> refreshTreasureBox() async {
@@ -645,32 +650,23 @@ class ZegoRoomProvider with ChangeNotifier {
   }
 
   void heartbeatJoin(){
-
+    void rejoin() async {
+      DateTime locale = DateTime.timestamp();
+      print('Rejoined at UTC ${locale.hour}:${locale.minute}:${locale.second}');
+      Provider.of<RoomsProvider>(Get.context!,listen: false).addRoomUser(room!.id!,password: roomPassword);
+    }
     const int heartBeatDelay = 5;
-    DateTime now = DateTime.now();
+    DateTime now = DateTime.timestamp();
 
-    // Calculate the next trigger time that is a multiple of 5 minutes and 01 second
-    DateTime next = now.add(Duration(minutes: heartBeatDelay - now.minute % heartBeatDelay, seconds: 1 - now.second));
+    // Calculate the next trigger time that is a multiple of 5 minutes and 0 second
+    DateTime next = now.add(Duration(minutes: heartBeatDelay - now.minute % heartBeatDelay, seconds: 0 - now.second));
     // Calculate the delay in seconds between now and next
     int delayInSec = next.difference(now).inSeconds;
 
     triggerTimer = Timer(Duration(seconds: delayInSec), () {
-      // Get the current time in local time zone
-      DateTime locale = DateTime.now();
-
-      // Perform your action here
-      print('Function triggered at Locale ${locale.hour}:${locale.minute}:${locale.second}');
-
-      // Call your function here
-      Provider.of<RoomsProvider>(Get.context!,listen: false).addRoomUser(room!.id!,password: roomPassword);
+      rejoin();
       heartBeat = Timer.periodic(const Duration(minutes: heartBeatDelay), (timer) {
-        // Get the current time in local time zone
-        DateTime locale = DateTime.now();
-
-        // Perform your action here
-        print('Function triggered at Locale ${locale.hour}:${locale.minute}:${locale.second}');
-
-        Provider.of<RoomsProvider>(Get.context!,listen: false).addRoomUser(room!.id!,password: roomPassword);
+        rejoin();
       });
     });
   }

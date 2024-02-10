@@ -54,7 +54,7 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
     zegoRoomProvider = Provider.of<ZegoRoomProvider>(context, listen: false);
     if (locked) {
       loading = false;
-      if(widget.room.userId! == StorageService().getString(Constants.id) || ZegoConfig.instance.userName == 'error-10234'){
+      if(widget.room.userId! == StorageService().getString(Constants.id) || ZegoConfig.instance.userName.contains('#icognito')){
         textEditingController.text = widget.room.password??'';
         joinLockedRoom();
       }
@@ -180,9 +180,12 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
         if(me.data!.extraSeat!.isNotEmpty){
           zegoRoomProvider.zegoRoom?.totalSeats = (userValidItemSelection(me.data!.extraSeat!).isNotEmpty ? widget.room.noOfSeats : 8)! ;
         }
+        if(me.data!.vehicle!.isNotEmpty &&  !me.data!.name!.contains('#icognito')){
+          final vehicle = userValidItemSelection(me.data!.vehicle!);
+          if(vehicle.isNotEmpty) zegoRoomProvider.roomVehicleEntryEffect(vehicle);
+        }
       } else {
-        final ownerData =
-            await Provider.of<UserDataProvider>(Get.context!, listen: false)
+        final ownerData = await Provider.of<UserDataProvider>(Get.context!, listen: false)
                 .getUser(id: zegoRoomProvider.room!.userId!);
         if (ownerData.data!.roomWallpaper!.isNotEmpty) {
           String image = userValidItemSelection(ownerData.data!.roomWallpaper!);
@@ -191,9 +194,13 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
             zegoRoomProvider.zegoRoom?.totalSeats = (userValidItemSelection(ownerData.data!.extraSeat!).isNotEmpty ? widget.room.noOfSeats : 8)! ;
           }
         }
+        if(ownerData.data!.vehicle!.isNotEmpty &&  !ownerData.data!.name!.contains('#icognito')){
+          final vehicle = userValidItemSelection(ownerData.data!.vehicle!);
+          if(vehicle.isNotEmpty) zegoRoomProvider.roomVehicleEntryEffect(vehicle);
+        }
         zegoRoomProvider.addGreeting(
             getGreeting(
-                me?.data?.name, Random().nextInt(5), ownerData.data?.name),
+                me?.data?.name, Random().nextInt(5),ownerData.data!.name!.contains('#icognito')?ownerData.data!.name!.split('#').first:ownerData.data!.name!),
             ownerData);
       }
       Provider.of<GiftsProvider>(Get.context!, listen: false).generateSeries();

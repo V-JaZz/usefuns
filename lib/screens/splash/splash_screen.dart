@@ -23,7 +23,6 @@ class StartState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<ConnectionProvider>(context,listen: false);
     configVersion();
   }
 
@@ -42,6 +41,7 @@ class StartState extends State<SplashScreen> {
           AppVersionConfigModel model = appVersionConfigModelFromJson(response.body);
           if(model.status == 1){
             if(model.data!.where((e) => e.name == Constants.appVersion).isNotEmpty){
+              Provider.of<ConnectionProvider>(Get.context!,listen: false);
               Get.off(() {
                 return StorageService().getString(Constants.id) == ''?const LogInScreen():const BottomNavigator();
               });
@@ -49,18 +49,15 @@ class StartState extends State<SplashScreen> {
               updateRequiredDialog();
             }
           }
-        } else {
-          configVersion();
-          print(response.reasonPhrase);
+        }else {
+          errorDialog();
         }
       } on TimeoutException catch (_) {
-        // Handle timeout exception
-        noInternetDialog();
+        errorDialog(e: 'Request Timeout\nPlease try again later!');
       } on SocketException catch (_) {
-        // Handle socket exception (no internet)
-        noInternetDialog();
+        errorDialog(e: 'No Internet Connection');
       } catch (e) {
-        maintenanceDialog(e: e.toString());
+        errorDialog(e: e.toString());
       }
     },);
   }
@@ -174,85 +171,6 @@ class StartState extends State<SplashScreen> {
         });
   }
 
-  void noInternetDialog() {
-    double baseWidth = 360;
-    double a = Get.width / baseWidth;
-    double b = a * 0.97;
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          return AlertDialog(
-            backgroundColor: Colors.white,
-            content: SizedBox(
-                width: 50 * a,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'No Internet Connection',
-                      style: SafeGoogleFont('Poppins',
-                          fontSize: 16 * b,
-                          fontWeight: FontWeight.w600,
-                          height: 1.5 * b / a,
-                          letterSpacing: 0.48 * a,
-                          color: Colors.black),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Get.back();
-                        configVersion();
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                            top: 12 * a,
-                            left: 0 * a,
-                            right: 0 * a),
-                        child: Container(
-                            width: 136 * a,
-                            height: 27 * a,
-                            decoration: BoxDecoration(
-                              borderRadius:
-                              BorderRadius.only(
-                                topLeft: Radius.circular(
-                                    9 * a),
-                                topRight: Radius.circular(
-                                    9 * a),
-                                bottomLeft:
-                                Radius.circular(
-                                    9 * a),
-                                bottomRight:
-                                Radius.circular(
-                                    9 * a),
-                              ),
-                              color: const Color(0xFF9E26BC),
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Retry',
-                                style: SafeGoogleFont(
-                                    'Poppins',
-                                    fontSize: 13 * a,
-                                    fontWeight:
-                                    FontWeight.w500,
-                                    height: 1.5 * b / a,
-                                    letterSpacing:
-                                    0.48 * a,
-                                    color: const Color.fromARGB(
-                                        255,
-                                        250,
-                                        249,
-                                        249)),
-                              ),
-                            )),
-                      ),
-                    ),
-                  ],
-                )),
-          );
-        });
-  }
-
   Future<void> _launchPlayStore() async {
     if (await canLaunchUrl(Uri.parse(Constants.playStoreLaunchUrl))) {
       await launchUrl(Uri.parse(Constants.playStoreLaunchUrl), mode: LaunchMode.externalApplication);
@@ -269,7 +187,7 @@ class StartState extends State<SplashScreen> {
     }
   }
 
-  void maintenanceDialog({String? e}) {
+  void errorDialog({String? e}) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
     double b = a * 0.97;

@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: "none"
 
-version: 1.0.9+9
+version: 1.0.10+10
 
 environment:
   sdk: ">=3.0.2 <4.0.0"
@@ -71,6 +71,7 @@ flutter:
     - assets/treas/
     - assets/gifts/
     - assets/emoji/
+    - assets/games/
     - assets/agency/
     - assets/icon_p/
     - assets/room_icons/

@@ -247,12 +247,12 @@ class UpdateProfileState extends State<UpdateProfile> {
                                 name = value;
                               });
                             },
-                            maxLength: 24,
+                            maxLength: 20,
                             decoration: InputDecoration(
                                 counterText: "",
                                 isDense: true,
                                 suffixIcon: Text(
-                                  '$nameLength/24',
+                                  '$nameLength/20',
                                   style: SafeGoogleFont(
                                     'Poppins',
                                     fontSize: 12 * b,

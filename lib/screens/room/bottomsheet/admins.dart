@@ -190,8 +190,8 @@ class _AdminsBottomSheetState extends State<AdminsBottomSheet> {
                                                   () async {
                                                     final p = Provider.of<RoomsProvider>(context,listen: false);
                                                     Get.back();
-                                                    value.room!.admin!.remove(admins[index]);
                                                     await p.removeAdmin(value.room!.id!,admins[index]);
+                                                    value.room!.admin!.remove(admins[index]);
                                                     value.updateAdminList();
                                                   },
                                           user.name

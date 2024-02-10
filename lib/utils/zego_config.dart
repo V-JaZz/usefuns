@@ -8,6 +8,7 @@ class ZegoConfig {
   String roomKey= 'ROOM_EXTRA_INFO_KEY';
 
   //Callbacks Commands
+  String roomEntry= 'ROOM_ENTRY';
   String roomMuteSeatKey= 'ROOM_MUTE_SEAT_KEY';
   String roomUnMuteSeatKey= 'ROOM_UNMUTE_SEAT_KEY';
   String roomLockSeatKey= 'ROOM_LOCK_SEAT_KEY';

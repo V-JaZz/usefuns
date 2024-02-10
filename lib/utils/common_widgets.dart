@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:ui' as ui;
 import 'package:get/get.dart';
+import 'package:live_app/provider/rooms_provider.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -15,6 +16,7 @@ import '../provider/user_data_provider.dart';
 import '../screens/dashboard/me/profile/user_profile.dart';
 import '../screens/dashboard/me/wallet/wallet.dart';
 import 'constants.dart';
+import 'helper.dart';
 
 void showCustomSnackBar(String? message, BuildContext context,
     {bool isError = true, bool isToaster = false}) {
@@ -34,6 +36,32 @@ void showCustomSnackBar(String? message, BuildContext context,
       duration: const Duration(seconds: 2),
     ));
   }
+}
+
+void showCustomBanner(String? message, {bool? autoClose}){
+  ScaffoldMessenger.of(Get.context!)
+    .showMaterialBanner(
+      MaterialBanner(
+        content: Text(message ??'error'),
+        actions: [
+          TextButton(
+            child: const Text("Retrying.."),
+            onPressed: () {},
+          ),
+        ],
+      ),
+    );
+  if(autoClose==true)Future.delayed(const Duration(seconds: 5),() => ScaffoldMessenger.of(Get.context!).hideCurrentMaterialBanner());
+}
+
+void showGetSnackBar(String? title, String? subtitle){
+  Get.snackbar(
+      title??'Error!',
+      subtitle??'Retrying...',
+      icon: const Icon(Icons.network_check_rounded, color: Colors.black87),
+      backgroundColor: Colors.white70,
+      duration: const Duration(seconds: 5)
+  );
 }
 
 Future<void> showCustomDialog(String title, String? subtitle,IconData? ic, {bool barrierDismissible = true, Color? icColor}) async {
@@ -885,7 +913,7 @@ Container viewUsersByIds(List<String>? list, {int popCount = 0, ScrollController
                                               ),
                                             ),
                                           ),
-                                          if(user.isActiveLive == true && user.name != 'error-10234')Container(
+                                          if(user.isActiveLive == true && !user.name!.contains('#icognito'))Container(
                                             margin: EdgeInsets.fromLTRB(
                                                 0 * a, 0 * a, 7 * a, 0 * a),
                                             width: 58 * a,
@@ -930,7 +958,7 @@ Container viewUsersByIds(List<String>? list, {int popCount = 0, ScrollController
                                         maxWidth: Get.width/2
                                       ),
                                       child: Text(
-                                        user.name.toString(),
+                                        user.name!.contains('#icognito')?user.name!.split('#').first:user.name??'',
                                         overflow: TextOverflow.ellipsis,
                                         style: SafeGoogleFont(
                                           'Poppins',
@@ -961,4 +989,45 @@ Container viewUsersByIds(List<String>? list, {int popCount = 0, ScrollController
         },
       ),
     );
+}
+
+Future<String?> selectCountryDialog() async {
+  String? iso = await showDialog(
+    context: Get.context!,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Select a Country'),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: ListView(
+            shrinkWrap: true,
+            children: countryNames.keys.map((String countryCode) {
+              return Row(
+                children: [
+                  Expanded(
+                    child: RadioListTile<String>(
+                      title: Text(countryNames[countryCode]!),
+                      value: countryCode,
+                      groupValue: Provider.of<RoomsProvider>(context).selectedCountryCode,
+                      onChanged: (String? selectedCountry) {
+                        print(selectedCountry);
+                        Get.back(result: selectedCountry);
+                      },
+                    ),
+                  ),
+                  if(countryCode != 'all')CountryFlag.fromCountryCode(
+                    countryCode,
+                    height: 14,
+                    width: 21,
+                    borderRadius: 4,
+                  )
+                ],
+              );
+            }).toList(),
+          ),
+        ),
+      );
+    },
+  );
+  return iso;
 }

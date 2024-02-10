@@ -119,6 +119,7 @@ String getRandomDiamondReward(int level) {
   List<int> diamonds = [0, 50*level, 100*level, 300*level];
   String reward;
   Random random = Random();
+
   int randomIndex = random.nextInt(diamonds.length);
   final wonDiamonds = diamonds[randomIndex].toInt();
   if(wonDiamonds == 0){

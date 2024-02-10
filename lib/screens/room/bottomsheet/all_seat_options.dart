@@ -656,11 +656,14 @@ class _OthersProfileSeatBottomSheetState extends State<OthersProfileSeatBottomSh
                             if(value.room!.admin!.contains(widget.user.streamId)){
                               value.room!.admin!.remove(widget.user.streamId);
                               await p.removeAdmin(value.room!.id!, widget.user.streamId!);
+                              value.updateAdminList();
+                            }else if(value.room!.admin!.length >= 20){
+                              showCustomSnackBar('Maximum admin limit is 20!', Get.context!);
                             }else{
                               value.room!.admin!.add(widget.user.streamId!);
                               await p.addAdmin(value.room!.id!, widget.user.streamId!);
+                              value.updateAdminList();
                             }
-                            value.updateAdminList();
                           }),
                     ],
                   ),

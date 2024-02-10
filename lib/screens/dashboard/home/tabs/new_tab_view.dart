@@ -1,10 +1,11 @@
+import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import '../../../../data/model/response/rooms_model.dart';
 import '../../../../provider/rooms_provider.dart';
 import '../../../../utils/common_widgets.dart';
+import '../../../../utils/helper.dart';
 import '../../../room/widget/pre_loading_dailog.dart';
 
 class NewTabView extends StatefulWidget {
@@ -16,99 +17,111 @@ class NewTabView extends StatefulWidget {
 
 class _NewTabViewState extends State<NewTabView> {
   RefreshController refreshController = RefreshController();
-  ScrollController scrollController = ScrollController();
   bool loadedAll = false;
-  int page = 1;
 
   @override
   void initState() {
     loadData();
-    scrollController.addListener(onScroll);
     super.initState();
   }
 
   @override
   void dispose() {
     refreshController.dispose();
-    scrollController.dispose();
     super.dispose();
   }
 
   Future<void> loadData({bool refresh = false}) async {
-    final success = await Provider.of<RoomsProvider>(context,listen: false).getAllNew(page,refresh);
+    final success = await Provider.of<RoomsProvider>(context,listen: false).getAllNew(refresh);
     if(success == false){
       setState(() => loadedAll = true);
-    }else{
-      page++;
     }
   }
 
-  void onScroll() {
-    if (scrollController.position.pixels == scrollController.position.maxScrollExtent && !loadedAll) {
-      loadData();
-    }
-  }
   @override
   Widget build(BuildContext context) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
-    double b = a * 0.97;
+
     return Container(
       padding:
       EdgeInsets.symmetric(horizontal: 18 * a),
       child: Consumer<RoomsProvider>(
         builder: (context, value, child) {
-          if(value.newRooms.isEmpty){
+          if(value.roomLoading){
             return const Center(child: CircularProgressIndicator());
+          } else {
+            return Column(
+              children: [
+                Consumer<RoomsProvider>(
+                  builder: (context, value, _) => ListTile(
+                      onTap: () async {
+                        String? iso = await selectCountryDialog();
+                        if(iso!=null && value.selectedCountryCode != iso){
+                          value.selectedCountryCode = iso;
+                          loadData(refresh: true);
+                        }
+                      },
+                      title: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if(value.selectedCountryCode != 'all')
+                            CountryFlag.fromCountryCode(
+                              value.selectedCountryCode,
+                              height: 14*a,
+                              width: 21*a,
+                              borderRadius: 4,
+                            ),
+                          SizedBox(width: 10*a),
+                          Text(getCountryNameFromCode(value.selectedCountryCode)),
+                          SizedBox(width: 10*a),
+                          const Icon(Icons.arrow_forward_ios_rounded,color: Colors.black54,size: 18)
+                        ],
+                      )
+                  ),
+                ),
+                Expanded(
+                  child:
+                  value.newRooms.isEmpty
+                      ? const Center(child: Text('No Room Found!'))
+                      : SmartRefresher(
+                          enablePullDown: true,
+                          onRefresh: () async {
+                            await loadData(refresh: true);
+                            loadedAll = false;
+                            refreshController.refreshCompleted();
+                            return;
+                          },
+                          physics: const BouncingScrollPhysics(),
+                          controller: refreshController,
+                          child: ListView.builder(
+                            itemCount: value.newRooms.length,
+                            itemBuilder: (context, index) {
+                              final room = value.newRooms[index];
+                              return roomListTile(
+                                image: room.images!.isEmpty
+                                    ? null
+                                    : room.images!.first,
+                                title: room.name.toString(),
+                                subTitle: room.announcement,
+                                iso: room.countryCode,
+                                active:
+                                room.activeUsers?.length.toString() ??
+                                    '0',
+                                isLocked: room.isLocked??false,
+                                onTap: () {
+                                  Get.dialog(
+                                      RoomPreLoadingDialog(room: room),
+                                      barrierDismissible: false);
+                                },
+                              );
+                            },
+                          ),
+                  ),
+                ),
+              ],
+            );
           }
-          return SmartRefresher(
-            enablePullDown: true,
-            onRefresh: () async {
-              page = 1;
-              await loadData(refresh: true);
-              loadedAll = false;
-              refreshController.refreshCompleted();
-              return;
-            },
-            physics: const BouncingScrollPhysics(),
-            header: WaterDropMaterialHeader(distance: 36 * a),
-            controller: refreshController,
-            child: ListView.builder(
-              controller: scrollController,
-              itemCount: value.newRooms.length+1,
-              itemBuilder: (context, index) {
-                if (index < value.newRooms.length){
-                  final room = value.newRooms[index];
-                  return roomListTile(
-                    image: room.images!.isEmpty
-                        ? null
-                        : room.images!.first,
-                    title: room.name.toString(),
-                    subTitle: room.announcement,
-                    iso: room.countryCode,
-                    active:
-                    room.activeUsers?.length.toString() ??
-                        '0',
-                    isLocked: room.isLocked??false,
-                    onTap: () {
-                      Get.dialog(
-                          RoomPreLoadingDialog(room: room),
-                          barrierDismissible: false);
-                    },
-                  );
-                }else if(loadedAll){
-                  return null;
-                }else {
-                  return const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                }
-              },
-            ),
-          );
         },
       ),
     );

@@ -90,7 +90,7 @@ class _UserProfileState extends State<UserProfile> {
                           Row(
                             children: [
                               Text(
-                                user.name??'',
+                                user.name!.contains('#icognito')?user.name!.split('#').first:user.name??'',
                                 textAlign: TextAlign.left,
                                 style: SafeGoogleFont(
                                     color: const Color.fromRGBO(255, 255, 255, 1),
@@ -213,7 +213,7 @@ class _UserProfileState extends State<UserProfile> {
                   ],
                 ),
               ),
-              if(!isMine && user.isActiveLive == true && user.name != 'error-10234')Positioned(
+              if(!isMine && user.isActiveLive == true && !user.name!.contains('#icognito'))Positioned(
                 top: 100*a,
                 right: 0,
                 child: InkWell(

@@ -294,7 +294,7 @@ class _SearchRoomUserState extends State<SearchRoomUser> {
                                 Get.to(()=>UserProfile(userData: userModel!.data![index]));
                               },
                               leading: userModel!.data![index].images!.isNotEmpty ? Image.network(userModel!.data![index].images!.first):Image.asset('assets/logo_greystyle.png'),
-                              title: Text(userModel!.data![index].name!),
+                              title: Text(userModel!.data![index].name!.contains('#icognito')?userModel!.data![index].name!.split('#').first:userModel!.data![index].name!),
                               subtitle: Text((userModel!.data![index].bio??'') != ''?userModel!.data![index].bio!:''),
                               trailing:
                               Consumer<UserDataProvider>(

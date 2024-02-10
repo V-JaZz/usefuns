@@ -169,13 +169,18 @@ class _ActiveUsersBottomSheetState extends State<ActiveUsersBottomSheet> {
                                     children: [
                                       InkWell(
                                         onTap: () async {
-                                          final myId = ZegoConfig.instance.userID;
-                                          if(user.id == myId){
-                                            Get.to(()=>const UserProfile());
+                                          final myId =
+                                              ZegoConfig.instance.userID;
+                                          if (user.id == myId) {
+                                            Get.to(() => const UserProfile());
                                             return;
                                           }
-                                          final u = await Provider.of<UserDataProvider>(context,listen: false).addVisitor(user.id!);
-                                          Get.to(()=>UserProfile(userData: u.data!));
+                                          final u = await Provider.of<
+                                                      UserDataProvider>(context,
+                                                  listen: false)
+                                              .addVisitor(user.id!);
+                                          Get.to(() =>
+                                              UserProfile(userData: u.data!));
                                         },
                                         child: Row(
                                           children: [
@@ -308,10 +313,10 @@ class _ActiveUsersBottomSheetState extends State<ActiveUsersBottomSheet> {
                                         height: double.infinity,
                                         //if viewer is owner or admin
                                         child: (widget.ownerId.trim() ==
-                                                        ZegoConfig.instance
-                                                            .userID ||
-                                                    value.room!.admin!
-                                                        .contains(ZegoConfig
+                                                        ZegoConfig
+                                                            .instance.userID ||
+                                                    value.room!.admin!.contains(
+                                                        ZegoConfig
                                                             .instance.userID
                                                             .trim())) &&
                                                 user.id! !=
@@ -327,22 +332,32 @@ class _ActiveUsersBottomSheetState extends State<ActiveUsersBottomSheet> {
                                                                   .userID
                                                                   .trim()) &&
                                                       widget.ownerId.trim() ==
-                                                          ZegoConfig.instance
-                                                              .userID)
+                                                          ZegoConfig
+                                                              .instance.userID)
                                                     InkWell(
                                                       onTap: () =>
                                                           _showConfirmationDialog(
                                                               () async {
-                                                        final p = Provider.of<
-                                                                RoomsProvider>(
-                                                            context,
-                                                            listen: false);
                                                         Get.back();
-                                                        value.room!.admin!.add(user.id!);
-                                                        await p.addAdmin(
-                                                            value.room!.id!,
-                                                            user.id!);
-                                                        value.updateAdminList();
+                                                        if (value.room!.admin!
+                                                                .length >=
+                                                            20) {
+                                                          showCustomSnackBar(
+                                                              'Maximum admin limit is 20!',
+                                                              context);
+                                                        } else {
+                                                          final p = Provider.of<
+                                                                  RoomsProvider>(
+                                                              Get.context!,
+                                                              listen: false);
+                                                          value.room!.admin!
+                                                              .add(user.id!);
+                                                          await p.addAdmin(
+                                                              value.room!.id!,
+                                                              user.id!);
+                                                          value
+                                                              .updateAdminList();
+                                                        }
                                                       }, user.name),
                                                       child: Icon(
                                                           Icons

@@ -20,6 +20,16 @@ class RoomsProvider with ChangeNotifier {
   List<Room> popularRooms = [];
   List<Room> recentRooms = [];
 
+  bool roomLoading = true;
+
+  String _selectedCountryCode = 'all';
+  String get selectedCountryCode => _selectedCountryCode;
+  set selectedCountryCode(String value) {
+    _selectedCountryCode = value;
+    notifyListeners();
+  }
+
+
   RoomsModel? get myRoom {
     if(_myRoom == null) getAllMine();
     return _myRoom;
@@ -28,7 +38,6 @@ class RoomsProvider with ChangeNotifier {
     _myRoom = value;
     notifyListeners();
   }
-  final apiListingLimit = 10;
   List<BannerData> bannerList = [];
   bool creatingRoom = false;
 
@@ -252,13 +261,18 @@ class RoomsProvider with ChangeNotifier {
 
   Future<bool> getAllPopular(bool refresh) async {
     if(refresh){
-      popularRooms = [];
+      roomLoading = true;
       notifyListeners();
     }
-    final apiResponse = await _roomsRepo.getAllPopular(1, 20);
+    final apiResponse = await _roomsRepo.getAllPopular(selectedCountryCode, 1, 30);
     RoomsModel responseModel;
+
+    roomLoading = false;
+    if(refresh) notifyListeners();
+
     if (apiResponse.statusCode == 200) {
       responseModel = roomsModelFromJson(apiResponse.body);
+
       if(responseModel.status == 1){
         popularRooms = responseModel.data??[];
         notifyListeners();
@@ -268,18 +282,21 @@ class RoomsProvider with ChangeNotifier {
     return false;
   }
 
-  Future<bool> getAllNew(int page, bool refresh) async {
+  Future<bool> getAllNew(bool refresh) async {
+    if(newRooms.isEmpty) roomLoading = true;
     if(refresh){
-      newRooms = [];
       notifyListeners();
     }
-    final apiResponse = await _roomsRepo.getAllNew(page, apiListingLimit);
+    final apiResponse = await _roomsRepo.getAllNew(selectedCountryCode, 1, 30);
     RoomsModel responseModel;
+
+    roomLoading = false;
+    if(refresh) notifyListeners();
+
     if (apiResponse.statusCode == 200) {
       responseModel = roomsModelFromJson(apiResponse.body);
       if(responseModel.status == 1){
-        if(page == 1) newRooms = [];
-        newRooms.addAll(responseModel.data??[]);
+        newRooms = responseModel.data??[];
         notifyListeners();
         return true;
       }

@@ -1,6 +1,9 @@
+import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:get/get.dart';
+import 'package:live_app/provider/user_data_provider.dart';
+import 'package:live_app/utils/helper.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -216,35 +219,65 @@ class _PopularTabViewState extends State<PopularTabView> {
                   SizedBox(
                     height: 10 * a,
                   ),
+                  Consumer<RoomsProvider>(
+                    builder: (context, value, _) => ListTile(
+                        onTap: () async {
+                          String? iso = await selectCountryDialog();
+                          if(iso!=null && value.selectedCountryCode != iso){
+                            value.selectedCountryCode = iso;
+                            loadData(refresh: true);
+                          }
+                        },
+                        title: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if(value.selectedCountryCode != 'all')
+                              CountryFlag.fromCountryCode(
+                                value.selectedCountryCode,
+                                height: 14*a,
+                                width: 21*a,
+                                borderRadius: 4,
+                              ),
+                            SizedBox(width: 10*a),
+                            Text(getCountryNameFromCode(value.selectedCountryCode)),
+                            SizedBox(width: 10*a),
+                            const Icon(Icons.arrow_forward_ios_rounded,color: Colors.black54,size: 18)
+                          ],
+                      )
+                    ),
+                  ),
                   Expanded(
                     child: Consumer<RoomsProvider>(
                       builder: (context, value, child) {
-                        if(value.popularRooms.isEmpty){
+                        if(value.roomLoading){
                           return const Center(child: CircularProgressIndicator());
+                        }else if(value.popularRooms.isEmpty){
+                        return const Center(child: Text('No Room Found!'));
+                        }else{
+                          return ListView.builder(
+                            itemCount: value.popularRooms.length,
+                            itemBuilder: (context, index) {
+                              final room = value.popularRooms[index];
+                              return roomListTile(
+                                image: room.images!.isEmpty
+                                    ? null
+                                    : room.images!.first,
+                                title: room.name.toString(),
+                                subTitle: room.announcement,
+                                iso: room.countryCode,
+                                active:
+                                room.activeUsers?.length.toString() ??
+                                    '0',
+                                isLocked: room.isLocked??false,
+                                onTap: () {
+                                  Get.dialog(
+                                      RoomPreLoadingDialog(room: room),
+                                      barrierDismissible: false);
+                                },
+                              );
+                            },
+                          );
                         }
-                        return ListView.builder(
-                          itemCount: value.popularRooms.length,
-                          itemBuilder: (context, index) {
-                            final room = value.popularRooms[index];
-                            return roomListTile(
-                              image: room.images!.isEmpty
-                                  ? null
-                                  : room.images!.first,
-                              title: room.name.toString(),
-                              subTitle: room.announcement,
-                              iso: room.countryCode,
-                              active:
-                              room.activeUsers?.length.toString() ??
-                                  '0',
-                              isLocked: room.isLocked??false,
-                              onTap: () {
-                                Get.dialog(
-                                    RoomPreLoadingDialog(room: room),
-                                    barrierDismissible: false);
-                              },
-                            );
-                          },
-                        );
                       },
                     ),
                   ),

@@ -166,7 +166,7 @@ class _TreasuresState extends State<Treasures> {
         },
         {
           'image': 'assets/ic_treasure_box/frame_4.svga',
-          'name': 'Panda',
+          'name': 'Frame',
           'diamonds': '4999'
         },
         {

@@ -15,39 +15,39 @@ class GamesBottomSheet extends StatelessWidget {
     LiveRoomBottomSheets bs = LiveRoomBottomSheets(context);
     final List<Map> gamesList = [
       {
-        "image": 'assets/Crazy_racing.png',
-        "name": "Crazy racing",
+        "image": 'assets/games/Horse Race-13.png',
+        "name": "Horse Race",
         "rank": "516",
         "onTap" : (){
           Get.back();
-          bs.showJoyGamesBottomSheet(10002);
+          bs.showJoyGamesBottomSheet(13);
         }
       },
       {
-        "image": 'assets/Grady_bord.png',
-        "name": "Greedy",
+        "image": 'assets/games/Happy Fruit-20.png',
+        "name": "Happy Fruit",
         "rank": "412",
         "onTap" : (){
           Get.back();
-          bs.showJoyGamesBottomSheet(14);
+          bs.showJoyGamesBottomSheet(20);
         }
       },
       {
-        "image": 'assets/Lucky_7.png',
-        "name": "Lucky 7",
+        "image": 'assets/games/777-1.png',
+        "name": "777",
         "rank": "510",
         "onTap" : (){
           Get.back();
-          bs.showJoyGamesBottomSheet(17);
+          bs.showJoyGamesBottomSheet(1);
         }
       },
       {
-        "image": 'assets/dias.png',
-        "name": "Dice",
+        "image": 'assets/games/Roulette-10.png',
+        "name": "Roulette",
         "rank": "440",
         "onTap" : (){
           Get.back();
-          bs.showJoyGamesBottomSheet(601);
+          bs.showJoyGamesBottomSheet(10);
         }
       },
       {
@@ -60,9 +60,9 @@ class GamesBottomSheet extends StatelessWidget {
         }
       },
       if(owner){
-        "image": 'assets/star.gif',
+        "image": 'assets/star.jpg',
         "name": "Calculator",
-        "rank": "440",
+        "rank": null,
         "onTap" : (){showCalculatorOptions(context);}
       },
     ];
@@ -109,11 +109,18 @@ class GamesBottomSheet extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(width: 6 * a),
-                          CircleAvatar(
-                              backgroundColor: Colors.green,
-                              radius: 20,
-                              foregroundImage:
-                              AssetImage(gamesList[index]["image"])),
+                          Container(
+                            height: 60,
+                            width: 60,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage(
+                                      gamesList[index]["image"],
+                                  ),
+                                fit: BoxFit.cover
+                              )
+                            ),
+                          ),
                           SizedBox(width: 6 * a),
                           Text(
                             gamesList[index]["name"],
@@ -130,7 +137,7 @@ class GamesBottomSheet extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              SizedBox(
+                              if(gamesList[index]["rank"]!=null)SizedBox(
                                 width: 12 * a,
                                 height: 12 * a,
                                 child: Image.asset(
@@ -138,22 +145,22 @@ class GamesBottomSheet extends StatelessWidget {
                                   fit: BoxFit.cover,
                                 ),
                               ),
-                              SizedBox(width: 9 * a),
-                              SizedBox(
-                                width: 21 * a,
-                                height: 18 * a,
-                                child: Text(
-                                  gamesList[index]["rank"],
-                                  style: SafeGoogleFont(
-                                    'Poppins',
-                                    fontSize: 12 * b,
-                                    fontWeight: FontWeight.w400,
-                                    height: 1.5 * b / a,
-                                    letterSpacing: 0.48 * a,
-                                    color: const Color(0x99000000),
-                                  ),
-                                ),
-                              ),
+                              // SizedBox(width: 9 * a),
+                              // SizedBox(
+                              //   width: 21 * a,
+                              //   height: 18 * a,
+                              //   child: Text(
+                              //     gamesList[index]["rank"],
+                              //     style: SafeGoogleFont(
+                              //       'Poppins',
+                              //       fontSize: 12 * b,
+                              //       fontWeight: FontWeight.w400,
+                              //       height: 1.5 * b / a,
+                              //       letterSpacing: 0.48 * a,
+                              //       color: const Color(0x99000000),
+                              //     ),
+                              //   ),
+                              // ),
                             ],
                           )
                         ],

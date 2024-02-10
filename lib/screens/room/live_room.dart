@@ -603,194 +603,165 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                 )),
                           ),
                           if(value.isOwner) Expanded(
-                            child: Stack(
-                              children: [
-                                Center(
-                                  child: SizedBox(
-                                    height: 36*a,
-                                    width: 54*a,
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        shape: const StadiumBorder(),
-                                        backgroundColor: Colors.white12,
-                                        surfaceTintColor: Colors.black26,
-                                        elevation: 0,
-                                        padding: EdgeInsets.zero,
-                                      ),
-                                      onPressed: (){
-                                        // showDialog(
-                                        //   context: context,
-                                        //   barrierColor: Colors.transparent,
-                                        //   builder: (BuildContext context) {
-                                        //     return AlertDialog(
-                                        //       insetPadding: const EdgeInsets.only(left: 18, right: 18, top: 0,bottom: 0),
-                                        //       actionsPadding: EdgeInsets.zero,
-                                        //       contentPadding: EdgeInsets.zero,
-                                        //       titlePadding: EdgeInsets.zero,
-                                        //       buttonPadding: EdgeInsets.zero,
-                                        //       iconPadding: EdgeInsets.zero,
-                                        //       backgroundColor: const Color(0xBF9e26bc),
-                                        //       shape: ShapeBorder.lerp(
-                                        //           InputBorder.none, InputBorder.none, 0),
-                                        //       content: Container(
-                                        //         padding: EdgeInsets.only(bottom: 14*a,top: 7*a),
-                                        //         width: 400 * a,
-                                        //         child: Column(
-                                        //           mainAxisAlignment: MainAxisAlignment.start,
-                                        //           crossAxisAlignment: CrossAxisAlignment.center,
-                                        //           mainAxisSize: MainAxisSize.min,
-                                        //           children: [
-                                        //             Row(
-                                        //               mainAxisAlignment:
-                                        //               MainAxisAlignment.spaceBetween,
-                                        //               children: [
-                                        //                 Padding(
-                                        //                   padding:
-                                        //                   EdgeInsets.only(left: 8 * a),
-                                        //                   child: Icon(
-                                        //                       CupertinoIcons.question_circle,
-                                        //                       color: Colors.white,
-                                        //                       size: 12 * a),
-                                        //                 ),
-                                        //                 const Spacer()
-                                        //               ],
-                                        //             ),
-                                        //             Row(
-                                        //               children: [
-                                        //                 const Spacer(flex: 2),
-                                        //                 Container(
-                                        //                   width: 64 * a,
-                                        //                   height: 17 * a,
-                                        //                   decoration: BoxDecoration(
-                                        //                     borderRadius:
-                                        //                     BorderRadius.circular(9 * a),
-                                        //                     color: const Color(0xffffe500),
-                                        //                   ),
-                                        //                   child: Center(
-                                        //                     child: Row(
-                                        //                       mainAxisSize: MainAxisSize.min,
-                                        //                       children: [
-                                        //                         Icon(
-                                        //                             CupertinoIcons.heart_fill,
-                                        //                             size: 12 * a),
-                                        //                         Text(
-                                        //                           ' Match',
-                                        //                           style: SafeGoogleFont(
-                                        //                             'Poppins',
-                                        //                             fontSize: 9 * b,
-                                        //                             fontWeight:
-                                        //                             FontWeight.w400,
-                                        //                             height: 1.5 * b / a,
-                                        //                             letterSpacing: 0.36 * a,
-                                        //                             color: const Color(
-                                        //                                 0xff000000),
-                                        //                           ),
-                                        //                         ),
-                                        //                       ],
-                                        //                     ),
-                                        //                   ),
-                                        //                 ),
-                                        //                 const Spacer(flex: 1),
-                                        //                 GestureDetector(
-                                        //                   onTap: () {
-                                        //                     bs.inviteMemberSheet();
-                                        //                   },
-                                        //                   child: Container(
-                                        //                     width: 64 * a,
-                                        //                     height: 17 * a,
-                                        //                     decoration: BoxDecoration(
-                                        //                       borderRadius:
-                                        //                       BorderRadius.circular(
-                                        //                           9 * a),
-                                        //                       color: const Color(0xffffe500),
-                                        //                     ),
-                                        //                     child: Center(
-                                        //                       child: Row(
-                                        //                         mainAxisSize:
-                                        //                         MainAxisSize.min,
-                                        //                         children: [
-                                        //                           Icon(Icons.person_add,
-                                        //                               size: 12 * a),
-                                        //                           Text(
-                                        //                             ' Invite',
-                                        //                             style: SafeGoogleFont(
-                                        //                               'Poppins',
-                                        //                               fontSize: 9 * b,
-                                        //                               fontWeight:
-                                        //                               FontWeight.w400,
-                                        //                               height: 1.5 * b / a,
-                                        //                               letterSpacing: 0.36 * a,
-                                        //                               color: const Color(
-                                        //                                   0xff000000),
-                                        //                             ),
-                                        //                           ),
-                                        //                         ],
-                                        //                       ),
-                                        //                     ),
-                                        //                   ),
-                                        //                 ),
-                                        //                 const Spacer(flex: 2),
-                                        //               ],
-                                        //             ),
-                                        //             SizedBox(height: 5*a),
-                                        //             Text(
-                                        //               'Participating in PK will Help to gather Your room Members',
-                                        //               style: SafeGoogleFont(
-                                        //                 'Poppins',
-                                        //                 fontSize: 9 * b,
-                                        //                 fontWeight: FontWeight.w400,
-                                        //                 height: 1.5 * b / a,
-                                        //                 letterSpacing: 0.24 * a,
-                                        //                 color: const Color(0xffffffff),
-                                        //               ),
-                                        //             ),
-                                        //           ],
-                                        //         ),
-                                        //       ),
-                                        //     );
-                                        //   },
-                                        // );
-                                      },
-                                      child: Text(
-                                        'PK',
-                                        style: SafeGoogleFont(
-                                          'Poppins',
-                                          fontSize: 18 * b,
-                                          fontStyle: FontStyle.italic,
-                                          fontWeight: FontWeight.w400,
-                                          letterSpacing: 0.48 * a,
-                                          color: const Color.fromARGB(255, 225, 198, 159),
-                                        ),
-                                      ),
+                            child: Center(
+                              child: SizedBox(
+                                height: 36*a,
+                                width: 54*a,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    shape: const StadiumBorder(),
+                                    backgroundColor: Colors.white12,
+                                    surfaceTintColor: Colors.black26,
+                                    elevation: 0,
+                                    padding: EdgeInsets.zero,
+                                  ),
+                                  onPressed: (){
+                                    // showDialog(
+                                    //   context: context,
+                                    //   barrierColor: Colors.transparent,
+                                    //   builder: (BuildContext context) {
+                                    //     return AlertDialog(
+                                    //       insetPadding: const EdgeInsets.only(left: 18, right: 18, top: 0,bottom: 0),
+                                    //       actionsPadding: EdgeInsets.zero,
+                                    //       contentPadding: EdgeInsets.zero,
+                                    //       titlePadding: EdgeInsets.zero,
+                                    //       buttonPadding: EdgeInsets.zero,
+                                    //       iconPadding: EdgeInsets.zero,
+                                    //       backgroundColor: const Color(0xBF9e26bc),
+                                    //       shape: ShapeBorder.lerp(
+                                    //           InputBorder.none, InputBorder.none, 0),
+                                    //       content: Container(
+                                    //         padding: EdgeInsets.only(bottom: 14*a,top: 7*a),
+                                    //         width: 400 * a,
+                                    //         child: Column(
+                                    //           mainAxisAlignment: MainAxisAlignment.start,
+                                    //           crossAxisAlignment: CrossAxisAlignment.center,
+                                    //           mainAxisSize: MainAxisSize.min,
+                                    //           children: [
+                                    //             Row(
+                                    //               mainAxisAlignment:
+                                    //               MainAxisAlignment.spaceBetween,
+                                    //               children: [
+                                    //                 Padding(
+                                    //                   padding:
+                                    //                   EdgeInsets.only(left: 8 * a),
+                                    //                   child: Icon(
+                                    //                       CupertinoIcons.question_circle,
+                                    //                       color: Colors.white,
+                                    //                       size: 12 * a),
+                                    //                 ),
+                                    //                 const Spacer()
+                                    //               ],
+                                    //             ),
+                                    //             Row(
+                                    //               children: [
+                                    //                 const Spacer(flex: 2),
+                                    //                 Container(
+                                    //                   width: 64 * a,
+                                    //                   height: 17 * a,
+                                    //                   decoration: BoxDecoration(
+                                    //                     borderRadius:
+                                    //                     BorderRadius.circular(9 * a),
+                                    //                     color: const Color(0xffffe500),
+                                    //                   ),
+                                    //                   child: Center(
+                                    //                     child: Row(
+                                    //                       mainAxisSize: MainAxisSize.min,
+                                    //                       children: [
+                                    //                         Icon(
+                                    //                             CupertinoIcons.heart_fill,
+                                    //                             size: 12 * a),
+                                    //                         Text(
+                                    //                           ' Match',
+                                    //                           style: SafeGoogleFont(
+                                    //                             'Poppins',
+                                    //                             fontSize: 9 * b,
+                                    //                             fontWeight:
+                                    //                             FontWeight.w400,
+                                    //                             height: 1.5 * b / a,
+                                    //                             letterSpacing: 0.36 * a,
+                                    //                             color: const Color(
+                                    //                                 0xff000000),
+                                    //                           ),
+                                    //                         ),
+                                    //                       ],
+                                    //                     ),
+                                    //                   ),
+                                    //                 ),
+                                    //                 const Spacer(flex: 1),
+                                    //                 GestureDetector(
+                                    //                   onTap: () {
+                                    //                     bs.inviteMemberSheet();
+                                    //                   },
+                                    //                   child: Container(
+                                    //                     width: 64 * a,
+                                    //                     height: 17 * a,
+                                    //                     decoration: BoxDecoration(
+                                    //                       borderRadius:
+                                    //                       BorderRadius.circular(
+                                    //                           9 * a),
+                                    //                       color: const Color(0xffffe500),
+                                    //                     ),
+                                    //                     child: Center(
+                                    //                       child: Row(
+                                    //                         mainAxisSize:
+                                    //                         MainAxisSize.min,
+                                    //                         children: [
+                                    //                           Icon(Icons.person_add,
+                                    //                               size: 12 * a),
+                                    //                           Text(
+                                    //                             ' Invite',
+                                    //                             style: SafeGoogleFont(
+                                    //                               'Poppins',
+                                    //                               fontSize: 9 * b,
+                                    //                               fontWeight:
+                                    //                               FontWeight.w400,
+                                    //                               height: 1.5 * b / a,
+                                    //                               letterSpacing: 0.36 * a,
+                                    //                               color: const Color(
+                                    //                                   0xff000000),
+                                    //                             ),
+                                    //                           ),
+                                    //                         ],
+                                    //                       ),
+                                    //                     ),
+                                    //                   ),
+                                    //                 ),
+                                    //                 const Spacer(flex: 2),
+                                    //               ],
+                                    //             ),
+                                    //             SizedBox(height: 5*a),
+                                    //             Text(
+                                    //               'Participating in PK will Help to gather Your room Members',
+                                    //               style: SafeGoogleFont(
+                                    //                 'Poppins',
+                                    //                 fontSize: 9 * b,
+                                    //                 fontWeight: FontWeight.w400,
+                                    //                 height: 1.5 * b / a,
+                                    //                 letterSpacing: 0.24 * a,
+                                    //                 color: const Color(0xffffffff),
+                                    //               ),
+                                    //             ),
+                                    //           ],
+                                    //         ),
+                                    //       ),
+                                    //     );
+                                    //   },
+                                    // );
+                                  },
+                                  child: Text(
+                                    'PK',
+                                    style: SafeGoogleFont(
+                                      'Poppins',
+                                      fontSize: 18 * b,
+                                      fontStyle: FontStyle.italic,
+                                      fontWeight: FontWeight.w400,
+                                      letterSpacing: 0.48 * a,
+                                      color: const Color.fromARGB(255, 225, 198, 159),
                                     ),
                                   ),
                                 ),
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: AnimatedContainer(
-                                    margin: EdgeInsets.only(left: 12*a),
-                                    duration: const Duration(milliseconds: 500),
-                                    width: value.newUser==null?0:120,
-                                    height: 27 * a,
-                                    padding: EdgeInsets.fromLTRB(
-                                        11 * a, 5 * a, 11 * a, 5 * a),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(4),
-                                        color: const Color(0x66090000)
-                                    ),
-                                    child: Text(
-                                      value.newUser==null?'':'${value.newUser}',
-                                      overflow: TextOverflow.ellipsis,
-                                      style: SafeGoogleFont(
-                                        'Poppins',
-                                        fontSize: 10.5 * b,
-                                        fontWeight: FontWeight.w400,
-                                        color: const Color(0xFFFFE57C),
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
+                              ),
                             ),
                           ),
                           Expanded(

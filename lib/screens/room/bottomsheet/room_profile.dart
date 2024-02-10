@@ -275,7 +275,7 @@ class _RoomProfileBottomSheetState extends State<RoomProfileBottomSheet> {
                     height: 3 * a,
                   ),
                   Text(
-                    getCountryName(value.room?.countryCode??'IN'),
+                    getCountryNameFromCode(value.room?.countryCode??'IN'),
                     style: SafeGoogleFont(
                       'Poppins',
                       fontSize: 12 * b,
