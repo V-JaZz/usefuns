@@ -110,7 +110,7 @@ class _MeState extends State<Me> {
       },
       {
         "icon": "assets/icons/ic_calender.png",
-        "title": "Dialy Task",
+        "title": "Daily Task",
         "onTap": () {
           showCustomSnackBar('Upcoming', context,isError: false);
           // Get.to(() => const DailyTask());

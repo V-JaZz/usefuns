@@ -1159,6 +1159,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                     fit: BoxFit.fitWidth,
                   ),
                 ),
+              AnimatedRoomEntry(zegoRoomProvider: value)
             ],
           ),
         ),
@@ -1262,3 +1263,142 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
   }
 
 }
+
+
+class AnimatedRoomEntry extends StatefulWidget {
+  final ZegoRoomProvider zegoRoomProvider;
+
+  const AnimatedRoomEntry({
+    Key? key,
+    required this.zegoRoomProvider,
+  }) : super(key: key);
+
+  @override
+  State<AnimatedRoomEntry> createState() => _AnimatedRoomEntryState();
+}
+
+class _AnimatedRoomEntryState extends State<AnimatedRoomEntry> {
+  late Animation<Offset> _positionAnimation;
+  late Animation<double> _opacityAnimation;
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<ZegoRoomProvider>(
+      builder: (context, zegoRoomProvider, _) {
+        final user = zegoRoomProvider.newUser;
+        if (user!=null && zegoRoomProvider.entryEffectController != null) {
+
+          _positionAnimation = Tween<Offset>(
+            begin: const Offset(-0.1, 0.0),
+            end: const Offset(0.0, 0.0),
+          ).animate(zegoRoomProvider.entryEffectController!);
+          _opacityAnimation = Tween<double>(
+            begin: 0.0,
+            end: 1.0,
+          ).animate(zegoRoomProvider.entryEffectController!);
+
+          return Center(
+            child: SlideTransition(
+              position: _positionAnimation,
+              child: FadeTransition(
+                opacity: _opacityAnimation,
+                child: Container(
+                  width: Get.width * 0.7,
+                  margin: EdgeInsets.only(right: Get.width * 0.2),
+                  height: 60,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(getBgPath(user.level!)),
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      width: Get.width * 0.45,
+                      child: Row(
+                        children: [
+                          if(user.images!.isNotEmpty) Padding(
+                            padding: const EdgeInsets.only(right: 10.0),
+                            child: CircleAvatar(
+                              foregroundImage: NetworkImage(
+                                  user.images!.first
+                              ),
+                              radius: 15,
+                            ),
+                          ),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  user.name!,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.0,
+                                      height: 0.97
+                                  ),
+                                ),
+                                const Text(
+                                  'joined!',
+                                  style: TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 14.0,
+                                      height: 0.97
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        } else {
+          return const SizedBox.shrink(); // Avoid returning an empty widget when text is null
+        }
+      },
+    );
+  }
+
+  String getBgPath(int level) {
+    int i = 1;
+    switch (level) {
+      case < 2:
+        break;
+      case < 13:
+        i = 2;
+        break;
+      case < 24:
+        i = 3;
+        break;
+      case < 35:
+        i = 4;
+        break;
+      case < 46:
+        i = 5;
+        break;
+      case < 57:
+        i = 6;
+        break;
+      case < 68:
+        i = 7;
+        break;
+      case < 79:
+        i = 8;
+        break;
+      case >= 79:
+        i = 9;
+        break;
+    }
+    return 'assets/entry_bg/$i.png';
+  }
+}
+

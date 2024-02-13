@@ -992,38 +992,65 @@ Container viewUsersByIds(List<String>? list, {int popCount = 0, ScrollController
 }
 
 Future<String?> selectCountryDialog() async {
-  String? iso = await showDialog(
+  String? iso;
+  String searchTerm = '';
+
+  iso = await showDialog(
     context: Get.context!,
     builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Select a Country'),
-        content: SizedBox(
-          width: double.maxFinite,
-          child: ListView(
-            shrinkWrap: true,
-            children: countryNames.keys.map((String countryCode) {
-              return Row(
-                children: [
-                  Expanded(
-                    child: RadioListTile<String>(
+      return StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          title: const Text('Select Region'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Search field
+              TextField(
+                onChanged: (value) {
+                  searchTerm = value.toLowerCase();
+                  setState(() {}); // Assuming you have a setState method
+                },
+                decoration: const InputDecoration(
+                  hintText: 'Search',
+                  prefixIcon: Icon(Icons.travel_explore_rounded)
+                ),
+              ),
+              const SizedBox(height: 10),
+              // List of countries (filtered based on searchTerm)
+              Container(
+                width: double.maxFinite,
+                height: double.maxFinite,
+                constraints: BoxConstraints(
+                  maxHeight: Get.width,
+                  minHeight: 100,
+                ),
+                child: ListView(
+                  shrinkWrap: true,
+                  children: countryNames.keys
+                      .where((countryCode) =>
+                      countryNames[countryCode]!
+                          .toLowerCase()
+                          .startsWith(searchTerm))
+                      .map((String countryCode) {
+                    return ListTile(
                       title: Text(countryNames[countryCode]!),
-                      value: countryCode,
-                      groupValue: Provider.of<RoomsProvider>(context).selectedCountryCode,
-                      onChanged: (String? selectedCountry) {
-                        print(selectedCountry);
-                        Get.back(result: selectedCountry);
-                      },
-                    ),
-                  ),
-                  if(countryCode != 'all')CountryFlag.fromCountryCode(
-                    countryCode,
-                    height: 14,
-                    width: 21,
-                    borderRadius: 4,
-                  )
-                ],
-              );
-            }).toList(),
+                      onTap: () => Get.back(result: countryCode),
+                      trailing: countryCode!='all' ?
+                      CountryFlag.fromCountryCode(
+                        countryCode,
+                        height: 14,
+                        width: 21,
+                        borderRadius: 4,
+                      ) : Icon(
+                          Icons.language,
+                          color:  Provider.of<RoomsProvider>(context).selectedCountryCode == countryCode?Theme.of(context).primaryColor:Colors.black54
+                      ),
+                      selected: Provider.of<RoomsProvider>(context).selectedCountryCode == countryCode,
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
           ),
         ),
       );

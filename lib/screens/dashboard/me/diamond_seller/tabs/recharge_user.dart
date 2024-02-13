@@ -45,7 +45,7 @@ class _RechargeUserTabViewState extends State<RechargeUserTabView> {
                         onTap: () async {
                           final ud = await Provider.of<UserDataProvider>(context, listen: false)
                               .getUser(
-                                  id: userIdController.text, isUsefunId: true);
+                                  id: userIdController.text, isUsefunsId: true);
                           setState(() {
                             user = ud;
                           });

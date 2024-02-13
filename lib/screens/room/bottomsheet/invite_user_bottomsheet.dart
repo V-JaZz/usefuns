@@ -173,53 +173,58 @@ class _InviteUserBottomSheetState extends State<InviteUserBottomSheet> {
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    InkWell(
-                                      onTap: () {
-                                        // showModalBottomSheet(
-                                        //     context: context,
-                                        //     builder: (BuildContext context) {
-                                        //       return Container(
-                                        //
-                                        //       );
-                                        //     });
-                                      },
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            margin: EdgeInsets.fromLTRB(
-                                                0 * a, 0 * a, 7 * a, 0 * a),
-                                            width: 50 * a,
-                                            height: 50 * a,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              image: user!.images!.isEmpty
-                                                  ? const DecorationImage(
-                                                fit: BoxFit.cover,
-                                                image: AssetImage('assets/profile.png'),
-                                              )
-                                                  :DecorationImage(
-                                                fit: BoxFit.cover,
-                                                image: NetworkImage(user.images!.first),
+                                    Expanded(
+                                      child: InkWell(
+                                        onTap: () {
+                                          // showModalBottomSheet(
+                                          //     context: context,
+                                          //     builder: (BuildContext context) {
+                                          //       return Container(
+                                          //
+                                          //       );
+                                          //     });
+                                        },
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              margin: EdgeInsets.fromLTRB(
+                                                  0 * a, 0 * a, 7 * a, 0 * a),
+                                              width: 50 * a,
+                                              height: 50 * a,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                image: user!.images!.isEmpty
+                                                    ? const DecorationImage(
+                                                  fit: BoxFit.cover,
+                                                  image: AssetImage('assets/profile.png'),
+                                                )
+                                                    :DecorationImage(
+                                                  fit: BoxFit.cover,
+                                                  image: NetworkImage(user.images!.first),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          Container(
-                                            margin: EdgeInsets.fromLTRB(
-                                                3 * a, 0 * a, 6 * a, 2 * a),
-                                            child: Text(
-                                              user.name.toString(),
-                                              style: SafeGoogleFont(
-                                                'Poppins',
-                                                fontSize: 15 * b,
-                                                fontWeight: FontWeight.w400,
-                                                height: 1.5 * b / a,
-                                                letterSpacing: 0.48 * a,
-                                                color: const Color(0xff000000),
+                                            Expanded(
+                                              child: Container(
+                                                margin: EdgeInsets.fromLTRB(
+                                                    3 * a, 0 * a, 6 * a, 2 * a),
+                                                child: Text(
+                                                  user.name!,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: SafeGoogleFont(
+                                                    'Poppins',
+                                                    fontSize: 15 * b,
+                                                    fontWeight: FontWeight.w400,
+                                                    height: 1.5 * b / a,
+                                                    letterSpacing: 0.48 * a,
+                                                    color: const Color(0xff000000),
+                                                  ),
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          userLevelTag(user.level??0,15 * a)
-                                        ],
+                                            userLevelTag(user.level??0,15 * a)
+                                          ],
+                                        ),
                                       ),
                                     ),
 
@@ -245,7 +250,6 @@ class _InviteUserBottomSheetState extends State<InviteUserBottomSheet> {
                                           ),
                                         ),
                                       ),
-                                    const Spacer(),
                                     IconButton(
                                         onPressed: (){
                                           value.inviteSeat(user.id!,user.name!,widget.seat.toString());

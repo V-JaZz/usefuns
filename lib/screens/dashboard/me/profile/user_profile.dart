@@ -73,7 +73,7 @@ class _UserProfileState extends State<UserProfile> {
                           onTap: (){Get.back();},
                           child: const Icon(CupertinoIcons.back,color: Colors.white),
                         ),
-                        Image.asset('assets/dots.png',width: 24*a),
+                        // Image.asset('assets/dots.png',width: 24*a),
                       ],
                     ),
                     Padding(
@@ -257,10 +257,10 @@ class _UserProfileState extends State<UserProfile> {
                   'Relationship',
                   style: TextStyle(fontSize: 10 * a),
                 ),
-                Text(
-                  'Honour',
-                  style: TextStyle(fontSize: 10 * a),
-                ),
+                // Text(
+                //   'Honour',
+                //   style: TextStyle(fontSize: 10 * a),
+                // ),
                 Text(
                   'Moments',
                   style: TextStyle(fontSize: 10 * a),
@@ -269,7 +269,7 @@ class _UserProfileState extends State<UserProfile> {
               views: [
                 ProfileTabView(userData: user),
                 const RelationshipTabView(),
-                const HomeScreen(),
+                // const HomeScreen(),
                 MomentsPage(appBar: false,userId: widget.userData?.id),
               ],
             )

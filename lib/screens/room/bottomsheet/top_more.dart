@@ -397,7 +397,7 @@ class TopMore extends StatelessWidget {
                                           ),
                                           child: Center(
                                             child: Text(
-                                              hasRoomLock
+                                              hasExtraSeat
                                                   ?(extraSeatAdded
                                                   ?'REMOVE'
                                                   :'ADD')

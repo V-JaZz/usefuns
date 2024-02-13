@@ -180,10 +180,6 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
         if(me.data!.extraSeat!.isNotEmpty){
           zegoRoomProvider.zegoRoom?.totalSeats = (userValidItemSelection(me.data!.extraSeat!).isNotEmpty ? widget.room.noOfSeats : 8)! ;
         }
-        if(me.data!.vehicle!.isNotEmpty &&  !me.data!.name!.contains('#icognito')){
-          final vehicle = userValidItemSelection(me.data!.vehicle!);
-          if(vehicle.isNotEmpty) zegoRoomProvider.roomVehicleEntryEffect(vehicle);
-        }
       } else {
         final ownerData = await Provider.of<UserDataProvider>(Get.context!, listen: false)
                 .getUser(id: zegoRoomProvider.room!.userId!);
@@ -194,16 +190,18 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
             zegoRoomProvider.zegoRoom?.totalSeats = (userValidItemSelection(ownerData.data!.extraSeat!).isNotEmpty ? widget.room.noOfSeats : 8)! ;
           }
         }
-        if(ownerData.data!.vehicle!.isNotEmpty &&  !ownerData.data!.name!.contains('#icognito')){
-          final vehicle = userValidItemSelection(ownerData.data!.vehicle!);
-          if(vehicle.isNotEmpty) zegoRoomProvider.roomVehicleEntryEffect(vehicle);
-        }
         zegoRoomProvider.addGreeting(
             getGreeting(
                 me?.data?.name, Random().nextInt(5),ownerData.data!.name!.contains('#icognito')?ownerData.data!.name!.split('#').first:ownerData.data!.name!),
             ownerData);
       }
       Provider.of<GiftsProvider>(Get.context!, listen: false).generateSeries();
+
+      if(!me!.data!.name!.contains('#icognito')){
+        final vehicle = userValidItemSelection(me.data!.vehicle!);
+        zegoRoomProvider.roomEntryEffect(userId: me.data!.userId!, vehicle: vehicle, mine: true);
+      }
+
       Get.back();
       Get.to(() => const LiveRoom(), transition: Transition.size);
     }else if(locked && password!=null){

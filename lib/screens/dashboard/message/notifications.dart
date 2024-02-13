@@ -64,8 +64,7 @@ class _NotificationsState extends State<Notifications> {
           final List<Map> notifications = [
             {
               "title": "System",
-              "message":
-                  "Please Complete Your Profile, So that Other People Can Know You better, and You can get more followers",
+              "message": "       ",
               "color": 0xFFFF9933,
               "icon": Icons.notifications_none,
               "onTap": () {
@@ -73,16 +72,16 @@ class _NotificationsState extends State<Notifications> {
               },
               "unread": value.notifications?.data?.length ?? 0
             },
-            {
-              "title": "Usefuns Club",
-              "message": "     ",
-              "color": 0xff14ae80,
-              "icon": Icons.people_alt_outlined,
-              "onTap": () {
-                Get.to(() => const UsefunsClubNotification());
-              },
-              "unread": 0
-            },
+            // {
+            //   "title": "Usefuns Club",
+            //   "message": "     ",
+            //   "color": 0xff14ae80,
+            //   "icon": Icons.people_alt_outlined,
+            //   "onTap": () {
+            //     Get.to(() => const UsefunsClubNotification());
+            //   },
+            //   "unread": 0
+            // },
             {
               "title": "Activity",
               "message": "Every Single gift has a rank, a greater chance",
@@ -95,7 +94,7 @@ class _NotificationsState extends State<Notifications> {
             },
             {
               "title": "Usefuns team",
-              "message": "",
+              "message": "Connect to Usefuns Support Team",
               "color": 0xff14ae80,
               "icon": Icons.headset_mic_outlined,
               "onTap": () {
@@ -127,92 +126,92 @@ class _NotificationsState extends State<Notifications> {
                   children: [
                     Column(
                       children: [
-                        Row(
-                          children: [
-                            Expanded(
-                                child: Column(
-                              children: [
-                                Container(
-                                    height: 33 * a,
-                                    width: 36 * a,
-                                    color: const Color(0xFF4285F4),
-                                    child: const Icon(Icons.comment_sharp,
-                                        color: Colors.white)),
-                                SizedBox(height: 5 * a),
-                                Text(
-                                  'Comments',
-                                  style: SafeGoogleFont(
-                                    'Poppins',
-                                    fontSize: 15 * b,
-                                    fontWeight: FontWeight.w400,
-                                    height: 1.5 * b / a,
-                                    letterSpacing: 0.6 * a,
-                                    color: const Color(0xff000000),
-                                  ),
-                                ),
-                              ],
-                            )),
-                            Expanded(
-                                child: Column(
-                              children: [
-                                Container(
-                                    height: 33 * a,
-                                    width: 36 * a,
-                                    color: const Color(0xFFEE3074),
-                                    child: const Icon(Icons.thumb_up_off_alt,
-                                        color: Colors.white)),
-                                SizedBox(height: 5 * a),
-                                Text(
-                                  'Likes',
-                                  style: SafeGoogleFont(
-                                    'Poppins',
-                                    fontSize: 15 * b,
-                                    fontWeight: FontWeight.w400,
-                                    height: 1.5 * b / a,
-                                    letterSpacing: 0.6 * a,
-                                    color: const Color(0xff000000),
-                                  ),
-                                ),
-                              ],
-                            )),
-                            Expanded(
-                              child: InkWell(
-                                onTap: () {},
-                                child: Column(
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        const UserProfile();
-                                      },
-                                      child: Container(
-                                          height: 33 * a,
-                                          width: 36 * a,
-                                          color: const Color(0xFF34A853),
-                                          child: const Icon(
-                                              Icons.people_alt_outlined,
-                                              color: Colors.white)),
-                                    ),
-                                    SizedBox(height: 5 * a),
-                                    Text(
-                                      'Followers',
-                                      style: SafeGoogleFont(
-                                        'Poppins',
-                                        fontSize: 15 * b,
-                                        fontWeight: FontWeight.w400,
-                                        height: 1.5 * b / a,
-                                        letterSpacing: 0.6 * a,
-                                        color: const Color(0xff000000),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 20 * a,
-                        ),
+                        // Row(
+                        //   children: [
+                        //     Expanded(
+                        //         child: Column(
+                        //       children: [
+                        //         Container(
+                        //             height: 33 * a,
+                        //             width: 36 * a,
+                        //             color: const Color(0xFF4285F4),
+                        //             child: const Icon(Icons.comment_sharp,
+                        //                 color: Colors.white)),
+                        //         SizedBox(height: 5 * a),
+                        //         Text(
+                        //           'Comments',
+                        //           style: SafeGoogleFont(
+                        //             'Poppins',
+                        //             fontSize: 15 * b,
+                        //             fontWeight: FontWeight.w400,
+                        //             height: 1.5 * b / a,
+                        //             letterSpacing: 0.6 * a,
+                        //             color: const Color(0xff000000),
+                        //           ),
+                        //         ),
+                        //       ],
+                        //     )),
+                        //     Expanded(
+                        //         child: Column(
+                        //       children: [
+                        //         Container(
+                        //             height: 33 * a,
+                        //             width: 36 * a,
+                        //             color: const Color(0xFFEE3074),
+                        //             child: const Icon(Icons.thumb_up_off_alt,
+                        //                 color: Colors.white)),
+                        //         SizedBox(height: 5 * a),
+                        //         Text(
+                        //           'Likes',
+                        //           style: SafeGoogleFont(
+                        //             'Poppins',
+                        //             fontSize: 15 * b,
+                        //             fontWeight: FontWeight.w400,
+                        //             height: 1.5 * b / a,
+                        //             letterSpacing: 0.6 * a,
+                        //             color: const Color(0xff000000),
+                        //           ),
+                        //         ),
+                        //       ],
+                        //     )),
+                        //     Expanded(
+                        //       child: InkWell(
+                        //         onTap: () {},
+                        //         child: Column(
+                        //           children: [
+                        //             InkWell(
+                        //               onTap: () {
+                        //                 const UserProfile();
+                        //               },
+                        //               child: Container(
+                        //                   height: 33 * a,
+                        //                   width: 36 * a,
+                        //                   color: const Color(0xFF34A853),
+                        //                   child: const Icon(
+                        //                       Icons.people_alt_outlined,
+                        //                       color: Colors.white)),
+                        //             ),
+                        //             SizedBox(height: 5 * a),
+                        //             Text(
+                        //               'Followers',
+                        //               style: SafeGoogleFont(
+                        //                 'Poppins',
+                        //                 fontSize: 15 * b,
+                        //                 fontWeight: FontWeight.w400,
+                        //                 height: 1.5 * b / a,
+                        //                 letterSpacing: 0.6 * a,
+                        //                 color: const Color(0xff000000),
+                        //               ),
+                        //             ),
+                        //           ],
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        // SizedBox(
+                        //   height: 20 * a,
+                        // ),
                         for (Map m in notifications)
                           ListTile(
                             onTap: m['onTap'],

@@ -5,10 +5,10 @@ import '../datasource/remote/http/http_client.dart';
 class UserDataRepo {
   final HttpApiClient _httpClient = HttpApiClient();
 
-  Future<http.Response> getUserById(String id, bool isUsefunId) async {
+  Future<http.Response> getUserById(String id, bool isUsefunsId) async {
     try {
       http.Response response = await _httpClient
-          .get('${isUsefunId ? 'user/getbyuserId/' : 'user/getbyid/'}$id');
+          .get('${isUsefunsId ? 'user/getbyuserId/' : 'user/getbyid/'}$id');
       return response;
     } catch (e) {
       rethrow;

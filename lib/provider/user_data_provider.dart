@@ -18,12 +18,12 @@ class UserDataProvider with ChangeNotifier {
   bool isUserDataLoading = true;
   bool isFollowLoading = false;
 
-  Future<UserDataModel> getUser({bool loading = true, String? id,bool isUsefunId = false}) async {
+  Future<UserDataModel> getUser({bool loading = true, String? id,bool isUsefunsId = false}) async {
     if(!isUserDataLoading&&id==null) {
       isUserDataLoading= true;
       if(loading)notifyListeners();
     }
-    final apiResponse = await _userDataRepo.getUserById(id??storageService.getString(Constants.id),isUsefunId);
+    final apiResponse = await _userDataRepo.getUserById(id??storageService.getString(Constants.id),isUsefunsId);
     UserDataModel responseModel;
     if (apiResponse.statusCode == 200) {
       responseModel = userDataModelFromJson(apiResponse.body);

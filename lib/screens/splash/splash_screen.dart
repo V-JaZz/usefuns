@@ -33,7 +33,7 @@ class StartState extends State<SplashScreen> {
           'Authorization': 'Bearer 1|muZM8iV2IQxqSVMRABSpBp58YkoPBonozCCSTdya'
         };
         var response = await http.get(
-          Uri.parse('https://techc2.be/admin/appVersion/getall'),
+          Uri.parse('http://usefunloadbalancer-766915119.ap-south-1.elb.amazonaws.com/admin/appVersion/getall'),
           headers: headers,
         ).timeout(const Duration(seconds: 20));
 
@@ -41,13 +41,15 @@ class StartState extends State<SplashScreen> {
           AppVersionConfigModel model = appVersionConfigModelFromJson(response.body);
           if(model.status == 1){
             if(model.data!.where((e) => e.name == Constants.appVersion).isNotEmpty){
-              Provider.of<ConnectionProvider>(Get.context!,listen: false);
+              Provider.of<ConnectionProvider>(Get.context!,listen: false).connectionStatus;
               Get.off(() {
                 return StorageService().getString(Constants.id) == ''?const LogInScreen():const BottomNavigator();
               });
             }else{
               updateRequiredDialog();
             }
+          }else {
+            errorDialog();
           }
         }else {
           errorDialog();

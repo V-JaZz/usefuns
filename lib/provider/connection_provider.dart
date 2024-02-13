@@ -7,7 +7,6 @@ import 'package:live_app/utils/common_widgets.dart';
 class ConnectionProvider extends ChangeNotifier {
   InternetConnectionStatus _connectionStatus = InternetConnectionStatus.connected;
   StreamSubscription? _connectionSubscription;
-  int failCount = 0;
 
   ConnectionProvider() {
     _connectionSubscription = InternetConnectionCheckerPlus().onStatusChange.listen(
@@ -31,7 +30,6 @@ class ConnectionProvider extends ChangeNotifier {
       noInternetMessage();
     } else {
       ScaffoldMessenger.of(Get.context!).hideCurrentMaterialBanner();
-      failCount=0;
     }
   }
 
@@ -44,9 +42,6 @@ class ConnectionProvider extends ChangeNotifier {
   InternetConnectionStatus get connectionStatus => _connectionStatus;
 
   void noInternetMessage() {
-    failCount++;
-    if(failCount>1) {
-      showCustomBanner('Network Error!');
-    }
+    showCustomBanner('Network Error!');
   }
 }

@@ -173,7 +173,7 @@ class _InviteHostTabViewState extends State<InviteHostTabView> {
                                   context,
                                   listen: false)
                               .getUser(
-                                  id: userIdController.text, isUsefunId: true);
+                                  id: userIdController.text, isUsefunsId: true);
                           setState(() {
                             user = ud;
                           });

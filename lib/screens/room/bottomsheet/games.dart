@@ -4,7 +4,6 @@ import 'package:live_app/provider/zego_room_provider.dart';
 import 'package:live_app/screens/room/bottomsheet/manager.dart';
 import 'package:provider/provider.dart';
 import '../../../utils/utils_assets.dart';
-import 'joy_games.dart';
 
 class GamesBottomSheet extends StatelessWidget {
   final bool owner;

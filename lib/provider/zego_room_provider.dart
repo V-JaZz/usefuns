@@ -48,7 +48,9 @@ class ZegoRoomProvider with ChangeNotifier {
     heartBeat?.cancel();
     triggerTimer?.cancel();
     broadcastMessageList?.clear();
+    entryEffectController?.dispose();
     foregroundSvgaController?.dispose();
+    roomUsersData = [];
     roomUsersList = [];
     roomStreamList = [];
     minimized = false;
@@ -60,6 +62,7 @@ class ZegoRoomProvider with ChangeNotifier {
     _loadedTrack = null;
     zegoRoom = null;
     foregroundSvgaController = null;
+    entryEffectController = null;
     backgroundImage = null;
     foregroundImage = null;
     roomPassword = null;
@@ -78,6 +81,15 @@ class ZegoRoomProvider with ChangeNotifier {
   String roomID = '';
   double treasureProgress = 0.0;
   int activeCount = 1;
+
+  UserData? _newUser;
+  UserData? get newUser => _newUser;
+  set newUser(UserData? value) {
+    _newUser = value;
+    notifyListeners();
+  }
+
+  List<UserData> roomUsersData = [];
   List<ZegoUser> roomUsersList = [];
   List<ZegoStreamExtended> roomStreamList = [];
   final scrollController = ScrollController();
@@ -87,6 +99,7 @@ class ZegoRoomProvider with ChangeNotifier {
   late TickerProvider vsync;
   String? backgroundImage;
   String? foregroundImage;
+  AnimationController? entryEffectController;
   SVGAAnimationController? foregroundSvgaController;
 
    // room music
@@ -289,8 +302,7 @@ class ZegoRoomProvider with ChangeNotifier {
     };
 
     ZegoExpressEngine.onIMRecvCustomCommand = (String roomID, ZegoUser fromUser, String command){
-      print('🚩🚩🚩 onIMRecvCustomCommand');
-        log(command);
+
         if(command == ZegoConfig.instance.roomResetCalculatorKey){
           for (ZegoStreamExtended user in roomStreamList) {
             user.points = 0;
@@ -328,13 +340,14 @@ class ZegoRoomProvider with ChangeNotifier {
         }else if(command.contains(ZegoConfig.instance.roomLockRoomUpdateKey)){
           if(command.length>25){
             roomPassword = command.substring(25);
-            showCustomSnackBar('Room Lock Updated!', Get.context!,isToaster: true,isError: false);
+            showCustomSnackBar('Room Lock Updated!', Get.context!, isToaster: true, isError: false);
           }else{
             roomPassword = null;
-            showCustomSnackBar('Room Unlocked!', Get.context!,isToaster: true,isError: false);
+            showCustomSnackBar('Room Unlocked!', Get.context!, isToaster: true, isError: false);
           }
         }else if(command.contains(ZegoConfig.instance.roomEntry)){
-          updateRoomForeground(command.substring(10));
+          final splitText = command.split(' ');
+          roomEntryEffect(userId: splitText[1],vehicle: splitText[2]);
         }
       notifyListeners();
     };
@@ -541,13 +554,64 @@ class ZegoRoomProvider with ChangeNotifier {
     refreshTreasureBox();
   }
 
-  void roomVehicleEntryEffect(String url){
-    ZegoExpressEngine.instance.sendCustomCommand(
-        roomID,
-        ZegoConfig.instance.roomEntry+url,
-        []
-    );
-    Future.delayed(const Duration(seconds: 2),() => updateRoomForeground(url));
+  Future<void> roomEntryEffect({required String userId, required String vehicle, bool mine = false}) async {
+
+    UserData? userData;
+    final udp = Provider.of<UserDataProvider>(Get.context!,listen: false);
+
+    loadSvga() async {
+      foregroundSvgaController = SVGAAnimationController(vsync: vsync);
+      foregroundSvgaController?.videoItem = await SVGAParser.shared.decodeFromURL(vehicle);
+    }
+
+    if(mine){
+      ZegoExpressEngine.instance.sendCustomCommand(
+          roomID,
+          '${ZegoConfig.instance.roomEntry} $userId $vehicle',
+          []
+      );
+      await Future.delayed(const Duration(seconds: 1));
+      if(vehicle.isNotEmpty) await loadSvga();
+      userData = udp.userData!.data!;
+    }else{
+      if(vehicle.isNotEmpty) await loadSvga();
+      final user = await udp.getUser(id: userId, isUsefunsId: true);
+      userData = user.data;
+    }
+
+    if(userData!=null) {
+
+      entryEffectController = AnimationController(
+        vsync: vsync,
+        duration: const Duration(milliseconds: 300),
+      );
+      if(!roomUsersData.contains(userData)) roomUsersData.add(userData);
+
+      newUser = userData;
+
+      //play entry animation
+      entryEffectController?.reset();
+      entryEffectController?.forward();
+      entryEffectController?.addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          Future.delayed(const Duration(seconds: 2), () {
+            entryEffectController?.reverse();
+          });
+        }
+      });
+      vehicle.isNotEmpty
+          ? await foregroundSvgaController?.forward()
+          : await Future.delayed(const Duration(seconds: 3));
+
+    }
+
+    newUser = null;
+    entryEffectController?.dispose();
+    entryEffectController = null;
+    if(vehicle.isNotEmpty) foregroundSvgaController?.dispose();
+    if(vehicle.isNotEmpty) foregroundSvgaController = null;
+
+    notifyListeners();
   }
 
   //broadcast and barrage methods
