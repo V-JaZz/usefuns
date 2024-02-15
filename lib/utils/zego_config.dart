@@ -30,9 +30,6 @@ class ZegoConfig {
   ZegoScenario scenario = ZegoScenario.HighQualityChatroom;
   bool enablePlatformView = false;
 
-  String userID = "";
-  String userName = "";
-
   bool isPreviewMirror = true;
   bool isPublishMirror = false;
 

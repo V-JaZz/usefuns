@@ -11,11 +11,12 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../data/model/body/zego_stream_model.dart';
 import '../../../data/model/response/gifts_model.dart';
+import '../../../data/model/response/user_data_model.dart';
 import '../../../utils/helper.dart';
 
 
 class SendGiftsBottomSheet extends StatefulWidget {
-  final String? selection;
+  final UserData? selection;
   const SendGiftsBottomSheet({Key? key, this.selection}) : super(key: key);
 
   @override
@@ -23,7 +24,7 @@ class SendGiftsBottomSheet extends StatefulWidget {
 }
 
 class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
-  List<String> _selectedStream = [];
+  List<UserData> _selectedStream = [];
   int selectedCount = 1;
   Gift? selectedGift;
   int? selectedGiftCost;
@@ -34,13 +35,14 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
   @override
   void initState() {
     Provider.of<GiftsProvider>(context, listen: false).getAll();
-    var list = Provider.of<ZegoRoomProvider>(context,listen: false).roomStreamList.where((e) => e.streamId != ZegoConfig.instance.userID).toList();
+    final zp = Provider.of<ZegoRoomProvider>(context,listen: false);
+    var list = zp.roomStreamList.where((e) => e.streamId != zp.userID).toList();
     selectedCount = 1;
     if (widget.selection != null) {
       _selectedStream.add(widget.selection!);
     }else if(list.isNotEmpty){
       list.sort((a, b) => a.seat!.compareTo(b.seat!));
-      _selectedStream.add(list.first.userName!);
+      _selectedStream.add(list.first.userData!);
     }
     super.initState();
   }
@@ -225,7 +227,7 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                           children: [
                             TextButton(
                               onPressed: () {
-                                _showBottomLeftDialog((List<String> ss) {
+                                _showBottomLeftDialog((List<UserData> ss) {
                                   setState(() {
                                     _selectedStream = ss;
                                   });
@@ -248,7 +250,7 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                                           ? 'select '
                                           :
                                       _selectedStream.length==1
-                                          ? '${_selectedStream.first} '
+                                          ? '${_selectedStream.first.name} '
                                           : '${_selectedStream.length} selected ',
                                       style: SafeGoogleFont(
                                         'DM Sans',
@@ -284,13 +286,13 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                                 } else {
                                   giftProvider.sendGift(
                                       user!.data!.id!,
-                                      zegoRoomProvider.roomUsersList.where((e) => _selectedStream.contains(e.userName)).map((e) => e.userID).toList(),
+                                      _selectedStream.map((e) => e.id!).toList(),
                                       selectedGift!.id!,
                                       selectedCount,
                                       zegoRoomProvider.room!.id!,
                                       selectedGift?.coin ?? 0);
                                   zegoRoomProvider.sendBroadcastGift(
-                                      _selectedStream,
+                                      _selectedStream.map((e) => e.name!).toList(),
                                       selectedGift!.images![1],
                                       selectedGift!.images![0],
                                       selectedGift!.coin??1,
@@ -514,7 +516,7 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
     );
   }
 
-  void _showBottomLeftDialog(Function callBack, List<String> ss) {
+  void _showBottomLeftDialog(Function callBack, List<UserData> ss) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -535,50 +537,50 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
 
 class CheckboxListTileWidget extends StatefulWidget {
   final Function callBack;
-  final List<String> selectedStream;
+  final List<UserData> selectedStream;
   const CheckboxListTileWidget(
       {super.key, required this.callBack, required this.selectedStream});
-
   @override
   CheckboxListTileWidgetState createState() => CheckboxListTileWidgetState();
 }
 
 class CheckboxListTileWidgetState extends State<CheckboxListTileWidget> {
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ZegoRoomProvider>(
       builder: (context, p, child) {
-        List<ZegoStreamExtended> list = p.roomStreamList
-            .where(
-                (element) => element.streamId != ZegoConfig.instance.userID)
-            .toList();
+
+        final  List<ZegoStreamExtended> list = p.roomStreamList
+            .where((element) => element.streamId != p.userID).toList();
         list.sort((a, b) => a.seat!.compareTo(b.seat!));
-        return list.isNotEmpty
-            ? ListView(
-                shrinkWrap: true,
-                children: List.generate(
-                  list.length,
-                  (index) => CheckboxListTile(
-                    activeColor: Theme.of(context).primaryColor,
-                    dense: true,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 6),
-                    title: Text(list[index].userName ?? ''),
-                    value: widget.selectedStream.contains(list[index].userName),
-                    onChanged: (bool? value) {
-                      if (value == true) {
-                        widget.selectedStream.add(list[index].userName ?? '');
-                        setState(() {});
-                      } else {
-                        widget.selectedStream.removeWhere(
-                            (element) => element == list[index].userName);
-                        setState(() {});
-                      }
-                      widget.callBack(widget.selectedStream);
-                    },
-                  ),
-                ))
-            : const SizedBox(
-                height: 90, child: Center(child: Text('None Seated')));
+
+          return list.isNotEmpty
+              ? ListView(
+              shrinkWrap: true,
+              children: List.generate(
+                list.length,
+                    (index) => CheckboxListTile(
+                      activeColor: Theme.of(context).primaryColor,
+                      dense: true,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 6),
+                      title: Text(list[index].userData?.name?? ''),
+                      value: widget.selectedStream.contains(list[index].userData),
+                      onChanged: (bool? value) {
+                        if (value == true) {
+                          widget.selectedStream.add(list[index].userData!);
+                          setState(() {});
+                        } else {
+                          widget.selectedStream.removeWhere(
+                                  (element) => element == list[index].userData);
+                          setState(() {});
+                        }
+                        widget.callBack(widget.selectedStream);
+                      },
+                    ),
+              ))
+              : const SizedBox(
+              height: 90, child: Center(child: Text('None Seated')));
       },
     );
   }

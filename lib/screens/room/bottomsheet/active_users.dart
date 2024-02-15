@@ -4,19 +4,16 @@ import 'package:live_app/provider/zego_room_provider.dart';
 import 'package:live_app/utils/common_widgets.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
-import 'package:zego_express_engine/zego_express_engine.dart';
-import '../../../data/datasource/local/sharedpreferences/storage_service.dart';
+import '../../../data/model/response/user_data_model.dart';
 import '../../../provider/rooms_provider.dart';
 import '../../../provider/user_data_provider.dart';
-import '../../../utils/constants.dart';
-import '../../../utils/zego_config.dart';
 import '../../dashboard/me/profile/user_profile.dart';
 import '../widget/kick_room.dart';
 
 class ActiveUsersBottomSheet extends StatefulWidget {
   final String ownerId;
-  const ActiveUsersBottomSheet({Key? key, required this.ownerId})
+  final ScrollController controller;
+  const ActiveUsersBottomSheet({Key? key, required this.ownerId, required this.controller})
       : super(key: key);
 
   @override
@@ -34,7 +31,7 @@ class _ActiveUsersBottomSheetState extends State<ActiveUsersBottomSheet> {
         // Reordering the list
         List<String> onSeat =
             value.roomStreamList.map((e) => e.streamId.toString()).toList();
-        List<ZegoUser> reorderedUsers = reorderList(
+        List<UserData> reorderedUsers = reorderList(
             ownerId: widget.ownerId,
             adminIds: value.room!.admin!,
             onSeatUsers: onSeat,
@@ -69,345 +66,255 @@ class _ActiveUsersBottomSheetState extends State<ActiveUsersBottomSheet> {
                 width: double.infinity,
                 height: Get.height / 3,
                 child: ListView.builder(
+                  controller: widget.controller,
                   itemCount: reorderedUsers.length,
                   itemBuilder: (context, index) {
-                    return FutureBuilder(
-                        future: Provider.of<UserDataProvider>(context,
-                                listen: false)
-                            .getUser(id: reorderedUsers[index].userID),
-                        builder: (context, snapshot) {
-                          switch (snapshot.connectionState) {
-                            case ConnectionState.none:
-                              return const Text('none...');
-                            case ConnectionState.active:
-                              return const Text('active...');
-                            case ConnectionState.waiting:
-                              return Container(
-                                  width: double.infinity,
-                                  height: 70 * a,
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                        top: BorderSide(
-                                            color:
-                                                Colors.black.withOpacity(0.06),
-                                            width: 1)),
-                                  ),
-                                  padding: EdgeInsets.all(10 * a),
-                                  child: Row(
-                                    children: [
-                                      Shimmer.fromColors(
-                                        baseColor: const Color.fromARGB(
-                                            248, 188, 187, 187),
-                                        highlightColor: Colors.white,
-                                        period: const Duration(seconds: 1),
-                                        child: Container(
-                                          margin: EdgeInsets.fromLTRB(
-                                              0 * a, 0 * a, 12 * a, 0 * a),
-                                          width: 50 * a,
-                                          height: 50 * a,
-                                          decoration: const BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            image: DecorationImage(
-                                              fit: BoxFit.cover,
-                                              image: AssetImage(
-                                                  'assets/profile.png'),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Align(
-                                          alignment: Alignment.center,
-                                          child: Shimmer.fromColors(
-                                            baseColor: const Color.fromARGB(
-                                                248, 188, 187, 187),
-                                            highlightColor: Colors.white,
-                                            period: const Duration(seconds: 1),
-                                            child: Container(
-                                              margin: EdgeInsets.fromLTRB(
-                                                  0 * a, 2 * a, 7 * a, 8 * a),
-                                              height: 21 * a,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(8)),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ));
-                            case ConnectionState.done:
-                              if (snapshot.hasError ||
-                                  snapshot.data?.status == 0 ||
-                                  snapshot.data?.data == null) {
-                                return ListTile(
-                                  title: Text('Error: ${snapshot.error}'),
-                                );
-                              } else {
-                                final user = snapshot.data!.data;
-                                print(
-                                    '${reorderedUsers[index].userID.trim() != widget.ownerId.trim()} || ${!value.room!.admin!.contains(reorderedUsers[index].userID.trim())}');
-                                print(reorderedUsers[index].userID.trim() !=
-                                        widget.ownerId.trim() &&
-                                    !value.room!.admin!.contains(
-                                        reorderedUsers[index].userID.trim()));
-                                return Container(
-                                  width: double.infinity,
-                                  height: 70 * a,
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                        top: BorderSide(
-                                            color:
-                                                Colors.black.withOpacity(0.06),
-                                            width: 1)),
-                                  ),
-                                  padding: EdgeInsets.all(10 * a),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      InkWell(
-                                        onTap: () async {
-                                          final myId =
-                                              ZegoConfig.instance.userID;
-                                          if (user.id == myId) {
-                                            Get.to(() => const UserProfile());
-                                            return;
-                                          }
-                                          final u = await Provider.of<
-                                                      UserDataProvider>(context,
-                                                  listen: false)
-                                              .addVisitor(user.id!);
-                                          Get.to(() =>
-                                              UserProfile(userData: u.data!));
-                                        },
-                                        child: Row(
-                                          children: [
-                                            Container(
-                                              margin: EdgeInsets.fromLTRB(
-                                                  0 * a, 0 * a, 7 * a, 0 * a),
-                                              width: 50 * a,
-                                              height: 50 * a,
-                                              decoration: BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                image: user!.images!.isEmpty
-                                                    ? const DecorationImage(
-                                                        fit: BoxFit.cover,
-                                                        image: AssetImage(
-                                                            'assets/profile.png'),
-                                                      )
-                                                    : DecorationImage(
-                                                        fit: BoxFit.cover,
-                                                        image: NetworkImage(
-                                                            user.images!.first),
-                                                      ),
-                                              ),
-                                            ),
-                                            Container(
-                                              margin: EdgeInsets.fromLTRB(
-                                                  3 * a, 0 * a, 6 * a, 2 * a),
-                                              child: Text(
-                                                user.name.toString(),
-                                                style: SafeGoogleFont(
-                                                  'Poppins',
-                                                  fontSize: 15 * b,
-                                                  fontWeight: FontWeight.w400,
-                                                  height: 1.5 * b / a,
-                                                  letterSpacing: 0.48 * a,
-                                                  color:
-                                                      const Color(0xff000000),
-                                                ),
-                                              ),
-                                            ),
-                                            userLevelTag(
-                                                user.level ?? 0, 17 * a)
-                                          ],
-                                        ),
-                                      ),
-
-                                      //if user is an owner or admin
-                                      reorderedUsers[index].userID.trim() ==
-                                                  widget.ownerId.trim() ||
-                                              value.room!.admin!.contains(
-                                                  reorderedUsers[index]
-                                                      .userID
-                                                      .trim())
-                                          ? Container(
-                                              margin:
-                                                  EdgeInsets.only(left: 5 * a),
-                                              padding: EdgeInsets.fromLTRB(
-                                                  5 * a, 0 * a, 6 * a, 0 * a),
-                                              height: 18 * a,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        12 * a),
-                                                color: reorderedUsers[index]
-                                                            .userID
-                                                            .trim() ==
-                                                        widget.ownerId.trim()
-                                                    ? const Color(0xFF138808)
-                                                    : const Color(0xffFF9933),
-                                              ),
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                reorderedUsers[index]
-                                                            .userID
-                                                            .trim() ==
-                                                        widget.ownerId.trim()
-                                                    ? 'Owner'
-                                                    : 'Admin',
-                                                style: SafeGoogleFont(
-                                                  'Poppins',
-                                                  fontSize: 11 * b,
-                                                  fontWeight: FontWeight.w400,
-                                                  height: 1.5 * b / a,
-                                                  letterSpacing: 0.36 * a,
-                                                  color:
-                                                      const Color(0xffffffff),
-                                                ),
-                                              ),
-                                            )
-                                          //if user is on seat
-                                          : (onSeat.contains(
-                                                  reorderedUsers[index]
-                                                      .userID
-                                                      .trim())
-                                              ? Container(
-                                                  margin: EdgeInsets.only(
-                                                      left: 5 * a),
-                                                  padding: EdgeInsets.fromLTRB(
-                                                      5 * a,
-                                                      0 * a,
-                                                      6 * a,
-                                                      0 * a),
-                                                  height: 18 * a,
-                                                  decoration: BoxDecoration(
-                                                      color: Theme.of(context)
-                                                          .primaryColor,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              12 * a)),
-                                                  alignment: Alignment.center,
-                                                  child: Text(
-                                                    'On Seat',
-                                                    style: SafeGoogleFont(
-                                                      'Poppins',
-                                                      fontSize: 11 * b,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      height: 1.5 * b / a,
-                                                      letterSpacing: 0.36 * a,
-                                                      color: const Color(
-                                                          0xffffffff),
-                                                    ),
-                                                  ),
-                                                )
-                                              : const SizedBox.shrink()),
-                                      const Spacer(),
-
-                                      Container(
-                                        padding: EdgeInsets.fromLTRB(
-                                            4 * a, 0 * a, 0 * a, 4 * a),
-                                        height: double.infinity,
-                                        //if viewer is owner or admin
-                                        child: (widget.ownerId.trim() ==
-                                                        ZegoConfig
-                                                            .instance.userID ||
-                                                    value.room!.admin!.contains(
-                                                        ZegoConfig
-                                                            .instance.userID
-                                                            .trim())) &&
-                                                user.id! !=
-                                                    ZegoConfig.instance.userID
-                                            ? Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  if (!value.room!.admin!
-                                                          .contains(
-                                                              reorderedUsers[
-                                                                      index]
-                                                                  .userID
-                                                                  .trim()) &&
-                                                      widget.ownerId.trim() ==
-                                                          ZegoConfig
-                                                              .instance.userID)
-                                                    InkWell(
-                                                      onTap: () =>
-                                                          _showConfirmationDialog(
-                                                              () async {
-                                                        Get.back();
-                                                        if (value.room!.admin!
-                                                                .length >=
-                                                            20) {
-                                                          showCustomSnackBar(
-                                                              'Maximum admin limit is 20!',
-                                                              context);
-                                                        } else {
-                                                          final p = Provider.of<
-                                                                  RoomsProvider>(
-                                                              Get.context!,
-                                                              listen: false);
-                                                          value.room!.admin!
-                                                              .add(user.id!);
-                                                          await p.addAdmin(
-                                                              value.room!.id!,
-                                                              user.id!);
-                                                          value
-                                                              .updateAdminList();
-                                                        }
-                                                      }, user.name),
-                                                      child: Icon(
-                                                          Icons
-                                                              .admin_panel_settings_outlined,
-                                                          color: Colors.grey,
-                                                          size: 21 * a),
-                                                    ),
-                                                  if (reorderedUsers[index]
-                                                              .userID
-                                                              .trim() !=
-                                                          widget.ownerId
-                                                              .trim() &&
-                                                      !value.room!.admin!
-                                                          .contains(
-                                                              reorderedUsers[
-                                                                      index]
-                                                                  .userID
-                                                                  .trim()))
-                                                    SizedBox(width: 12 * a),
-                                                  if (reorderedUsers[index]
-                                                              .userID
-                                                              .trim() !=
-                                                          widget.ownerId
-                                                              .trim() &&
-                                                      !value.room!.admin!
-                                                          .contains(
-                                                              reorderedUsers[
-                                                                      index]
-                                                                  .userID
-                                                                  .trim()))
-                                                    InkWell(
-                                                      onTap: () {
-                                                        kickRoomWidget(context,
-                                                            user.name, user.id);
-                                                      },
-                                                      child: Icon(
-                                                          Icons.exit_to_app,
-                                                          color: Colors.grey,
-                                                          size: 21 * a),
-                                                    ),
-                                                ],
-                                              )
-                                            : const SizedBox.shrink(),
-                                      ),
-                                    ],
-                                  ),
-                                );
+                    final user = reorderedUsers[index];
+                    return Container(
+                      width: double.infinity,
+                      height: 70 * a,
+                      decoration: BoxDecoration(
+                        border: Border(
+                            top: BorderSide(
+                                color:
+                                Colors.black.withOpacity(0.06),
+                                width: 1)),
+                      ),
+                      padding: EdgeInsets.all(10 * a),
+                      child: Row(
+                        crossAxisAlignment:
+                        CrossAxisAlignment.center,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              final myId = value.userID;
+                              if (user.id == myId) {
+                                Get.to(() => const UserProfile());
+                                return;
                               }
-                          }
-                        });
+                              Provider.of<UserDataProvider>(context,
+                                  listen: false).addVisitor(user.id!);
+                              Get.to(() => UserProfile(userData: user));
+                            },
+                            child: Row(
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.fromLTRB(
+                                      0 * a, 0 * a, 7 * a, 0 * a),
+                                  width: 50 * a,
+                                  height: 50 * a,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: user.images!.isEmpty
+                                        ? const DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: AssetImage(
+                                          'assets/profile.png'),
+                                    )
+                                        : DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: NetworkImage(
+                                          user.images!.first),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.fromLTRB(
+                                      3 * a, 0 * a, 6 * a, 2 * a),
+                                  child: Text(
+                                    user.name.toString(),
+                                    style: SafeGoogleFont(
+                                      'Poppins',
+                                      fontSize: 15 * b,
+                                      fontWeight: FontWeight.w400,
+                                      height: 1.5 * b / a,
+                                      letterSpacing: 0.48 * a,
+                                      color:
+                                      const Color(0xff000000),
+                                    ),
+                                  ),
+                                ),
+                                userLevelTag(
+                                    user.level ?? 0, 17 * a)
+                              ],
+                            ),
+                          ),
+
+                          //if user is an owner or admin
+                          reorderedUsers[index].id!.trim() ==
+                              widget.ownerId.trim() ||
+                              value.room!.admin!.contains(
+                                  reorderedUsers[index]
+                                      .id!
+                                      .trim())
+                              ? Container(
+                            margin:
+                            EdgeInsets.only(left: 5 * a),
+                            padding: EdgeInsets.fromLTRB(
+                                5 * a, 0 * a, 6 * a, 0 * a),
+                            height: 18 * a,
+                            decoration: BoxDecoration(
+                              borderRadius:
+                              BorderRadius.circular(
+                                  12 * a),
+                              color: reorderedUsers[index]
+                                  .id!
+                                  .trim() ==
+                                  widget.ownerId.trim()
+                                  ? const Color(0xFF138808)
+                                  : const Color(0xffFF9933),
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              reorderedUsers[index]
+                                  .id!
+                                  .trim() ==
+                                  widget.ownerId.trim()
+                                  ? 'Owner'
+                                  : 'Admin',
+                              style: SafeGoogleFont(
+                                'Poppins',
+                                fontSize: 11 * b,
+                                fontWeight: FontWeight.w400,
+                                height: 1.5 * b / a,
+                                letterSpacing: 0.36 * a,
+                                color:
+                                const Color(0xffffffff),
+                              ),
+                            ),
+                          )
+                          //if user is on seat
+                              : (onSeat.contains(
+                              reorderedUsers[index]
+                                  .id!
+                                  .trim())
+                              ? Container(
+                            margin: EdgeInsets.only(
+                                left: 5 * a),
+                            padding: EdgeInsets.fromLTRB(
+                                5 * a,
+                                0 * a,
+                                6 * a,
+                                0 * a),
+                            height: 18 * a,
+                            decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .primaryColor,
+                                borderRadius:
+                                BorderRadius.circular(
+                                    12 * a)),
+                            alignment: Alignment.center,
+                            child: Text(
+                              'On Seat',
+                              style: SafeGoogleFont(
+                                'Poppins',
+                                fontSize: 11 * b,
+                                fontWeight:
+                                FontWeight.w400,
+                                height: 1.5 * b / a,
+                                letterSpacing: 0.36 * a,
+                                color: const Color(
+                                    0xffffffff),
+                              ),
+                            ),
+                          )
+                              : const SizedBox.shrink()),
+                          const Spacer(),
+
+                          Container(
+                            padding: EdgeInsets.fromLTRB(
+                                4 * a, 0 * a, 0 * a, 4 * a),
+                            height: double.infinity,
+                            //if viewer is owner or admin
+                            child: (widget.ownerId.trim() ==
+                                value.userID ||
+                                value.room!.admin!.contains(
+                                    value.userID
+                                        .trim())) &&
+                                user.id! !=
+                                    value.userID
+                                ? Row(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.center,
+                              children: [
+                                if (!value.room!.admin!
+                                    .contains(
+                                    reorderedUsers[
+                                    index]
+                                        .id!
+                                        .trim()) &&
+                                    widget.ownerId.trim() ==
+                                        value.userID)
+                                  InkWell(
+                                    onTap: () =>
+                                        _showConfirmationDialog(
+                                                () async {
+                                              Get.back();
+                                              if (value.room!.admin!
+                                                  .length >=
+                                                  20) {
+                                                showCustomSnackBar(
+                                                    'Maximum admin limit is 20!',
+                                                    context);
+                                              } else {
+                                                final p = Provider.of<
+                                                    RoomsProvider>(
+                                                    Get.context!,
+                                                    listen: false);
+                                                value.room!.admin!
+                                                    .add(user.id!);
+                                                await p.addAdmin(
+                                                    value.room!.id!,
+                                                    user.id!);
+                                                value.updateAdminList();
+                                              }
+                                            }, user.name),
+                                    child: Icon(
+                                        Icons
+                                            .admin_panel_settings_outlined,
+                                        color: Colors.grey,
+                                        size: 21 * a),
+                                  ),
+                                if (reorderedUsers[index]
+                                    .id!
+                                    .trim() !=
+                                    widget.ownerId
+                                        .trim() &&
+                                    !value.room!.admin!
+                                        .contains(
+                                        reorderedUsers[
+                                        index]
+                                            .id!
+                                            .trim()))
+                                  SizedBox(width: 12 * a),
+                                if (reorderedUsers[index]
+                                    .id!
+                                    .trim() !=
+                                    widget.ownerId
+                                        .trim() &&
+                                    !value.room!.admin!
+                                        .contains(
+                                        reorderedUsers[
+                                        index]
+                                            .id!
+                                            .trim()))
+                                  InkWell(
+                                    onTap: () {
+                                      kickRoomWidget(context,
+                                          user.name, user.id);
+                                    },
+                                    child: Icon(
+                                        Icons.exit_to_app,
+                                        color: Colors.grey,
+                                        size: 21 * a),
+                                  ),
+                              ],
+                            )
+                                : const SizedBox.shrink(),
+                          ),
+                        ],
+                      ),
+                    );
                   },
                 ),
               ),
@@ -418,39 +325,39 @@ class _ActiveUsersBottomSheetState extends State<ActiveUsersBottomSheet> {
     );
   }
 
-  List<ZegoUser> reorderList(
+  List<UserData> reorderList(
       {required String ownerId,
       required List<String> adminIds,
       required List<String> onSeatUsers,
-      required List<ZegoUser> activeUsers}) {
+      required List<UserData> activeUsers}) {
     // Reordering the list
-    List<ZegoUser> reorderedUsers = [];
+    List<UserData> reorderedUsers = [];
 
     // Adding owner to the top
-    ZegoUser? owner =
-        activeUsers.firstWhereOrNull((user) => user.userID == ownerId);
+    UserData? owner =
+        activeUsers.firstWhereOrNull((user) => user.id == ownerId);
     if (owner != null) reorderedUsers.add(owner);
 
     // Adding admins after the owner
-    List<ZegoUser> admins =
-        activeUsers.where((user) => adminIds.contains(user.userID)).toList();
+    List<UserData> admins =
+        activeUsers.where((user) => adminIds.contains(user.id)).toList();
     reorderedUsers.addAll(admins);
 
     // Adding on seat users after owner and admin
-    List<ZegoUser> onSeat = activeUsers
+    List<UserData> onSeat = activeUsers
         .where((user) =>
-            user.userID != ownerId &&
-            !adminIds.contains(user.userID) &&
-            onSeatUsers.contains(user.userID))
+            user.id != ownerId &&
+            !adminIds.contains(user.id) &&
+            onSeatUsers.contains(user.id))
         .toList();
     reorderedUsers.addAll(onSeat);
 
     // Adding remaining users (excluding owner, admins and on seat users)
-    List<ZegoUser> remainingUsers = activeUsers
+    List<UserData> remainingUsers = activeUsers
         .where((user) =>
-            user.userID != ownerId &&
-            !adminIds.contains(user.userID) &&
-            !onSeatUsers.contains(user.userID))
+            user.id != ownerId &&
+            !adminIds.contains(user.id) &&
+            !onSeatUsers.contains(user.id))
         .toList();
     reorderedUsers.addAll(remainingUsers);
 

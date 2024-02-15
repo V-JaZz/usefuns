@@ -68,7 +68,7 @@ class BottomMoreBottomSheet extends StatelessWidget {
               // SizedBox(
               //   width: 10 * a,
               // ),
-              value.onSeat && (value.isOwner || value.room!.admin!.contains(ZegoConfig.instance.userID))? InkWell(
+              value.onSeat && (value.isOwner || value.room!.admin!.contains(value.userID))? InkWell(
                 onTap: () {
                   Get.back();
                   Get.to(() => const RoomMediaPlayer());

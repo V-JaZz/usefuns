@@ -37,8 +37,6 @@ class UserDataProvider with ChangeNotifier {
           storageService.clearStorage();
           Get.offAll(const BannedCountdown());
         }
-        ZegoConfig.instance.userID = userData!.data!.id!;
-        ZegoConfig.instance.userName = userData!.data!.name!;
       }else if(id==null){
         storageService.clearStorage();
         Get.offAll(const LogInScreen());
@@ -84,13 +82,13 @@ class UserDataProvider with ChangeNotifier {
     return responseModel;
   }
 
-  Future <UserDataModel> addVisitor(String id) async {
+  Future <CommonModel> addVisitor(String id) async {
     final apiResponse = await _userDataRepo.addVisitor(id);
-    UserDataModel responseModel;
+    CommonModel responseModel;
     if (apiResponse.statusCode == 200) {
-      responseModel = userDataModelFromJson(apiResponse.body);
+      responseModel = commonModelFromJson(apiResponse.body);
     } else {
-      responseModel = UserDataModel(status: 0,message: apiResponse.reasonPhrase);
+      responseModel = CommonModel(status: 0,message: apiResponse.reasonPhrase);
     }
     return responseModel;
   }

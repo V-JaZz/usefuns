@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:live_app/data/model/response/user_data_model.dart';
 import 'package:live_app/provider/zego_room_provider.dart';
 import 'package:live_app/utils/common_widgets.dart';
 
@@ -28,8 +29,8 @@ class _InviteUserBottomSheetState extends State<InviteUserBottomSheet> {
     return Consumer<ZegoRoomProvider>(
       builder: (context, value, child) {
         List<String> onSeat =  value.roomStreamList.map((e) => e.streamId.toString()).toList();
-        List<ZegoUser> activeNotOnSeat = value.roomUsersList.where((e) => !onSeat.contains(e.userID)).toList();
-        List<ZegoUser> reorderedUsers = reorderList(ownerId: widget.ownerId,adminIds: value.room!.admin!, activeNotOnSeat: activeNotOnSeat);
+        List<UserData> activeNotOnSeat = value.roomUsersList.where((e) => !onSeat.contains(e.id)).toList();
+        List<UserData> reorderedUsers = reorderList(myId: value.userID , ownerId: widget.ownerId,adminIds: value.room!.admin!, activeNotOnSeat: activeNotOnSeat);
 
         return Container(
         width: double.infinity,
@@ -98,7 +99,7 @@ class _InviteUserBottomSheetState extends State<InviteUserBottomSheet> {
                 itemCount: reorderedUsers.length,
                 itemBuilder: (context, index) {
                   return FutureBuilder(
-                      future: Provider.of<UserDataProvider>(context,listen: false).getUser(id: reorderedUsers[index].userID),
+                      future: value.getSavedUserData(reorderedUsers[index].id!),
                       builder: (context, snapshot) {
                         switch (snapshot.connectionState) {
                           case ConnectionState.none:
@@ -156,12 +157,12 @@ class _InviteUserBottomSheetState extends State<InviteUserBottomSheet> {
                                 )
                             );
                           case ConnectionState.done:
-                            if (snapshot.hasError || snapshot.data?.status==0 || snapshot.data==null) {
+                            if (snapshot.hasError || snapshot.data==null) {
                               return ListTile(
                                 title: Text('Error: ${snapshot.error}'),
                               );
                             }else {
-                              final user = snapshot.data!.data;
+                              final user = snapshot.data!;
 
                               return Container(
                                 width: double.infinity,
@@ -229,17 +230,17 @@ class _InviteUserBottomSheetState extends State<InviteUserBottomSheet> {
                                     ),
 
                                     //if user is an owner or admin
-                                    if(reorderedUsers[index].userID.trim() == widget.ownerId.trim() || value.room!.admin!.contains(reorderedUsers[index].userID.trim()))
+                                    if(reorderedUsers[index].id!.trim() == widget.ownerId.trim() || value.room!.admin!.contains(reorderedUsers[index].id!.trim()))
                                       Container(
                                         margin: EdgeInsets.only(left: 5*a),
                                         padding: EdgeInsets.fromLTRB(5 * a, 0 * a, 6 * a, 0 * a),
-                                        height: reorderedUsers[index].userID.trim() == widget.ownerId.trim() ?18 * a:16 * a,
+                                        height: reorderedUsers[index].id!.trim() == widget.ownerId.trim() ?18 * a:16 * a,
                                         decoration: BoxDecoration(
-                                          color: reorderedUsers[index].userID.trim() == widget.ownerId.trim()?const Color(0xFF138808):const Color(0xffFF9933),
+                                          color: reorderedUsers[index].id!.trim() == widget.ownerId.trim()?const Color(0xFF138808):const Color(0xffFF9933),
                                         ),
                                         alignment: Alignment.center,
                                         child: Text(
-                                          reorderedUsers[index].userID.trim() == widget.ownerId.trim() ? 'Owner' : 'Admin',
+                                          reorderedUsers[index].id!.trim() == widget.ownerId.trim() ? 'Owner' : 'Admin',
                                           style: SafeGoogleFont(
                                             'Poppins',
                                             fontSize: 11 * b,
@@ -283,24 +284,24 @@ class _InviteUserBottomSheetState extends State<InviteUserBottomSheet> {
     );
   }
 
-  List<ZegoUser> reorderList(
-      {required String ownerId, required List<String> adminIds, required List<ZegoUser> activeNotOnSeat}) {
+  List<UserData> reorderList(
+      {required String myId, required String ownerId, required List<String> adminIds, required List<UserData> activeNotOnSeat}) {
     //Remove the viewer
-    activeNotOnSeat.removeWhere((e) => e.userID == ZegoConfig.instance.userID);
+    activeNotOnSeat.removeWhere((e) => e.id == myId);
 
     // Reordering the list
-    List<ZegoUser> reorderedUsers = [];
+    List<UserData> reorderedUsers = [];
 
     // Adding owner to the top
-    ZegoUser? owner = activeNotOnSeat.firstWhereOrNull((user) => user.userID == ownerId);
+    UserData? owner = activeNotOnSeat.firstWhereOrNull((user) => user.id == ownerId);
     if(owner!=null)reorderedUsers.add(owner);
 
     // Adding admins after the owner
-    List<ZegoUser> admins = activeNotOnSeat.where((user) => adminIds.contains(user.userID)).toList();
+    List<UserData> admins = activeNotOnSeat.where((user) => adminIds.contains(user.id)).toList();
     reorderedUsers.addAll(admins);
 
     // Adding remaining users (excluding owner and admins)
-    List<ZegoUser> remainingUsers = activeNotOnSeat.where((user) => user.userID != ownerId && !adminIds.contains(user.userID)).toList();
+    List<UserData> remainingUsers = activeNotOnSeat.where((user) => user.id != ownerId && !adminIds.contains(user.id)).toList();
     reorderedUsers.addAll(remainingUsers);
 
     return reorderedUsers.toSet().toList();

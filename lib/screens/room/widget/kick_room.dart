@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 void kickRoomWidget(context, name, id){
   double baseWidth = 390;
   double a = MediaQuery.of(context).size.width / baseWidth;
-  double b = a * 0.97;
   showDialog(
     context: context,
     builder: (BuildContext context) {

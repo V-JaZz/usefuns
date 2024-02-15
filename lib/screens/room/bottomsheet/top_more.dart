@@ -115,14 +115,13 @@ class TopMore extends StatelessWidget {
                                     ),
                                   GestureDetector(
                                     onTap: () {
+                                      Get.back();
                                       if(!hasRoomLock){
                                         Get.to(() => const Shop(index: 6));
                                       }else if(isRoomLocked){
                                         Provider.of<ZegoRoomProvider>(context,listen:false).updateRoomLock(null);
-                                        Get.back();
                                       }else if(_formKey.currentState!.validate()){
                                         Provider.of<ZegoRoomProvider>(context,listen:false).updateRoomLock(textEditingController.text);
-                                        Get.back();
                                       }
                                     },
                                     child: Padding(
@@ -361,14 +360,13 @@ class TopMore extends StatelessWidget {
                                   ),
                                   GestureDetector(
                                     onTap: () {
+                                      Get.back();
                                       if(!hasExtraSeat){
                                         Get.to(() => const Shop(index: 6));
                                       }else if(extraSeatAdded){
                                         Provider.of<ZegoRoomProvider>(context,listen:false).updateTotalSeats(8);
-                                        Get.back();
                                       }else{
                                         Provider.of<ZegoRoomProvider>(context,listen:false).updateTotalSeats(12);
-                                        Get.back();
                                       }
                                     },
                                     child: Padding(

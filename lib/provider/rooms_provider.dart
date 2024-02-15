@@ -21,6 +21,7 @@ class RoomsProvider with ChangeNotifier {
   List<Room> recentRooms = [];
 
   bool roomLoading = true;
+  int _retryCount = 0;
 
   String _selectedCountryCode = 'all';
   String get selectedCountryCode => _selectedCountryCode;
@@ -134,14 +135,27 @@ class RoomsProvider with ChangeNotifier {
     return responseModel;
   }
 
-  Future<CommonModel> addRoomUser(String roomId, {String? password}) async {
+  Future<CommonModel> addRoomUser(String roomId, {String? password, bool retry = false}) async {
+
     final apiResponse = password==null
         ? await _roomsRepo.addUser(roomId,storageService.getString(Constants.id))
         : await _roomsRepo.addUserLocked(roomId,storageService.getString(Constants.id), password);
     CommonModel responseModel;
     if (apiResponse.statusCode == 200) {
       responseModel = commonModelFromJson(apiResponse.body);
-    } else {
+
+      if(retry && _retryCount<3 && (responseModel.status != 1 || responseModel.message != "Member added successfully.")) {
+        _retryCount++;
+        return await addRoomUser(roomId, password: password, retry: retry);
+      }else{
+        _retryCount = 0;
+      }
+
+    }else if(retry && _retryCount<3){
+      _retryCount++;
+      return await addRoomUser(roomId, password: password, retry: retry);
+    }else{
+      _retryCount = 0;
       responseModel = CommonModel(status: 0,message: apiResponse.reasonPhrase);
     }
     return responseModel;
@@ -278,6 +292,8 @@ class RoomsProvider with ChangeNotifier {
         notifyListeners();
         return true;
       }
+    }else{
+      await getAllPopular(refresh);
     }
     return false;
   }
@@ -300,6 +316,8 @@ class RoomsProvider with ChangeNotifier {
         notifyListeners();
         return true;
       }
+    }else{
+      await getAllNew(refresh);
     }
     return false;
   }

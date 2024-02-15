@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/data/datasource/local/sharedpreferences/storage_service.dart';
-import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../data/model/response/room_gift_history_model.dart';
 import '../../../provider/gifts_provider.dart';
+import '../../../provider/user_data_provider.dart';
+import '../../../provider/zego_room_provider.dart';
 import '../../../utils/constants.dart';
 import '../../../utils/helper.dart';
 import '../../dashboard/me/profile/user_profile.dart';
@@ -137,7 +138,7 @@ class _ContributionState extends State<Contribution> {
                                       diamondsSum = diamondsSum+(g.gift!.coin!*g.count!);
                                     }
                                     return FutureBuilder(
-                                      future: Provider.of<UserDataProvider>(context,listen: false).getUser(id: userId),
+                                      future: Provider.of<ZegoRoomProvider>(context,listen: false).getSavedUserData(userId),
                                         builder: (context, snapshot) {
                                           switch (snapshot.connectionState) {
                                             case ConnectionState.none:
@@ -161,7 +162,7 @@ class _ContributionState extends State<Contribution> {
                                                 ),
                                               );
                                             case ConnectionState.done:
-                                              if(snapshot.hasError || snapshot.data?.data == null){
+                                              if(snapshot.hasError || snapshot.data == null){
                                                 return const SizedBox.shrink();
                                               }
                                               return Column(
@@ -171,20 +172,20 @@ class _ContributionState extends State<Contribution> {
                                                       onTap: () {
                                                         Get.back();
                                                         String myId = StorageService().getString(Constants.userId);
-                                                        if(snapshot.data!.data!.userId == myId){
+                                                        if(snapshot.data!.userId == myId){
                                                           Get.to(()=>const UserProfile());
                                                           return;
                                                         }
-                                                        Provider.of<UserDataProvider>(context,listen: false).addVisitor(snapshot.data!.data!.id!);
-                                                        Get.to(()=>UserProfile(userData: snapshot.data!.data!));
+                                                        Provider.of<UserDataProvider>(context,listen: false).addVisitor(snapshot.data!.id!);
+                                                        Get.to(()=>UserProfile(userData: snapshot.data!));
                                                       },
                                                       child: SizedBox(
                                                         height: 58 * a,
                                                         child: Stack(
                                                           children: [
-                                                            snapshot.data!.data!.images!.isNotEmpty
+                                                            snapshot.data!.images!.isNotEmpty
                                                               ? CircleAvatar(
-                                                              foregroundImage:NetworkImage(snapshot.data!.data!.images!.first),
+                                                              foregroundImage:NetworkImage(snapshot.data!.images!.first),
                                                               radius: 25 * a,
                                                             )
                                                                 : CircleAvatar(
@@ -207,7 +208,7 @@ class _ContributionState extends State<Contribution> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      snapshot.data!.data!.name!,
+                                                      snapshot.data!.name!,
                                                       style: SafeGoogleFont(
                                                         'Poppins',
                                                         fontSize: 12 * b,
@@ -267,7 +268,7 @@ class _ContributionState extends State<Contribution> {
                                     diamondsSum = diamondsSum+(g.gift!.coin!*g.count!);
                                   }
                                   return FutureBuilder(
-                                    future: Provider.of<UserDataProvider>(context,listen: false).getUser(id: userId),
+                                    future: Provider.of<ZegoRoomProvider>(context,listen: false).getSavedUserData(userId),
                                     builder: (context, snapshot) {
                                       switch (snapshot.connectionState) {
                                         case ConnectionState.none:
@@ -289,7 +290,7 @@ class _ContributionState extends State<Contribution> {
                                             ),
                                           );
                                         case ConnectionState.done:
-                                          if(snapshot.hasError || snapshot.data?.data == null){
+                                          if(snapshot.hasError || snapshot.data == null){
                                             return const SizedBox.shrink();
                                           }
                                           return ListTile(
@@ -299,12 +300,12 @@ class _ContributionState extends State<Contribution> {
                                             onTap: () {
                                               Get.back();
                                               String myId = StorageService().getString(Constants.userId);
-                                              if(snapshot.data!.data!.userId == myId){
+                                              if(snapshot.data!.userId == myId){
                                                 Get.to(()=>const UserProfile());
                                                 return;
                                               }
-                                              Provider.of<UserDataProvider>(context,listen: false).addVisitor(snapshot.data!.data!.id!);
-                                              Get.to(()=>UserProfile(userData: snapshot.data!.data!));
+                                              Provider.of<UserDataProvider>(context,listen: false).addVisitor(snapshot.data!.id!);
+                                              Get.to(()=>UserProfile(userData: snapshot.data!));
                                             },
                                             leading: Row(
                                               mainAxisSize: MainAxisSize.min,
@@ -324,9 +325,9 @@ class _ContributionState extends State<Contribution> {
                                                     ),
                                                   ),
                                                 ),
-                                                snapshot.data!.data!.images!.isNotEmpty
+                                                snapshot.data!.images!.isNotEmpty
                                                     ? CircleAvatar(
-                                                  foregroundImage:NetworkImage(snapshot.data!.data!.images!.first),
+                                                  foregroundImage:NetworkImage(snapshot.data!.images!.first),
                                                   radius: 25 * a,
                                                 )
                                                     : CircleAvatar(
@@ -336,7 +337,7 @@ class _ContributionState extends State<Contribution> {
                                               ],
                                             ),
                                             title: Text(
-                                              snapshot.data!.data!.name!,
+                                              snapshot.data!.name!,
                                               style: SafeGoogleFont(
                                                 'Poppins',
                                                 fontSize: 12 * b,
@@ -445,7 +446,7 @@ class _ContributionState extends State<Contribution> {
                                         diamondsSum = diamondsSum+(g.gift!.coin!*g.count!);
                                       }
                                       return FutureBuilder(
-                                        future: Provider.of<UserDataProvider>(context,listen: false).getUser(id: userId),
+                                        future: Provider.of<ZegoRoomProvider>(context,listen: false).getSavedUserData(userId),
                                         builder: (context, snapshot) {
                                           switch (snapshot.connectionState) {
                                             case ConnectionState.none:
@@ -469,7 +470,7 @@ class _ContributionState extends State<Contribution> {
                                                 ),
                                               );
                                             case ConnectionState.done:
-                                              if(snapshot.hasError || snapshot.data?.data == null){
+                                              if(snapshot.hasError || snapshot.data == null){
                                                 return const SizedBox.shrink();
                                               }
                                               return Column(
@@ -479,20 +480,20 @@ class _ContributionState extends State<Contribution> {
                                                     onTap:() {
                                                       Get.back();
                                                       String myId = StorageService().getString(Constants.userId);
-                                                      if(snapshot.data!.data!.userId == myId){
+                                                      if(snapshot.data!.userId == myId){
                                                         Get.to(()=>const UserProfile());
                                                         return;
                                                       }
-                                                      Provider.of<UserDataProvider>(context,listen: false).addVisitor(snapshot.data!.data!.id!);
-                                                      Get.to(()=>UserProfile(userData: snapshot.data!.data!));
+                                                      Provider.of<UserDataProvider>(context,listen: false).addVisitor(snapshot.data!.id!);
+                                                      Get.to(()=>UserProfile(userData: snapshot.data!));
                                                     },
                                                     child: SizedBox(
                                                       height: 58 * a,
                                                       child: Stack(
                                                         children: [
-                                                          snapshot.data!.data!.images!.isNotEmpty
+                                                          snapshot.data!.images!.isNotEmpty
                                                               ? CircleAvatar(
-                                                            foregroundImage:NetworkImage(snapshot.data!.data!.images!.first),
+                                                            foregroundImage:NetworkImage(snapshot.data!.images!.first),
                                                             radius: 25 * a,
                                                           )
                                                               : CircleAvatar(
@@ -515,7 +516,7 @@ class _ContributionState extends State<Contribution> {
                                                     ),
                                                   ),
                                                   Text(
-                                                    snapshot.data!.data!.name!,
+                                                    snapshot.data!.name!,
                                                     style: SafeGoogleFont(
                                                       'Poppins',
                                                       fontSize: 12 * b,
@@ -575,7 +576,7 @@ class _ContributionState extends State<Contribution> {
                                       diamondsSum = diamondsSum+(g.gift!.coin!*g.count!);
                                     }
                                     return FutureBuilder(
-                                      future: Provider.of<UserDataProvider>(context,listen: false).getUser(id: userId),
+                                      future: Provider.of<ZegoRoomProvider>(context,listen: false).getSavedUserData(userId),
                                       builder: (context, snapshot) {
                                         switch (snapshot.connectionState) {
                                           case ConnectionState.none:
@@ -597,7 +598,7 @@ class _ContributionState extends State<Contribution> {
                                               ),
                                             );
                                           case ConnectionState.done:
-                                            if(snapshot.hasError || snapshot.data?.data == null){
+                                            if(snapshot.hasError || snapshot.data == null){
                                               return const SizedBox.shrink();
                                             }
                                             return ListTile(
@@ -607,12 +608,12 @@ class _ContributionState extends State<Contribution> {
                                               onTap: () {
                                                 Get.back();
                                                 String myId = StorageService().getString(Constants.userId);
-                                                if(snapshot.data!.data!.userId == myId){
+                                                if(snapshot.data!.userId == myId){
                                                   Get.to(()=>const UserProfile());
                                                   return;
                                                 }
-                                                Provider.of<UserDataProvider>(context,listen: false).addVisitor(snapshot.data!.data!.id!);
-                                                Get.to(()=>UserProfile(userData: snapshot.data!.data!));
+                                                Provider.of<UserDataProvider>(context,listen: false).addVisitor(snapshot.data!.id!);
+                                                Get.to(()=>UserProfile(userData: snapshot.data!));
                                               },
                                               leading: Row(
                                                 mainAxisSize: MainAxisSize.min,
@@ -632,9 +633,9 @@ class _ContributionState extends State<Contribution> {
                                                       ),
                                                     ),
                                                   ),
-                                                  snapshot.data!.data!.images!.isNotEmpty
+                                                  snapshot.data!.images!.isNotEmpty
                                                       ? CircleAvatar(
-                                                    foregroundImage:NetworkImage(snapshot.data!.data!.images!.first),
+                                                    foregroundImage:NetworkImage(snapshot.data!.images!.first),
                                                     radius: 25 * a,
                                                   )
                                                       : CircleAvatar(
@@ -644,7 +645,7 @@ class _ContributionState extends State<Contribution> {
                                                 ],
                                               ),
                                               title: Text(
-                                                snapshot.data!.data!.name!,
+                                                snapshot.data!.name!,
                                                 style: SafeGoogleFont(
                                                   'Poppins',
                                                   fontSize: 12 * b,

@@ -10,7 +10,6 @@ import 'package:live_app/utils/utils_assets.dart';
 import 'package:marquee_text/marquee_text.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 import '../../data/model/body/zego_stream_model.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
@@ -21,7 +20,6 @@ import '../../provider/zego_room_provider.dart';
 import '../../utils/helper.dart';
 import 'widget/live_record.dart';
 import '../../utils/common_widgets.dart';
-import '../../utils/zego_config.dart';
 import '../dashboard/me/profile/user_profile.dart';
 import 'bottomsheet/manager.dart';
 // ignore: depend_on_referenced_packages
@@ -78,12 +76,13 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                 width: Get.width,
                 fit: BoxFit.fill,
               ),
-              if(value.backgroundImage!=null)Image.network(
-                value.backgroundImage!,
-                height: Get.height,
-                width: Get.width,
-                fit: BoxFit.cover,
-              ),
+              if(value.backgroundImage!=null)
+                  Image.network(
+                    value.backgroundImage!,
+                    height: Get.height,
+                    width: Get.width,
+                    fit: BoxFit.cover,
+                ),
               SafeArea(
                 child: Column(
                   children: [
@@ -355,7 +354,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                                         diamondsSum = diamondsSum+g.gift!.coin!;
                                                       }
                                                       return FutureBuilder(
-                                                        future: Provider.of<UserDataProvider>(context,listen: false).getUser(id: userId),
+                                                        future: value.getSavedUserData(userId),
                                                         builder: (context, snapshot) {
                                                           switch (snapshot.connectionState) {
                                                             case ConnectionState.none:
@@ -363,23 +362,14 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                                             case ConnectionState.active:
                                                               return const Text('active...');
                                                             case ConnectionState.waiting:
-                                                              return Shimmer.fromColors(
-                                                                baseColor: Colors.white12,
-                                                                highlightColor: Colors.transparent,
-                                                                period: const Duration(seconds: 1),
-                                                                child: Container(
-                                                                  margin: EdgeInsets.fromLTRB(
-                                                                      0 * a, 0 * a, 4 * a, 0 * a),
-                                                                  width: 24 * a,
-                                                                  height: 24 * a,
-                                                                  decoration: const BoxDecoration(
-                                                                      shape: BoxShape.circle,
-                                                                      color: Colors.white
-                                                                  ),
-                                                                ),
+                                                              return Container(
+                                                                margin: EdgeInsets.fromLTRB(
+                                                                    0 * a, 0 * a, 4 * a, 0 * a),
+                                                                width: 24 * a,
+                                                                height: 24 * a,
                                                               );
                                                             case ConnectionState.done:
-                                                              if(snapshot.hasError || snapshot.data?.data == null){
+                                                              if(snapshot.hasError || snapshot.data == null){
                                                                 return const SizedBox.shrink();
                                                               }
                                                               return Container(
@@ -389,10 +379,10 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                                                   height: 24 * a,
                                                                   decoration: BoxDecoration(
                                                                     shape: BoxShape.circle,
-                                                                    image: snapshot.data!.data!.images!.isNotEmpty
+                                                                    image: snapshot.data!.images!.isNotEmpty
                                                                         ? DecorationImage(
                                                                       fit: BoxFit.cover,
-                                                                      image: NetworkImage(snapshot.data!.data!.images!.first),
+                                                                      image: NetworkImage(snapshot.data!.images!.first),
                                                                     )
                                                                         : const DecorationImage(
                                                                       fit: BoxFit.cover,
@@ -462,107 +452,107 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
 
                                     if(user!=null) {
                                       return GestureDetector(
-                                    onTap: () {
-                                      if (user.streamId == ZegoConfig.instance.userID) {
-                                        bs.showMyProfileSeatBottomSheet(user);
-                                      } else {
-                                          bs.showOthersProfileSeatBottomSheet(user: user, owner: value.isOwner, admin: value.room!.admin!.contains(ZegoConfig.instance.userID));
-                                      }
-                                    },
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        SizedBox(
-                                          width: 76 * a,
-                                          height: 72 * a,
-                                          child: Stack(
-                                            children: [
-                                              if(user.micOn == true)Center(
-                                                child: SizedBox(
-                                                  width: 72 * a,
-                                                  height: 72 * a,
-                                                  child: const SoundVisualizer(),
-                                                ),
-                                              ),
-                                              Center(
-                                                child: userProfileDisplay(
-                                                  size: 72 * a,
-                                                  image: user.image??'',
-                                                  frame: user.frame??'',
-                                                  child: !user.micOn!
-                                                      ? Container(
-                                                    width: 52 * a,
-                                                    height: 52 * a,
-                                                    decoration: const BoxDecoration(
-                                                        color: Colors.black26,
-                                                        shape: BoxShape.circle
-                                                    ),
-                                                    child: Icon(Icons.mic_off,color: Colors.white.withOpacity(0.8),size: 18*a),
-                                                  ):null,
-                                                ),
-                                              ),
-                                              if(user.reactionController!=null)
-                                                Center(
-                                                  child: SizedBox(
-                                                      width: 76 * a,
+                                        onTap: () {
+                                          if (user.streamId == value.userID) {
+                                            bs.showMyProfileSeatBottomSheet(user);
+                                          } else {
+                                            bs.showOthersProfileSeatBottomSheet(user: user, owner: value.isOwner, admin: value.room!.admin!.contains(value.userID));
+                                          }
+                                        },
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            SizedBox(
+                                              width: 76 * a,
+                                              height: 72 * a,
+                                              child: Stack(
+                                                children: [
+                                                  if(user.micOn == true)Center(
+                                                    child: SizedBox(
+                                                      width: 72 * a,
                                                       height: 72 * a,
-                                                      child: SVGAImage(user.reactionController!)
+                                                      child: const SoundVisualizer(),
+                                                    ),
                                                   ),
-                                                ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 72 * a,
-                                          child: Text(
-                                            user.userName ?? '',
-                                            textAlign: TextAlign.center,
-                                            style: SafeGoogleFont(
-                                              'Poppins',
-                                              fontSize: 11 * b,
-                                              fontWeight: FontWeight.w400,
-                                              letterSpacing: 0.4 * a,
-                                              color: const Color(0xffffffff),
+                                                  Center(
+                                                    child: userProfileDisplay(
+                                                      size: 72 * a,
+                                                      image: user.userData?.images?.first??'',
+                                                      frame: userValidItemSelection(user.userData!.frame!),
+                                                      child: !user.micOn!
+                                                          ? Container(
+                                                        width: 52 * a,
+                                                        height: 52 * a,
+                                                        decoration: const BoxDecoration(
+                                                            color: Colors.black26,
+                                                            shape: BoxShape.circle
+                                                        ),
+                                                        child: Icon(Icons.mic_off,color: Colors.white.withOpacity(0.8),size: 18*a),
+                                                      ):null,
+                                                    ),
+                                                  ),
+                                                  if(user.reactionController!=null)
+                                                    Center(
+                                                      child: SizedBox(
+                                                          width: 76 * a,
+                                                          height: 72 * a,
+                                                          child: SVGAImage(user.reactionController!)
+                                                      ),
+                                                    ),
+                                                ],
+                                              ),
                                             ),
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                        if(value.zegoRoom!.viewCalculator) SizedBox(height: 3 * a),
-                                        if(value.zegoRoom!.viewCalculator) Container(
-                                          decoration: BoxDecoration(
-                                              color: Colors.black12,
-                                              borderRadius: BorderRadius.circular(12)
-                                          ),
-                                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                                          child: Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Icon(CupertinoIcons.star_circle_fill,size: 11*a,color: Colors.white),
-                                              SizedBox(width: 2 * a),
-                                              Text(
-                                                formatNumber(user.points??0),
+                                            SizedBox(
+                                              width: 72 * a,
+                                              child: Text(
+                                                user.userData!.name ?? '',
                                                 textAlign: TextAlign.center,
                                                 style: SafeGoogleFont(
                                                   'Poppins',
-                                                  fontSize: 10 * b,
-                                                  fontWeight: FontWeight.w500,
-                                                  height: 1.5 * b / a,
+                                                  fontSize: 11 * b,
+                                                  fontWeight: FontWeight.w400,
                                                   letterSpacing: 0.4 * a,
-                                                  color: Colors.white.withOpacity(0.9),
+                                                  color: const Color(0xffffffff),
                                                 ),
                                                 overflow: TextOverflow.ellipsis,
                                               ),
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  );
+                                            ),
+                                            if(value.zegoRoom!.viewCalculator) SizedBox(height: 3 * a),
+                                            if(value.zegoRoom!.viewCalculator) Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.black12,
+                                                  borderRadius: BorderRadius.circular(12)
+                                              ),
+                                              padding: const EdgeInsets.symmetric(horizontal: 4),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Icon(CupertinoIcons.star_circle_fill,size: 11*a,color: Colors.white),
+                                                  SizedBox(width: 2 * a),
+                                                  Text(
+                                                    formatNumber(user.points??0),
+                                                    textAlign: TextAlign.center,
+                                                    style: SafeGoogleFont(
+                                                      'Poppins',
+                                                      fontSize: 10 * b,
+                                                      fontWeight: FontWeight.w500,
+                                                      height: 1.5 * b / a,
+                                                      letterSpacing: 0.4 * a,
+                                                      color: Colors.white.withOpacity(0.9),
+                                                    ),
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      );
                                     }
                                     return GestureDetector(
                                       onTap: () {
-                                          if(value.isOwner || value.room!.admin!.contains(ZegoConfig.instance.userID)) {
+                                          if(value.isOwner || value.room!.admin!.contains(value.userID)) {
                                             bs.showSeatOptionsBottomSheet(i);
                                           }else if(!value.zegoRoom!.lockedSeats.contains(i)){
                                             value.publishStream(i);
@@ -837,12 +827,13 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                             margin: EdgeInsets.only(bottom: 6 * a),
                                             child: GestureDetector(
                                               onTap: () async {
-                                                final myId = ZegoConfig.instance.userID;
+                                                final myId = value.userID;
                                                 if(message.fromUser.userID == myId){
                                                   Get.to(()=>const UserProfile());
                                                 }else{
-                                                  final u = await Provider.of<UserDataProvider>(context,listen: false).addVisitor(message.fromUser.userID);
-                                                  Get.to(()=>UserProfile(userData: u.data!));
+                                                  Provider.of<UserDataProvider>(context,listen: false).addVisitor(message.fromUser.userID);
+                                                  final ud = await value.getSavedUserData(message.fromUser.userID);
+                                                  Get.to(()=>UserProfile(userData: ud));
                                                 }
                                               },
                                               child: Container(
@@ -1078,7 +1069,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                 backgroundColor:zegoRoomProvider.isMicOn && value.isMicrophonePermissionGranted?null: Colors.white12,
                               ),
                               onPressed: () {
-                                if(value.roomStreamList.firstWhere((e) => e.streamId == ZegoConfig.instance.userID).micPermit == false){
+                                if(value.roomStreamList.firstWhere((e) => e.streamId == value.userID).micPermit == false){
                                   showCustomSnackBar('Muted by Admin/Owner', context,isToaster: true);
                                 }else if(!value.isMicrophonePermissionGranted){
                                   requestMicrophonePermission();

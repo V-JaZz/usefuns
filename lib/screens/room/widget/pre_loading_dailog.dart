@@ -54,7 +54,7 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
     zegoRoomProvider = Provider.of<ZegoRoomProvider>(context, listen: false);
     if (locked) {
       loading = false;
-      if(widget.room.userId! == StorageService().getString(Constants.id) || ZegoConfig.instance.userName.contains('#icognito')){
+      if(widget.room.userId! == StorageService().getString(Constants.id) || Provider.of<UserDataProvider>(Get.context!, listen: false).userData!.data!.name!.contains('#icognito')){
         textEditingController.text = widget.room.password??'';
         joinLockedRoom();
       }
@@ -161,6 +161,9 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
     final response =  await Provider.of<RoomsProvider>(Get.context!, listen: false).addRoomUser(widget.room.id!, password: password);
 
     if (response.status == 1) {
+      final me = Provider.of<UserDataProvider>(Get.context!, listen: false).userData;
+      zegoRoomProvider.userID =me!.data!.id!;
+      zegoRoomProvider.userName =me.data!.name!;
       zegoRoomProvider.isOwner = widget.room.userId! == StorageService().getString(Constants.id);
       zegoRoomProvider.room = widget.room;
       zegoRoomProvider.roomPassword = password;
@@ -170,10 +173,8 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
           lockedSeats: [],
           viewCalculator: false);
       await zegoRoomProvider.init();
-
-      final me = Provider.of<UserDataProvider>(Get.context!, listen: false).userData;
       if (zegoRoomProvider.isOwner) {
-        if (me!.data!.roomWallpaper!.isNotEmpty) {
+        if (me.data!.roomWallpaper!.isNotEmpty) {
           String image = userValidItemSelection(me.data!.roomWallpaper!);
           zegoRoomProvider.backgroundImage = image.isNotEmpty?image:null;
         }
@@ -197,7 +198,7 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
       }
       Provider.of<GiftsProvider>(Get.context!, listen: false).generateSeries();
 
-      if(!me!.data!.name!.contains('#icognito')){
+      if(!me.data!.name!.contains('#icognito')){
         final vehicle = userValidItemSelection(me.data!.vehicle!);
         zegoRoomProvider.roomEntryEffect(userId: me.data!.userId!, vehicle: vehicle, mine: true);
       }

@@ -180,7 +180,7 @@ class MyProfileSeatBottomSheet extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     userLevelTag(
-                      user.level??0,
+                        value.userData?.data?.level??0,
                       17 * a,
                       viewZero: true
                   ),
@@ -253,7 +253,7 @@ class MyProfileSeatBottomSheet extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               Text(
-                                '22',
+                                AgeCalculator.calculateAge(value.userData!.data!.dob!).toString(),
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                     color: const Color.fromRGBO(0, 0, 0, 1),
@@ -432,360 +432,362 @@ class _OthersProfileSeatBottomSheetState extends State<OthersProfileSeatBottomSh
     double b = a * 0.97;
 
     return Consumer<ZegoRoomProvider>(
-      builder: (context, value, child) => Stack(
-        children: [
-          Container(
-            color: Colors.white,
-            margin: EdgeInsets.only(top: 36 * a),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(height: 45 * a),
-                  Text(
-                    widget.user.userName??'',
-                    style: SafeGoogleFont(
-                      'Poppins',
-                      fontSize: 20 * b,
-                      fontWeight: FontWeight.w400,
-                      height: 1 * b / a,
-                      color: const Color(0xff000000),
+      builder: (context, value, _) {
+        final user = widget.user.userData;
+        return Stack(
+          children: [
+            Container(
+              color: Colors.white,
+              margin: EdgeInsets.only(top: 36 * a),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(height: 45 * a),
+                    Text(
+                      user?.name??'',
+                      style: SafeGoogleFont(
+                        'Poppins',
+                        fontSize: 20 * b,
+                        fontWeight: FontWeight.w400,
+                        height: 1 * b / a,
+                        color: const Color(0xff000000),
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 6 * a),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        userLevelTag(
-                          widget.user.level??0,
-                          17 * a,
-                          viewZero: true
-                      ),
-                        if(value.room!.admin!.contains(widget.user.streamId)) SizedBox(
-                          width: 6*a,
-                        ),
-                        if(value.room!.admin!.contains(widget.user.streamId)) Container(
-                          decoration: BoxDecoration(
-                              color: const Color(0xffFF9933),
-                              borderRadius: BorderRadius.circular(12*a)
+                    SizedBox(height: 6 * a),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          userLevelTag(
+                              user?.level??0,
+                              17 * a,
+                              viewZero: true
                           ),
-                          padding: EdgeInsets.symmetric(horizontal: 6 *a , vertical: 2*a),
-                          child: Text(
-                            'Admin',
-                            style: SafeGoogleFont(
-                              'Poppins',
-                              fontSize: 14 * b,
-                              fontWeight: FontWeight.w400,
-                              height: 1 * b / a,
-                              color: Colors.white,
-                            ),
+                          if(value.room!.admin!.contains(widget.user.streamId)) SizedBox(
+                            width: 6*a,
                           ),
-                        ),
-                        if(widget.user.owner == true) SizedBox(
-                          width: 6*a,
-                        ),
-                        if(widget.user.owner == true) Container(
-                          decoration: BoxDecoration(
-                              color: const Color(0xFF138808),
-                            borderRadius: BorderRadius.circular(12*a)
-                        ),
-                          padding: EdgeInsets.symmetric(horizontal: 6 *a , vertical: 2*a),
-                          child: Text(
-                            'Owner',
-                            style: SafeGoogleFont(
-                              'Poppins',
-                              fontSize: 14 * b,
-                              fontWeight: FontWeight.w400,
-                              height: 1 * b / a,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        if(widget.user.owner == true||widget.user.member == true) SizedBox(
-                          width: 6*a,
-                        ),
-                        if(widget.user.owner != true && widget.user.member == true) Container(
-                          decoration: BoxDecoration(
-                              color: const Color(0xFF9E26BC),
-                              borderRadius: BorderRadius.circular(12*a)
-                          ),
-                          padding: EdgeInsets.symmetric(horizontal: 6 *a , vertical: 2*a),
-                          child: Text(
-                            'Member',
-                            style: SafeGoogleFont(
-                              'Poppins',
-                              fontSize: 14 * b,
-                              fontWeight: FontWeight.w400,
-                              height: 1 * b / a,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 6*a,
-                        ),
-                        SizedBox(
-                            child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    '22',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                        color: const Color.fromRGBO(0, 0, 0, 1),
-                                        fontFamily: 'Poppins',
-                                        fontSize: 14 * a,
-                                        letterSpacing:
-                                        0 /*percentages not used in flutter. defaulting to zero*/,
-                                        fontWeight: FontWeight.normal,
-                                        height: 1 * a),
-                                  ),
-                                  Icon(Icons.female,size: 16*a),
-                                ]
-                            )
-                        ),
-                        SizedBox(
-                          width: 6*a,
-                        ),
-                      ]),
-                  SizedBox(height: 6 * a),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        ' Usefuns Id - ${widget.user.id}  ',
-                        style: SafeGoogleFont(
-                          'Poppins',
-                          fontSize: 14 * b,
-                          fontWeight: FontWeight.w400,
-                          height: 1.5 * b / a,
-                          color: const Color(0x99000000),
-                        ),
-                      ),
-                      Image.asset('assets/people.png'),
-                      Text(
-                        '  ${widget.user.followers}- Followers',
-                        style: SafeGoogleFont(
-                          'Poppins',
-                          fontSize: 14 * b,
-                          fontWeight: FontWeight.w400,
-                          height: 1.5 * b / a,
-                          color: const Color(0x99000000),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 24 * a),
-                  Wrap(
-                    alignment: WrapAlignment.center,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    spacing: 18*a,
-                    runSpacing: 24*a,
-                    children: [
-                      iconTextWidget(
-                          text: 'Profile',
-                          path: 'assets/icon_p/profile.png',
-                          onTap: () async {
-                            Get.back();
-                            final data = await userDataProvider.addVisitor(widget.user.streamId!);
-                            Get.to(()=>UserProfile(userData: data.data));
-                          }),
-                      iconTextWidget(
-                          text: 'Chat',
-                          path: 'assets/icon_p/chat.png',
-                          onTap: (){
-                            Get.back();
-                            bs.showMessage();
-                          }),
-                      iconTextWidget(
-                          text: 'Mention',
-                          path: 'assets/icon_p/mention.png',
-                          onTap: (){
-                            Get.back();
-
-                            bs.showMessage(mention: widget.user.userName);
-                          }),
-                      if((widget.owner || widget.admin)&& widget.user.owner == false) iconTextWidget(
-                          text: 'Lock',
-                          path: 'assets/icon_p/lock.png',
-                          onTap: (){
-                            value.lockStreamer(widget.user.streamId!,widget.user.userName!);
-                            Get.back();
-                          }),
-                      if((widget.owner || widget.admin)&& widget.user.owner == false) iconTextWidget(
-                          text:  value.roomStreamList.where((e) => e.streamId == widget.user.streamId).first.micPermit == false ? 'Unmute Mic': 'Mute Mic',
-                          path: 'assets/icon_p/mute_mic.png',
-                          onTap: (){
-                            if(value.roomStreamList.where((e) => e.streamId == widget.user.streamId).first.micPermit == false) {
-                              value.unMuteStreamer(widget.user.streamId!,widget.user.userName!);
-                              showCustomSnackBar('Permitted to use mic',context,isToaster: true,isError: false);
-                            } else{
-                              value.muteStreamer(widget.user.streamId!,widget.user.userName!);
-                            }
-                            Get.back();
-                          }),
-                      if((widget.owner || widget.admin)&& widget.user.owner == false) iconTextWidget(
-                          text: value.roomStreamList.where((e) => e.streamId == widget.user.streamId).first.chatBan == true?'Unban Chat':'Ban Chat',
-                          path: 'assets/icon_p/ban.png',
-                          onTap: (){
-                            if(value.roomStreamList.where((e) => e.streamId == widget.user.streamId).first.chatBan == true){
-                              value.unbanChat(widget.user.streamId!,widget.user.userName!);
-                            }else{
-                              value.banChat(widget.user.streamId!,widget.user.userName!);
-                            }
-                            Get.back();
-                          }),
-                      if((widget.owner || widget.admin)&& widget.user.owner == false) iconTextWidget(
-                          text: 'Kick',
-                          path: 'assets/icon_p/kick.png',
-                          onTap: (){
-                            kickRoomWidget(context, widget.user.userName, widget.user.streamId);
-                          }),
-                      if((widget.owner || widget.admin)&& widget.user.owner == false) iconTextWidget(
-                          text: 'Invite',
-                          path: 'assets/icon_p/invite.png',
-                          onTap: (){}
-                      ),
-                      if(widget.owner==true) iconTextWidget(
-                          text: value.room!.admin!.contains(widget.user.streamId) ? 'Remove Admin':'Set Admin',
-                          path: 'assets/icon_p/set_admin.png',
-                          onTap: () async {
-                            final p = Provider.of<RoomsProvider>(context,listen: false);
-                            Get.back();
-                            if(value.room!.admin!.contains(widget.user.streamId)){
-                              value.room!.admin!.remove(widget.user.streamId);
-                              await p.removeAdmin(value.room!.id!, widget.user.streamId!);
-                              value.updateAdminList();
-                            }else if(value.room!.admin!.length >= 20){
-                              showCustomSnackBar('Maximum admin limit is 20!', Get.context!);
-                            }else{
-                              value.room!.admin!.add(widget.user.streamId!);
-                              await p.addAdmin(value.room!.id!, widget.user.streamId!);
-                              value.updateAdminList();
-                            }
-                          }),
-                    ],
-                  ),
-                  SizedBox(height: 24 * a),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Consumer<UserDataProvider>(
-                        builder:(context, up , _) =>
-                            GestureDetector(
-                            onTap: () async {
-                              if(follow){
-                                final res = await up.unFollowUser(userId: widget.user.streamId!);
-                                if(res.status == 1){
-                                  setState(() {
-                                    follow = false;
-                                  });
-                                }else{
-                                  showCustomSnackBar('error unfollowing user!', context, isToaster: true);
-                                }
-                              }else{
-                                final res = await up.followUser(userId: widget.user.streamId!);
-                                if(res.status == 1){
-                                  setState(() {
-                                    follow = true;
-                                  });
-                                }else{
-                                  showCustomSnackBar('error following user!', context, isToaster: true);
-                                }
-                              }
-                            },
-                            child: Container(
-                                width: 90 * a,
-                                height: 26 * a,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: const Color.fromRGBO(255, 153, 51, 1),
-                                  ),
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(12 * a),
-                                    topRight: Radius.circular(12 * a),
-                                    bottomLeft: Radius.circular(12 * a),
-                                    bottomRight: Radius.circular(12 * a),
-                                  ),
-                                  color: Colors.white,
-                                ),
-                                child: Center(
-                                  child: up.isFollowLoading
-                                      ? Padding(
-                                        padding: EdgeInsets.all(3*a),
-                                        child: const AspectRatio(
-                                            aspectRatio: 1,
-                                            child: CircularProgressIndicator(color: Color.fromRGBO(255, 153, 51, 1))
-                                        ),
-                                      )
-                                      : Text(
-                                    follow?'Unfollow':'Follow',
-                                    textAlign: TextAlign.left,
-                                    style: SafeGoogleFont(
-                                        color: const Color.fromRGBO(0, 0, 0, 1),
-                                        'Poppins',
-                                        fontSize: 12 * a,
-                                        fontWeight: FontWeight.normal,
-                                        height: 1),
-                                  ),
-                                )),
-                          )
-                      ),
-                      GestureDetector(
-                        onTap: (){
-                          Get.back();
-                          bs.showSendGiftsBottomSheet(selection: widget.user.userName);
-                        },
-                        child: Container(
-                            width: 90 * a,
-                            height: 26 * a,
+                          if(value.room!.admin!.contains(widget.user.streamId)) Container(
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(12 * a),
-                                topRight: Radius.circular(12 * a),
-                                bottomLeft: Radius.circular(12 * a),
-                                bottomRight: Radius.circular(12 * a),
-                              ),
-                              color: const Color.fromRGBO(255, 153, 51, 1),
+                                color: const Color(0xffFF9933),
+                                borderRadius: BorderRadius.circular(12*a)
                             ),
-                            child: Center(
-                              child: Text(
-                                'Send Gifts',
-                                textAlign: TextAlign.left,
-                                style: SafeGoogleFont(
-                                    color:
-                                    const Color.fromRGBO(250, 248, 248, 1),
-                                    'Poppins',
-                                    fontSize: 12 * a,
-                                    fontWeight: FontWeight.normal,
-                                    height: 1),
+                            padding: EdgeInsets.symmetric(horizontal: 6 *a , vertical: 2*a),
+                            child: Text(
+                              'Admin',
+                              style: SafeGoogleFont(
+                                'Poppins',
+                                fontSize: 14 * b,
+                                fontWeight: FontWeight.w400,
+                                height: 1 * b / a,
+                                color: Colors.white,
                               ),
-                            )),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 18 * a),
-                ],
+                            ),
+                          ),
+                          if(widget.user.owner == true) SizedBox(
+                            width: 6*a,
+                          ),
+                          if(widget.user.owner == true) Container(
+                            decoration: BoxDecoration(
+                                color: const Color(0xFF138808),
+                                borderRadius: BorderRadius.circular(12*a)
+                            ),
+                            padding: EdgeInsets.symmetric(horizontal: 6 *a , vertical: 2*a),
+                            child: Text(
+                              'Owner',
+                              style: SafeGoogleFont(
+                                'Poppins',
+                                fontSize: 14 * b,
+                                fontWeight: FontWeight.w400,
+                                height: 1 * b / a,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          if(widget.user.owner == true||widget.user.member == true) SizedBox(
+                            width: 6*a,
+                          ),
+                          if(widget.user.owner != true && widget.user.member == true) Container(
+                            decoration: BoxDecoration(
+                                color: const Color(0xFF9E26BC),
+                                borderRadius: BorderRadius.circular(12*a)
+                            ),
+                            padding: EdgeInsets.symmetric(horizontal: 6 *a , vertical: 2*a),
+                            child: Text(
+                              'Member',
+                              style: SafeGoogleFont(
+                                'Poppins',
+                                fontSize: 14 * b,
+                                fontWeight: FontWeight.w400,
+                                height: 1 * b / a,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 6*a,
+                          ),
+                          SizedBox(
+                              child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      AgeCalculator.calculateAge(user!.dob!).toString(),
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: const Color.fromRGBO(0, 0, 0, 1),
+                                          fontFamily: 'Poppins',
+                                          fontSize: 14 * a,
+                                          letterSpacing:
+                                          0 /*percentages not used in flutter. defaulting to zero*/,
+                                          fontWeight: FontWeight.normal,
+                                          height: 1 * a),
+                                    ),
+                                    Icon(Icons.female,size: 16*a),
+                                  ]
+                              )
+                          ),
+                          SizedBox(
+                            width: 6*a,
+                          ),
+                        ]),
+                    SizedBox(height: 6 * a),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          ' Usefuns Id - ${user.userId}  ',
+                          style: SafeGoogleFont(
+                            'Poppins',
+                            fontSize: 14 * b,
+                            fontWeight: FontWeight.w400,
+                            height: 1.5 * b / a,
+                            color: const Color(0x99000000),
+                          ),
+                        ),
+                        Image.asset('assets/people.png'),
+                        Text(
+                          '  ${user.followers?.length}- Followers',
+                          style: SafeGoogleFont(
+                            'Poppins',
+                            fontSize: 14 * b,
+                            fontWeight: FontWeight.w400,
+                            height: 1.5 * b / a,
+                            color: const Color(0x99000000),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 24 * a),
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 18*a,
+                      runSpacing: 24*a,
+                      children: [
+                        iconTextWidget(
+                            text: 'Profile',
+                            path: 'assets/icon_p/profile.png',
+                            onTap: () async {
+                              Get.back();
+                              Provider.of<UserDataProvider>(context,listen: false).addVisitor(widget.user.streamId!);
+                              Get.to(()=>UserProfile(userData: widget.user.userData!));
+                            }),
+                        iconTextWidget(
+                            text: 'Chat',
+                            path: 'assets/icon_p/chat.png',
+                            onTap: (){
+                              Get.back();
+                              bs.showMessage();
+                            }),
+                        iconTextWidget(
+                            text: 'Mention',
+                            path: 'assets/icon_p/mention.png',
+                            onTap: (){
+                              Get.back();
+                              bs.showMessage(mention: user.name);
+                            }),
+                        if((widget.owner || widget.admin)&& widget.user.owner == false) iconTextWidget(
+                            text: 'Lock',
+                            path: 'assets/icon_p/lock.png',
+                            onTap: (){
+                              value.lockStreamer(widget.user.streamId!,user.name!);
+                              Get.back();
+                            }),
+                        if((widget.owner || widget.admin)&& widget.user.owner == false) iconTextWidget(
+                            text:  value.roomStreamList.where((e) => e.streamId == widget.user.streamId).first.micPermit == false ? 'Unmute Mic': 'Mute Mic',
+                            path: 'assets/icon_p/mute_mic.png',
+                            onTap: (){
+                              if(value.roomStreamList.where((e) => e.streamId == widget.user.streamId).first.micPermit == false) {
+                                value.unMuteStreamer(widget.user.streamId!,user.name!);
+                                showCustomSnackBar('Permitted to use mic',context,isToaster: true,isError: false);
+                              } else{
+                                value.muteStreamer(widget.user.streamId!,user.name!);
+                              }
+                              Get.back();
+                            }),
+                        if((widget.owner || widget.admin)&& widget.user.owner == false) iconTextWidget(
+                            text: value.roomStreamList.where((e) => e.streamId == widget.user.streamId).first.chatBan == true?'Unban Chat':'Ban Chat',
+                            path: 'assets/icon_p/ban.png',
+                            onTap: (){
+                              if(value.roomStreamList.where((e) => e.streamId == widget.user.streamId).first.chatBan == true){
+                                value.unbanChat(widget.user.streamId!,user.name!);
+                              }else{
+                                value.banChat(widget.user.streamId!,user.name!);
+                              }
+                              Get.back();
+                            }),
+                        if((widget.owner || widget.admin)&& widget.user.owner == false) iconTextWidget(
+                            text: 'Kick',
+                            path: 'assets/icon_p/kick.png',
+                            onTap: (){
+                              kickRoomWidget(context, user.name, widget.user.streamId);
+                            }),
+                        if((widget.owner || widget.admin)&& widget.user.owner == false) iconTextWidget(
+                            text: 'Invite',
+                            path: 'assets/icon_p/invite.png',
+                            onTap: (){}
+                        ),
+                        if(widget.owner==true) iconTextWidget(
+                            text: value.room!.admin!.contains(widget.user.streamId) ? 'Remove Admin':'Set Admin',
+                            path: 'assets/icon_p/set_admin.png',
+                            onTap: () async {
+                              final p = Provider.of<RoomsProvider>(context,listen: false);
+                              Get.back();
+                              if(value.room!.admin!.contains(widget.user.streamId)){
+                                value.room!.admin!.remove(widget.user.streamId);
+                                await p.removeAdmin(value.room!.id!, widget.user.streamId!);
+                                value.updateAdminList();
+                              }else if(value.room!.admin!.length >= 20){
+                                showCustomSnackBar('Maximum admin limit is 20!', Get.context!);
+                              }else{
+                                value.room!.admin!.add(widget.user.streamId!);
+                                await p.addAdmin(value.room!.id!, widget.user.streamId!);
+                                value.updateAdminList();
+                              }
+                            }),
+                      ],
+                    ),
+                    SizedBox(height: 24 * a),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Consumer<UserDataProvider>(
+                            builder:(context, up , _) =>
+                                GestureDetector(
+                                  onTap: () async {
+                                    if(follow){
+                                      final res = await up.unFollowUser(userId: widget.user.streamId!);
+                                      if(res.status == 1){
+                                        setState(() {
+                                          follow = false;
+                                        });
+                                      }else{
+                                        showCustomSnackBar('error unfollowing user!', context, isToaster: true);
+                                      }
+                                    }else{
+                                      final res = await up.followUser(userId: widget.user.streamId!);
+                                      if(res.status == 1){
+                                        setState(() {
+                                          follow = true;
+                                        });
+                                      }else{
+                                        showCustomSnackBar('error following user!', context, isToaster: true);
+                                      }
+                                    }
+                                  },
+                                  child: Container(
+                                      width: 90 * a,
+                                      height: 26 * a,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: const Color.fromRGBO(255, 153, 51, 1),
+                                        ),
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(12 * a),
+                                          topRight: Radius.circular(12 * a),
+                                          bottomLeft: Radius.circular(12 * a),
+                                          bottomRight: Radius.circular(12 * a),
+                                        ),
+                                        color: Colors.white,
+                                      ),
+                                      child: Center(
+                                        child: up.isFollowLoading
+                                            ? Padding(
+                                          padding: EdgeInsets.all(3*a),
+                                          child: const AspectRatio(
+                                              aspectRatio: 1,
+                                              child: CircularProgressIndicator(color: Color.fromRGBO(255, 153, 51, 1))
+                                          ),
+                                        )
+                                            : Text(
+                                          follow?'Unfollow':'Follow',
+                                          textAlign: TextAlign.left,
+                                          style: SafeGoogleFont(
+                                              color: const Color.fromRGBO(0, 0, 0, 1),
+                                              'Poppins',
+                                              fontSize: 12 * a,
+                                              fontWeight: FontWeight.normal,
+                                              height: 1),
+                                        ),
+                                      )),
+                                )
+                        ),
+                        GestureDetector(
+                          onTap: (){
+                            Get.back();
+                            bs.showSendGiftsBottomSheet(selection: user);
+                          },
+                          child: Container(
+                              width: 90 * a,
+                              height: 26 * a,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(12 * a),
+                                  topRight: Radius.circular(12 * a),
+                                  bottomLeft: Radius.circular(12 * a),
+                                  bottomRight: Radius.circular(12 * a),
+                                ),
+                                color: const Color.fromRGBO(255, 153, 51, 1),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Send Gifts',
+                                  textAlign: TextAlign.left,
+                                  style: SafeGoogleFont(
+                                      color:
+                                      const Color.fromRGBO(250, 248, 248, 1),
+                                      'Poppins',
+                                      fontSize: 12 * a,
+                                      fontWeight: FontWeight.normal,
+                                      height: 1),
+                                ),
+                              )),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 18 * a),
+                  ],
+                ),
               ),
             ),
-          ),
-          Positioned(
-            top: 0,
-            left: (Get.width*0.5)-(40*a),
-            child: userProfileDisplay(
-              size: 80*a,
-              image: widget.user.image??'',
-              frame: widget.user.frame??'',
-              onTap: () async {
-                Get.back();
-                final user = await Provider.of<UserDataProvider>(context,listen: false).addVisitor(widget.user.streamId!);
-                Get.to(()=>UserProfile(userData: user.data!));
-              },
+            Positioned(
+              top: 0,
+              left: (Get.width*0.5)-(40*a),
+              child: userProfileDisplay(
+                size: 80*a,
+                image: user.images?.first??'',
+                frame: userValidItemSelection(user.frame),
+                onTap: () async {
+                  Get.back();
+                  Provider.of<UserDataProvider>(context,listen: false).addVisitor(widget.user.streamId!);
+                  Get.to(()=>UserProfile(userData: widget.user.userData!));
+                },
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        );
+      },
     );
   }
 
@@ -824,4 +826,402 @@ class _OthersProfileSeatBottomSheetState extends State<OthersProfileSeatBottomSh
   }
 }
 
+
+class AudienceBottomSheet extends StatefulWidget {
+  final ZegoStreamExtended user;
+  final bool owner;
+  final bool admin;
+  const AudienceBottomSheet({super.key, required this.user, required this.owner, required this.admin});
+
+  @override
+  State<AudienceBottomSheet> createState() => _AudienceBottomSheetState();
+}
+
+class _AudienceBottomSheetState extends State<AudienceBottomSheet> {
+  late final UserDataProvider userDataProvider;
+  late bool follow;
+  @override
+  void initState() {
+    userDataProvider = Provider.of<UserDataProvider>(context,listen: false);
+    follow = Provider.of<UserDataProvider>(context,listen: false).userData!.data!.following!.firstWhereOrNull((element) => element == widget.user.streamId)!=null;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bs = LiveRoomBottomSheets(context);
+    double baseWidth = 360;
+    double a = Get.width / baseWidth;
+    double b = a * 0.97;
+
+    return Consumer<ZegoRoomProvider>(
+      builder: (context, value, _) {
+        final user = widget.user.userData;
+        return Stack(
+          children: [
+            Container(
+              color: Colors.white,
+              margin: EdgeInsets.only(top: 36 * a),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(height: 45 * a),
+                    Text(
+                      user?.name??'',
+                      style: SafeGoogleFont(
+                        'Poppins',
+                        fontSize: 20 * b,
+                        fontWeight: FontWeight.w400,
+                        height: 1 * b / a,
+                        color: const Color(0xff000000),
+                      ),
+                    ),
+                    SizedBox(height: 6 * a),
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          userLevelTag(
+                              user?.level??0,
+                              17 * a,
+                              viewZero: true
+                          ),
+                          if(value.room!.admin!.contains(widget.user.streamId)) SizedBox(
+                            width: 6*a,
+                          ),
+                          if(value.room!.admin!.contains(widget.user.streamId)) Container(
+                            decoration: BoxDecoration(
+                                color: const Color(0xffFF9933),
+                                borderRadius: BorderRadius.circular(12*a)
+                            ),
+                            padding: EdgeInsets.symmetric(horizontal: 6 *a , vertical: 2*a),
+                            child: Text(
+                              'Admin',
+                              style: SafeGoogleFont(
+                                'Poppins',
+                                fontSize: 14 * b,
+                                fontWeight: FontWeight.w400,
+                                height: 1 * b / a,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          if(widget.user.owner == true) SizedBox(
+                            width: 6*a,
+                          ),
+                          if(widget.user.owner == true) Container(
+                            decoration: BoxDecoration(
+                                color: const Color(0xFF138808),
+                                borderRadius: BorderRadius.circular(12*a)
+                            ),
+                            padding: EdgeInsets.symmetric(horizontal: 6 *a , vertical: 2*a),
+                            child: Text(
+                              'Owner',
+                              style: SafeGoogleFont(
+                                'Poppins',
+                                fontSize: 14 * b,
+                                fontWeight: FontWeight.w400,
+                                height: 1 * b / a,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          if(widget.user.owner == true||widget.user.member == true) SizedBox(
+                            width: 6*a,
+                          ),
+                          if(widget.user.owner != true && widget.user.member == true) Container(
+                            decoration: BoxDecoration(
+                                color: const Color(0xFF9E26BC),
+                                borderRadius: BorderRadius.circular(12*a)
+                            ),
+                            padding: EdgeInsets.symmetric(horizontal: 6 *a , vertical: 2*a),
+                            child: Text(
+                              'Member',
+                              style: SafeGoogleFont(
+                                'Poppins',
+                                fontSize: 14 * b,
+                                fontWeight: FontWeight.w400,
+                                height: 1 * b / a,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 6*a,
+                          ),
+                          SizedBox(
+                              child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      AgeCalculator.calculateAge(user!.dob!).toString(),
+                                      textAlign: TextAlign.left,
+                                      style: TextStyle(
+                                          color: const Color.fromRGBO(0, 0, 0, 1),
+                                          fontFamily: 'Poppins',
+                                          fontSize: 14 * a,
+                                          letterSpacing:
+                                          0 /*percentages not used in flutter. defaulting to zero*/,
+                                          fontWeight: FontWeight.normal,
+                                          height: 1 * a),
+                                    ),
+                                    Icon(Icons.female,size: 16*a),
+                                  ]
+                              )
+                          ),
+                          SizedBox(
+                            width: 6*a,
+                          ),
+                        ]),
+                    SizedBox(height: 6 * a),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          ' Usefuns Id - ${user.userId}  ',
+                          style: SafeGoogleFont(
+                            'Poppins',
+                            fontSize: 14 * b,
+                            fontWeight: FontWeight.w400,
+                            height: 1.5 * b / a,
+                            color: const Color(0x99000000),
+                          ),
+                        ),
+                        Image.asset('assets/people.png'),
+                        Text(
+                          '  ${user.followers?.length}- Followers',
+                          style: SafeGoogleFont(
+                            'Poppins',
+                            fontSize: 14 * b,
+                            fontWeight: FontWeight.w400,
+                            height: 1.5 * b / a,
+                            color: const Color(0x99000000),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 24 * a),
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 18*a,
+                      runSpacing: 24*a,
+                      children: [
+                        iconTextWidget(
+                            text: 'Profile',
+                            path: 'assets/icon_p/profile.png',
+                            onTap: () async {
+                              Get.back();
+                              Provider.of<UserDataProvider>(context,listen: false).addVisitor(widget.user.streamId!);
+                              Get.to(()=>UserProfile(userData: widget.user.userData!));
+                            }),
+                        iconTextWidget(
+                            text: 'Chat',
+                            path: 'assets/icon_p/chat.png',
+                            onTap: (){
+                              Get.back();
+                              bs.showMessage();
+                            }),
+                        iconTextWidget(
+                            text: 'Mention',
+                            path: 'assets/icon_p/mention.png',
+                            onTap: (){
+                              Get.back();
+                              bs.showMessage(mention: user.name);
+                            }),
+                        if((widget.owner || widget.admin)&& widget.user.owner == false) iconTextWidget(
+                            text: value.roomStreamList.where((e) => e.streamId == widget.user.streamId).first.chatBan == true?'Unban Chat':'Ban Chat',
+                            path: 'assets/icon_p/ban.png',
+                            onTap: (){
+                              if(value.roomStreamList.where((e) => e.streamId == widget.user.streamId).first.chatBan == true){
+                                value.unbanChat(widget.user.streamId!,user.name!);
+                              }else{
+                                value.banChat(widget.user.streamId!,user.name!);
+                              }
+                              Get.back();
+                            }),
+                        if((widget.owner || widget.admin)&& widget.user.owner == false) iconTextWidget(
+                            text: 'Kick',
+                            path: 'assets/icon_p/kick.png',
+                            onTap: (){
+                              kickRoomWidget(context, user.name, widget.user.streamId);
+                            }),
+                        if(widget.owner==true) iconTextWidget(
+                            text: value.room!.admin!.contains(widget.user.streamId) ? 'Remove Admin':'Set Admin',
+                            path: 'assets/icon_p/set_admin.png',
+                            onTap: () async {
+                              final p = Provider.of<RoomsProvider>(context,listen: false);
+                              Get.back();
+                              if(value.room!.admin!.contains(widget.user.streamId)){
+                                value.room!.admin!.remove(widget.user.streamId);
+                                await p.removeAdmin(value.room!.id!, widget.user.streamId!);
+                                value.updateAdminList();
+                              }else if(value.room!.admin!.length >= 20){
+                                showCustomSnackBar('Maximum admin limit is 20!', Get.context!);
+                              }else{
+                                value.room!.admin!.add(widget.user.streamId!);
+                                await p.addAdmin(value.room!.id!, widget.user.streamId!);
+                                value.updateAdminList();
+                              }
+                            }),
+                      ],
+                    ),
+                    SizedBox(height: 24 * a),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Consumer<UserDataProvider>(
+                            builder:(context, up , _) =>
+                                GestureDetector(
+                                  onTap: () async {
+                                    if(follow){
+                                      final res = await up.unFollowUser(userId: widget.user.streamId!);
+                                      if(res.status == 1){
+                                        setState(() {
+                                          follow = false;
+                                        });
+                                      }else{
+                                        showCustomSnackBar('error unfollowing user!', context, isToaster: true);
+                                      }
+                                    }else{
+                                      final res = await up.followUser(userId: widget.user.streamId!);
+                                      if(res.status == 1){
+                                        setState(() {
+                                          follow = true;
+                                        });
+                                      }else{
+                                        showCustomSnackBar('error following user!', context, isToaster: true);
+                                      }
+                                    }
+                                  },
+                                  child: Container(
+                                      width: 90 * a,
+                                      height: 26 * a,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: const Color.fromRGBO(255, 153, 51, 1),
+                                        ),
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(12 * a),
+                                          topRight: Radius.circular(12 * a),
+                                          bottomLeft: Radius.circular(12 * a),
+                                          bottomRight: Radius.circular(12 * a),
+                                        ),
+                                        color: Colors.white,
+                                      ),
+                                      child: Center(
+                                        child: up.isFollowLoading
+                                            ? Padding(
+                                          padding: EdgeInsets.all(3*a),
+                                          child: const AspectRatio(
+                                              aspectRatio: 1,
+                                              child: CircularProgressIndicator(color: Color.fromRGBO(255, 153, 51, 1))
+                                          ),
+                                        )
+                                            : Text(
+                                          follow?'Unfollow':'Follow',
+                                          textAlign: TextAlign.left,
+                                          style: SafeGoogleFont(
+                                              color: const Color.fromRGBO(0, 0, 0, 1),
+                                              'Poppins',
+                                              fontSize: 12 * a,
+                                              fontWeight: FontWeight.normal,
+                                              height: 1),
+                                        ),
+                                      )),
+                                )
+                        ),
+                        GestureDetector(
+                          onTap: (){
+                            Get.back();
+                            bs.showSendGiftsBottomSheet(selection: user);
+                          },
+                          child: Container(
+                              width: 90 * a,
+                              height: 26 * a,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(12 * a),
+                                  topRight: Radius.circular(12 * a),
+                                  bottomLeft: Radius.circular(12 * a),
+                                  bottomRight: Radius.circular(12 * a),
+                                ),
+                                color: const Color.fromRGBO(255, 153, 51, 1),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Send Gifts',
+                                  textAlign: TextAlign.left,
+                                  style: SafeGoogleFont(
+                                      color:
+                                      const Color.fromRGBO(250, 248, 248, 1),
+                                      'Poppins',
+                                      fontSize: 12 * a,
+                                      fontWeight: FontWeight.normal,
+                                      height: 1),
+                                ),
+                              )),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 18 * a),
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              top: 0,
+              left: (Get.width*0.5)-(40*a),
+              child: userProfileDisplay(
+                size: 80*a,
+                image: user.images?.first??'',
+                frame: userValidItemSelection(user.frame),
+                onTap: () async {
+                  Get.back();
+                  Provider.of<UserDataProvider>(context,listen: false).addVisitor(widget.user.streamId!);
+                  Get.to(()=>UserProfile(userData: widget.user.userData!));
+                },
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  iconTextWidget({required String text, required String path,void Function()? onTap}) {
+    double baseWidth = 360;
+    double a = Get.width / baseWidth;
+    double b = a * 0.97;
+    return InkWell(
+      onTap: onTap,
+      child: SizedBox(
+        width: Get.width * 0.27,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              radius: 9 * a,
+              backgroundColor: Colors.white,
+              child: Image.asset(path),
+            ),
+            SizedBox(height: 6 * a),
+            Text(
+              text,
+              textAlign: TextAlign.center,
+              style: SafeGoogleFont('Poppins',
+                  fontSize: 14 * b,
+                  fontWeight: FontWeight.w400,
+                  height: 1.5 * b / a,
+                  letterSpacing: 0.48 * a,
+                  color: Colors.black),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
 

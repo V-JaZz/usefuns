@@ -2,21 +2,15 @@ import 'dart:convert';
 // ignore: depend_on_referenced_packages
 import 'package:svgaplayer_flutter/svgaplayer_flutter.dart';
 
+import '../response/user_data_model.dart';
+
 ZegoStreamExtended zegoStreamExtendedFromJson(String str) => ZegoStreamExtended.fromJson(json.decode(str));
 
 String zegoStreamExtendedToJson(ZegoStreamExtended data) => json.encode(data.toJson());
 
 class ZegoStreamExtended {
-  String? id;
   String? streamId;
-  String? userName;
-  String? gender;
-  String? image;
-  String? frame;
-  int? level;
-  int? age;
-  int? followers;
-  int? vip;
+  UserData? userData;
   int? seat;
   bool? micOn;
   bool? chatBan;
@@ -28,16 +22,8 @@ class ZegoStreamExtended {
   bool? member;
 
   ZegoStreamExtended({
-    this.id,
     this.streamId,
-    this.userName,
-    this.gender,
-    this.image,
-    this.frame,
-    this.level,
-    this.age,
-    this.followers,
-    this.vip,
+    this.userData,
     this.seat,
     this.micOn,
     this.chatBan,
@@ -50,16 +36,7 @@ class ZegoStreamExtended {
   });
 
   factory ZegoStreamExtended.fromJson(Map<String, dynamic> json) => ZegoStreamExtended(
-    id: json["id"],
     streamId: json["stream_id"],
-    userName: json["user_name"],
-    gender: json["gender"],
-    image: json["image"],
-    frame: json["frame"],
-    level: json["level"],
-    age: json["age"],
-    followers: json["followers"],
-    vip: json["vip"],
     seat: json["seat"],
     micOn: json["mic_on"],
     chatBan: json["chat_ban"],
@@ -71,16 +48,7 @@ class ZegoStreamExtended {
   );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
     "stream_id": streamId,
-    "user_name": userName,
-    "gender": gender,
-    "image": image,
-    "frame": frame,
-    "level": level,
-    "age": age,
-    "followers": followers,
-    "vip": vip,
     "seat": seat,
     "mic_on": micOn,
     "chat_ban": chatBan,

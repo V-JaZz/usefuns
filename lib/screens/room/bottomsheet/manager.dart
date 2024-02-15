@@ -39,14 +39,19 @@ class LiveRoomBottomSheets {
   }
 
   void showActiveUsersBottomSheet(String ownerId) {
+
     showModalBottomSheet(
-        backgroundColor: Colors.transparent,
-        isScrollControlled: false,
-        enableDrag: true,
-        isDismissible: true,
+        backgroundColor: Colors.white,
+        shape: InputBorder.none,
+        isScrollControlled: true,
         context: context,
         builder: (context) {
-          return ActiveUsersBottomSheet(ownerId: ownerId);
+          return DraggableScrollableSheet(
+            expand: false,
+            minChildSize: 0.5,
+            snap: true,
+            builder: (context, scrollController) => ActiveUsersBottomSheet(ownerId: ownerId, controller: scrollController),
+          );
         });
   }
 
@@ -186,7 +191,7 @@ class LiveRoomBottomSheets {
         });
   }
 
-  void showSendGiftsBottomSheet({String? selection}) {
+  void showSendGiftsBottomSheet({UserData? selection}) {
     showModalBottomSheet(
         backgroundColor: Colors.transparent,
         barrierColor: Colors.transparent,
