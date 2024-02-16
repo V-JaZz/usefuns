@@ -831,9 +831,11 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                                 if(message.fromUser.userID == myId){
                                                   Get.to(()=>const UserProfile());
                                                 }else{
-                                                  Provider.of<UserDataProvider>(context,listen: false).addVisitor(message.fromUser.userID);
-                                                  final ud = await value.getSavedUserData(message.fromUser.userID);
-                                                  Get.to(()=>UserProfile(userData: ud));
+                                                  bs.showAudienceBottomSheet(
+                                                      user: await value.getSavedUserData(message.fromUser.userID),
+                                                      admin: value.room?.admin?.contains(myId)??false,
+                                                      owner: value.room?.userId == myId
+                                                  );
                                                 }
                                               },
                                               child: Container(

@@ -13,7 +13,6 @@ class ZegoStreamExtended {
   UserData? userData;
   int? seat;
   bool? micOn;
-  bool? chatBan;
   bool? micPermit;
   double? soundLevel;
   int? points;
@@ -26,7 +25,6 @@ class ZegoStreamExtended {
     this.userData,
     this.seat,
     this.micOn,
-    this.chatBan,
     this.micPermit,
     this.soundLevel,
     this.points,
@@ -39,7 +37,6 @@ class ZegoStreamExtended {
     streamId: json["stream_id"],
     seat: json["seat"],
     micOn: json["mic_on"],
-    chatBan: json["chat_ban"],
     micPermit: json["mic_permit"],
     soundLevel: json["sound_level"],
     points: json["points"],
@@ -51,7 +48,6 @@ class ZegoStreamExtended {
     "stream_id": streamId,
     "seat": seat,
     "mic_on": micOn,
-    "chat_ban": chatBan,
     "mic_permit": micPermit,
     "sound_level": soundLevel,
     "points": points,

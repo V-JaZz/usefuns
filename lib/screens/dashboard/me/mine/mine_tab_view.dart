@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:live_app/data/datasource/local/sharedpreferences/storage_service.dart';
 import 'package:live_app/provider/user_data_provider.dart';
+import 'package:live_app/utils/constants.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../data/model/response/user_data_model.dart';
+import '../../../../provider/zego_room_provider.dart';
 import '../../../../utils/common_widgets.dart';
 import '../../../../utils/helper.dart';
 // ignore: depend_on_referenced_packages
@@ -214,6 +217,11 @@ class MineItemDialog extends StatelessWidget {
                     final res = await Provider.of<UserDataProvider>(context,listen: false).makeItemDefault(itemId: frameId, type: type);
                     if(res.status == 0) {
                       showCustomSnackBar(res.message??'error!', Get.context!,isToaster: true);
+                    }else if(type == 'wallpaper'){
+                      final zp = Provider.of<ZegoRoomProvider>(Get.context!,listen:false);
+                      if(zp.room?.userId == StorageService().getString(Constants.id)){
+                        zp.updateRoomTheme();
+                      }
                     }
                   }
                 },

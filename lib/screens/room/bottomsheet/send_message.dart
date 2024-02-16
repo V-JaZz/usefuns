@@ -126,7 +126,7 @@ class _SendMessageBottomSheetState extends State<SendMessageBottomSheet> {
 
   void submit() {
     final value = Provider.of<ZegoRoomProvider>(context,listen: false);
-    if(value.roomStreamList.firstWhereOrNull((e) => e.streamId == value.userID)?.chatBan == true){
+    if(value.chatBan == true){
       showCustomSnackBar('your chat is banned!', context,isToaster: true);
       return;
     }

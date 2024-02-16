@@ -45,6 +45,7 @@ class LiveRoomBottomSheets {
         shape: InputBorder.none,
         isScrollControlled: true,
         context: context,
+        useSafeArea: true,
         builder: (context) {
           return DraggableScrollableSheet(
             expand: false,
@@ -139,8 +140,6 @@ class LiveRoomBottomSheets {
         });
   }
 
-
-
   void showOthersProfileSeatBottomSheet({required ZegoStreamExtended user, bool? owner, bool? admin}) {
     showModalBottomSheet(
         backgroundColor: Colors.transparent,
@@ -153,6 +152,17 @@ class LiveRoomBottomSheets {
         });
   }
 
+  void showAudienceBottomSheet({required UserData user, bool? owner, bool? admin}) {
+    showModalBottomSheet(
+        backgroundColor: Colors.transparent,
+        isScrollControlled: false,
+        enableDrag: true,
+        isDismissible: true,
+        context: context,
+        builder: (context) {
+          return AudienceBottomSheet(user: user, admin: admin??false, owner: owner??false);
+        });
+  }
 
   void showInviteBottomSheet(ownerId, seat) {
     showModalBottomSheet(

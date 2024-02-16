@@ -6,9 +6,9 @@ import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import '../../../data/model/response/user_data_model.dart';
 import '../../../provider/rooms_provider.dart';
-import '../../../provider/user_data_provider.dart';
 import '../../dashboard/me/profile/user_profile.dart';
 import '../widget/kick_room.dart';
+import 'manager.dart';
 
 class ActiveUsersBottomSheet extends StatefulWidget {
   final String ownerId;
@@ -92,9 +92,12 @@ class _ActiveUsersBottomSheetState extends State<ActiveUsersBottomSheet> {
                                 Get.to(() => const UserProfile());
                                 return;
                               }
-                              Provider.of<UserDataProvider>(context,
-                                  listen: false).addVisitor(user.id!);
-                              Get.to(() => UserProfile(userData: user));
+                              LiveRoomBottomSheets(context)
+                                  .showAudienceBottomSheet(
+                                user: user,
+                                admin: value.room?.admin?.contains(myId)??false,
+                                owner: value.room?.userId == myId
+                              );
                             },
                             child: Row(
                               children: [

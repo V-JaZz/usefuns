@@ -13,11 +13,11 @@ class ZegoConfig {
   String roomUnMuteSeatKey= 'ROOM_UNMUTE_SEAT_KEY';
   String roomLockSeatKey= 'ROOM_LOCK_SEAT_KEY';
   String roomBanChatKey= 'ROOM_BAN_CHAT_KEY';
-  String roomUnBanChatKey= 'ROOM_UNBAN_CHAT_KEY';
   String roomKickSeatKey= 'ROOM_KICK_SEAT_KEY';
   String roomInviteSeatKey= 'ROOM_INVITE_SEAT_KEY';
   String roomResetCalculatorKey= 'ROOM_RESET_CALCULATOR_KEY';
   String refreshAdminKey= 'REFRESH_ADMIN_KEY';
+  String refreshThemeKey= 'REFRESH_ROOM_THEME';
   String refreshTreasureKey= 'REFRESH_TREASURE_KEY';
   String roomLockRoomUpdateKey= 'ROOM_LOCK_ROOM_UPDATE_KEY';
 

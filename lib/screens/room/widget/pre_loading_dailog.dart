@@ -187,13 +187,13 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
         if (ownerData.data!.roomWallpaper!.isNotEmpty) {
           String image = userValidItemSelection(ownerData.data!.roomWallpaper!);
           zegoRoomProvider.backgroundImage = image.isNotEmpty?image:null;
-          if(ownerData.data!.extraSeat!.isNotEmpty){
-            zegoRoomProvider.zegoRoom?.totalSeats = (userValidItemSelection(ownerData.data!.extraSeat!).isNotEmpty ? widget.room.noOfSeats : 8)! ;
-          }
+        }
+        if(ownerData.data!.extraSeat!.isNotEmpty){
+          zegoRoomProvider.zegoRoom?.totalSeats = (userValidItemSelection(ownerData.data!.extraSeat!).isNotEmpty ? widget.room.noOfSeats : 8)! ;
         }
         zegoRoomProvider.addGreeting(
             getGreeting(
-                me?.data?.name, Random().nextInt(5),ownerData.data!.name!.contains('#icognito')?ownerData.data!.name!.split('#').first:ownerData.data!.name!),
+                me.data?.name, Random().nextInt(5),ownerData.data!.name!.contains('#icognito')?ownerData.data!.name!.split('#').first:ownerData.data!.name!),
             ownerData);
       }
       Provider.of<GiftsProvider>(Get.context!, listen: false).generateSeries();

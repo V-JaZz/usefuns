@@ -19,7 +19,7 @@ import 'data/datasource/local/sharedpreferences/storage_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
+  await Firebase.initializeApp();
   final storageService = StorageService();
   await storageService.init();
 

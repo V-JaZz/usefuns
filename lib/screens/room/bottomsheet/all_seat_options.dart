@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:live_app/provider/rooms_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../data/model/body/zego_stream_model.dart';
+import '../../../data/model/response/user_data_model.dart';
 import '../../../provider/user_data_provider.dart';
 import '../../../provider/zego_room_provider.dart';
 import '../../../utils/helper.dart';
@@ -627,14 +628,10 @@ class _OthersProfileSeatBottomSheetState extends State<OthersProfileSeatBottomSh
                               Get.back();
                             }),
                         if((widget.owner || widget.admin)&& widget.user.owner == false) iconTextWidget(
-                            text: value.roomStreamList.where((e) => e.streamId == widget.user.streamId).first.chatBan == true?'Unban Chat':'Ban Chat',
+                            text: 'Ban Chat',
                             path: 'assets/icon_p/ban.png',
                             onTap: (){
-                              if(value.roomStreamList.where((e) => e.streamId == widget.user.streamId).first.chatBan == true){
-                                value.unbanChat(widget.user.streamId!,user.name!);
-                              }else{
-                                value.banChat(widget.user.streamId!,user.name!);
-                              }
+                              value.banChat(widget.user.streamId!,user.name!);
                               Get.back();
                             }),
                         if((widget.owner || widget.admin)&& widget.user.owner == false) iconTextWidget(
@@ -683,7 +680,7 @@ class _OthersProfileSeatBottomSheetState extends State<OthersProfileSeatBottomSh
                                           follow = false;
                                         });
                                       }else{
-                                        showCustomSnackBar('error unfollowing user!', context, isToaster: true);
+                                        showCustomSnackBar('error unfollowing user!', Get.context!, isToaster: true);
                                       }
                                     }else{
                                       final res = await up.followUser(userId: widget.user.streamId!);
@@ -692,7 +689,7 @@ class _OthersProfileSeatBottomSheetState extends State<OthersProfileSeatBottomSh
                                           follow = true;
                                         });
                                       }else{
-                                        showCustomSnackBar('error following user!', context, isToaster: true);
+                                        showCustomSnackBar('error following user!', Get.context!, isToaster: true);
                                       }
                                     }
                                   },
@@ -828,7 +825,7 @@ class _OthersProfileSeatBottomSheetState extends State<OthersProfileSeatBottomSh
 
 
 class AudienceBottomSheet extends StatefulWidget {
-  final ZegoStreamExtended user;
+  final UserData user;
   final bool owner;
   final bool admin;
   const AudienceBottomSheet({super.key, required this.user, required this.owner, required this.admin});
@@ -843,7 +840,7 @@ class _AudienceBottomSheetState extends State<AudienceBottomSheet> {
   @override
   void initState() {
     userDataProvider = Provider.of<UserDataProvider>(context,listen: false);
-    follow = Provider.of<UserDataProvider>(context,listen: false).userData!.data!.following!.firstWhereOrNull((element) => element == widget.user.streamId)!=null;
+    follow = Provider.of<UserDataProvider>(context,listen: false).userData!.data!.following!.firstWhereOrNull((element) => element == widget.user.id)!=null;
     super.initState();
   }
 
@@ -856,19 +853,19 @@ class _AudienceBottomSheetState extends State<AudienceBottomSheet> {
 
     return Consumer<ZegoRoomProvider>(
       builder: (context, value, _) {
-        final user = widget.user.userData;
+        final user = widget.user;
         return Stack(
           children: [
             Container(
               color: Colors.white,
-              margin: EdgeInsets.only(top: 36 * a),
+              margin: EdgeInsets.only(top: 52 * a),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     SizedBox(height: 45 * a),
                     Text(
-                      user?.name??'',
+                      user.name??'',
                       style: SafeGoogleFont(
                         'Poppins',
                         fontSize: 20 * b,
@@ -882,14 +879,14 @@ class _AudienceBottomSheetState extends State<AudienceBottomSheet> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           userLevelTag(
-                              user?.level??0,
+                              user.level??0,
                               17 * a,
                               viewZero: true
                           ),
-                          if(value.room!.admin!.contains(widget.user.streamId)) SizedBox(
+                          if(value.room!.admin!.contains(widget.user.id)) SizedBox(
                             width: 6*a,
                           ),
-                          if(value.room!.admin!.contains(widget.user.streamId)) Container(
+                          if(value.room!.admin!.contains(widget.user.id)) Container(
                             decoration: BoxDecoration(
                                 color: const Color(0xffFF9933),
                                 borderRadius: BorderRadius.circular(12*a)
@@ -906,10 +903,10 @@ class _AudienceBottomSheetState extends State<AudienceBottomSheet> {
                               ),
                             ),
                           ),
-                          if(widget.user.owner == true) SizedBox(
+                          if(widget.user.id == value.room?.userId) SizedBox(
                             width: 6*a,
                           ),
-                          if(widget.user.owner == true) Container(
+                          if(widget.user.id == value.room?.userId) Container(
                             decoration: BoxDecoration(
                                 color: const Color(0xFF138808),
                                 borderRadius: BorderRadius.circular(12*a)
@@ -926,10 +923,10 @@ class _AudienceBottomSheetState extends State<AudienceBottomSheet> {
                               ),
                             ),
                           ),
-                          if(widget.user.owner == true||widget.user.member == true) SizedBox(
+                          if(widget.user.id != value.room?.userId || value.room!.groupMembers!.contains(value.room!.userId)) SizedBox(
                             width: 6*a,
                           ),
-                          if(widget.user.owner != true && widget.user.member == true) Container(
+                          if(widget.user.id != value.room?.userId && value.room!.groupMembers!.contains(widget.user.id)) Container(
                             decoration: BoxDecoration(
                                 color: const Color(0xFF9E26BC),
                                 borderRadius: BorderRadius.circular(12*a)
@@ -955,7 +952,7 @@ class _AudienceBottomSheetState extends State<AudienceBottomSheet> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
                                     Text(
-                                      AgeCalculator.calculateAge(user!.dob!).toString(),
+                                      AgeCalculator.calculateAge(user.dob!).toString(),
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                           color: const Color.fromRGBO(0, 0, 0, 1),
@@ -1013,8 +1010,8 @@ class _AudienceBottomSheetState extends State<AudienceBottomSheet> {
                             path: 'assets/icon_p/profile.png',
                             onTap: () async {
                               Get.back();
-                              Provider.of<UserDataProvider>(context,listen: false).addVisitor(widget.user.streamId!);
-                              Get.to(()=>UserProfile(userData: widget.user.userData!));
+                              Provider.of<UserDataProvider>(context,listen: false).addVisitor(widget.user.id!);
+                              Get.to(()=>UserProfile(userData: widget.user));
                             }),
                         iconTextWidget(
                             text: 'Chat',
@@ -1030,38 +1027,34 @@ class _AudienceBottomSheetState extends State<AudienceBottomSheet> {
                               Get.back();
                               bs.showMessage(mention: user.name);
                             }),
-                        if((widget.owner || widget.admin)&& widget.user.owner == false) iconTextWidget(
-                            text: value.roomStreamList.where((e) => e.streamId == widget.user.streamId).first.chatBan == true?'Unban Chat':'Ban Chat',
+                        if((widget.owner || widget.admin)&& widget.user.id != value.room?.userId) iconTextWidget(
+                            text: 'Ban Chat',
                             path: 'assets/icon_p/ban.png',
                             onTap: (){
-                              if(value.roomStreamList.where((e) => e.streamId == widget.user.streamId).first.chatBan == true){
-                                value.unbanChat(widget.user.streamId!,user.name!);
-                              }else{
-                                value.banChat(widget.user.streamId!,user.name!);
-                              }
+                              value.banChat(widget.user.id!,user.name!);
                               Get.back();
                             }),
-                        if((widget.owner || widget.admin)&& widget.user.owner == false) iconTextWidget(
+                        if((widget.owner || widget.admin) && widget.user.id != value.room?.userId) iconTextWidget(
                             text: 'Kick',
                             path: 'assets/icon_p/kick.png',
                             onTap: (){
-                              kickRoomWidget(context, user.name, widget.user.streamId);
+                              kickRoomWidget(context, user.name, widget.user.id);
                             }),
                         if(widget.owner==true) iconTextWidget(
-                            text: value.room!.admin!.contains(widget.user.streamId) ? 'Remove Admin':'Set Admin',
+                            text: value.room!.admin!.contains(widget.user.id) ? 'Remove Admin':'Set Admin',
                             path: 'assets/icon_p/set_admin.png',
                             onTap: () async {
                               final p = Provider.of<RoomsProvider>(context,listen: false);
                               Get.back();
-                              if(value.room!.admin!.contains(widget.user.streamId)){
-                                value.room!.admin!.remove(widget.user.streamId);
-                                await p.removeAdmin(value.room!.id!, widget.user.streamId!);
+                              if(value.room!.admin!.contains(widget.user.id)){
+                                value.room!.admin!.remove(widget.user.id);
+                                await p.removeAdmin(value.room!.id!, widget.user.id!);
                                 value.updateAdminList();
                               }else if(value.room!.admin!.length >= 20){
                                 showCustomSnackBar('Maximum admin limit is 20!', Get.context!);
                               }else{
-                                value.room!.admin!.add(widget.user.streamId!);
-                                await p.addAdmin(value.room!.id!, widget.user.streamId!);
+                                value.room!.admin!.add(widget.user.id!);
+                                await p.addAdmin(value.room!.id!, widget.user.id!);
                                 value.updateAdminList();
                               }
                             }),
@@ -1076,22 +1069,22 @@ class _AudienceBottomSheetState extends State<AudienceBottomSheet> {
                                 GestureDetector(
                                   onTap: () async {
                                     if(follow){
-                                      final res = await up.unFollowUser(userId: widget.user.streamId!);
+                                      final res = await up.unFollowUser(userId: widget.user.id!);
                                       if(res.status == 1){
                                         setState(() {
                                           follow = false;
                                         });
                                       }else{
-                                        showCustomSnackBar('error unfollowing user!', context, isToaster: true);
+                                        showCustomSnackBar('error unfollowing user!', Get.context!, isToaster: true);
                                       }
                                     }else{
-                                      final res = await up.followUser(userId: widget.user.streamId!);
+                                      final res = await up.followUser(userId: widget.user.id!);
                                       if(res.status == 1){
                                         setState(() {
                                           follow = true;
                                         });
                                       }else{
-                                        showCustomSnackBar('error following user!', context, isToaster: true);
+                                        showCustomSnackBar('error following user!', Get.context!, isToaster: true);
                                       }
                                     }
                                   },
@@ -1172,15 +1165,15 @@ class _AudienceBottomSheetState extends State<AudienceBottomSheet> {
             ),
             Positioned(
               top: 0,
-              left: (Get.width*0.5)-(40*a),
+              left: (Get.width*0.5)-(50*a),
               child: userProfileDisplay(
-                size: 80*a,
+                size: 100*a,
                 image: user.images?.first??'',
                 frame: userValidItemSelection(user.frame),
                 onTap: () async {
                   Get.back();
-                  Provider.of<UserDataProvider>(context,listen: false).addVisitor(widget.user.streamId!);
-                  Get.to(()=>UserProfile(userData: widget.user.userData!));
+                  Provider.of<UserDataProvider>(context,listen: false).addVisitor(widget.user.id!);
+                  Get.to(()=>UserProfile(userData: widget.user));
                 },
               ),
             ),

@@ -59,6 +59,7 @@ class ZegoRoomProvider with ChangeNotifier {
     savedUsersData = [];
     roomUsersList = [];
     roomStreamList = [];
+    chatBan = false;
     minimized = false;
     mediaPlayer = null;
     activeCount = 0;
@@ -88,6 +89,7 @@ class ZegoRoomProvider with ChangeNotifier {
   String userID = '';
   String userName = '';
   double treasureProgress = 0.0;
+  bool chatBan = false;
   int activeCount = 1;
 
   UserData? _newUser;
@@ -347,12 +349,8 @@ class ZegoRoomProvider with ChangeNotifier {
           stopPublishingStream();
           showCustomSnackBar('Locked by ${fromUser.userName}', Get.context!,isToaster: true);
         }else if(command == ZegoConfig.instance.roomBanChatKey){
-          roomStreamList.firstWhere((e) => e.streamId == userID).chatBan = true;
+          chatBan = true;
           showCustomSnackBar('Banned Chat by ${fromUser.userName}', Get.context!,isToaster: true);
-          notifyStreamExtraInfoUpdate();
-        }else if(command == ZegoConfig.instance.roomUnBanChatKey){
-          roomStreamList.firstWhere((e) => e.streamId == userID).chatBan = false;
-          showCustomSnackBar('Unbanned Chat by ${fromUser.userName}', Get.context!,isToaster: true,isError: false);
           notifyStreamExtraInfoUpdate();
         }else if(command == ZegoConfig.instance.roomKickSeatKey){
           Get.offAll(const BottomNavigator(),transition: Transition.noTransition);
@@ -362,6 +360,8 @@ class ZegoRoomProvider with ChangeNotifier {
           refreshAdmins();
         }else if(command == ZegoConfig.instance.refreshTreasureKey){
           refreshTreasureBox();
+        }else if(command == ZegoConfig.instance.refreshThemeKey){
+          refreshTheme();
         }else if(command.contains(ZegoConfig.instance.roomInviteSeatKey)){
           viewInviteToSeatDailog(command.substring(20),fromUser.userName);
         }else if(command.contains(ZegoConfig.instance.roomLockRoomUpdateKey)){
@@ -388,9 +388,11 @@ class ZegoRoomProvider with ChangeNotifier {
         if(model.type == 'gift'){
           updateRoomForeground(model.gift?.giftPath??'');
           if(model.gift?.toId == userID){
-            int points = (((model.gift?.count??1)*(model.gift?.giftPrice??1))*3).toInt();
-            roomStreamList.firstWhere((e) => e.streamId == userID).points = (roomStreamList.firstWhere((e) => e.streamId == userID).points??0)+points;
-            notifyStreamExtraInfoUpdate();
+            if(roomStreamList.firstWhereOrNull((e) => e.streamId == userID) != null){
+              int points = (((model.gift?.count??1)*(model.gift?.giftPrice??1))*3).toInt();
+              roomStreamList.firstWhereOrNull((e) => e.streamId == userID)?.points = (roomStreamList.firstWhere((e) => e.streamId == userID).points??0)+points;
+              notifyStreamExtraInfoUpdate();
+            }
           }
         }
       }
@@ -514,13 +516,6 @@ class ZegoRoomProvider with ChangeNotifier {
         [ZegoUser(userID, userName)]
     );
   }
-  void unbanChat(String userID, String userName){
-    ZegoExpressEngine.instance.sendCustomCommand(
-        roomID,
-        ZegoConfig.instance.roomUnBanChatKey,
-        [ZegoUser(userID, userName)]
-    );
-  }
   void kickStreamer(String userID, String userName){
     ZegoExpressEngine.instance.sendCustomCommand(
         roomID,
@@ -570,6 +565,14 @@ class ZegoRoomProvider with ChangeNotifier {
     ZegoExpressEngine.instance.sendCustomCommand(
         roomID,
         ZegoConfig.instance.refreshAdminKey,
+        []
+    );
+  }
+  void updateRoomTheme(){
+    refreshTheme();
+    ZegoExpressEngine.instance.sendCustomCommand(
+        roomID,
+        ZegoConfig.instance.refreshThemeKey,
         []
     );
   }
@@ -739,6 +742,16 @@ class ZegoRoomProvider with ChangeNotifier {
   Future<void> refreshAdmins() async {
     final data = await Provider.of<RoomsProvider>(Get.context!,listen: false).getAdmins(room!.id!);
     if(data!=null) room = room?.copyWith(admin: data.admin);
+  }
+
+  Future<void> refreshTheme() async {
+    final ownerData = await Provider.of<UserDataProvider>(Get.context!, listen: false)
+        .getUser(id: room!.userId!);
+    if (ownerData.data!.roomWallpaper!.isNotEmpty) {
+      String image = userValidItemSelection(ownerData.data!.roomWallpaper!);
+      backgroundImage = image.isNotEmpty?image:null;
+      notifyListeners();
+    }
   }
 
   void heartbeatJoin(){
