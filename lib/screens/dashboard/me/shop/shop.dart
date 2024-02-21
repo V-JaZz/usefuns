@@ -17,8 +17,10 @@ class Shop extends StatefulWidget {
 }
 
 class _ShopState extends State<Shop> {
+  late int index;
   @override
   void initState() {
+    index = widget.index??0;
     Provider.of<ShopWalletProvider>(context, listen: false).getAll();
     super.initState();
   }
@@ -75,7 +77,7 @@ class _ShopState extends State<Shop> {
           ),
           GestureDetector(
             onTap: () {
-              Get.off(() => const Mine(), transition: Transition.noTransition);
+              Get.off(() => Mine(index: index), transition: Transition.noTransition);
             },
             child: Container(
               margin: const EdgeInsets.only(right: 30),
@@ -95,7 +97,10 @@ class _ShopState extends State<Shop> {
       body: shopWalletProvider.loadingShopProgress == null
           ? VerticalTabs(
               tabsWidth: 120 * a,
-              initialIndex: widget.index ?? 0,
+              initialIndex: index,
+              onSelect: (tabIndex) {
+                index = tabIndex;
+              },
               indicatorColor: Theme.of(context).primaryColor,
               selectedTabBackgroundColor:
                   Theme.of(context).primaryColor.withOpacity(0.1),

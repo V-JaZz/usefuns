@@ -4,10 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/provider/zego_room_provider.dart';
-import 'package:live_app/utils/utils_assets.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:provider/provider.dart';
-import 'package:zego_express_engine/zego_express_engine.dart';
 
 class RoomMediaPlayer extends StatefulWidget {
   const RoomMediaPlayer({super.key});
@@ -23,6 +21,12 @@ class _RoomMediaPlayerState extends State<RoomMediaPlayer> with TickerProviderSt
   late final ZegoRoomProvider zp;
   late AnimationController _controller;
   late Timer timer;
+  bool searching = false;
+  final FocusNode focusNode = FocusNode();
+  final TextEditingController _searchController = TextEditingController();
+  List<SongModel>? songs ;
+  List<SongModel>? filtered ;
+  bool loading = true;
 
   @override
   void initState() {
@@ -56,14 +60,26 @@ class _RoomMediaPlayerState extends State<RoomMediaPlayer> with TickerProviderSt
     _hasPermission = await _audioQuery.checkAndRequest(
       retryRequest: retry,
     );
-    _hasPermission ? setState(() {}) : null;
+    _hasPermission ? setState(() => loadSongs()) : null;
+  }
+
+  // Function to filter songs based on search query
+  void filterSongs(String query) {
+    if (query.isEmpty) {
+      filtered = songs;
+    } else {
+      filtered = songs?.where((song) {
+        return song.title.toLowerCase().contains(query.toLowerCase());
+      }).toList();
+    }
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
-    double b = a * 0.97;
+
     return Consumer<ZegoRoomProvider>(
       builder: (context, value, child) => Scaffold(
           appBar: AppBar(
@@ -71,77 +87,112 @@ class _RoomMediaPlayerState extends State<RoomMediaPlayer> with TickerProviderSt
             automaticallyImplyLeading: true,
             backgroundColor: const Color(0xffFF9933),
             foregroundColor: Colors.white,
-            title: const Text(
-              'Songs',
-            ),
+            title: searching
+                ?Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        focusNode: focusNode,
+                        controller: _searchController,
+                        onChanged: filterSongs,
+                        style: const TextStyle(color: Colors.black),
+                        cursorColor: const Color(0xffFF9933),
+                        decoration: const InputDecoration(
+                          hintText: 'Search songs...',
+                          hintStyle: TextStyle(color: Colors.black26),
+                          border: InputBorder.none,
+                          filled: true,
+                          fillColor: Colors.white,
+
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _searchController.clear();
+                          filterSongs('');
+                          focusNode.unfocus();
+                          searching = false;
+                        });
+                      },
+                      icon: const Icon(Icons.clear, color: Colors.white),
+                    ),
+                  ],
+                )
+                :Row(
+                  children: [
+                    const Expanded(
+                      child: Text(
+                        'Songs',
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () async {
+                        setState(() {
+                          searching = true;
+                        });
+                        Future.delayed(const Duration(milliseconds: 300),() => FocusScope.of(context).requestFocus(focusNode));
+                      },
+                      icon: const Icon(Icons.search, color: Colors.white),
+                    ),
+                  ],
+                ),
           ),
           body: Center(
             child: !_hasPermission
                 ? noAccessToLibraryWidget()
-                : FutureBuilder<List<SongModel>>(
-                    // Default values:
-                    future: _audioQuery.querySongs(
-                      sortType: null,
-                      orderType: OrderType.ASC_OR_SMALLER,
-                      uriType: UriType.EXTERNAL,
-                      ignoreCase: true,
-                    ),
-                    builder: (context, item) {
-                      // Display error, if any.
-                      if (item.hasError) {
-                        return Text(item.error.toString());
-                      }
+                : Builder(
+              builder: (context) {
 
-                      // Waiting content.
-                      if (item.data == null) {
-                        return const CircularProgressIndicator();
-                      }
+                // Waiting content.
+                if (loading) {
+                  return const CircularProgressIndicator();
+                }
 
-                      // 'Library' is empty.
-                      if (item.data!.isEmpty) {
-                        return const Text("Nothing found!");
-                      }
+                // 'Library' is empty.
+                if (filtered!.isEmpty) {
+                  return const Text("Nothing found!");
+                }
 
-                      // You can use [item.data!] direct or you can create a:
-                      // List<SongModel> songs = item.data!;
-                      return ListView.builder(
-                        itemCount: item.data!.length,
-                        itemBuilder: (context, index) {
-                          bool selected = item.data![index].id == value.loadedTrack?.id;
-                          return ListTile(
-                            tileColor: selected ? const Color(0x33FF9933) : null,
-                            onTap: () async {
-                              if(value.mediaPlayer==null){
-                                print('mediaPlayer == null');
-                              }else{
-                                bool loadSuccess = await value.loadLocalMedia(item.data![index]);
-                                if(loadSuccess){
-                                  await value.mediaPlayer?.start();
-                                  if (value.isPlaying == false) {
-                                    value.isPlaying = true;
-                                    _controller.reverse();
-                                  }
-                                }else{
-                                  if (value.isPlaying == true) {
-                                    value.isPlaying = false;
-                                    _controller.forward();
-                                  }
-                                }
-                              }
-                            },
-                            title: Text(item.data![index].title),
-                            subtitle: Text(item.data![index].artist ?? "No Artist"),
-                            // This Widget will query/load image.
-                            // You can use/create your own widget/method using [queryArtwork].
-                            leading: Icon(
-                                selected ? Icons.pause_circle_filled_rounded : Icons.play_circle_fill_rounded,
-                                color: const Color(0xffFF9933),
-                                size: 45*a),
-                          );
-                        },
-                      );
-                    },
-                  ),
+                return ListView.builder(
+                  itemCount: filtered!.length,
+                  itemBuilder: (context, index) {
+                    bool selected = filtered![index].id == value.loadedTrack?.id;
+                    return ListTile(
+                      tileColor: selected ? const Color(0x33FF9933) : null,
+                      onTap: () async {
+                        if(value.mediaPlayer==null){
+                          print('mediaPlayer == null');
+                        }else{
+                          bool loadSuccess = await value.loadLocalMedia(filtered![index]);
+                          if(loadSuccess){
+                            await value.mediaPlayer?.start();
+                            if (value.isPlaying == false) {
+                              value.isPlaying = true;
+                              _controller.reverse();
+                            }
+                          }else{
+                            if (value.isPlaying == true) {
+                              value.isPlaying = false;
+                              _controller.forward();
+                            }
+                          }
+                        }
+                      },
+                      title: Text(filtered![index].title),
+                      subtitle: Text(filtered![index].artist ?? "No Artist"),
+                      // This Widget will query/load image.
+                      // You can use/create your own widget/method using [queryArtwork].
+                      leading: Icon(
+                          selected ? Icons.pause_circle_filled_rounded : Icons.play_circle_fill_rounded,
+                          color: const Color(0xffFF9933),
+                          size: 45*a),
+                    );
+                  },
+                );
+              },
+            ),
           ),
           bottomNavigationBar: value.loadedTrack != null? Column(
             mainAxisSize: MainAxisSize.min,
@@ -181,7 +232,7 @@ class _RoomMediaPlayerState extends State<RoomMediaPlayer> with TickerProviderSt
                         if(round!=value.trackVolume){
                           value.trackVolume = round;
                         }
-                        },
+                      },
                     ),
                   ],
                 ),
@@ -235,13 +286,13 @@ class _RoomMediaPlayerState extends State<RoomMediaPlayer> with TickerProviderSt
                     GestureDetector(
                       onTap: () async {
                         if (value.isPlaying == false) {
-                            value.isPlaying = true;
+                          value.isPlaying = true;
                           await value.mediaPlayer?.resume();
-                            _controller.reverse();
+                          _controller.reverse();
                         } else {
-                            value.isPlaying = false;
+                          value.isPlaying = false;
                           await value.mediaPlayer?.pause();
-                            _controller.forward();
+                          _controller.forward();
                         }
                       },
                       child: AnimatedIcon(
@@ -258,7 +309,7 @@ class _RoomMediaPlayerState extends State<RoomMediaPlayer> with TickerProviderSt
                           });
                         },
                         icon: Icon(
-                            CupertinoIcons.slider_horizontal_3,
+                          CupertinoIcons.slider_horizontal_3,
                           color: mixer?const Color(0xffFF9933):Colors.white,
                         )
                     )
@@ -278,7 +329,7 @@ class _RoomMediaPlayerState extends State<RoomMediaPlayer> with TickerProviderSt
         title: Text(
           text,
           style:
-              const TextStyle(color: Colors.black, fontWeight: FontWeight.w300),
+          const TextStyle(color: Colors.black, fontWeight: FontWeight.w300),
         ),
         subtitle: Text(
           text1,
@@ -295,9 +346,9 @@ class _RoomMediaPlayerState extends State<RoomMediaPlayer> with TickerProviderSt
           ),
           child: const Center(
               child: Icon(
-            Icons.play_arrow,
-            color: Colors.white,
-          )),
+                Icons.play_arrow,
+                color: Colors.white,
+              )),
         ),
       ),
     );
@@ -324,4 +375,16 @@ class _RoomMediaPlayerState extends State<RoomMediaPlayer> with TickerProviderSt
     );
   }
 
+  Future<void> loadSongs() async {
+    songs = await _audioQuery.querySongs(
+      sortType: null,
+      orderType: OrderType.ASC_OR_SMALLER,
+      uriType: UriType.EXTERNAL,
+      ignoreCase: true,
+    );
+    setState(() {
+      filtered = songs;
+      loading = false;
+    });
+  }
 }

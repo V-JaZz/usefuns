@@ -108,14 +108,14 @@ class _MeState extends State<Me> {
           Get.to(() => const LevelPrivileges());
         }
       },
-      {
-        "icon": "assets/icons/ic_calender.png",
-        "title": "Daily Task",
-        "onTap": () {
-          showCustomSnackBar('Upcoming', context,isError: false);
-          // Get.to(() => const DailyTask());
-        }
-      },
+      // {
+      //   "icon": "assets/icons/ic_calender.png",
+      //   "title": "Daily Task",
+      //   "onTap": () {
+      //     showCustomSnackBar('Upcoming', context,isError: false);
+      //     // Get.to(() => const DailyTask());
+      //   }
+      // },
       {
         "icon": "assets/icons/ic_querry.png",
         "title": "Help Center & Feedback",

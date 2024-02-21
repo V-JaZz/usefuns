@@ -11,8 +11,36 @@ class GamesBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     LiveRoomBottomSheets bs = LiveRoomBottomSheets(context);
     final List<Map> gamesList = [
+      {
+        "image": 'assets/games/Sudan-15.png',
+        "name": "Sudan",
+        "rank": "516",
+        "onTap" : (){
+          Get.back();
+          bs.showJoyGamesBottomSheet(15);
+        }
+      },
+      {
+        "image": 'assets/games/Dragon Tiger-12.png',
+        "name": "Dragon Tiger",
+        "rank": "516",
+        "onTap" : (){
+          Get.back();
+          bs.showJoyGamesBottomSheet(12);
+        }
+      },
+      {
+        "image": 'assets/games/Neon Wheel-17.png',
+        "name": "Neon Wheel",
+        "rank": "516",
+        "onTap" : (){
+          Get.back();
+          bs.showJoyGamesBottomSheet(17);
+        }
+      },
       {
         "image": 'assets/games/Horse Race-13.png',
         "name": "Horse Race",
@@ -65,9 +93,11 @@ class GamesBottomSheet extends StatelessWidget {
         "onTap" : (){showCalculatorOptions(context);}
       },
     ];
+
     double baseWidth = 360;
     double a = Get.width / baseWidth;
     double b = a * 0.97;
+
     return Container(
       color: Colors.white,
       width: double.infinity,

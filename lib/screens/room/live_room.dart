@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -838,6 +839,11 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                                   );
                                                 }
                                               },
+                                              onLongPress: () {
+                                                FlutterClipboard.copy('${body.message}').then((value) {
+                                                  showCustomSnackBar('Copied to Clipboard!', context, isToaster: true, isError: false);
+                                                });
+                                              },
                                               child: Container(
                                                 padding: EdgeInsets.fromLTRB(
                                                     8 * a, 4 * a, 8 * a, 4 * a),
@@ -1107,7 +1113,10 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                               ),
                             ),
                             IconButton(
-                              onPressed:(){bs.showGamesBottomSheet(value.isOwner);},
+                              onPressed:()async{
+                                await bs.showGamesBottomSheet(value.isOwner);
+                                Provider.of<UserDataProvider>(Get.context!, listen: false).getUser(loading: false);
+                                },
                               icon: SizedBox(
                                 width: 30 * a,
                                 height: 27 * a,

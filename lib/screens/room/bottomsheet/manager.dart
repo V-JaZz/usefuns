@@ -214,8 +214,8 @@ class LiveRoomBottomSheets {
         });
   }
 
-  void showGamesBottomSheet(bool owner) {
-    showModalBottomSheet(
+  Future<void> showGamesBottomSheet(bool owner) async {
+    await showModalBottomSheet(
         backgroundColor: Colors.transparent,
         isScrollControlled: false,
         enableDrag: true,
@@ -224,6 +224,7 @@ class LiveRoomBottomSheets {
         builder: (context) {
           return GamesBottomSheet(owner: owner);
         });
+    return;
   }
 
   void showJoyGamesBottomSheet(int gameId, {int? mini, String? language}) {
@@ -296,7 +297,7 @@ class LiveRoomBottomSheets {
       isDismissible: true,
       context: context,
       builder: (BuildContext context) {
-        return const Notifications(showAppBar: false);
+        return const MessageNotifications(showAppBar: false);
       },
     );
   }

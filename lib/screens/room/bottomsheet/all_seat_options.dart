@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:live_app/provider/rooms_provider.dart';
 import 'package:provider/provider.dart';
@@ -177,8 +178,7 @@ class MyProfileSeatBottomSheet extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 12 * a),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Wrap(
                   children: [
                     userLevelTag(
                         value.userData?.data?.level??0,
@@ -248,6 +248,15 @@ class MyProfileSeatBottomSheet extends StatelessWidget {
                     SizedBox(
                       width: 6*a,
                     ),
+                    for(var v in value.userData!.data!.tags!)
+                      Padding(
+                        padding: EdgeInsets.only(right: 6*a),
+                        child: SvgPicture.network(
+                          v.images!.first,
+                          fit: BoxFit.fitHeight,
+                          height: 19 * a,
+                        ),
+                      ),
                     SizedBox(
                         child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -305,9 +314,10 @@ class MyProfileSeatBottomSheet extends StatelessWidget {
                 if((value.userData?.data?.bio??'') != '')Padding(
                   padding: EdgeInsets.symmetric(horizontal: 36 * a),
                   child: Text(
-                    value.userData?.data?.bio??'',
+                    value.userData?.data?.bio?.trim()??'',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
                     style: SafeGoogleFont(
                       'Poppins',
                       fontSize: 12 * b,
@@ -418,10 +428,12 @@ class OthersProfileSeatBottomSheet extends StatefulWidget {
 class _OthersProfileSeatBottomSheetState extends State<OthersProfileSeatBottomSheet> {
   late final UserDataProvider userDataProvider;
   late bool follow;
+  late bool followBack;
   @override
   void initState() {
     userDataProvider = Provider.of<UserDataProvider>(context,listen: false);
     follow = Provider.of<UserDataProvider>(context,listen: false).userData!.data!.following!.firstWhereOrNull((element) => element == widget.user.streamId)!=null;
+    followBack = Provider.of<UserDataProvider>(context,listen: false).userData!.data!.followers!.firstWhereOrNull((element) => element == widget.user.streamId)!=null;
     super.initState();
   }
 
@@ -456,8 +468,7 @@ class _OthersProfileSeatBottomSheetState extends State<OthersProfileSeatBottomSh
                       ),
                     ),
                     SizedBox(height: 6 * a),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                    Wrap(
                         children: <Widget>[
                           userLevelTag(
                               user?.level??0,
@@ -527,13 +538,22 @@ class _OthersProfileSeatBottomSheetState extends State<OthersProfileSeatBottomSh
                           SizedBox(
                             width: 6*a,
                           ),
+                          for(var v in user!.tags!)
+                            Padding(
+                              padding: EdgeInsets.only(right: 6*a),
+                              child: SvgPicture.network(
+                                v.images!.first,
+                                fit: BoxFit.fitHeight,
+                                height: 19 * a,
+                              ),
+                            ),
                           SizedBox(
                               child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
                                     Text(
-                                      AgeCalculator.calculateAge(user!.dob!).toString(),
+                                      AgeCalculator.calculateAge(user.dob!).toString(),
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                           color: const Color.fromRGBO(0, 0, 0, 1),
@@ -599,7 +619,11 @@ class _OthersProfileSeatBottomSheetState extends State<OthersProfileSeatBottomSh
                             path: 'assets/icon_p/chat.png',
                             onTap: (){
                               Get.back();
-                              bs.showMessage();
+                              if(!follow || !followBack){
+                                showCustomSnackBar('Must follow from both sides!',context,isToaster: true,isError: false);
+                              }else{
+                                bs.showNotificationsBottomSheet();
+                              }
                             }),
                         iconTextWidget(
                             text: 'Mention',
@@ -837,10 +861,13 @@ class AudienceBottomSheet extends StatefulWidget {
 class _AudienceBottomSheetState extends State<AudienceBottomSheet> {
   late final UserDataProvider userDataProvider;
   late bool follow;
+    late bool followBack;
+
   @override
   void initState() {
     userDataProvider = Provider.of<UserDataProvider>(context,listen: false);
     follow = Provider.of<UserDataProvider>(context,listen: false).userData!.data!.following!.firstWhereOrNull((element) => element == widget.user.id)!=null;
+    followBack = Provider.of<UserDataProvider>(context,listen: false).userData!.data!.followers!.firstWhereOrNull((element) => element == widget.user.id)!=null;
     super.initState();
   }
 
@@ -875,8 +902,7 @@ class _AudienceBottomSheetState extends State<AudienceBottomSheet> {
                       ),
                     ),
                     SizedBox(height: 6 * a),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                    Wrap(
                         children: <Widget>[
                           userLevelTag(
                               user.level??0,
@@ -946,6 +972,15 @@ class _AudienceBottomSheetState extends State<AudienceBottomSheet> {
                           SizedBox(
                             width: 6*a,
                           ),
+                          for(var v in user.tags!)
+                            Padding(
+                              padding: EdgeInsets.only(right: 6*a),
+                              child: SvgPicture.network(
+                                v.images!.first,
+                                fit: BoxFit.fitHeight,
+                                height: 19 * a,
+                              ),
+                            ),
                           SizedBox(
                               child: Row(
                                   mainAxisSize: MainAxisSize.min,
@@ -1018,7 +1053,11 @@ class _AudienceBottomSheetState extends State<AudienceBottomSheet> {
                             path: 'assets/icon_p/chat.png',
                             onTap: (){
                               Get.back();
-                              bs.showMessage();
+                              if(!follow || !followBack){
+                                showCustomSnackBar('Must follow from both sides!',context,isToaster: true,isError: false);
+                              }else{
+                                bs.showNotificationsBottomSheet();
+                              }
                             }),
                         iconTextWidget(
                             text: 'Mention',

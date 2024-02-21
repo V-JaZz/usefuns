@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:live_app/utils/common_widgets.dart';
 import 'package:provider/provider.dart';
 import '../../../provider/zego_room_provider.dart';
-import '../../../utils/zego_config.dart';
 
 class SendMessageBottomSheet extends StatefulWidget {
   final String? mention;
@@ -37,7 +36,7 @@ class _SendMessageBottomSheetState extends State<SendMessageBottomSheet> {
   Widget build(BuildContext context) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
-    double b = a * 0.97;
+
     return GestureDetector(
       onTap: () => Get.back(),
       child: Scaffold(
@@ -130,7 +129,22 @@ class _SendMessageBottomSheetState extends State<SendMessageBottomSheet> {
       showCustomSnackBar('your chat is banned!', context,isToaster: true);
       return;
     }
+    if(containsUrl(controller.text)){
+      showCustomSnackBar('Text can\'t have URL!', context,isToaster: true);
+      return;
+    }
     if(controller.text.trim() != '') value.sendBroadcastMessage(controller.text.trim());
     Get.back();
+  }
+
+  bool containsUrl(String text) {
+    // Regular expression to match URLs
+    final RegExp urlRegExp = RegExp(
+      r"(http://www\.|https://www\.|http://|https://)?[a-zA-Z0-9]+([-.]?[a-zA-Z0-9]+)*\.[a-zA-Z]{2,5}(:[0-9]{1,5})?(/.*)?",
+      caseSensitive: false,
+      multiLine: false,
+    );
+    // Check if the text contains a URL
+    return urlRegExp.hasMatch(text);
   }
 }

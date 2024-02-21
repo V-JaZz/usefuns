@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:live_app/provider/user_data_provider.dart';
-import 'package:live_app/screens/dashboard/me/profile/user_profile.dart';
+import 'package:live_app/screens/dashboard/message/chat_screen.dart';
 import 'package:live_app/utils/constants.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
@@ -10,28 +9,21 @@ import '../../../provider/messages_provider.dart';
 import '../../web/web_view.dart';
 import 'activity.dart';
 import 'system_notification.dart';
-import 'usefuns_club_notifications.dart';
 
-class Notifications extends StatefulWidget {
+class MessageNotifications extends StatefulWidget {
   final bool showAppBar;
-  const Notifications({Key? key, this.showAppBar = true}) : super(key: key);
+  const MessageNotifications({Key? key, this.showAppBar = true}) : super(key: key);
   @override
-  State<Notifications> createState() => _NotificationsState();
+  State<MessageNotifications> createState() => _MessageNotificationsState();
 }
 
-class _NotificationsState extends State<Notifications> {
+class _MessageNotificationsState extends State<MessageNotifications> {
   RefreshController refreshController = RefreshController();
   @override
   void initState() {
-    final uid = Provider.of<UserDataProvider>(context, listen: false)
-        .userData!
-        .data!
-        .userId!;
-    Provider.of<MessagesProvider>(context, listen: false)
-        .getAllNotifications(uid);
+    Provider.of<MessagesNotificationsProvider>(Get.context!,listen: false).init();
     super.initState();
   }
-
   @override
   void dispose() {
     refreshController.dispose();
@@ -53,10 +45,10 @@ class _NotificationsState extends State<Notifications> {
               automaticallyImplyLeading: false,
               centerTitle: true,
               elevation: 1,
-              title: const Text('Notification'),
+              title: const Text('Message'),
             )
           : null,
-      body: Consumer<MessagesProvider>(
+      body: Consumer<MessagesNotificationsProvider>(
         builder: (context, value, _) {
           if (value.notifications == null) {
             return const Center(child: CircularProgressIndicator());
@@ -99,10 +91,10 @@ class _NotificationsState extends State<Notifications> {
               "icon": Icons.headset_mic_outlined,
               "onTap": () {
                 // Get.to(() => const UsefunsTeam());
-                Get.to(()=>WebPageViewer(url: Constants.ufTeamSupportChat));
+                Get.to(()=>const WebPageViewer(url: Constants.ufTeamSupportChat));
               },
               "unread": 0
-            },
+            }
           ];
 
           return SmartRefresher(
@@ -126,92 +118,6 @@ class _NotificationsState extends State<Notifications> {
                   children: [
                     Column(
                       children: [
-                        // Row(
-                        //   children: [
-                        //     Expanded(
-                        //         child: Column(
-                        //       children: [
-                        //         Container(
-                        //             height: 33 * a,
-                        //             width: 36 * a,
-                        //             color: const Color(0xFF4285F4),
-                        //             child: const Icon(Icons.comment_sharp,
-                        //                 color: Colors.white)),
-                        //         SizedBox(height: 5 * a),
-                        //         Text(
-                        //           'Comments',
-                        //           style: SafeGoogleFont(
-                        //             'Poppins',
-                        //             fontSize: 15 * b,
-                        //             fontWeight: FontWeight.w400,
-                        //             height: 1.5 * b / a,
-                        //             letterSpacing: 0.6 * a,
-                        //             color: const Color(0xff000000),
-                        //           ),
-                        //         ),
-                        //       ],
-                        //     )),
-                        //     Expanded(
-                        //         child: Column(
-                        //       children: [
-                        //         Container(
-                        //             height: 33 * a,
-                        //             width: 36 * a,
-                        //             color: const Color(0xFFEE3074),
-                        //             child: const Icon(Icons.thumb_up_off_alt,
-                        //                 color: Colors.white)),
-                        //         SizedBox(height: 5 * a),
-                        //         Text(
-                        //           'Likes',
-                        //           style: SafeGoogleFont(
-                        //             'Poppins',
-                        //             fontSize: 15 * b,
-                        //             fontWeight: FontWeight.w400,
-                        //             height: 1.5 * b / a,
-                        //             letterSpacing: 0.6 * a,
-                        //             color: const Color(0xff000000),
-                        //           ),
-                        //         ),
-                        //       ],
-                        //     )),
-                        //     Expanded(
-                        //       child: InkWell(
-                        //         onTap: () {},
-                        //         child: Column(
-                        //           children: [
-                        //             InkWell(
-                        //               onTap: () {
-                        //                 const UserProfile();
-                        //               },
-                        //               child: Container(
-                        //                   height: 33 * a,
-                        //                   width: 36 * a,
-                        //                   color: const Color(0xFF34A853),
-                        //                   child: const Icon(
-                        //                       Icons.people_alt_outlined,
-                        //                       color: Colors.white)),
-                        //             ),
-                        //             SizedBox(height: 5 * a),
-                        //             Text(
-                        //               'Followers',
-                        //               style: SafeGoogleFont(
-                        //                 'Poppins',
-                        //                 fontSize: 15 * b,
-                        //                 fontWeight: FontWeight.w400,
-                        //                 height: 1.5 * b / a,
-                        //                 letterSpacing: 0.6 * a,
-                        //                 color: const Color(0xff000000),
-                        //               ),
-                        //             ),
-                        //           ],
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
-                        // SizedBox(
-                        //   height: 20 * a,
-                        // ),
                         for (Map m in notifications)
                           ListTile(
                             onTap: m['onTap'],
@@ -256,6 +162,46 @@ class _NotificationsState extends State<Notifications> {
                                   )
                                 : null,
                           ),
+                        const SizedBox(height: 8),
+                        Consumer<MessagesNotificationsProvider>(
+                          builder: (context, value, _) {
+                            if(value.allEligibleUsersData == null){
+                              return const Center(child: CircularProgressIndicator());
+                            }else if(value.allEligibleUsersData!.isEmpty){
+                              return const Text('User must be in follower and following to send messages');
+                            } else{
+                              return Column(
+                                children: List.generate(
+                                    value.allEligibleUsersData!.length,
+                                        (index) => ListTile(
+                                          onTap: () {
+                                            Get.to(()=> ChatScreen(user: value.allEligibleUsersData![index]));
+                                          },
+                                          dense: true,
+                                          contentPadding: EdgeInsets.zero,
+                                      leading: value.allEligibleUsersData![index].images!.isNotEmpty?CircleAvatar(
+                                        foregroundImage: NetworkImage(
+                                            value.allEligibleUsersData![index].images!.first
+                                        ),
+                                      ):null,
+                                      title: Text(
+                                        value.allEligibleUsersData![index].name!,
+
+                                        style: SafeGoogleFont(
+                                          'Poppins',
+                                          fontSize: 15 * b,
+                                          fontWeight: FontWeight.w400,
+                                          height: 1.5 * b / a,
+                                          letterSpacing: 0.6 * a,
+                                          color: const Color(0xff000000),
+                                        ),),
+                                          subtitle: const Text(''),
+                                    )
+                                ),
+                              );
+                            }
+                          },
+                        )
                       ],
                     ),
                   ],

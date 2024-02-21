@@ -30,6 +30,14 @@ class _SearchRoomUserState extends State<SearchRoomUser> {
   RoomSearchModel? roomModel;
   bool searching = false;
   int currentTab = 0 ;
+  final focusNode = FocusNode();
+
+
+  void _focus() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(context).requestFocus(focusNode);
+    });
+  }
 
   void _performSearch() {
     setState(() {
@@ -65,6 +73,12 @@ class _SearchRoomUserState extends State<SearchRoomUser> {
   }
 
   @override
+  void initState() {
+    _focus();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
@@ -85,6 +99,7 @@ class _SearchRoomUserState extends State<SearchRoomUser> {
               borderRadius: BorderRadius.circular(50 * a),
             ),
             child: TextFormField(
+              focusNode: focusNode,
               controller: textEditingController,
               style: SafeGoogleFont(
                 'Poppins',

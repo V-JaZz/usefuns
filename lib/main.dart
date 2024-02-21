@@ -16,10 +16,13 @@ import 'package:live_app/screens/splash/splash_screen.dart';
 import 'package:live_app/provider/connection_provider.dart';
 import 'package:provider/provider.dart';
 import 'data/datasource/local/sharedpreferences/storage_service.dart';
+import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   final storageService = StorageService();
   await storageService.init();
 
@@ -46,7 +49,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => ClubProvider()),
         ChangeNotifierProvider(create: (context) => ShopWalletProvider()),
         ChangeNotifierProvider(create: (context) => GiftsProvider()),
-        ChangeNotifierProvider(create: (context) => MessagesProvider()),
+        ChangeNotifierProvider(create: (context) => MessagesNotificationsProvider()),
         ChangeNotifierProvider(create: (context) => SellerAgencyProvider()),
       ],
 

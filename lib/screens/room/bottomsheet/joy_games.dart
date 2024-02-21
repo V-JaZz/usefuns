@@ -29,34 +29,36 @@ class _JoyGamesState extends State<JoyGames> {
   @override
   Widget build(BuildContext context) {
 
-    return SizedBox(
-      height: Get.width,
-      child: WebView(
-        initialUrl: url,
-        javascriptMode: JavascriptMode.unrestricted,
-        onWebViewCreated: (WebViewController webViewController) {
-          _webViewController = webViewController;
-        },
-        javascriptChannels: <JavascriptChannel>{
-          JavascriptChannel(
-            name: 'Usefuns',
-            onMessageReceived: (JavascriptMessage message) {
-              var data = jsonDecode(message.message);
-              //The user clicks the close button in the game lobby
-              if (data['name'] == 'newTppClose') {
-                print('newTppClose');
-              }
-              //The user actively clicks the button to increase gold coins
-              if (data['name'] == 'clickRecharge') {
-                print('clickRecharge');
-              }
-              //When the user places a bet, the balance is insufficient callback
-              if (data['name'] == 'recharge') {
-                print('recharge');
-              }
-            },
-          ),
-        },
+    return SafeArea(
+      child: SizedBox(
+        height: widget.mini==0?double.infinity:Get.width,
+        child: WebView(
+          initialUrl: url,
+          javascriptMode: JavascriptMode.unrestricted,
+          onWebViewCreated: (WebViewController webViewController) {
+            _webViewController = webViewController;
+          },
+          javascriptChannels: <JavascriptChannel>{
+            JavascriptChannel(
+              name: 'Usefuns',
+              onMessageReceived: (JavascriptMessage message) {
+                var data = jsonDecode(message.message);
+                //The user clicks the close button in the game lobby
+                if (data['name'] == 'newTppClose') {
+                  print('newTppClose');
+                }
+                //The user actively clicks the button to increase gold coins
+                if (data['name'] == 'clickRecharge') {
+                  print('clickRecharge');
+                }
+                //When the user places a bet, the balance is insufficient callback
+                if (data['name'] == 'recharge') {
+                  print('recharge');
+                }
+              },
+            ),
+          },
+        ),
       ),
     );
   }

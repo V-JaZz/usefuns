@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 import '../datasource/remote/http/http_client.dart';
 
-class MessagesRepo {
+class MessagesNotificationsRepo {
 
   final HttpApiClient _httpClient = HttpApiClient();
 

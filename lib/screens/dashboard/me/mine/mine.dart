@@ -16,8 +16,10 @@ class Mine extends StatefulWidget {
 }
 
 class _MineState extends State<Mine> {
+  late int index;
   @override
   void initState() {
+    index = widget.index??0;
     super.initState();
   }
 
@@ -65,7 +67,7 @@ class _MineState extends State<Mine> {
           ),
           GestureDetector(
             onTap: () {
-              Get.off(() => const Shop(), transition: Transition.noTransition);
+              Get.off(() => Shop(index: index), transition: Transition.noTransition);
             },
             child: Container(
               margin: const EdgeInsets.only(right: 30),
@@ -84,7 +86,7 @@ class _MineState extends State<Mine> {
       ),
       body: VerticalTabs(
               tabsWidth: 120 * a,
-              initialIndex: widget.index ?? 0,
+              initialIndex: index,
               indicatorColor: const Color(0xFF7926BC),
               selectedTabBackgroundColor:
                   const Color(0xFF7926BC).withOpacity(0.1),

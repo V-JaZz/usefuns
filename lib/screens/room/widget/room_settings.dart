@@ -139,6 +139,13 @@ class _RoomSettingsState extends State<RoomSettings> {
       'onTap': _showAnnouncementBottomSheet,
     },
     {
+      "title": "Joined History",
+      "trailing": "view",
+      'onTap': () {
+        Get.to(() => const JoinedHistory());
+      },
+    },
+    {
       "title": "Blocked list",
       "trailing": "view",
       'onTap': () {
@@ -475,6 +482,67 @@ class _RoomSettingsState extends State<RoomSettings> {
           loadingWidget()
       );
     }
+  }
+}
+
+class JoinedHistory extends StatelessWidget {
+  const JoinedHistory({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    double baseWidth = 360;
+    double a = Get.width / baseWidth;
+    double b = a * 0.97;
+    return Scaffold(
+      backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: true,
+      appBar: AppBar(
+        backgroundColor: const Color(0x339E26BC),
+        automaticallyImplyLeading: true,
+        centerTitle: true,
+        elevation: 1,
+        title: Text('Joined History',
+            textAlign: TextAlign.center,
+            style: SafeGoogleFont(
+              'Poppins',
+              fontSize: 20 * b,
+              fontWeight: FontWeight.w400,
+              height: 1.5 * b / a,
+              letterSpacing: 0.8 * a,
+              color: const Color(0xff000000),
+            )),
+      ),
+      body: Container(
+        alignment: Alignment.center,
+        padding: EdgeInsets.symmetric(horizontal: 18 * a, vertical: 8 * a),
+        child: Provider.of<ZegoRoomProvider>(context,listen: false).room?.lastmembers?.isEmpty??true
+            ? Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 50 * a,
+            ),
+            Image.asset(
+              "assets/icons/ic_empty.png",
+              width: Get.width / 3,
+              height: Get.width / 3,
+            ),
+            Text(
+              'No Data!',
+              style: SafeGoogleFont(
+                'Poppins',
+                fontSize: 16 * b,
+                fontWeight: FontWeight.w400,
+                height: 1.5 * b / a,
+                letterSpacing: 0.64 * a,
+                color: const Color(0xff000000),
+              ),
+            ),
+          ],
+        )
+            : viewUsersByIds(Provider.of<ZegoRoomProvider>(context,listen: false).room!.lastmembers!.toSet().toList()),
+      ),
+    );
   }
 }
 

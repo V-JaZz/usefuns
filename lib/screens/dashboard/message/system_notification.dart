@@ -25,7 +25,7 @@ class System extends StatelessWidget {
         elevation: 1,
         title: const Text('System'),
       ),
-      body: Consumer<MessagesProvider>(
+      body: Consumer<MessagesNotificationsProvider>(
         builder: (context, value, _) => Padding(
           padding: EdgeInsets.all(18.0 * a),
           child: Column(

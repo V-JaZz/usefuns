@@ -38,15 +38,15 @@ void showCustomSnackBar(String? message, BuildContext context,
   }
 }
 
-void showCustomBanner(String? message, {bool? autoClose}){
+void showCustomBanner(String? message, {bool? autoClose, void Function()? onAction}){
   ScaffoldMessenger.of(Get.context!)
     .showMaterialBanner(
       MaterialBanner(
         content: Text(message ??'error'),
         actions: [
           TextButton(
-            child: const Text("Retrying.."),
-            onPressed: () {},
+            onPressed: onAction,
+            child: const Text("Ok"),
           ),
         ],
       ),
@@ -258,8 +258,8 @@ Widget userProfileDisplay(
         children: [
           Center(
             child: Container(
-              width: size * 0.7,
-              height: size * 0.7,
+              width: size * 0.67,
+              height: size * 0.67,
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   image: image.isEmpty

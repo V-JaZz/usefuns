@@ -27,8 +27,8 @@ class _BottomNavigatorState extends State<BottomNavigator> {
   int _selectedIndex = 0;
   static const List<Widget> _widgetOptions = <Widget>[
     Home(),
-    // Games(),
-    Notifications(),
+    Games(),
+    MessageNotifications(),
     // Moments(),
     Me(),
   ];
@@ -107,12 +107,12 @@ class _BottomNavigatorState extends State<BottomNavigator> {
                 iconColor: Colors.black,
                 iconActiveColor: Colors.black,
               ),
-              // GButton(
-              //   text: 'Games',
-              //   icon: Icons.gamepad,
-              //   iconColor: Colors.black,
-              //   iconActiveColor: Colors.black,
-              // ),
+              GButton(
+                text: 'Games',
+                icon: Icons.gamepad,
+                iconColor: Colors.black,
+                iconActiveColor: Colors.black,
+              ),
               GButton(
                 text: 'Message',
                 icon: Icons.message,

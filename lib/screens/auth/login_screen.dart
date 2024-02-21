@@ -7,6 +7,8 @@ import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import '../../data/model/response/send_otp_model.dart';
 import '../../utils/common_widgets.dart';
+import '../../utils/constants.dart';
+import '../dashboard/me/settings/info_text_view.dart';
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({Key? key}) : super(key: key);
@@ -290,7 +292,7 @@ class _LogInScreenState extends State<LogInScreen> {
       ),
       bottomSheet: Container(
         alignment: Alignment.center,
-        height: 45*a,
+        height: 45 * a,
         margin: EdgeInsets.fromLTRB(30 * a, 0 * a, 30 * a, 10 * a),
         child: RichText(
           textAlign: TextAlign.center,
@@ -313,28 +315,42 @@ class _LogInScreenState extends State<LogInScreen> {
                   color: const Color(0xff000000),
                 ),
               ),
-              TextSpan(
-                text: 'Term of service, Privacy',
-                style: SafeGoogleFont(
-                  'Roboto',
-                  fontSize: 14 * b,
-                  fontWeight: FontWeight.w300,
-                  height: 1.1725 * b / a,
-                  color: const Color(0xff1877f2),
+              WidgetSpan(
+                child: GestureDetector(
+                  onTap: () {
+                    Get.to(() => const InfoTextView(title: "Terms of Service",info: Constants.termsOfService));
+                  },
+                  child: Text(
+                    'Term of service, ',
+                    style: SafeGoogleFont(
+                      'Roboto',
+                      fontSize: 14 * b,
+                      fontWeight: FontWeight.w300,
+                      height: 1.1725 * b / a,
+                      color: const Color(0xff1877f2),
+                    ),
+                  ),
+                ),
+              ),
+              WidgetSpan(
+                child: GestureDetector(
+                  onTap: () {
+                    Get.to(() => const InfoTextView(title: "Privacy Policy",info: Constants.privacyPolicy));
+                  },
+                  child: Text(
+                    'Privacy Policy ',
+                    style: SafeGoogleFont(
+                      'Roboto',
+                      fontSize: 14 * b,
+                      fontWeight: FontWeight.w300,
+                      height: 1.1725 * b / a,
+                      color: const Color(0xff1877f2),
+                    ),
+                  ),
                 ),
               ),
               TextSpan(
-                text: ' Policy',
-                style: SafeGoogleFont(
-                  'Roboto',
-                  fontSize: 14 * b,
-                  fontWeight: FontWeight.w300,
-                  height: 1.1725 * b / a,
-                  color: const Color(0xff1877f2),
-                ),
-              ),
-              TextSpan(
-                text: ' and',
+                text: 'and ',
                 style: SafeGoogleFont(
                   'Roboto',
                   fontSize: 14 * b,
@@ -343,14 +359,21 @@ class _LogInScreenState extends State<LogInScreen> {
                   color: const Color(0xff000000),
                 ),
               ),
-              TextSpan(
-                text: ' Community Policy',
-                style: SafeGoogleFont(
-                  'Roboto',
-                  fontSize: 14 * b,
-                  fontWeight: FontWeight.w300,
-                  height: 1.1725 * b / a,
-                  color: const Color(0xff4285f4),
+              WidgetSpan(
+                child: GestureDetector(
+                  onTap: () {
+                    Get.to(() => const InfoTextView(title: "Community Policy",info: Constants.communityPolicy));
+                  },
+                  child: Text(
+                    'Community Policy',
+                    style: SafeGoogleFont(
+                      'Roboto',
+                      fontSize: 14 * b,
+                      fontWeight: FontWeight.w300,
+                      height: 1.1725 * b / a,
+                      color: const Color(0xff4285f4),
+                    ),
+                  ),
                 ),
               ),
             ],

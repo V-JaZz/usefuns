@@ -28,16 +28,16 @@ class BottomMoreBottomSheet extends StatelessWidget {
             alignment: WrapAlignment.start,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              SizedBox(
-                width: 10 * a,
-              ),
-              InkWell(
-                onTap: () {
-                  Get.to(() => const DailyTask());
-                },
-                child: iconTextRow(
-                    a, b, 'Daily\nTasks', 'assets/room_icons/b1.png'),
-              ),
+              // SizedBox(
+              //   width: 10 * a,
+              // ),
+              // InkWell(
+              //   onTap: () {
+              //     Get.to(() => const DailyTask());
+              //   },
+              //   child: iconTextRow(
+              //       a, b, 'Daily\nTasks', 'assets/room_icons/b1.png'),
+              // ),
               SizedBox(
                 width: 20 * a,
               ),

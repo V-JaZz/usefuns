@@ -54,43 +54,43 @@ class _SettingsState extends State<Settings> {
     {
       "title": "Terms of Service",
       "ontap": () {
-        Get.to(() => InfoTextView(title: "Terms of Service",info: Constants.termsOfService));
+        Get.to(() => const InfoTextView(title: "Terms of Service",info: Constants.termsOfService));
       }
     },
     {
       "title": "Privacy Policy",
       "ontap": () {
-        Get.to(() => InfoTextView(title: "Privacy Policy",info: Constants.privacyPolicy));
+        Get.to(() => const InfoTextView(title: "Privacy Policy",info: Constants.privacyPolicy));
       }
     },
     {
       "title": "Community Policy",
       "ontap": () {
-        Get.to(() => InfoTextView(title: "Community Policy",info: Constants.communityPolicy));
+        Get.to(() => const InfoTextView(title: "Community Policy",info: Constants.communityPolicy));
       }
     },
     {
       "title": "Refund Policy",
       "ontap": () {
-        Get.to(() => InfoTextView(title: "Refund Policy",info: Constants.refundPolicy));
+        Get.to(() => const InfoTextView(title: "Refund Policy",info: Constants.refundPolicy));
       }
     },
     {
       "title": "Intellectual Property Rights",
       "ontap": () {
-        Get.to(() => InfoTextView(title: "Intellectual Property Rights",info: Constants.intellectualPropertyRights));
+        Get.to(() => const InfoTextView(title: "Intellectual Property Rights",info: Constants.intellectualPropertyRights));
       }
     },
     {
       "title": "About us",
       "ontap": () {
-        Get.to(() => InfoTextView(title: "About us",info: Constants.aboutUs));
+        Get.to(() => const InfoTextView(title: "About us",info: Constants.aboutUs));
       }
     },
     {
       "title": "Contact us",
       "ontap": () {
-        Get.to(() => InfoTextView(title: "Contact us",info: Constants.contactUs));
+        Get.to(() => const InfoTextView(title: "Contact us",info: Constants.contactUs));
       }
     }
   ];

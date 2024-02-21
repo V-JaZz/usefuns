@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "934319728711",
-    "project_id": "usefuns-49a14",
-    "storage_bucket": "usefuns-49a14.appspot.com"
+    "project_number": "175451357326",
+    "project_id": "usefuns-89062",
+    "storage_bucket": "usefuns-89062.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:934319728711:android:4bd6917de9c03f13e86962",
+        "mobilesdk_app_id": "1:175451357326:android:81b95b020bcf3cdf9bc9df",
         "android_client_info": {
           "package_name": "com.alkb.usefuns.live_app"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCNAl-xrE44hnZM04XAhAZtxQEz7J3g5IM"
+          "current_key": "AIzaSyBWpGtZpF-dUvK6EtMPKH2ptgvS27KJLuI"
         }
       ],
       "services": {
