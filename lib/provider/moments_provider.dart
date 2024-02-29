@@ -1,8 +1,11 @@
 import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:live_app/data/repository/moments_repo.dart';
+import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/utils/constants.dart';
+import 'package:provider/provider.dart';
 import '../data/datasource/local/sharedpreferences/storage_service.dart';
 import '../data/model/response/common_model.dart';
 import '../data/model/response/moments_model.dart';
@@ -26,20 +29,18 @@ class MomentsProvider with ChangeNotifier {
 
   Future<MomentsModel> getAllMoments({bool refresh = false}) async {
     isLoadedAll = false;
-    if(refresh) notifyListeners();
+    if(refresh || allMoments.isEmpty) notifyListeners();
     final apiResponse = await _momentsRepo.getAllMoments();
     MomentsModel responseModel;
     if (apiResponse.statusCode == 200) {
       isLoadedAll = true;
-      notifyListeners();
       responseModel = momentsModelFromJson(apiResponse.body);
-      if(responseModel.status == 1){
-        allMoments = responseModel.data??[];
+      if(responseModel.status == 1){responseModel.data??[];
+        addUserDataInMoments(responseModel.data??[], true);
       }
     } else {
       responseModel = MomentsModel(status: 0,message: apiResponse.reasonPhrase);
     }
-    notifyListeners();
     return responseModel;
   }
 
@@ -50,15 +51,13 @@ class MomentsProvider with ChangeNotifier {
     MomentsModel responseModel;
     if (apiResponse.statusCode == 200) {
       isLoadedFollowing = true;
-      notifyListeners();
       responseModel = momentsModelFromJson(apiResponse.body);
       if(responseModel.status == 1){
-        followingMoments = responseModel.data??[];
+        addUserDataInMoments(responseModel.data??[], false);
       }
     } else {
       responseModel = MomentsModel(status: 0,message: apiResponse.reasonPhrase);
     }
-    notifyListeners();
     return responseModel;
   }
 
@@ -119,7 +118,7 @@ class MomentsProvider with ChangeNotifier {
     }
   }
 
-  bool checkLike(int index, {bool? all, bool? following}) {
+  bool checkLike(String mId, {bool? all, bool? following}) {
     List<Moment> moments;
     bool liked;
     if(all==true){
@@ -130,7 +129,7 @@ class MomentsProvider with ChangeNotifier {
       moments = myMoments;
     }
     try{
-    liked = moments[index].likes!.contains(moments[index].likes!.where((element) => element.userId!.where((element) => element.id == storageService.getString(Constants.id)).isNotEmpty).first);
+    liked = moments[moments.indexWhere((e) => e.id==mId)].likes!.firstWhereOrNull((element) => element.userId == storageService.getString(Constants.id))!=null;
     }catch(e){
       liked = false;
     }
@@ -155,7 +154,7 @@ class MomentsProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> makeComment (int index, String postId, String comment, {bool? all, bool? following}) async {
+  Future<bool> makeComment(String postId, String comment, {bool? all, bool? following}) async {
     isCommenting = true;
     notifyListeners();
     final apiResponse = await _momentsRepo.makeComment(postId: postId,id: storageService.getString(Constants.id),comment: comment);
@@ -181,7 +180,7 @@ class MomentsProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> deleteComment (int index, String postId, String commentId, {bool? all, bool? following}) async {
+  Future<bool> deleteComment (String postId, String commentId, {bool? all, bool? following}) async {
     isDeletingComment = true;
     notifyListeners();
     final apiResponse = await _momentsRepo.deleteComment(id: storageService.getString(Constants.id),commentId: commentId);
@@ -205,6 +204,19 @@ class MomentsProvider with ChangeNotifier {
       notifyListeners();
       return false;
     }
+  }
+
+  Future<void> addUserDataInMoments(List<Moment> list, bool all) async {
+    final udp = Provider.of<UserDataProvider>(Get.context!,listen: false);
+    all ? allMoments=[] : followingMoments=[];
+    for(Moment m in list){
+      final res = await udp.getUser(id: m.createdBy!);
+      if(res.data != null) {
+        m.userDetails = res.data;
+        all ? allMoments.add(m) : followingMoments.add(m);
+      }
+    }
+    notifyListeners();
   }
 
 }

@@ -171,7 +171,7 @@ class _ImageGalleryState extends State<ImageGallery> {
                 },
               ),
               SizedBox(width: 15 * a),
-              if(widget.myMoments[index].userDetails!.first.isCommentRestricted == false)Row(
+              Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const Icon(Icons.mode_comment_outlined,color: Colors.grey),
@@ -242,7 +242,7 @@ class _ImageGalleryState extends State<ImageGallery> {
             },
           ),
           SizedBox(width: 15 * a),
-          if(widget.myMoments[index].userDetails!.first.isCommentRestricted == false)Row(
+          Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Icon(Icons.mode_comment_outlined,color: Colors.grey),

@@ -231,8 +231,9 @@ class LiveRoomBottomSheets {
     showModalBottomSheet(
         backgroundColor: Colors.transparent,
         isScrollControlled: false,
-        enableDrag: true,
-        isDismissible: true,
+        enableDrag: false,
+        isDismissible: false,
+        showDragHandle: true,
         context: context,
         builder: (context) {
           return JoyGames(gameId: gameId, mini: mini, language: language);

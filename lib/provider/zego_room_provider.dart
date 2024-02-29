@@ -363,7 +363,7 @@ class ZegoRoomProvider with ChangeNotifier {
         }else if(command == ZegoConfig.instance.refreshThemeKey){
           refreshTheme();
         }else if(command.contains(ZegoConfig.instance.roomInviteSeatKey)){
-          viewInviteToSeatDailog(command.substring(20),fromUser.userName);
+          if(!minimized) viewInviteToSeatDailog(command.substring(20),fromUser.userName);
         }else if(command.contains(ZegoConfig.instance.roomLockRoomUpdateKey)){
           if(command.length>25){
             roomPassword = command.substring(25);
@@ -659,7 +659,7 @@ class ZegoRoomProvider with ChangeNotifier {
   Future<void> sendBroadcastGift(List<String> toName, String thumbnailPath, String giftPath, int giftPrice, int count) async {
     for (var receiverName in toName) {
       final user = Provider.of<UserDataProvider>(Get.context!,listen: false).userData;
-      String body = zegoBroadcastModelToJson(ZegoBroadcastModel(userImage: user!.data!.images!.isNotEmpty? user.data!.images!.first:null, level:user.data!.level,type: "gift",gift: ZegoGift(toName: receiverName,count: count,thumbnailPath: thumbnailPath, giftPath: giftPath, toId: roomUsersList.firstWhere((e) => e.name == receiverName).id,giftPrice: giftPrice),tags: [if(isOwner)'Owner',if(room!.admin!.contains(userID))'Admin'], bubble: userValidItemSelection(user.data?.chatBubble)));
+      String body = zegoBroadcastModelToJson(ZegoBroadcastModel(userImage: user!.data!.images!.isNotEmpty? user.data!.images!.first:null, level:user.data!.level,type: "gift",gift: ZegoGift(toName: receiverName,count: count,thumbnailPath: thumbnailPath, giftPath: giftPath, toId: savedUsersData.firstWhereOrNull((e) => e.name == receiverName)?.id,giftPrice: giftPrice),tags: [if(isOwner)'Owner',if(room!.admin!.contains(userID))'Admin'], bubble: userValidItemSelection(user.data?.chatBubble)));
       ZegoExpressEngine.instance.sendBroadcastMessage(roomID, body);
       broadcastMessageList?.enqueue(ZegoBroadcastMessageInfo(body,0,0,ZegoUser(userID,userName)));
       notifyListeners();

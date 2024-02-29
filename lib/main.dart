@@ -13,7 +13,6 @@ import 'package:live_app/provider/shop_wallet_provider.dart';
 import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/provider/zego_room_provider.dart';
 import 'package:live_app/screens/splash/splash_screen.dart';
-import 'package:live_app/provider/connection_provider.dart';
 import 'package:provider/provider.dart';
 import 'data/datasource/local/sharedpreferences/storage_service.dart';
 import 'firebase_options.dart';
@@ -40,7 +39,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => ConnectionProvider()),
         ChangeNotifierProvider(create: (context) => AuthProvider()),
         ChangeNotifierProvider(create: (context) => UserDataProvider()),
         ChangeNotifierProvider(create: (context) => MomentsProvider()),

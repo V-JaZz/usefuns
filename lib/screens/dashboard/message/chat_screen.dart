@@ -23,12 +23,6 @@ class _ChatScreenState extends State<ChatScreen> {
   final ScrollController _controller = ScrollController();
 
   @override
-  void initState() {
-    super.initState();
-    _scrollToBottom();
-  }
-
-  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
@@ -80,11 +74,11 @@ class _ChatScreenState extends State<ChatScreen> {
                             itemBuilder: (context, index) {
                               bool isNewDate = index==0
                                   ? true
-                                  : (_list[index].timeStamp.day != _list[index-1].timeStamp.day);
+                                  : (_list[index].timeStamp.toLocal().day != _list[index-1].timeStamp.toLocal().day);
                               return Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  if(isNewDate) Text( DateFormat('d MMM y').format(_list[index].timeStamp)),
+                                  if(isNewDate) Text( DateFormat('d MMM y').format(_list[index].timeStamp.toLocal())),
                                   MessageCard(
                                       message: _list[index],
                                       userImage:widget.user.images?.first

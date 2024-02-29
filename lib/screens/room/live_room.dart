@@ -513,6 +513,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                                   'Poppins',
                                                   fontSize: 11 * b,
                                                   fontWeight: FontWeight.w400,
+                                                  height: 1,
                                                   letterSpacing: 0.4 * a,
                                                   color: const Color(0xffffffff),
                                                 ),

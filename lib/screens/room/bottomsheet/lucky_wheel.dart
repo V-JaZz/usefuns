@@ -136,7 +136,7 @@ class _LuckyWheelBottomSheetState extends State<LuckyWheelBottomSheet> with Tick
                 showInsufficientDialog(context,200-userD);
               }else if(!isSpinning){
                 isSpinning = true;
-                bool success = await Provider.of<ShopWalletProvider>(context,listen: false).spendUserDiamonds(200);
+                bool success = await Provider.of<ShopWalletProvider>(context,listen: false).spendUserDiamonds(200,'Lucky Wheel');
                 if(success) {
                   final rewardPosition = [2,3,4,5,6,7,4,5,6,7];
                   int value = rewardPosition[Random().nextInt(9)];
@@ -203,7 +203,7 @@ class LuckyWheelReward extends StatelessWidget {
                   ),
                   onPressed: () {
                     Get.back();
-                    Provider.of<ShopWalletProvider>(context,listen: false).rewardDiamonds(diamonds);
+                    Provider.of<ShopWalletProvider>(context,listen: false).luckyWheelReward(diamonds);
                   },
                   child: const Text('Claim'))
             ],

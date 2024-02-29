@@ -40,7 +40,6 @@ class _ActiveUsersBottomSheetState extends State<ActiveUsersBottomSheet> {
         return Container(
           color: Colors.white,
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(
                 height: 12 * a,
@@ -62,9 +61,7 @@ class _ActiveUsersBottomSheetState extends State<ActiveUsersBottomSheet> {
               SizedBox(
                 height: 12 * a,
               ),
-              SizedBox(
-                width: double.infinity,
-                height: Get.height / 3,
+              Expanded(
                 child: ListView.builder(
                   controller: widget.controller,
                   itemCount: reorderedUsers.length,
@@ -88,6 +85,7 @@ class _ActiveUsersBottomSheetState extends State<ActiveUsersBottomSheet> {
                           InkWell(
                             onTap: () {
                               final myId = value.userID;
+                              Get.back();
                               if (user.id == myId) {
                                 Get.to(() => const UserProfile());
                                 return;

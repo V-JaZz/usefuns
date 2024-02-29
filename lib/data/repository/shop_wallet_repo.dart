@@ -43,7 +43,7 @@ class ShopWalletRepo {
   }
 
   Future<http.Response> shopDiamonds(
-      {required String userId,required int diamonds, required int price, required String method}) async {
+      {required String userId,required int diamonds, required int price, required String method, required String transactionId,required String status,}) async {
     try {
       http.Response response = await _httpClient.post(
           'user/wallet/add',
@@ -51,7 +51,27 @@ class ShopWalletRepo {
             "userId": userId,
             "diamonds": diamonds,
             "payment_method": method,
-            "price": price
+            "price": price,
+            "transactionId": transactionId,
+            "status": status
+          }
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<http.Response> diamondSubmitFlow(
+      {required String userId,required int diamonds, required String uses,required int type}) async {
+    try {
+      http.Response response = await _httpClient.post(
+          'user/diamondSubmitFlow',
+          {
+            "userId": userId,
+            "diamonds": diamonds,
+            "uses": uses,
+            "type": type,
           }
       );
       return response;
@@ -69,22 +89,6 @@ class ShopWalletRepo {
             "userId": userId,
             "diamonds": diamonds,
             "beans": beans
-          }
-      );
-      return response;
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  Future<http.Response> spendUserDiamonds(
-      {required String userId,required int diamonds}) async {
-    try {
-      http.Response response = await _httpClient.post(
-          'user/diamondUse',
-          {
-            "userId": userId,
-            "diamonds": diamonds
           }
       );
       return response;

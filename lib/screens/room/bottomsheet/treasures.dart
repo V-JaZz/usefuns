@@ -7,6 +7,184 @@ import 'package:provider/provider.dart';
 // ignore: depend_on_referenced_packages
 import 'package:svgaplayer_flutter/svgaplayer_flutter.dart';
 
+List<Map<String, dynamic>> treasureBoxRewards = [
+  {
+    'image': 'assets/ic_treasure_box/1.png',
+    'prize': [
+      {
+        'image': 'assets/ic_treasure_box/bubble_3.png',
+        'name': 'Bubble',
+        'diamonds': '499',
+      },
+      {
+        'image': 'assets/ic_treasure_box/theme_1.jpg',
+        'name': 'Theme',
+        'diamonds': '1299',
+      },
+      {
+        'image': 'assets/ic_treasure_box/frame_1.svga',
+        'name': 'Frame',
+        'diamonds': '1999',
+      },
+      {
+        'image': null,
+        'name': 'diamonds',
+        'diamonds': '300',
+      },
+      {
+        'image': null,
+        'name': 'diamonds',
+        'diamonds': '100',
+      },
+      {
+        'image': null,
+        'name': 'diamonds',
+        'diamonds': '50',
+      },
+    ],
+  },
+  {
+    'image': 'assets/ic_treasure_box/2.png',
+    'prize': [
+      {
+        'image': 'assets/ic_treasure_box/bubble_2.png',
+        'name': 'Bubble',
+        'diamonds': '999',
+      },
+      {
+        'image': 'assets/ic_treasure_box/theme_2.jpg',
+        'name': 'Theme',
+        'diamonds': '1899',
+      },
+      {
+        'image': 'assets/ic_treasure_box/frame_2.svga',
+        'name': 'Frame',
+        'diamonds': '2999',
+      },
+      {
+        'image': null,
+        'name': 'diamonds',
+        'diamonds': '600',
+      },
+      {
+        'image': null,
+        'name': 'diamonds',
+        'diamonds': '200',
+      },
+      {
+        'image': null,
+        'name': 'diamonds',
+        'diamonds': '100',
+      }
+    ],
+  },
+  {
+    'image': 'assets/ic_treasure_box/3.png',
+    'prize': [
+      {
+        'image': 'assets/ic_treasure_box/bubble_1.png',
+        'name': 'Bubble',
+        'diamonds': '1499',
+      },
+      {
+        'image': 'assets/ic_treasure_box/theme_3.jpg',
+        'name': 'Theme',
+        'diamonds': '2499',
+      },
+      {
+        'image': 'assets/ic_treasure_box/frame_3.svga',
+        'name': 'Frame',
+        'diamonds': '3999',
+      },
+      {
+        'image': null,
+        'name': 'diamonds',
+        'diamonds': '900',
+      },
+      {
+        'image': null,
+        'name': 'diamonds',
+        'diamonds': '300',
+      },
+      {
+        'image': null,
+        'name': 'diamonds',
+        'diamonds': '150',
+      }
+    ],
+  },
+  {
+    'image': 'assets/ic_treasure_box/4.png',
+    'prize': [
+      {
+        'image': null,
+        'name': 'Lock\nRoom\n+\nExtra\nSeats',
+        'diamonds': '2499',
+      },
+      {
+        'image': 'assets/ic_treasure_box/frame_3.svga',
+        'name': 'Frame',
+        'diamonds': '3999',
+      },
+      {
+        'image': 'assets/ic_treasure_box/vehicle_1.svga',
+        'name': 'Vehicle',
+        'diamonds': '4999',
+      },
+      {
+        'image': null,
+        'name': 'diamonds',
+        'diamonds': '1200',
+      },
+      {
+        'image': null,
+        'name': 'diamonds',
+        'diamonds': '400',
+      },
+      {
+        'image': null,
+        'name': 'diamonds',
+        'diamonds': '200',
+      }
+    ],
+  },
+  {
+    'image': 'assets/ic_treasure_box/5.png',
+    'prize': [
+      {
+        'image': null,
+        'name': 'Lock\nRoom\n+\nExtra\nSeats',
+        'diamonds': '2499',
+      },
+      {
+        'image': 'assets/ic_treasure_box/frame_4.svga',
+        'name': 'Frame',
+        'diamonds': '4999',
+      },
+      {
+        'image': 'assets/ic_treasure_box/vehicle_2.svga',
+        'name': 'Vehicle',
+        'diamonds': '9999',
+      },
+      {
+        'image': null,
+        'name': 'diamonds',
+        'diamonds': '1500',
+      },
+      {
+        'image': null,
+        'name': 'diamonds',
+        'diamonds': '500',
+      },
+      {
+        'image': null,
+        'name': 'diamonds',
+        'diamonds': '250',
+      }
+    ],
+  }
+];
+
 class Treasures extends StatefulWidget {
   const Treasures({Key? key}) : super(key: key);
 
@@ -15,183 +193,6 @@ class Treasures extends StatefulWidget {
 }
 
 class _TreasuresState extends State<Treasures> {
-  List<Map> boxes = [
-    {
-      'image': 'assets/ic_treasure_box/1.png',
-      'prize': [
-        {
-          'image': 'assets/ic_treasure_box/bubble_3.png',
-          'name': 'Bubble',
-          'diamonds': '499'
-        },
-        {
-          'image': 'assets/ic_treasure_box/theme_1.jpg',
-          'name': 'Theme',
-          'diamonds': '1299'
-        },
-        {
-          'image': 'assets/ic_treasure_box/frame_1.svga',
-          'name': 'Frame',
-          'diamonds': '1999'
-        },
-        {
-          'image': null,
-          'name': 'diamonds',
-          'diamonds': '300'
-        },
-        {
-          'image': null,
-          'name': 'diamonds',
-          'diamonds': '100'
-        },
-        {
-          'image': null,
-          'name': 'diamonds',
-          'diamonds': '50'
-        },
-      ],
-    },
-    {
-      'image': 'assets/ic_treasure_box/2.png',
-      'prize': [
-        {
-          'image': 'assets/ic_treasure_box/bubble_2.png',
-          'name': 'Bubble',
-          'diamonds': '999'
-        },
-        {
-          'image': 'assets/ic_treasure_box/theme_2.jpg',
-          'name': 'Theme',
-          'diamonds': '1899'
-        },
-        {
-          'image': 'assets/ic_treasure_box/frame_2.svga',
-          'name': 'Frame',
-          'diamonds': '2999'
-        },
-        {
-          'image': null,
-          'name': 'diamonds',
-          'diamonds': '600'
-        },
-        {
-          'image': null,
-          'name': 'diamonds',
-          'diamonds': '200'
-        },
-        {
-          'image': null,
-          'name': 'diamonds',
-          'diamonds': '100'
-        }
-      ],
-    },
-    {
-      'image': 'assets/ic_treasure_box/3.png',
-      'prize': [
-        {
-          'image': 'assets/ic_treasure_box/bubble_1.png',
-          'name': 'Bubble',
-          'diamonds': '1499'
-        },
-        {
-          'image': 'assets/ic_treasure_box/theme_3.jpg',
-          'name': 'Theme',
-          'diamonds': '2499'
-        },
-        {
-          'image': 'assets/ic_treasure_box/frame_3.svga',
-          'name': 'Frame',
-          'diamonds': '3999'
-        },
-        {
-          'image': null,
-          'name': 'diamonds',
-          'diamonds': '900'
-        },
-        {
-          'image': null,
-          'name': 'diamonds',
-          'diamonds': '300'
-        },
-        {
-          'image': null,
-          'name': 'diamonds',
-          'diamonds': '150'
-        }
-      ],
-    },
-    {
-      'image': 'assets/ic_treasure_box/4.png',
-      'prize': [
-        {
-          'image': null,
-          'name': 'Lock\nRoom\n+\nExtra\nSeats',
-          'diamonds': '2499'
-        },
-        {
-          'image': 'assets/ic_treasure_box/frame_3.svga',
-          'name': 'Frame',
-          'diamonds': '3999'
-        },
-        {
-          'image': 'assets/ic_treasure_box/vehicle_1.svga',
-          'name': 'Vehicle',
-          'diamonds': '4999'
-        },
-        {
-          'image': null,
-          'name': 'diamonds',
-          'diamonds': '1200'
-        },
-        {
-          'image': null,
-          'name': 'diamonds',
-          'diamonds': '400'
-        },
-        {
-          'image': null,
-          'name': 'diamonds',
-          'diamonds': '200'
-        }
-      ],
-    },
-    {
-      'image': 'assets/ic_treasure_box/5.png',
-      'prize': [
-        {
-          'image': null,
-          'name': 'Lock\nRoom\n+\nExtra\nSeats',
-          'diamonds': '2499'
-        },
-        {
-          'image': 'assets/ic_treasure_box/frame_4.svga',
-          'name': 'Frame',
-          'diamonds': '4999'
-        },
-        {
-          'image': 'assets/ic_treasure_box/vehicle_2.svga',
-          'name': 'Vehicle',
-          'diamonds': '9999'
-        },
-        {
-          'image': null,
-          'name': 'diamonds',
-          'diamonds': '1500'
-        },
-        {
-          'image': null,
-          'name': 'diamonds',
-          'diamonds': '500'
-        },
-        {
-          'image': null,
-          'name': 'diamonds',
-          'diamonds': '250'
-        }
-      ],
-    }
-  ];
   int selectedBox = 0;
   ScrollController sc = ScrollController();
   @override
@@ -300,7 +301,7 @@ class _TreasuresState extends State<Treasures> {
             width: 95 * a * 5,
             child: Row(
               children: List.generate(
-                boxes.length,
+                treasureBoxRewards.length,
                 (i) => SizedBox(
                   height: 68 * a,
                   width: 95 * a,
@@ -334,7 +335,7 @@ class _TreasuresState extends State<Treasures> {
                                     sc.animateTo(position, duration: const Duration(milliseconds: 500), curve: Curves.decelerate);
                                   },
                                   child: Image.asset(
-                                    boxes[i]['image'],
+                                    treasureBoxRewards[i]['image'],
                                     width: 60 * a,
                                     height: 49 * a,
                                     fit: BoxFit.contain,
@@ -433,29 +434,33 @@ class _TreasuresState extends State<Treasures> {
               width: 10 * a,
             ),
             rewardVertical(
-                boxes[selectedBox]['prize'][0]['image'],
-                boxes[selectedBox]['prize'][0]['name'],
-                boxes[selectedBox]['prize'][0]['diamonds']
+                treasureBoxRewards[selectedBox]['prize'][0]['image'],
+                treasureBoxRewards[selectedBox]['prize'][0]['name'],
+                treasureBoxRewards[selectedBox]['prize'][0]['diamonds']
             ),
             SizedBox(
               width: 10 * a,
             ),
             rewardVertical(
-                boxes[selectedBox]['prize'][1]['image'],
-                boxes[selectedBox]['prize'][1]['name'],
-                boxes[selectedBox]['prize'][1]['diamonds']
+                treasureBoxRewards[selectedBox]['prize'][1]['image'],
+                treasureBoxRewards[selectedBox]['prize'][1]['name'],
+                treasureBoxRewards[selectedBox]['prize'][1]['diamonds']
             ),
             SizedBox(
               width: 10 * a,
             ),
-            diamonds(boxes[selectedBox]['prize'][3]['diamonds'],boxes[selectedBox]['prize'][4]['diamonds'],boxes[selectedBox]['prize'][5]['diamonds']),
+            diamonds(
+                treasureBoxRewards[selectedBox]['prize'][3]['diamonds'],
+                treasureBoxRewards[selectedBox]['prize'][4]['diamonds'],
+                treasureBoxRewards[selectedBox]['prize'][5]['diamonds']
+            ),
             SizedBox(
               width: 10 * a,
             ),
             rewardVertical(
-                boxes[selectedBox]['prize'][2]['image'],
-                boxes[selectedBox]['prize'][2]['name'],
-                boxes[selectedBox]['prize'][2]['diamonds']
+                treasureBoxRewards[selectedBox]['prize'][2]['image'],
+                treasureBoxRewards[selectedBox]['prize'][2]['name'],
+                treasureBoxRewards[selectedBox]['prize'][2]['diamonds']
             ),
           ],
         ),
@@ -470,79 +475,103 @@ class _TreasuresState extends State<Treasures> {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
     double b = a * 0.97;
-    return Container(
-      padding: EdgeInsets.symmetric(vertical:path != null? 10 * a:0*a, horizontal: 3 * a),
-      color: const Color(0x66411EB9),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            height:path != null? 120 * a:140*a,
-            width: 70 * a,
-            child: Column(
-              children: [
-                if(path != null)
-                path.split('.').last=='svga'
-                    ? SizedBox(
-                        width: 92 * a,
-                        height: 64.348836898803711 * a,
-                        child: SVGASimpleImage(
-                          assetsName: path,
-                        ),
-                      )
-                    : Container(
-                        width: 92 * a,
-                        height: 64.348836898803711 * a,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage(path), fit: BoxFit.fitWidth),
-                        ),
-                      ),
-                SizedBox(
-                  height: 8 * a,
-                ),
-                Text(
-                  name,
-                  textAlign: TextAlign.center,
-                  style: SafeGoogleFont(
-                      color: const Color.fromRGBO(255, 255, 255, 1),
-                      'Roboto',
-                      fontSize: 16 * a,
-                      fontWeight: FontWeight.normal,
-                      height: 1.2 * b / a),
-                ),
-                const Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+    return Stack(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(vertical:path != null? 10 * a:0*a, horizontal: 3 * a),
+          color: const Color(0x66411EB9),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                height:path != null? 120 * a:140*a,
+                width: 70 * a,
+                child: Column(
                   children: [
-                    Container(
-                        width: 11 * a,
-                        height: 6.523255825042725 * a,
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage('assets/icons/ic_diamond.png'),
-                              fit: BoxFit.fitWidth),
-                        )),
-                    SizedBox(width: 3*a),
+                    if(path != null)
+                      path.split('.').last=='svga'
+                          ? SizedBox(
+                              width: 92 * a,
+                              height: 64.348836898803711 * a,
+                              child: SVGASimpleImage(
+                                assetsName: path,
+                              ),
+                            )
+                          : Container(
+                              width: 92 * a,
+                              height: 64.348836898803711 * a,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image: AssetImage(path), fit: BoxFit.fitWidth),
+                              ),
+                            ),
+                    SizedBox(
+                      height: 8 * a,
+                    ),
                     Text(
-                      prize,
-                      textAlign: TextAlign.left,
+                      name,
+                      textAlign: TextAlign.center,
                       style: SafeGoogleFont(
                           color: const Color.fromRGBO(255, 255, 255, 1),
                           'Roboto',
                           fontSize: 16 * a,
                           fontWeight: FontWeight.normal,
-                          height: 1.5 * b / a),
+                          height: 1.2 * b / a),
                     ),
+                    const Spacer(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                            width: 11 * a,
+                            height: 6.523255825042725 * a,
+                            decoration: const BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage('assets/icons/ic_diamond.png'),
+                                  fit: BoxFit.fitWidth),
+                            )),
+                        SizedBox(width: 3*a),
+                        Text(
+                          prize,
+                          textAlign: TextAlign.left,
+                          style: SafeGoogleFont(
+                              color: const Color.fromRGBO(255, 255, 255, 1),
+                              'Roboto',
+                              fontSize: 16 * a,
+                              fontWeight: FontWeight.normal,
+                              height: 1.5 * b / a),
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
                   ],
                 ),
-                const Spacer(),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+        Positioned(
+            top: 0,
+            right: 0,
+            child: Container(
+                decoration: const BoxDecoration(
+                    color: Colors.black45,
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(6)
+                    )
+                ),
+                child: Text(
+                  ' ${selectedBox + 1}d ',
+                  style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white
+                  ),
+                )
+            )
+        )
+      ],
     );
   }
 

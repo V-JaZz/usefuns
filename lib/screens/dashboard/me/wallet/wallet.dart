@@ -1,6 +1,7 @@
 import 'package:contained_tab_bar_view/contained_tab_bar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'diamond_history.dart';
 import 'tabs/coins.dart';
 import 'tabs/beans.dart';
 import 'tabs/diamond.dart';
@@ -32,8 +33,15 @@ class _WalletState extends State<Wallet> {
           'Wallet',
         ),
         actions: [
-          IconButton(icon: const Icon(Icons.help_outline_outlined),
-              onPressed: () {}),
+          TextButton(
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.white
+            ),
+              child: const Icon(Icons.history),
+              onPressed: () {
+                Get.to(()=>const DiamondHistory());
+          }),
+          const SizedBox(width: 8)
         ],
       ),
       body: Container(

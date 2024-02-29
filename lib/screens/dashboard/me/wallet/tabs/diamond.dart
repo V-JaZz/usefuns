@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:live_app/provider/shop_wallet_provider.dart';
 import 'package:live_app/provider/user_data_provider.dart';
+import 'package:live_app/screens/dashboard/me/wallet/diamond_history.dart';
 import 'package:provider/provider.dart';
 
 class DiamondTabView extends StatefulWidget {
@@ -20,7 +22,7 @@ class _DiamondTabViewState extends State<DiamondTabView> {
         builder: (context, value, _) =>  Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding: const EdgeInsets.all(15),
               child: Container(
                 width: double.infinity,
                 height: 119,
@@ -58,16 +60,16 @@ class _DiamondTabViewState extends State<DiamondTabView> {
                             ),
                           ],
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
               ),
             ),
-            value.iapLoading || value.iapDiamondsList == null
-                ? const Center(child: CircularProgressIndicator(color: Colors.green))
-                : !value.iapAvailable
+            !value.iapAvailable
                 ? const Text(' In-App-Purchase not available!')
+                : value.iapLoading || value.iapDiamondsList == null
+                ? const Center(child: CircularProgressIndicator(color: Colors.green))
                 : Column(
                     children: [
                       for(var product in value.iapDiamondsList!)

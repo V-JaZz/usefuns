@@ -118,7 +118,7 @@ class _ShopCommonViewState extends State<ShopCommonView> {
                 }
               },
             ),
-            Text(capitalizeText(item.name!)),
+            Text(capitalizeText(item.name!),textAlign: TextAlign.center),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

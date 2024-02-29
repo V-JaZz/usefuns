@@ -51,7 +51,7 @@ void showCustomBanner(String? message, {bool? autoClose, void Function()? onActi
         ],
       ),
     );
-  if(autoClose==true)Future.delayed(const Duration(seconds: 5),() => ScaffoldMessenger.of(Get.context!).hideCurrentMaterialBanner());
+  if(autoClose==true)Future.delayed(const Duration(seconds: 3),() => ScaffoldMessenger.of(Get.context!).hideCurrentMaterialBanner());
 }
 
 void showGetSnackBar(String? title, String? subtitle){
@@ -258,8 +258,8 @@ Widget userProfileDisplay(
         children: [
           Center(
             child: Container(
-              width: size * 0.67,
-              height: size * 0.67,
+              width: size * 0.64,
+              height: size * 0.64,
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   image: image.isEmpty

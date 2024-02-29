@@ -126,7 +126,7 @@ String getRandomDiamondReward(int level) {
       reward = 'Better Luck\nNext Time';
   }else {
     reward = 'You Won\n$wonDiamonds Diamonds!';
-    Provider.of<ShopWalletProvider>(Get.context!,listen: false).rewardDiamonds(wonDiamonds);
+    Provider.of<ShopWalletProvider>(Get.context!,listen: false).treasureBoxReward(wonDiamonds);
   }
   return reward;
 }

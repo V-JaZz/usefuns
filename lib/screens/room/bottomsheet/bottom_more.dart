@@ -3,9 +3,7 @@ import 'package:get/get.dart';
 import 'package:live_app/provider/zego_room_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../utils/utils_assets.dart';
-import '../../../utils/zego_config.dart';
 import '../../dashboard/me/shop/shop.dart';
-import '../../dashboard/me/tasks/dailyTask.dart';
 import '../widget/media_player.dart';
 import 'manager.dart';
 
@@ -42,7 +40,10 @@ class BottomMoreBottomSheet extends StatelessWidget {
                 width: 20 * a,
               ),
               InkWell(
-                onTap: LiveRoomBottomSheets(context).showIncomeExpenseBottomSheet,
+                onTap:(){
+                  Get.back();
+                  LiveRoomBottomSheets(context).showIncomeExpenseBottomSheet();
+                },
                 child: iconTextRow(a, b, 'Income &\nExpenditure',
                     'assets/room_icons/b2.png'),
               ),
@@ -51,6 +52,7 @@ class BottomMoreBottomSheet extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
+                  Get.back();
                   Get.to(() => const Shop());
                 },
                 child: iconTextRow(a, b, 'Shop', 'assets/homeim.png'),

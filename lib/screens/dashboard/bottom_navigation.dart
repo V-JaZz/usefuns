@@ -29,7 +29,7 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     Home(),
     Games(),
     MessageNotifications(),
-    // Moments(),
+    Moments(),
     Me(),
   ];
 
@@ -119,12 +119,12 @@ class _BottomNavigatorState extends State<BottomNavigator> {
                 iconColor: Colors.black,
                 iconActiveColor: Colors.black,
               ),
-              // GButton(
-              //   text: 'Moments',
-              //   icon: Icons.timelapse,
-              //   iconColor: Colors.black,
-              //   iconActiveColor: Colors.black,
-              // ),
+              GButton(
+                text: 'Moments',
+                icon: Icons.timelapse,
+                iconColor: Colors.black,
+                iconActiveColor: Colors.black,
+              ),
               GButton(
                 text: 'Me',
                 icon: Icons.person,

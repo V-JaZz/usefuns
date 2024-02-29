@@ -459,39 +459,61 @@ class _MeState extends State<Me> {
                 ),
               Column(
                 children: [
-                  SizedBox(height: 6*a),
+                  SizedBox(height: 15*a),
                   for (Map m in list)
-                    Container(
-                      margin: EdgeInsets.only(
-                          top: 14 * a, left: 10 * a, right: 50 * a),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            m['icon'],
-                            fit: BoxFit.cover,
-                            width: 16 * a,
-                            height: 16 * a,
-                          ),
-                          SizedBox(width: 11 * a),
-                          InkWell(
-                            onTap: m["onTap"],
-                            child: Text(
-                              m['title'],
-                              textAlign: TextAlign.left,
-                              style: SafeGoogleFont(
-                                'Poppins',
-                                fontSize: 16 * b,
-                                fontWeight: FontWeight.w400,
-                                height: 1.5 * b / a,
-                                letterSpacing: 0.48 * a,
-                                color: const Color(0xff000000),
-                              ),
-                            ),
-                          ),
-                        ],
+                    ListTile(
+                      dense: true,
+                      onTap: m["onTap"],
+                      leading: Image.asset(
+                        m['icon'],
+                        fit: BoxFit.cover,
+                        width: 16 * a,
+                        height: 16 * a,
+                      ),
+                      title: Text(
+                        m['title'],
+                        textAlign: TextAlign.left,
+                        style: SafeGoogleFont(
+                          'Poppins',
+                          fontSize: 16 * b,
+                          fontWeight: FontWeight.w400,
+                          height: 1.5 * b / a,
+                          letterSpacing: 0.48 * a,
+                          color: const Color(0xff000000),
+                        ),
                       ),
                     ),
+                    // Container(
+                    //   margin: EdgeInsets.only(
+                    //       top: 14 * a, left: 10 * a, right: 50 * a),
+                    //   child: Row(
+                    //     crossAxisAlignment: CrossAxisAlignment.center,
+                    //     children: [
+                    //       Image.asset(
+                    //         m['icon'],
+                    //         fit: BoxFit.cover,
+                    //         width: 16 * a,
+                    //         height: 16 * a,
+                    //       ),
+                    //       SizedBox(width: 11 * a),
+                    //       InkWell(
+                    //         onTap: m["onTap"],
+                    //         child: Text(
+                    //           m['title'],
+                    //           textAlign: TextAlign.left,
+                    //           style: SafeGoogleFont(
+                    //             'Poppins',
+                    //             fontSize: 16 * b,
+                    //             fontWeight: FontWeight.w400,
+                    //             height: 1.5 * b / a,
+                    //             letterSpacing: 0.48 * a,
+                    //             color: const Color(0xff000000),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                   SizedBox(height: 30 * a),
                 ],
               ),

@@ -10,7 +10,6 @@ import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../data/model/response/app_version_config.dart';
-import '../../provider/connection_provider.dart';
 import '../auth/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -41,7 +40,6 @@ class StartState extends State<SplashScreen> {
           AppVersionConfigModel model = appVersionConfigModelFromJson(response.body);
           if(model.status == 1){
             if(model.data!.where((e) => e.name == Constants.appVersion).isNotEmpty){
-              Provider.of<ConnectionProvider>(Get.context!,listen: false).connectionStatus;
               Get.off(() {
                 return StorageService().getString(Constants.id) == ''?const LogInScreen():const BottomNavigator();
               });

@@ -2,10 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:live_app/utils/constants.dart';
-
 import 'package:http_parser/http_parser.dart';
+import '../../../../utils/common_widgets.dart';
 
 class HttpApiClient {
   final String baseUrl = Constants.baseUrl;
@@ -219,7 +220,11 @@ class HttpApiClient {
 
   Future<http.Response> _handleApiException(Object error) async {
     if (error is SocketException) {
-      log('Socket Exception: $error');
+      showCustomSnackBar(
+          'Network Error!',
+          Get.context!,
+          isToaster: true
+      );
       return http.Response('No Internet Connection', 400);
     } else {
       throw error;
@@ -230,6 +235,7 @@ class HttpApiClient {
     log('Response Status Code: ${response.statusCode}');
     log('Response Body: ${response.body}');
   }
+
   String _getMediaType(String filePath) {
     // Map file extensions to media types
     Map<String, String> mediaTypeMap = {

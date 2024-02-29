@@ -63,7 +63,7 @@ class MessagesNotificationsProvider with ChangeNotifier {
   NotificationModel? notifications;
 
   Future<void> getAllNotifications() async {
-    final uid = Provider.of<UserDataProvider>(Get.context!,listen: false).userData!.data!.id!;
+    final uid = Provider.of<UserDataProvider>(Get.context!,listen: false).userData!.data!.userId!;
     final apiResponse = await _messagesNotificationsRepo.getAll(uid);
     if (apiResponse.statusCode == 200) {
       notifications = notificationModelFromJson(apiResponse.body);

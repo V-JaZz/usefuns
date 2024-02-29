@@ -91,7 +91,6 @@ class _GamesState extends State<Games> {
                       Get.to(()=>const Shop());
                     },
                     child: Container(
-                      margin: EdgeInsets.fromLTRB(0 * a, 0 * a, 42 * a, 0 * a),
                       width: 24 * a,
                       height: 24 * a,
                       decoration: BoxDecoration(

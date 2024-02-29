@@ -88,6 +88,9 @@ class _MineState extends State<Mine> {
               tabsWidth: 120 * a,
               initialIndex: index,
               indicatorColor: const Color(0xFF7926BC),
+              onSelect: (tabIndex) {
+                index = tabIndex;
+              },
               selectedTabBackgroundColor:
                   const Color(0xFF7926BC).withOpacity(0.1),
               tabs: const <Tab>[
