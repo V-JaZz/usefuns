@@ -14,7 +14,7 @@ import '../../../../data/model/response/user_data_model.dart';
 import '../../../../provider/user_data_provider.dart';
 import 'honor.dart';
 import '../../../room/widget/pre_loading_dailog.dart';
-import 'moments_page.dart';
+import '../moments_page.dart';
 import 'update_profile.dart';
 import '../../../../utils/common_widgets.dart';
 import '../../../../utils/helper.dart';

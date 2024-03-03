@@ -832,14 +832,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.4.0"
-  photo_view:
+  phonepe_payment_sdk:
     dependency: "direct main"
     description:
-      name: photo_view
-      sha256: "8036802a00bae2a78fc197af8a158e3e2f7b500561ed23b4c458107685e645bb"
+      name: phonepe_payment_sdk
+      sha256: f00b986ce05fbc655cb59929c2c29a9d39b2b21ec3ac1ad2bcf25d046c105f2e
       url: "https://pub.dev"
     source: hosted
-    version: "0.14.0"
+    version: "2.0.1"
   platform:
     dependency: transitive
     description:

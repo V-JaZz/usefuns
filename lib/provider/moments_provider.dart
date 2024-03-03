@@ -67,10 +67,20 @@ class MomentsProvider with ChangeNotifier {
     MomentsModel responseModel;
     if (apiResponse.statusCode == 200) {
       _isLoadedMy = true;
-      notifyListeners();
       responseModel = momentsModelFromJson(apiResponse.body);
+
+      final udp = Provider.of<UserDataProvider>(Get.context!,listen: false);
+      List<Moment> momentsWithUserData = [];
+      final res = await udp.getUser(id: id);
+      for(Moment m in responseModel.data??[]){
+        if(res.data != null) {
+          m.userDetails = res.data;
+          momentsWithUserData.add(m);
+        }
+      }
+      responseModel.data = momentsWithUserData;
       if(responseModel.status == 1 && id==null){
-        myMoments = responseModel.data??[];
+        myMoments = momentsWithUserData;
       }
     } else {
       responseModel = MomentsModel(status: 0,message: apiResponse.reasonPhrase);
@@ -208,14 +218,16 @@ class MomentsProvider with ChangeNotifier {
 
   Future<void> addUserDataInMoments(List<Moment> list, bool all) async {
     final udp = Provider.of<UserDataProvider>(Get.context!,listen: false);
-    all ? allMoments=[] : followingMoments=[];
+    List<Moment> moments = [];
     for(Moment m in list){
       final res = await udp.getUser(id: m.createdBy!);
       if(res.data != null) {
         m.userDetails = res.data;
-        all ? allMoments.add(m) : followingMoments.add(m);
+        moments.add(m);
       }
     }
+    moments.toSet().toList();
+    all ? allMoments = moments : followingMoments = moments;
     notifyListeners();
   }
 

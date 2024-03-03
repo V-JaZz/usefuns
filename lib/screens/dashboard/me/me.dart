@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:live_app/provider/user_data_provider.dart';
-import 'package:live_app/screens/dashboard/me/profile/moments_page.dart';
+import 'package:live_app/screens/dashboard/me/moments_page.dart';
 import 'package:live_app/screens/dashboard/me/settings/settings.dart';
 import 'package:live_app/screens/dashboard/me/shop/shop.dart';
 import 'package:live_app/screens/dashboard/me/wallet/wallet.dart';
