@@ -53,7 +53,7 @@ class _ViewMomentState extends State<ViewMoment> {
                         ),
                         title: Text(
                           widget.moment.userDetails!.name!,
-                          style: SafeGoogleFont(
+                          style: safeGoogleFont(
                             'Poppins',
                             fontSize: 18 * b,
                             fontWeight: FontWeight.w400,
@@ -65,7 +65,7 @@ class _ViewMomentState extends State<ViewMoment> {
                         subtitle: Text(
                             TimeUtil.getTimeDifferenceString(widget.moment.createdAt!),
                             overflow: TextOverflow.ellipsis,
-                            style: SafeGoogleFont(
+                            style: safeGoogleFont(
                               'Poppins',
                               fontSize: 15 * b,
                               fontWeight: FontWeight.w300,
@@ -104,7 +104,7 @@ class _ViewMomentState extends State<ViewMoment> {
                                   widget.moment.caption != null
                                       ? Text(
                                     widget.moment.caption.toString(),
-                                    style: SafeGoogleFont(
+                                    style: safeGoogleFont(
                                       'Poppins',
                                       fontSize: 14 * b,
                                       fontWeight: FontWeight.w400,
@@ -160,7 +160,7 @@ class _ViewMomentState extends State<ViewMoment> {
                             Widget result;
                             result = Text(
                               text,
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 16 * b,
                                 fontWeight: FontWeight.w400,
@@ -180,7 +180,7 @@ class _ViewMomentState extends State<ViewMoment> {
                             SizedBox(width: 5 * a),
                             Text(
                               widget.moment.comments?.length.toString()??'0',
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 16 * b,
                                 fontWeight: FontWeight.w400,
@@ -197,7 +197,7 @@ class _ViewMomentState extends State<ViewMoment> {
                   const Divider(),
                   if(widget.moment.userDetails!.isCommentRestricted == false)Text(
                     '${widget.moment.comments?.length} Comments',
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                       'Poppins',
                       fontSize: 16 * b,
                       fontWeight: FontWeight.w400,

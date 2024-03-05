@@ -71,7 +71,7 @@ class _MomentsTabViewState extends State<MomentsTabView> {
                     ),
                     title: Text(
                       moments[index].userDetails!.name!,
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                         'Poppins',
                         fontSize: 18 * b,
                         fontWeight: FontWeight.w400,
@@ -83,7 +83,7 @@ class _MomentsTabViewState extends State<MomentsTabView> {
                     subtitle: Text(
                         TimeUtil.getTimeDifferenceString(moments[index].createdAt!),
                         overflow: TextOverflow.ellipsis,
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 15 * b,
                           fontWeight: FontWeight.w300,
@@ -105,7 +105,7 @@ class _MomentsTabViewState extends State<MomentsTabView> {
                         moments[index].caption.toString(),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 5,
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 14 * b,
                           fontWeight: FontWeight.w400,
@@ -174,7 +174,7 @@ class _MomentsTabViewState extends State<MomentsTabView> {
                                       Widget result;
                                       result = Text(
                                         text,
-                                        style: SafeGoogleFont(
+                                        style: safeGoogleFont(
                                           'Poppins',
                                           fontSize: 16 * b,
                                           fontWeight: FontWeight.w400,
@@ -194,7 +194,7 @@ class _MomentsTabViewState extends State<MomentsTabView> {
                                       SizedBox(width: 5 * a),
                                       Text(
                                         moments[index].comments?.length.toString()??'0',
-                                        style: SafeGoogleFont(
+                                        style: safeGoogleFont(
                                           'Poppins',
                                           fontSize: 16 * b,
                                           fontWeight: FontWeight.w400,

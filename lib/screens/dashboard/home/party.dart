@@ -72,7 +72,7 @@ class _PartyState extends State<Party> {
                   dividerColor: Colors.transparent,
                   labelColor: const Color(0xff000000),
                   unselectedLabelColor: const Color(0x99000000),
-                  labelStyle: SafeGoogleFont(
+                  labelStyle: safeGoogleFont(
                     'Poppins',
                     fontSize: 12 * b,
                     fontWeight: FontWeight.w400,
@@ -80,7 +80,7 @@ class _PartyState extends State<Party> {
                     letterSpacing: 0.48 * a,
                     color: const Color(0xff000000),
                   ),
-                  unselectedLabelStyle: SafeGoogleFont(
+                  unselectedLabelStyle: safeGoogleFont(
                     'Poppins',
                     fontSize: 12 * b,
                     fontWeight: FontWeight.w400,
@@ -133,7 +133,7 @@ class _PartyState extends State<Party> {
                     children: [
                       Text(
                         'Coming Soon',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 12 * b,
                           fontWeight: FontWeight.w400,
@@ -147,7 +147,7 @@ class _PartyState extends State<Party> {
                         children: [
                           Text(
                             'More',
-                            style: SafeGoogleFont(
+                            style: safeGoogleFont(
                               'Poppins',
                               fontSize: 12 * b,
                               fontWeight: FontWeight.w400,
@@ -190,7 +190,7 @@ class _PartyState extends State<Party> {
                                 contentPadding: EdgeInsets.zero,
                                 title: Text(
                                   club["name"],
-                                  style: SafeGoogleFont(
+                                  style: safeGoogleFont(
                                     'Poppins',
                                     fontSize: 12 * b,
                                     fontWeight: FontWeight.w400,
@@ -207,7 +207,7 @@ class _PartyState extends State<Party> {
                                     Text(
                                       club["time"],
                                       overflow: TextOverflow.ellipsis,
-                                      style: SafeGoogleFont(
+                                      style: safeGoogleFont(
                                         'Poppins',
                                         fontSize: 9 * b,
                                         fontWeight: FontWeight.w400,
@@ -228,7 +228,7 @@ class _PartyState extends State<Party> {
                                   child: FittedBox(
                                     child: Text(
                                       'Subscribe',
-                                      style: SafeGoogleFont(
+                                      style: safeGoogleFont(
                                         'Poppins',
                                         fontWeight: FontWeight.w400,
                                         letterSpacing: 0.36 * a,
@@ -254,7 +254,7 @@ class _PartyState extends State<Party> {
                     child: Center(
                       child: Text(
                         '+ Create',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 12 * b,
                           fontWeight: FontWeight.w400,
@@ -281,7 +281,7 @@ class _PartyState extends State<Party> {
               ),
               Text(
                 'No Data',
-                style: SafeGoogleFont(
+                style: safeGoogleFont(
                   'Poppins',
                   fontSize: 16 * b,
                   fontWeight: FontWeight.w400,
@@ -301,7 +301,7 @@ class _PartyState extends State<Party> {
                 child: Center(
                   child: Text(
                     '+ Create',
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                       'Poppins',
                       fontSize: 12 * b,
                       fontWeight: FontWeight.w400,
@@ -324,7 +324,7 @@ class _PartyState extends State<Party> {
                   labelColor: const Color(0xff000000),
                   dividerColor: Colors.transparent,
                   unselectedLabelColor: const Color(0x99000000),
-                  labelStyle: SafeGoogleFont(
+                  labelStyle: safeGoogleFont(
                     'Poppins',
                     fontSize: 16 * b,
                     fontWeight: FontWeight.w400,
@@ -332,7 +332,7 @@ class _PartyState extends State<Party> {
                     letterSpacing: 0.96 * a,
                     color: const Color(0xff000000),
                   ),
-                  unselectedLabelStyle: SafeGoogleFont(
+                  unselectedLabelStyle: safeGoogleFont(
                     'Poppins',
                     fontSize: 16 * b,
                     fontWeight: FontWeight.w400,
@@ -368,7 +368,7 @@ class _PartyState extends State<Party> {
                         ),
                         Text(
                           'No Data',
-                          style: SafeGoogleFont(
+                          style: safeGoogleFont(
                             'Poppins',
                             fontSize: 16 * b,
                             fontWeight: FontWeight.w400,
@@ -388,7 +388,7 @@ class _PartyState extends State<Party> {
                           child: Center(
                             child: Text(
                               '+ Create',
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 12 * b,
                                 fontWeight: FontWeight.w400,
@@ -413,7 +413,7 @@ class _PartyState extends State<Party> {
                         ),
                         Text(
                           'No Data',
-                          style: SafeGoogleFont(
+                          style: safeGoogleFont(
                             'Poppins',
                             fontSize: 16 * b,
                             fontWeight: FontWeight.w400,
@@ -433,7 +433,7 @@ class _PartyState extends State<Party> {
                           child: Center(
                             child: Text(
                               '+ Create',
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 12 * b,
                                 fontWeight: FontWeight.w400,
@@ -458,7 +458,7 @@ class _PartyState extends State<Party> {
                         ),
                         Text(
                           'No Data',
-                          style: SafeGoogleFont(
+                          style: safeGoogleFont(
                             'Poppins',
                             fontSize: 16 * b,
                             fontWeight: FontWeight.w400,
@@ -478,7 +478,7 @@ class _PartyState extends State<Party> {
                           child: Center(
                             child: Text(
                               '+ Create',
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 12 * b,
                                 fontWeight: FontWeight.w400,

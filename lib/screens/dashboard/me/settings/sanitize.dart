@@ -13,7 +13,6 @@ class _SanitizeState extends State<Sanitize> {
   Widget build(BuildContext context) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
-    double b = a * 0.97;
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 67,
@@ -43,7 +42,7 @@ class _SanitizeState extends State<Sanitize> {
       child: ListTile(
         leading: Image.asset(img),
         title: Text(name),
-        subtitle: Text('Banned Forever'),
+        subtitle: const Text('Banned Forever'),
       ),
     );
   }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/provider/user_data_provider.dart';
-import 'package:live_app/screens/dashboard/me/me.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 
@@ -41,7 +40,7 @@ class _LevelPrivilegesState extends State<LevelPrivileges> {
           title: Text(
             'Level Privileges',
             textAlign: TextAlign.left,
-            style: SafeGoogleFont(
+            style: safeGoogleFont(
               color: const Color.fromRGBO(0, 0, 0, 1),
               'Poppins',
               fontSize: 17 * a,
@@ -85,7 +84,7 @@ class _LevelPrivilegesState extends State<LevelPrivileges> {
                     Text(
                       'You need ${(series[value.userData?.data?.level??0].ceil()-(value.userData?.data?.exp??0.0)).toInt()} EXP to upgrade Level',
                       textAlign: TextAlign.left,
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                           color: const Color.fromRGBO(255, 255, 255, 1),
                           'Poppins',
                           fontSize: 12 * a,
@@ -159,7 +158,7 @@ class _LevelPrivilegesState extends State<LevelPrivileges> {
                 alignment: Alignment.bottomLeft,
                 child: Text(
                   'How to level Up',
-                  style: SafeGoogleFont(
+                  style: safeGoogleFont(
                       color: Colors.black.withOpacity(0.8),
                       'Poppins',
                       fontSize: 14 * a,
@@ -189,7 +188,7 @@ class _LevelPrivilegesState extends State<LevelPrivileges> {
                     ),
                     Text(
                       'Send Gift',
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                           color: Colors.black.withOpacity(0.8),
                           'Poppins',
                           fontSize: 12,
@@ -216,7 +215,7 @@ class _LevelPrivilegesState extends State<LevelPrivileges> {
                     ),
                     Text(
                       'Shop',
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                           color: Colors.black.withOpacity(0.8),
                           'Poppins',
                           fontSize: 12,
@@ -243,7 +242,7 @@ class _LevelPrivilegesState extends State<LevelPrivileges> {
                     ),
                     Text(
                       'Add More',
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                           color: Colors.black.withOpacity(0.8),
                           'Poppins',
                           fontSize: 12,
@@ -264,7 +263,7 @@ class _LevelPrivilegesState extends State<LevelPrivileges> {
               child: Text(
                 'Every Time when You Spend Diamonds on Usefuns\nYou will get EXP to level up (1 Diamonds = 1 exp).',
                 textAlign: TextAlign.center,
-                style: SafeGoogleFont(
+                style: safeGoogleFont(
                     color: Colors.black.withOpacity(0.8),
                     'Poppins',
                     fontSize: 12,
@@ -283,7 +282,7 @@ class _LevelPrivilegesState extends State<LevelPrivileges> {
                 alignment: Alignment.bottomLeft,
                 child: Text(
                   'Privileges awards',
-                  style: SafeGoogleFont(
+                  style: safeGoogleFont(
                       color: Colors.black.withOpacity(0.8),
                       'Poppins',
                       fontSize: 14 * a,
@@ -332,7 +331,6 @@ class _LevelPrivilegesState extends State<LevelPrivileges> {
   Column txt(txt) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
-    double b = a * 0.97;
     return Column(children: [
       Padding(
         padding: EdgeInsets.only(left: 40 * a, right: 40 * a),
@@ -340,7 +338,7 @@ class _LevelPrivilegesState extends State<LevelPrivileges> {
           alignment: Alignment.bottomLeft,
           child: Text(
             txt,
-            style: SafeGoogleFont(
+            style: safeGoogleFont(
               color: Colors.black.withOpacity(0.8),
               'Poppins',
               fontSize: 12 * a,

@@ -58,7 +58,7 @@ class InviteRoomBottomSheet extends StatelessWidget {
                 child: Text(
                   'Invite PK                                  ',
                   textAlign: TextAlign.left,
-                  style: SafeGoogleFont(
+                  style: safeGoogleFont(
                       color: const Color.fromRGBO(6, 6, 6, 1),
                       'Lato',
                       fontSize: 22 * a,
@@ -93,7 +93,7 @@ class InviteRoomBottomSheet extends StatelessWidget {
             child: Text(
               '   Recommended Rooms',
               textAlign: TextAlign.left,
-              style: SafeGoogleFont(
+              style: safeGoogleFont(
                   color: const Color.fromRGBO(6, 6, 6, 1),
                   'Lato',
                   fontSize: 20 * a,
@@ -122,7 +122,7 @@ class InviteRoomBottomSheet extends StatelessWidget {
                                 ),
                                 title: Text(
                                   club["name"],
-                                  style: SafeGoogleFont(
+                                  style: safeGoogleFont(
                                     'Poppins',
                                     fontSize: 16 * b,
                                     fontWeight: FontWeight.w400,
@@ -134,7 +134,7 @@ class InviteRoomBottomSheet extends StatelessWidget {
                                 subtitle: Text(
                                   club["about"],
                                   overflow: TextOverflow.ellipsis,
-                                  style: SafeGoogleFont(
+                                  style: safeGoogleFont(
                                     'Poppins',
                                     fontSize: 12 * b,
                                     fontWeight: FontWeight.w400,
@@ -154,7 +154,7 @@ class InviteRoomBottomSheet extends StatelessWidget {
                                     child: Center(
                                       child: Text(
                                         'Invite',
-                                        style: SafeGoogleFont(
+                                        style: safeGoogleFont(
                                           'Poppins',
                                           fontSize: 12 * b,
                                           fontWeight: FontWeight.w800,

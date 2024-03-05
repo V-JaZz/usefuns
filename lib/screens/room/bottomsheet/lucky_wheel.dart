@@ -49,7 +49,7 @@ class _LuckyWheelBottomSheetState extends State<LuckyWheelBottomSheet> with Tick
               const Spacer(flex: 5),
               Text(
                 'Lucky Wheel',
-                style: SafeGoogleFont(
+                style: safeGoogleFont(
                   'Poppins',
                   fontSize: 18,
                   fontWeight: FontWeight.w400,
@@ -66,7 +66,7 @@ class _LuckyWheelBottomSheetState extends State<LuckyWheelBottomSheet> with Tick
                     .data!
                     .diamonds
                     .toString(),
-                style: SafeGoogleFont(
+                style: safeGoogleFont(
                   'Roboto',
                   fontSize: 16,
                   fontWeight: FontWeight.w400,

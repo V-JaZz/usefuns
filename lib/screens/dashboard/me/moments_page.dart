@@ -35,9 +35,6 @@ class _MomentsPageState extends State<MomentsPage> {
   @override
   Widget build(BuildContext context) {
 
-    double baseWidth = 360;
-    double a = Get.width / baseWidth;
-    double b = a * 0.97;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: widget.appBar ? AppBar(
@@ -146,7 +143,7 @@ class _MyMomentsState extends State<MyMoments> {
                   ),
                   title: Text(
                     moments[index].userDetails!.name!,
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                       'Poppins',
                       fontSize: 18 * b,
                       fontWeight: FontWeight.w400,
@@ -158,7 +155,7 @@ class _MyMomentsState extends State<MyMoments> {
                   subtitle: Text(
                       TimeUtil.getTimeDifferenceString(moments[index].createdAt!),
                       overflow: TextOverflow.ellipsis,
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                         'Poppins',
                         fontSize: 15 * b,
                         fontWeight: FontWeight.w300,
@@ -180,7 +177,7 @@ class _MyMomentsState extends State<MyMoments> {
                       moments[index].caption.toString(),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 5,
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                         'Poppins',
                         fontSize: 14 * b,
                         fontWeight: FontWeight.w400,
@@ -249,7 +246,7 @@ class _MyMomentsState extends State<MyMoments> {
                                     Widget result;
                                     result = Text(
                                       text,
-                                      style: SafeGoogleFont(
+                                      style: safeGoogleFont(
                                         'Poppins',
                                         fontSize: 16 * b,
                                         fontWeight: FontWeight.w400,
@@ -269,7 +266,7 @@ class _MyMomentsState extends State<MyMoments> {
                                     SizedBox(width: 5 * a),
                                     Text(
                                       moments[index].comments?.length.toString()??'0',
-                                      style: SafeGoogleFont(
+                                      style: safeGoogleFont(
                                         'Poppins',
                                         fontSize: 16 * b,
                                         fontWeight: FontWeight.w400,

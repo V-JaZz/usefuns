@@ -8,7 +8,6 @@ import '../data/model/response/user_data_model.dart';
 import '../data/repository/user_data_repo.dart';
 import '../screens/auth/banned_countdown.dart';
 import '../screens/auth/login_screen.dart';
-import '../utils/zego_config.dart';
 
 class UserDataProvider with ChangeNotifier {
 

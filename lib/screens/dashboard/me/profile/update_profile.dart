@@ -1,14 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:live_app/data/model/response/common_model.dart';
 import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/utils/utils_assets.dart';
-import 'package:provider/provider.dart';
 import 'package:provider/provider.dart';
 import '../../../../utils/common_widgets.dart';
 
@@ -76,7 +74,7 @@ class UpdateProfileState extends State<UpdateProfile> {
             title: 'Cropper',
           ),
           WebUiSettings(
-            context: context,
+            context: Get.context!,
           ),
         ],
       ).then((croppedImage) {
@@ -86,7 +84,7 @@ class UpdateProfileState extends State<UpdateProfile> {
       });
 
     } on Exception catch (e) {
-      return const Text('Adding Failed');
+      return Text('Adding Failed!, $e');
     }
   }
 
@@ -204,7 +202,7 @@ class UpdateProfileState extends State<UpdateProfile> {
                       const SizedBox(height: 16),
                       Text(
                         'Tap to edit the Profile Picture',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 16 * b,
                           fontWeight: FontWeight.w400,
@@ -221,7 +219,7 @@ class UpdateProfileState extends State<UpdateProfile> {
                             margin: EdgeInsets.fromLTRB(0 * a, 0 * a, 0 * a, 3 * a),
                             child: Text(
                               'Nickname',
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 16 * b,
                                 fontWeight: FontWeight.w300,
@@ -232,7 +230,7 @@ class UpdateProfileState extends State<UpdateProfile> {
                             ),
                           ),
                           TextFormField(
-                            style: SafeGoogleFont(
+                            style: safeGoogleFont(
                               'Poppins',
                               fontSize: 12 * b,
                               fontWeight: FontWeight.w300,
@@ -253,7 +251,7 @@ class UpdateProfileState extends State<UpdateProfile> {
                                 isDense: true,
                                 suffixIcon: Text(
                                   '$nameLength/20',
-                                  style: SafeGoogleFont(
+                                  style: safeGoogleFont(
                                     'Poppins',
                                     fontSize: 12 * b,
                                     fontWeight: FontWeight.w300,
@@ -264,7 +262,7 @@ class UpdateProfileState extends State<UpdateProfile> {
                                 ),
                                 suffixIconConstraints:
                                     BoxConstraints(maxHeight: 15 * a),
-                                hintStyle: SafeGoogleFont(
+                                hintStyle: safeGoogleFont(
                                   'Poppins',
                                   fontSize: 12 * b,
                                   fontWeight: FontWeight.w300,
@@ -285,7 +283,7 @@ class UpdateProfileState extends State<UpdateProfile> {
                             margin: EdgeInsets.fromLTRB(0 * a, 0 * a, 0 * a, 3 * a),
                             child: Text(
                               'Birthday',
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 16 * b,
                                 fontWeight: FontWeight.w300,
@@ -301,7 +299,7 @@ class UpdateProfileState extends State<UpdateProfile> {
                             },
                             child: TextFormField(
                               enabled: false,
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 12 * b,
                                 fontWeight: FontWeight.w300,
@@ -318,7 +316,7 @@ class UpdateProfileState extends State<UpdateProfile> {
                                   ),
                                   suffixIconConstraints:
                                       BoxConstraints(maxHeight: 15 * a),
-                                  hintStyle: SafeGoogleFont(
+                                  hintStyle: safeGoogleFont(
                                     'Poppins',
                                     fontSize: 12 * b,
                                     fontWeight: FontWeight.w300,
@@ -342,7 +340,7 @@ class UpdateProfileState extends State<UpdateProfile> {
                             margin: EdgeInsets.fromLTRB(0 * a, 0 * a, 0 * a, 3 * a),
                             child: Text(
                               'Email',
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 16 * b,
                                 fontWeight: FontWeight.w300,
@@ -353,7 +351,7 @@ class UpdateProfileState extends State<UpdateProfile> {
                             ),
                           ),
                           TextFormField(
-                            style: SafeGoogleFont(
+                            style: safeGoogleFont(
                               'Poppins',
                               fontSize: 12 * b,
                               fontWeight: FontWeight.w300,
@@ -368,7 +366,7 @@ class UpdateProfileState extends State<UpdateProfile> {
                             decoration: InputDecoration(
                                 counterText: "",
                                 isDense: true,
-                                hintStyle: SafeGoogleFont(
+                                hintStyle: safeGoogleFont(
                                   'Poppins',
                                   fontSize: 12 * b,
                                   fontWeight: FontWeight.w300,
@@ -389,7 +387,7 @@ class UpdateProfileState extends State<UpdateProfile> {
                             margin: EdgeInsets.fromLTRB(0 * a, 0 * a, 0 * a, 3 * a),
                             child: Text(
                               'Bio',
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 16 * b,
                                 fontWeight: FontWeight.w300,
@@ -400,7 +398,7 @@ class UpdateProfileState extends State<UpdateProfile> {
                             ),
                           ),
                           TextFormField(
-                            style: SafeGoogleFont(
+                            style: safeGoogleFont(
                               'Poppins',
                               fontSize: 12 * b,
                               fontWeight: FontWeight.w300,
@@ -415,7 +413,7 @@ class UpdateProfileState extends State<UpdateProfile> {
                             decoration: InputDecoration(
                                 counterText: "",
                                 isDense: true,
-                                hintStyle: SafeGoogleFont(
+                                hintStyle: safeGoogleFont(
                                   'Poppins',
                                   fontSize: 12 * b,
                                   fontWeight: FontWeight.w300,
@@ -431,7 +429,6 @@ class UpdateProfileState extends State<UpdateProfile> {
                       const SizedBox(height: 36),
                       TextButton(
                         onPressed: () async {
-                          print('name : $name, dob : $selectedDate, email : $email, bio : $bio');
                           if(name!='' && name!=null && selectedDate !=null ){
                             CommonModel model = await value.updateUser(name: name!, dob: selectedDate!.toIso8601String(), email: email,image: croppedImagePaths??imagePaths,bio: bio);
                             if (model.status == 1) {
@@ -456,7 +453,7 @@ class UpdateProfileState extends State<UpdateProfile> {
                           child: Center(
                             child: Text(
                               'Save',
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Inter',
                                 fontSize: 16 * b,
                                 fontWeight: FontWeight.w700,

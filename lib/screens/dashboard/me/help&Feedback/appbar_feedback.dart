@@ -14,9 +14,6 @@ class AppbarFeedBack extends StatefulWidget {
 class _AppbarFeedBackState extends State<AppbarFeedBack> {
   @override
   Widget build(BuildContext context) {
-    double baseWidth = 360;
-    double a = Get.width / baseWidth;
-    double b = a * 0.97;
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 75,

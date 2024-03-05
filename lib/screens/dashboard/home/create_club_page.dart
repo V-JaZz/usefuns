@@ -56,7 +56,7 @@ class _CreateClubScreenState extends State<CreateClubScreen> {
             title: 'Cropper',
           ),
           WebUiSettings(
-            context: context,
+            context: Get.context!,
           ),
         ],
       ).then((croppedImage) {
@@ -66,7 +66,7 @@ class _CreateClubScreenState extends State<CreateClubScreen> {
       });
 
     } on Exception catch (e) {
-      return const Text('Adding Failed');
+      return Text('Adding Failed!, $e');
     }
   }
 
@@ -112,7 +112,7 @@ class _CreateClubScreenState extends State<CreateClubScreen> {
           centerTitle: true,
           title: Text(
             'Create a Club',
-            style: SafeGoogleFont(
+            style: safeGoogleFont(
               'inter',
               fontSize: 20 * b,
               fontWeight: FontWeight.w700,
@@ -156,7 +156,7 @@ class _CreateClubScreenState extends State<CreateClubScreen> {
                             SizedBox(height: 8*a),
                             Text(
                               'Add Club Avatar',
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'inter',
                                 fontSize: 12 * b,
                                 fontWeight: FontWeight.w700,
@@ -176,7 +176,7 @@ class _CreateClubScreenState extends State<CreateClubScreen> {
                 children: [
                   Text(
                     'Club Name',
-                    style: SafeGoogleFont('Poppins',
+                    style: safeGoogleFont('Poppins',
                         fontSize: 12 * b,
                         fontWeight: FontWeight.w400,
                         height: 1.2125 * b / a,
@@ -212,7 +212,7 @@ class _CreateClubScreenState extends State<CreateClubScreen> {
                 children: [
                   Text(
                     'Club Label',
-                    style: SafeGoogleFont('Poppins',
+                    style: safeGoogleFont('Poppins',
                         fontSize: 12 * b,
                         fontWeight: FontWeight.w400,
                         height: 1.2125 * b / a,
@@ -247,7 +247,7 @@ class _CreateClubScreenState extends State<CreateClubScreen> {
               ),
               Text(
                 "A label is a short name for your club;it will be shown in club rooms and on club menmbers",
-                style: SafeGoogleFont('Poppins',
+                style: safeGoogleFont('Poppins',
                     fontSize: 10 * b,
                     fontWeight: FontWeight.bold,
                     height: 1.2125 * b / a,
@@ -261,7 +261,7 @@ class _CreateClubScreenState extends State<CreateClubScreen> {
                 children: [
                   Text(
                     'Club Announcement',
-                    style: SafeGoogleFont('Poppins',
+                    style: safeGoogleFont('Poppins',
                         fontSize: 12 * b,
                         fontWeight: FontWeight.w400,
                         height: 1.2125 * b / a,
@@ -297,7 +297,7 @@ class _CreateClubScreenState extends State<CreateClubScreen> {
               ),
               Text(
                 'Tips: \n 1. Leader can get rewards when your club is in the top 150 of monthly ranking.(settled monthly)\n 2. There is a limit on how many times you can change your avatar , name, label , so choose wisely \n 3.You can create a club for free if your wealth level is greater than lv.35',
-                style: SafeGoogleFont('Poppins',
+                style: safeGoogleFont('Poppins',
                     fontSize: 12 * b,
                     fontWeight: FontWeight.bold,
                     height: 1.2125 * b / a,
@@ -325,7 +325,7 @@ class _CreateClubScreenState extends State<CreateClubScreen> {
                     child: Center(
                         child: Text(
                       "Create with 5000 Diamonds",
-                      style: SafeGoogleFont('Poppins',
+                      style: safeGoogleFont('Poppins',
                           fontSize: 13 * b,
                           fontWeight: FontWeight.bold,
                           height: 2 * b / a,

@@ -18,7 +18,7 @@ class _DiamondHistoryState extends State<DiamondHistory> {
         child: ListView(
           padding: const EdgeInsets.only(top: 0),
           physics: const BouncingScrollPhysics(),
-          children: List.generate(10 ?? 0, (i) {
+          children: List.generate(10, (i) {
             return InkWell(
               onTap: () {
                 // showReportInfo(reports![i]);

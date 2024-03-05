@@ -7,7 +7,6 @@ import 'package:live_app/screens/room/bottomsheet/joy_games.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 
-import '../../../utils/common_widgets.dart';
 
 class Games extends StatefulWidget {
   const Games({Key? key}) : super(key: key);
@@ -43,7 +42,7 @@ class _GamesState extends State<Games> {
         elevation: 1,
         title: Text(
           'Game',
-          style: SafeGoogleFont(
+          style: safeGoogleFont(
             'Poppins',
             fontSize: 20 * b,
             fontWeight: FontWeight.w400,
@@ -75,7 +74,7 @@ class _GamesState extends State<Games> {
                             .data!
                             .diamonds
                             .toString(),
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Roboto',
                           fontSize: 14 * b,
                           fontWeight: FontWeight.w400,
@@ -144,7 +143,7 @@ class _GamesState extends State<Games> {
                         Image.asset(gamesList[index]["image"]),
                         Text(
                           gamesList[index]["name"],
-                          style: SafeGoogleFont(
+                          style: safeGoogleFont(
                             'Poppins',
                             fontSize: 16 * b,
                             fontWeight: FontWeight.w400,

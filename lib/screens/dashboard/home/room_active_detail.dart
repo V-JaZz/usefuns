@@ -58,7 +58,7 @@ class RoomActiveDetail extends StatelessWidget {
             Expanded(
                 child: Text('Room Active Detail',
                     textAlign: TextAlign.center,
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                       'Poppins',
                       fontSize: 20 * b,
                       fontWeight: FontWeight.w400,
@@ -101,7 +101,7 @@ class RoomActiveDetail extends StatelessWidget {
                         children: [
                           Text(
                             m["name"],
-                            style: SafeGoogleFont(
+                            style: safeGoogleFont(
                               'Poppins',
                               fontSize: 12 * b,
                               fontWeight: FontWeight.w400,
@@ -121,7 +121,7 @@ class RoomActiveDetail extends StatelessWidget {
                               SizedBox(width: 6 * a),
                               Text(
                                 m["time"],
-                                style: SafeGoogleFont(
+                                style: safeGoogleFont(
                                   'Poppins',
                                   fontSize: 9 * b,
                                   fontWeight: FontWeight.w400,
@@ -135,7 +135,7 @@ class RoomActiveDetail extends StatelessWidget {
                           SizedBox(height: 11 * a),
                           Text(
                             'Room ID:354356765',
-                            style: SafeGoogleFont(
+                            style: safeGoogleFont(
                               'Poppins',
                               fontSize: 12 * b,
                               fontWeight: FontWeight.w400,
@@ -161,7 +161,7 @@ class RoomActiveDetail extends StatelessWidget {
                 children: [
                   Text(
                     'Subscribed Record',
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                       'Poppins',
                       fontSize: 12 * b,
                       fontWeight: FontWeight.w400,
@@ -187,7 +187,7 @@ class RoomActiveDetail extends StatelessWidget {
                       ),
                       Text(
                         '4',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 9 * b,
                           fontWeight: FontWeight.w500,
@@ -219,7 +219,7 @@ class RoomActiveDetail extends StatelessWidget {
                       ),
                       title: Text(
                         subscribedList[i]['name'],
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 12 * b,
                           fontWeight: FontWeight.w400,
@@ -230,7 +230,7 @@ class RoomActiveDetail extends StatelessWidget {
                       ),
                       trailing: Text(
                         subscribedList[i]['time'],
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 9 * b,
                           fontWeight: FontWeight.w400,
@@ -263,7 +263,7 @@ class RoomActiveDetail extends StatelessWidget {
                     child: Center(
                       child: Text(
                         'Join',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 12 * b,
                           fontWeight: FontWeight.w400,
@@ -284,7 +284,7 @@ class RoomActiveDetail extends StatelessWidget {
                     child: Center(
                       child: Text(
                         'Subscribe',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 12 * b,
                           fontWeight: FontWeight.w400,

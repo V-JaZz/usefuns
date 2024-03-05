@@ -29,7 +29,7 @@ class _IncomeExpenseState extends State<IncomeExpense> {
               labelColor: const Color(0xff000000),
               dividerColor: Colors.transparent,
               unselectedLabelColor: const Color(0x99000000),
-              labelStyle: SafeGoogleFont(
+              labelStyle: safeGoogleFont(
                 'Poppins',
                 fontSize: 16 * b,
                 fontWeight: FontWeight.w400,
@@ -37,7 +37,7 @@ class _IncomeExpenseState extends State<IncomeExpense> {
                 letterSpacing: 0.96 * a,
                 color: const Color(0xff000000),
               ),
-              unselectedLabelStyle: SafeGoogleFont(
+              unselectedLabelStyle: safeGoogleFont(
                 'Poppins',
                 fontSize: 16 * b,
                 fontWeight: FontWeight.w400,
@@ -73,7 +73,7 @@ class _IncomeExpenseState extends State<IncomeExpense> {
                       ),
                       Text(
                         'Oops, Currently Empty',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 16 * b,
                           fontWeight: FontWeight.w400,
@@ -100,7 +100,7 @@ class _IncomeExpenseState extends State<IncomeExpense> {
                       ),
                       Text(
                         'Oops, Currently Empty',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 16 * b,
                           fontWeight: FontWeight.w400,

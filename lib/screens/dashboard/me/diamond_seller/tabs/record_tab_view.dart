@@ -4,7 +4,6 @@ import 'package:live_app/provider/seller_agency_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../data/model/response/seller_record_model.dart';
-import '../../../../../utils/utils_assets.dart';
 
 class SellerRecordTabView extends StatefulWidget {
   const SellerRecordTabView({super.key});
@@ -18,7 +17,6 @@ class _SellerRecordTabViewState extends State<SellerRecordTabView> {
   Widget build(BuildContext context) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
-    double b = a * 0.97;
     return FutureBuilder(
       future: Provider.of<SellerAgencyProvider>(context).getSellerRecord(),
       builder:

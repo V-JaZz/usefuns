@@ -13,7 +13,6 @@ class _IntellectualState extends State<Intellectual> {
   Widget build(BuildContext context) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
-    double b = a * 0.97;
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 67 * a,
@@ -26,14 +25,14 @@ class _IntellectualState extends State<Intellectual> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Text(
+              const Text(
                 'INTELLECTUAL PROPERTY RIGHTS',
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(
                 height: 20 * a,
               ),
-              Text(
+              const Text(
                   'In the Event of any Concerns Or\nComplaints about Possible Violation of\nIntellectual Property Rights, Please Send \nus an email at ip@usefuns.com\nidentifying with specificity the rights\nalleged to be violated and the accused\nProducts. Note: This email address is \njust for intellectual Property Rights and\nLegal issuses, other requests may not \nget respondence'),
             ],
           ),

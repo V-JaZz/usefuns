@@ -51,7 +51,7 @@ class _CreateRoomState extends State<CreateRoom> {
             title: 'Cropper',
           ),
           WebUiSettings(
-            context: context,
+            context: Get.context!,
           ),
         ],
       ).then((croppedImage) {
@@ -61,7 +61,7 @@ class _CreateRoomState extends State<CreateRoom> {
       });
 
     } on Exception catch (e) {
-      return const Text('Adding Failed');
+      return Text('Adding Failed!, $e');
     }
   }
 
@@ -127,7 +127,7 @@ class _CreateRoomState extends State<CreateRoom> {
                     SizedBox(width: 24 * a),
                     Text(
                       'Enter Room Name',
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                         'Poppins',
                         fontSize: 21 * b,
                         fontWeight: FontWeight.w400,
@@ -165,7 +165,7 @@ class _CreateRoomState extends State<CreateRoom> {
               TextFormField(
                 maxLength: 30,
                 controller: textEditingController,
-                style: SafeGoogleFont(
+                style: safeGoogleFont(
                   'Poppins',
                   fontSize: 12 * b,
                   fontWeight: FontWeight.w300,
@@ -174,7 +174,7 @@ class _CreateRoomState extends State<CreateRoom> {
                   color: const Color(0x66000000),
                 ),
                 decoration: InputDecoration(
-                    hintStyle: SafeGoogleFont(
+                    hintStyle: safeGoogleFont(
                       'Poppins',
                       fontSize: 12 * b,
                       fontWeight: FontWeight.w300,
@@ -220,7 +220,7 @@ class _CreateRoomState extends State<CreateRoom> {
                     child: Center(
                       child: Text(
                         value.creatingRoom?'Please Wait..':'Verify',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Inter',
                           fontSize: 16 * b,
                           fontWeight: FontWeight.w700,

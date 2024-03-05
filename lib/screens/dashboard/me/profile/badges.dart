@@ -13,19 +13,18 @@ class _BadgePageState extends State<BadgePage> {
   Widget build(BuildContext context) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
-    double b = a * 0.97;
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 67 * a,
         backgroundColor: const Color(0xff9E26BC).withOpacity(0.2),
         automaticallyImplyLeading: true,
-        title: Center(child: const Text('Badges')),
+        title: const Center(child: Text('Badges')),
       ),
       body: Padding(
         padding: EdgeInsets.all(15.0 * a),
         child: Column(
           children: [
-            Text('Badges'),
+            const Text('Badges'),
             SizedBox(
               height: 500 * a,
               child: GridView(

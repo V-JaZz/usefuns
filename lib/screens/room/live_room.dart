@@ -61,10 +61,10 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
     double baseWidth = 360;
     double a = Get.width / baseWidth;
     double b = a * 0.97;
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (pop) async {
         viewPowerDailog();
-        return false;
       },
       child: Consumer<ZegoRoomProvider>(
         builder: (context, value, _) => Scaffold(
@@ -145,7 +145,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                           children: [
                                             MarqueeText(
                                               text : TextSpan(text:value.room?.name??''),
-                                              style: SafeGoogleFont(
+                                              style: safeGoogleFont(
                                                 'Lato',
                                                 fontSize: 15 * b,
                                                 fontWeight: FontWeight.w400,
@@ -159,7 +159,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                               child: Text(
                                                 'ID ${value.room?.roomId}',
                                                 overflow: TextOverflow.ellipsis,
-                                                style: SafeGoogleFont(
+                                                style: safeGoogleFont(
                                                   'Lato',
                                                   fontSize: 11 * b,
                                                   fontWeight: FontWeight.w400,
@@ -182,7 +182,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                   child: Text(
                                     'Online\n${value.activeCount}',
                                     textAlign: TextAlign.center,
-                                    style: SafeGoogleFont(
+                                    style: safeGoogleFont(
                                       'Lato',
                                       fontSize: 11,
                                       fontWeight: FontWeight.w400,
@@ -272,7 +272,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                           SizedBox(width: 3 * a),
                                           Text(
                                             'Group : ${value.room?.groupMembers?.length??0}',
-                                            style: SafeGoogleFont(
+                                            style: safeGoogleFont(
                                               'Poppins',
                                               fontSize: 9 * b,
                                               fontWeight: FontWeight.w400,
@@ -313,7 +313,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                           SizedBox(width: 3 * a),
                                           Text(
                                             'Bonus',
-                                            style: SafeGoogleFont(
+                                            style: safeGoogleFont(
                                               'Poppins',
                                               fontSize: 9 * b,
                                               fontWeight: FontWeight.w400,
@@ -509,7 +509,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                               child: Text(
                                                 user.userData!.name ?? '',
                                                 textAlign: TextAlign.center,
-                                                style: SafeGoogleFont(
+                                                style: safeGoogleFont(
                                                   'Poppins',
                                                   fontSize: 11 * b,
                                                   fontWeight: FontWeight.w400,
@@ -535,7 +535,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                                   Text(
                                                     formatNumber(user.points??0),
                                                     textAlign: TextAlign.center,
-                                                    style: SafeGoogleFont(
+                                                    style: safeGoogleFont(
                                                       'Poppins',
                                                       fontSize: 10 * b,
                                                       fontWeight: FontWeight.w500,
@@ -743,7 +743,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                   },
                                   child: Text(
                                     'PK',
-                                    style: SafeGoogleFont(
+                                    style: safeGoogleFont(
                                       'Poppins',
                                       fontSize: 18 * b,
                                       fontStyle: FontStyle.italic,
@@ -776,7 +776,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                           ),
                                           child: Text(
                                             'Please Respect each other and chat in friendly manner. Abuse, sexual and violent contents are not allowed. All violators will be banned.',
-                                            style: SafeGoogleFont(
+                                            style: safeGoogleFont(
                                               'Poppins',
                                               fontSize: 10.5 * b,
                                               fontWeight: FontWeight.w400,
@@ -798,7 +798,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                             children: [
                                               Text(
                                                 'Announcement : ',
-                                                style: SafeGoogleFont(
+                                                style: safeGoogleFont(
                                                   'Poppins',
                                                   fontSize: 10.5 * b,
                                                   letterSpacing: 0.48 * a,
@@ -807,7 +807,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                               ),
                                               Text(
                                                 (value.room?.announcement??'')==''?'Hii! Welcome to my room.':value.room!.announcement!,
-                                                style: SafeGoogleFont(
+                                                style: safeGoogleFont(
                                                   'Poppins',
                                                   fontWeight: FontWeight.w600,
                                                   fontSize: 11 * b,
@@ -892,7 +892,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                                               children: [
                                                                 Text(
                                                                   message.fromUser.userName,
-                                                                  style: SafeGoogleFont(
+                                                                  style: safeGoogleFont(
                                                                     'Poppins',
                                                                     fontSize: 12 * b,
                                                                     fontWeight:
@@ -915,7 +915,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                                                   child: Center(
                                                                     child: Text(
                                                                       body.tags!.first,
-                                                                      style: SafeGoogleFont(
+                                                                      style: safeGoogleFont(
                                                                         'Poppins',
                                                                         fontSize: 7 * b,
                                                                         fontWeight: FontWeight.w500,
@@ -956,7 +956,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                                                                       Expanded(
                                                                         child: Text(' X ${body.gift?.count}',
                                                                           overflow: TextOverflow.ellipsis,
-                                                                          style: SafeGoogleFont(
+                                                                          style: safeGoogleFont(
                                                                             'Poppins',
                                                                             fontSize: 16 * b,
                                                                             fontWeight:
@@ -1184,7 +1184,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
         textSpans.add(TextSpan(
           text: parts[i],
           style:
-          SafeGoogleFont(
+          safeGoogleFont(
             'Poppins',
             fontSize: 11,
             fontWeight:
@@ -1200,7 +1200,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
         textSpans.add(TextSpan(
           text: '@$partAfterAt',
           style:
-          SafeGoogleFont(
+          safeGoogleFont(
             'Poppins',
             fontSize: 11,
             fontWeight:
@@ -1213,7 +1213,7 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
         textSpans.add(TextSpan(
           text: parts[i].substring(partAfterAt.length), // Exclude the first part
           style:
-          SafeGoogleFont(
+          safeGoogleFont(
             'Poppins',
             fontSize: 11,
             fontWeight:

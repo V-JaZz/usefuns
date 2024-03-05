@@ -2,7 +2,6 @@ import 'package:country_flags/country_flags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:get/get.dart';
-import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/utils/helper.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
@@ -149,7 +148,7 @@ class _PopularTabViewState extends State<PopularTabView> {
                                     width: 30 * a, height: 30 * a),
                                 Text(
                                   'Ranking',
-                                  style: SafeGoogleFont(
+                                  style: safeGoogleFont(
                                     'Poppins',
                                     fontSize: 16 * b,
                                     fontWeight: FontWeight.w400,
@@ -176,7 +175,7 @@ class _PopularTabViewState extends State<PopularTabView> {
                                 Text(
                                   'Family',
                                   maxLines: 1,
-                                  style: SafeGoogleFont(
+                                  style: safeGoogleFont(
                                     'Poppins',
                                     fontSize: 16 * b,
                                     fontWeight: FontWeight.w400,
@@ -202,7 +201,7 @@ class _PopularTabViewState extends State<PopularTabView> {
                                     width: 30 * a, height: 30 * a),
                                 Text(
                                   'Party',
-                                  style: SafeGoogleFont(
+                                  style: safeGoogleFont(
                                     'Poppins',
                                     fontSize: 16 * b,
                                     fontWeight: FontWeight.w400,

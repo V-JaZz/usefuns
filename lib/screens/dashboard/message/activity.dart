@@ -56,7 +56,7 @@ class Activity extends StatelessWidget {
                         SizedBox(height: 8 * a),
                         Text(
                           activityList[index]["text"],
-                          style: SafeGoogleFont(
+                          style: safeGoogleFont(
                             'Poppins',
                             fontSize: 14 * b,
                             fontWeight: FontWeight.w400,

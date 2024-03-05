@@ -31,7 +31,7 @@ class ShareBottomSheet extends StatelessWidget {
                 ),
                 Text(
                   'Usefuns Friends',
-                  style: SafeGoogleFont('Poppins',
+                  style: safeGoogleFont('Poppins',
                       fontSize: 12 * b,
                       fontWeight: FontWeight.w400,
                       height: 1.5 * b / a,
@@ -52,7 +52,7 @@ class ShareBottomSheet extends StatelessWidget {
                 ),
                 Text(
                   'Whatsapp',
-                  style: SafeGoogleFont('Poppins',
+                  style: safeGoogleFont('Poppins',
                       fontSize: 12 * b,
                       fontWeight: FontWeight.w400,
                       height: 1.5 * b / a,

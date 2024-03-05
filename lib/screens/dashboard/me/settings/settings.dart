@@ -112,7 +112,7 @@ class _SettingsState extends State<Settings> {
         elevation: 1,
         title: Text('Settings',
             textAlign: TextAlign.center,
-            style: SafeGoogleFont(
+            style: safeGoogleFont(
               'Poppins',
               fontSize: 20 * b,
               fontWeight: FontWeight.w400,
@@ -144,7 +144,7 @@ class _SettingsState extends State<Settings> {
                       child: Text(
                         m['title'],
                         textAlign: TextAlign.left,
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 14 * b,
                           fontWeight: FontWeight.w400,
@@ -163,7 +163,7 @@ class _SettingsState extends State<Settings> {
                     if (m['trailing'] == 'number')
                       Text(
                         '${Provider.of<UserDataProvider>(context).userData?.data?.mobile??0}',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 12 * b,
                           fontWeight: FontWeight.w400,
@@ -214,7 +214,7 @@ class _SettingsState extends State<Settings> {
                       child: Text(
                         m['title'],
                         textAlign: TextAlign.left,
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 14 * b,
                           fontWeight: FontWeight.w400,
@@ -245,7 +245,7 @@ class _SettingsState extends State<Settings> {
                   child: Center(
                     child: Text(
                       value.isLoading?'Logging out..':'Logout',
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                         'Poppins',
                         fontSize: 16 * b,
                         fontWeight: FontWeight.w400,
@@ -267,7 +267,7 @@ class _SettingsState extends State<Settings> {
         child: Center(
           child: Text(
             'App version : ${Constants.appVersion}',
-            style: SafeGoogleFont(
+            style: safeGoogleFont(
               'Poppins',
               fontSize: 12 * b,
               fontWeight: FontWeight.w400,

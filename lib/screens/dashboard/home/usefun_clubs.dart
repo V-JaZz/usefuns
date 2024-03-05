@@ -94,7 +94,7 @@ class _UsefunsClubState extends State<UsefunsClub>
             Expanded(
                 child: Text('Usefuns',
                     textAlign: TextAlign.center,
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                       'Poppins',
                       fontSize: 20 * b,
                       fontWeight: FontWeight.w400,
@@ -122,7 +122,7 @@ class _UsefunsClubState extends State<UsefunsClub>
             indicatorWeight: 1.3,
             labelColor: const Color(0xff000000),
             unselectedLabelColor: const Color(0x99000000),
-            labelStyle: SafeGoogleFont(
+            labelStyle: safeGoogleFont(
               'Poppins',
               fontSize: 16 * b,
               fontWeight: FontWeight.w400,
@@ -130,7 +130,7 @@ class _UsefunsClubState extends State<UsefunsClub>
               letterSpacing: 0.96 * a,
               color: const Color(0xff000000),
             ),
-            unselectedLabelStyle: SafeGoogleFont(
+            unselectedLabelStyle: safeGoogleFont(
               'Poppins',
               fontSize: 16 * b,
               fontWeight: FontWeight.w400,
@@ -264,7 +264,7 @@ class _UsefunsClubState extends State<UsefunsClub>
                                                   ),
                                                   Text(
                                                     club.name??'',
-                                                    style: SafeGoogleFont(
+                                                    style: safeGoogleFont(
                                                       'Poppins',
                                                       fontSize: 12 * b,
                                                       fontWeight: FontWeight.w400,
@@ -286,7 +286,7 @@ class _UsefunsClubState extends State<UsefunsClub>
                                                       ),
                                                       Text(
                                                         club.totalDaimond?.toString()??'0',
-                                                        style: SafeGoogleFont(
+                                                        style: safeGoogleFont(
                                                           'Poppins',
                                                           fontSize: 9 * b,
                                                           fontWeight: FontWeight.w400,
@@ -327,7 +327,7 @@ class _UsefunsClubState extends State<UsefunsClub>
                                                       0 * a, 0 * a, 11 * a, 0 * a),
                                                   child: Text(
                                                     '${i + 1}',
-                                                    style: SafeGoogleFont(
+                                                    style: safeGoogleFont(
                                                       'Poppins',
                                                       fontSize: 16 * b,
                                                       fontWeight: FontWeight.w400,
@@ -350,7 +350,7 @@ class _UsefunsClubState extends State<UsefunsClub>
                                             ),
                                             title: Text(
                                               club.name??'',
-                                              style: SafeGoogleFont(
+                                              style: safeGoogleFont(
                                                 'Poppins',
                                                 fontSize: 12 * b,
                                                 fontWeight: FontWeight.w400,
@@ -373,7 +373,7 @@ class _UsefunsClubState extends State<UsefunsClub>
                                                 ),
                                                 Text(
                                                   club.totalDaimond?.toString()??'0',
-                                                  style: SafeGoogleFont(
+                                                  style: safeGoogleFont(
                                                     'Poppins',
                                                     fontSize: 9 * b,
                                                     fontWeight: FontWeight.w400,
@@ -487,7 +487,7 @@ class _UsefunsClubState extends State<UsefunsClub>
                                               ),
                                               Text(
                                                 club.name??'',
-                                                style: SafeGoogleFont(
+                                                style: safeGoogleFont(
                                                   'Poppins',
                                                   fontSize: 12 * b,
                                                   fontWeight: FontWeight.w400,
@@ -509,7 +509,7 @@ class _UsefunsClubState extends State<UsefunsClub>
                                                   ),
                                                   Text(
                                                     club.totalDaimond?.toString()??'0',
-                                                    style: SafeGoogleFont(
+                                                    style: safeGoogleFont(
                                                       'Poppins',
                                                       fontSize: 9 * b,
                                                       fontWeight: FontWeight.w400,
@@ -549,7 +549,7 @@ class _UsefunsClubState extends State<UsefunsClub>
                                                       0 * a, 0 * a, 11 * a, 0 * a),
                                                   child: Text(
                                                     '${i + 1}',
-                                                    style: SafeGoogleFont(
+                                                    style: safeGoogleFont(
                                                       'Poppins',
                                                       fontSize: 16 * b,
                                                       fontWeight: FontWeight.w400,
@@ -572,7 +572,7 @@ class _UsefunsClubState extends State<UsefunsClub>
                                             ),
                                             title: Text(
                                               club.name??'',
-                                              style: SafeGoogleFont(
+                                              style: safeGoogleFont(
                                                 'Poppins',
                                                 fontSize: 12 * b,
                                                 fontWeight: FontWeight.w400,
@@ -595,7 +595,7 @@ class _UsefunsClubState extends State<UsefunsClub>
                                                 ),
                                                 Text(
                                                   club.totalDaimond?.toString()??'0',
-                                                  style: SafeGoogleFont(
+                                                  style: safeGoogleFont(
                                                     'Poppins',
                                                     fontSize: 9 * b,
                                                     fontWeight: FontWeight.w400,
@@ -647,7 +647,7 @@ class _UsefunsClubState extends State<UsefunsClub>
                       child: Center(
                         child: Text(
                           '+',
-                          style: SafeGoogleFont(
+                          style: safeGoogleFont(
                             'Poppins',
                             fontSize: 16 * b,
                             fontWeight: FontWeight.w400,
@@ -668,7 +668,7 @@ class _UsefunsClubState extends State<UsefunsClub>
                     margin: EdgeInsets.fromLTRB(0 * a, 0 * a, 0 * a, 2 * a),
                     child: Text(
                       'Create a Club',
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                         'Poppins',
                         fontSize: 12 * b,
                         fontWeight: FontWeight.w400,

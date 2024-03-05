@@ -74,7 +74,7 @@ class _MomentsState extends State<Moments> with TickerProviderStateMixin {
           dividerColor: Colors.transparent,
           labelColor: const Color(0xff000000),
           unselectedLabelColor: const Color(0x99000000),
-          labelStyle: SafeGoogleFont(
+          labelStyle: safeGoogleFont(
             'Poppins',
             fontSize: 18 * b,
             fontWeight: FontWeight.w400,
@@ -82,7 +82,7 @@ class _MomentsState extends State<Moments> with TickerProviderStateMixin {
             letterSpacing: 0.96 * a,
             color: const Color(0xff000000),
           ),
-          unselectedLabelStyle: SafeGoogleFont(
+          unselectedLabelStyle: safeGoogleFont(
             'Poppins',
             fontSize: 18 * b,
             fontWeight: FontWeight.w400,
@@ -137,7 +137,7 @@ class _MomentsState extends State<Moments> with TickerProviderStateMixin {
                   ),
                   Text(
                     'No Posts yet',
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                       'Poppins',
                       fontSize: 16 * b,
                       fontWeight: FontWeight.w400,
@@ -173,7 +173,7 @@ class _MomentsState extends State<Moments> with TickerProviderStateMixin {
                   ),
                   Text(
                     'No Following yet',
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                       'Poppins',
                       fontSize: 16 * b,
                       fontWeight: FontWeight.w400,
@@ -201,7 +201,7 @@ class _MomentsState extends State<Moments> with TickerProviderStateMixin {
                   ),
                   Text(
                     'No Posts yet',
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                       'Poppins',
                       fontSize: 16 * b,
                       fontWeight: FontWeight.w400,

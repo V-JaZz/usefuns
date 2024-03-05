@@ -7,7 +7,6 @@ import 'package:live_app/utils/common_widgets.dart';
 import 'package:provider/provider.dart';
 import '../../../data/model/body/firestore_message_model.dart';
 import '../../../provider/user_data_provider.dart';
-import '../../../utils/helper.dart';
 
 class ChatScreen extends StatefulWidget {
   final UserData user;

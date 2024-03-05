@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/provider/zego_room_provider.dart';
 import 'package:provider/provider.dart';
-import '../../../utils/common_widgets.dart';
 
 void viewInviteToSeatDailog(String seatInfo, String from){
   Get.defaultDialog(

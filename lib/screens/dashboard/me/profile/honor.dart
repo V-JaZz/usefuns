@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
               alignment: Alignment.bottomLeft,
               child: Text(
                 '   Aristocracy',
-                style: SafeGoogleFont(
+                style: safeGoogleFont(
                     color: const Color.fromRGBO(0, 0, 0, 1),
                     'Poppins',
                     fontSize: 12 * a,
@@ -66,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         '7 Privileges',
                         textAlign: TextAlign.left,
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                             color: const Color.fromRGBO(0, 0, 0, 1),
                             'Poppins',
                             fontSize: 12 * a,
@@ -85,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Text(
                     'Badge',
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                         color: const Color.fromRGBO(0, 0, 0, 1),
                         'Poppins',
                         fontSize: 12 * a,
@@ -96,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Text(
                         'More',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                             color: const Color.fromRGBO(0, 0, 0, 1),
                             'Poppins',
                             fontSize: 12 * a,
@@ -129,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Text(
                     'Vehicle',
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                         color: const Color.fromRGBO(0, 0, 0, 1),
                         'Poppins',
                         fontSize: 12 * a,
@@ -140,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Text(
                         'More',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                             color: const Color.fromRGBO(0, 0, 0, 1),
                             'Poppins',
                             fontSize: 12 * a,
@@ -174,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Text(
                         'More',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                             color: const Color.fromRGBO(0, 0, 0, 1),
                             'Poppins',
                             fontSize: 12 * a,
@@ -215,7 +215,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Text(
                     'Gift',
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                         color: const Color.fromRGBO(0, 0, 0, 1),
                         'Poppins',
                         fontSize: 12 * a,
@@ -226,7 +226,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Text(
                         'More',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                             color: const Color.fromRGBO(0, 0, 0, 1),
                             'Poppins',
                             fontSize: 12 * a,

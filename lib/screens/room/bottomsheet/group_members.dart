@@ -14,9 +14,6 @@ class _GroupMembersBottomSheetState extends State<GroupMembersBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    double baseWidth = 390;
-    double a = MediaQuery.of(context).size.width / baseWidth;
-    double b = a * 0.97;
     return Container(
       color: Colors.white
     );

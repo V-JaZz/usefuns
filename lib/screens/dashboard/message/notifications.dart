@@ -133,7 +133,7 @@ class _MessageNotificationsState extends State<MessageNotifications> {
                             ),
                             title: Text(
                               m['title'],
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 15 * b,
                                 fontWeight: FontWeight.w400,
@@ -146,7 +146,7 @@ class _MessageNotificationsState extends State<MessageNotifications> {
                               m['message'],
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 10 * b,
                                 fontWeight: FontWeight.w300,
@@ -187,7 +187,7 @@ class _MessageNotificationsState extends State<MessageNotifications> {
                                       title: Text(
                                         value.allEligibleUsersData![index].name!,
 
-                                        style: SafeGoogleFont(
+                                        style: safeGoogleFont(
                                           'Poppins',
                                           fontSize: 15 * b,
                                           fontWeight: FontWeight.w400,

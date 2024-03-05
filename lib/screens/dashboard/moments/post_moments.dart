@@ -58,7 +58,7 @@ class _PostMomentsState extends State<PostMoments> {
             title: 'Cropper',
           ),
           WebUiSettings(
-            context: context,
+            context: Get.context!,
           ),
         ],
       ).then((croppedImage) {
@@ -68,7 +68,7 @@ class _PostMomentsState extends State<PostMoments> {
       });
 
     } on Exception catch (e) {
-      return const Text('Adding Failed');
+      return Text('Adding Failed!, $e');
     }
   }
 
@@ -117,7 +117,7 @@ class _PostMomentsState extends State<PostMoments> {
         elevation: 1,
         title: Text('Add Moment',
             textAlign: TextAlign.center,
-            style: SafeGoogleFont(
+            style: safeGoogleFont(
               'Poppins',
               fontSize: 20 * b,
               fontWeight: FontWeight.w400,
@@ -191,7 +191,7 @@ class _PostMomentsState extends State<PostMoments> {
               child: Center(
                 child: Text(
                   momentsProvider.isPosting?'Posting':'Post',
-                  style: SafeGoogleFont(
+                  style: safeGoogleFont(
                     'Poppins',
                     fontSize: 16 * b,
                     fontWeight: FontWeight.w400,

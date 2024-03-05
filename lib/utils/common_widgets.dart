@@ -82,7 +82,7 @@ Future<void> showCustomDialog(String title, String? subtitle,IconData? ic, {bool
                 children: [
                   Text(
                     title,
-                    style: SafeGoogleFont('Poppins',
+                    style: safeGoogleFont('Poppins',
                         fontSize: 16 * b,
                         fontWeight: FontWeight.w600,
                         height: 1.5 * b / a,
@@ -99,7 +99,7 @@ Future<void> showCustomDialog(String title, String? subtitle,IconData? ic, {bool
                   if(subtitle!=null)Text(
                     subtitle,
                     textAlign: TextAlign.center,
-                    style: SafeGoogleFont('Poppins',
+                    style: safeGoogleFont('Poppins',
                         fontSize: 10 * b,
                         fontWeight: FontWeight.w500,
                         height: 1.5 * b / a,
@@ -137,7 +137,7 @@ Future<void> showCustomDialog(String title, String? subtitle,IconData? ic, {bool
                           child: Center(
                             child: Text(
                               'OKAY',
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                   'Poppins',
                                   fontSize: 13 * a,
                                   fontWeight:
@@ -158,8 +158,8 @@ Future<void> showCustomDialog(String title, String? subtitle,IconData? ic, {bool
 }
 
 Widget loadingWidget() {
-  return WillPopScope(
-    onWillPop: () async => false,
+  return PopScope(
+    canPop: false,
     child: Stack(
       children: [
         // Background with blur effect
@@ -366,7 +366,7 @@ Widget roomListTile(
                   child: Text(
                     title,
                     overflow: TextOverflow.ellipsis,
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                       'Poppins',
                       fontSize: 17 * b,
                       fontWeight: FontWeight.w400,
@@ -384,7 +384,7 @@ Widget roomListTile(
                         : subTitle,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                       'Poppins',
                       fontSize: 14 * b,
                       fontWeight: FontWeight.w400,
@@ -421,7 +421,7 @@ Widget roomListTile(
                     const SizedBox(height: 15, width: 20, child: WaveAnimation()),
                     Text(
                       active == 'null' ? '0' : active,
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                         'Poppins',
                         fontSize: 14 * b,
                         fontWeight: FontWeight.w400,
@@ -548,7 +548,7 @@ Future<void> rewardDialog(String path, String title, String info, void Function(
                 children: [
                   Text(
                     title,
-                    style: SafeGoogleFont('Poppins',
+                    style: safeGoogleFont('Poppins',
                         fontSize: 16 * b,
                         fontWeight: FontWeight.w600,
                         height: 1.5 * b / a,
@@ -565,7 +565,7 @@ Future<void> rewardDialog(String path, String title, String info, void Function(
                   Text(
                     info,
                     textAlign: TextAlign.center,
-                    style: SafeGoogleFont('Poppins',
+                    style: safeGoogleFont('Poppins',
                         fontSize: 10 * b,
                         fontWeight: FontWeight.w500,
                         height: 1.5 * b / a,
@@ -601,7 +601,7 @@ Future<void> rewardDialog(String path, String title, String info, void Function(
                           child: Center(
                             child: Text(
                               'OKAY',
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                   'Poppins',
                                   fontSize: 13 * a,
                                   fontWeight:
@@ -960,7 +960,7 @@ Container viewUsersByIds(List<String>? list, {int popCount = 0, ScrollController
                                       child: Text(
                                         user.name!.contains('#icognito')?user.name!.split('#').first:user.name??'',
                                         overflow: TextOverflow.ellipsis,
-                                        style: SafeGoogleFont(
+                                        style: safeGoogleFont(
                                           'Poppins',
                                           fontSize: 15 * b,
                                           fontWeight: FontWeight.w400,

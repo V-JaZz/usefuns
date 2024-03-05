@@ -42,7 +42,7 @@ class _AgencyTabState extends State<AgencyTab> {
         ),
         title: Text(
           'Agency',
-          style: SafeGoogleFont(
+          style: safeGoogleFont(
             'Poppins',
             fontSize: 14 * b,
             fontWeight: FontWeight.w400,
@@ -87,7 +87,7 @@ class _AgencyTabState extends State<AgencyTab> {
     double b = a * 0.97;
     return Text(
       txt,
-      style: SafeGoogleFont(
+      style: safeGoogleFont(
         'Poppins',
         fontSize: 12 * b,
         fontWeight: FontWeight.w400,

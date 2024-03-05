@@ -83,7 +83,7 @@ class _LogInScreenState extends State<LogInScreen> {
               ),
               Text(
                 'Meet new friends and Join live Party',
-                style: SafeGoogleFont(
+                style: safeGoogleFont(
                   'Roboto',
                   fontSize: 14 * b,
                   fontWeight: FontWeight.w400,
@@ -94,7 +94,7 @@ class _LogInScreenState extends State<LogInScreen> {
               const Spacer(flex: 2),
               Text(
                 'Welcome',
-                style: SafeGoogleFont(
+                style: safeGoogleFont(
                   'Poppins',
                   fontSize: 24 * b,
                   fontWeight: FontWeight.w400,
@@ -117,7 +117,7 @@ class _LogInScreenState extends State<LogInScreen> {
                   ),
                   Text(
                     'Enter WhatsApp number',
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                       'Roboto',
                       fontSize: 15 * b,
                       fontWeight: FontWeight.w400,
@@ -195,7 +195,7 @@ class _LogInScreenState extends State<LogInScreen> {
                   child: Center(
                     child: Text(
                       provider.isLoading ? 'Sending OTP..' : 'Verify',
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                         'Inter',
                         fontSize: 16 * b,
                         fontWeight: FontWeight.w700,
@@ -297,7 +297,7 @@ class _LogInScreenState extends State<LogInScreen> {
         child: RichText(
           textAlign: TextAlign.center,
           text: TextSpan(
-            style: SafeGoogleFont(
+            style: safeGoogleFont(
               'Roboto',
               fontSize: 14 * b,
               fontWeight: FontWeight.w300,
@@ -307,7 +307,7 @@ class _LogInScreenState extends State<LogInScreen> {
             children: [
               TextSpan(
                 text: 'Log in means You agree to ',
-                style: SafeGoogleFont(
+                style: safeGoogleFont(
                   'Roboto',
                   fontSize: 14 * b,
                   fontWeight: FontWeight.w300,
@@ -322,7 +322,7 @@ class _LogInScreenState extends State<LogInScreen> {
                   },
                   child: Text(
                     'Term of service, ',
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                       'Roboto',
                       fontSize: 14 * b,
                       fontWeight: FontWeight.w300,
@@ -339,7 +339,7 @@ class _LogInScreenState extends State<LogInScreen> {
                   },
                   child: Text(
                     'Privacy Policy ',
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                       'Roboto',
                       fontSize: 14 * b,
                       fontWeight: FontWeight.w300,
@@ -351,7 +351,7 @@ class _LogInScreenState extends State<LogInScreen> {
               ),
               TextSpan(
                 text: 'and ',
-                style: SafeGoogleFont(
+                style: safeGoogleFont(
                   'Roboto',
                   fontSize: 14 * b,
                   fontWeight: FontWeight.w300,
@@ -366,7 +366,7 @@ class _LogInScreenState extends State<LogInScreen> {
                   },
                   child: Text(
                     'Community Policy',
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                       'Roboto',
                       fontSize: 14 * b,
                       fontWeight: FontWeight.w300,

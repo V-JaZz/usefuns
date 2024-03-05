@@ -6,14 +6,12 @@ import 'package:live_app/data/model/response/login_model.dart';
 import 'package:live_app/data/repository/auth_repo.dart';
 import 'package:live_app/utils/constants.dart';
 import '../data/datasource/local/sharedpreferences/storage_service.dart';
-import '../data/model/response/common_model.dart';
 import '../data/model/response/register_model.dart';
 import '../data/model/response/send_otp_model.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
 
 import '../screens/auth/login_screen.dart';
-import '../utils/common_widgets.dart';
 
 class AuthProvider with ChangeNotifier {
   final storageService = StorageService();

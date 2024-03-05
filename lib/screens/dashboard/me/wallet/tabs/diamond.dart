@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:live_app/provider/shop_wallet_provider.dart';
 import 'package:live_app/provider/user_data_provider.dart';
-import 'package:live_app/screens/dashboard/me/wallet/diamond_history.dart';
 import 'package:provider/provider.dart';
 
 class DiamondTabView extends StatefulWidget {

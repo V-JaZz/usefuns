@@ -8,7 +8,6 @@ import 'package:live_app/screens/dashboard/bottom_navigation.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../data/model/response/send_otp_model.dart';
 import '../../utils/common_widgets.dart';
 import '../../utils/constants.dart';
 import 'create_profile.dart';
@@ -57,7 +56,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
             SizedBox(height: 10 * a),
             Text(
               'Verification',
-              style: SafeGoogleFont(
+              style: safeGoogleFont(
                 'Roboto',
                 fontSize: 20 * b,
                 fontWeight: FontWeight.w500,
@@ -69,7 +68,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
             SizedBox(height: 30 * a),
             Text(
               'Enter Verification code ',
-              style: SafeGoogleFont(
+              style: safeGoogleFont(
                 'Inter',
                 fontSize: 16 * b,
                 fontWeight: FontWeight.w400,
@@ -105,7 +104,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                       height: 15 * a,
                       child: Text(
                         !value.resend?'If you didn’t receive a code! ':'',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Inter',
                           fontSize: 12 * b,
                           fontWeight: FontWeight.w400,
@@ -123,7 +122,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                         height: 15 * a,
                         child: Text(
                           !value.resend?'Resend':'OTP resent!',
-                          style: SafeGoogleFont(
+                          style: safeGoogleFont(
                             'Inter',
                             fontSize: 12 * b,
                             fontWeight: FontWeight.w400,
@@ -173,7 +172,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
                   child: Center(
                     child: Text(
                       value.isLoading ? 'Verifying OTP..' : 'Verify',
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                         'Inter',
                         fontSize: 16 * b,
                         fontWeight: FontWeight.w700,

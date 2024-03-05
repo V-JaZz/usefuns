@@ -77,7 +77,7 @@ class _CreateProfileState extends State<CreateProfile> {
             title: 'Cropper',
           ),
           WebUiSettings(
-            context: context,
+            context: Get.context!,
           ),
         ],
       ).then((croppedImage) {
@@ -87,7 +87,7 @@ class _CreateProfileState extends State<CreateProfile> {
       });
 
     } on Exception catch (e) {
-      return const Text('Adding Failed');
+      return Text('Adding Failed!, $e');
     }
   }
 
@@ -140,7 +140,7 @@ class _CreateProfileState extends State<CreateProfile> {
                       const SizedBox(height: 16),
                       Text(
                         'Start to Create Your Profile',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Roboto',
                           fontSize: 22 * b,
                           fontWeight: FontWeight.w400,
@@ -187,7 +187,7 @@ class _CreateProfileState extends State<CreateProfile> {
                       const SizedBox(height: 16),
                       Text(
                         'Tap to edit the Profile Picture',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 16 * b,
                           fontWeight: FontWeight.w400,
@@ -204,7 +204,7 @@ class _CreateProfileState extends State<CreateProfile> {
                             margin: EdgeInsets.fromLTRB(0 * a, 0 * a, 0 * a, 3 * a),
                             child: Text(
                               'Nickname',
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 16 * b,
                                 fontWeight: FontWeight.w300,
@@ -215,7 +215,7 @@ class _CreateProfileState extends State<CreateProfile> {
                             ),
                           ),
                           TextFormField(
-                            style: SafeGoogleFont(
+                            style: safeGoogleFont(
                               'Poppins',
                               fontSize: 12 * b,
                               fontWeight: FontWeight.w300,
@@ -235,7 +235,7 @@ class _CreateProfileState extends State<CreateProfile> {
                                 isDense: true,
                                 suffixIcon: Text(
                                   '$nameLength/20',
-                                  style: SafeGoogleFont(
+                                  style: safeGoogleFont(
                                     'Poppins',
                                     fontSize: 12 * b,
                                     fontWeight: FontWeight.w300,
@@ -246,7 +246,7 @@ class _CreateProfileState extends State<CreateProfile> {
                                 ),
                                 suffixIconConstraints:
                                     BoxConstraints(maxHeight: 15 * a),
-                                hintStyle: SafeGoogleFont(
+                                hintStyle: safeGoogleFont(
                                   'Poppins',
                                   fontSize: 12 * b,
                                   fontWeight: FontWeight.w300,
@@ -268,7 +268,7 @@ class _CreateProfileState extends State<CreateProfile> {
                               padding: EdgeInsets.only(top: 6 * a),
                               child: Text(
                                 'Select Gender',
-                                style: SafeGoogleFont(
+                                style: safeGoogleFont(
                                   'Poppins',
                                   fontSize: 16 * b,
                                   fontWeight: FontWeight.w300,
@@ -313,7 +313,7 @@ class _CreateProfileState extends State<CreateProfile> {
                                   ),
                                   Text(
                                     'Male',
-                                    style: SafeGoogleFont(
+                                    style: safeGoogleFont(
                                       'Poppins',
                                       fontSize: 16 * b,
                                       fontWeight: FontWeight.w300,
@@ -363,7 +363,7 @@ class _CreateProfileState extends State<CreateProfile> {
                                   ),
                                   Text(
                                     'Female',
-                                    style: SafeGoogleFont(
+                                    style: safeGoogleFont(
                                       'Poppins',
                                       fontSize: 16 * b,
                                       fontWeight: FontWeight.w300,
@@ -389,7 +389,7 @@ class _CreateProfileState extends State<CreateProfile> {
                             margin: EdgeInsets.fromLTRB(0 * a, 0 * a, 0 * a, 3 * a),
                             child: Text(
                               'Language',
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 16 * b,
                                 fontWeight: FontWeight.w300,
@@ -410,7 +410,7 @@ class _CreateProfileState extends State<CreateProfile> {
                             },
                             child: TextFormField(
                               enabled: false,
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 12 * b,
                                 fontWeight: FontWeight.w300,
@@ -427,7 +427,7 @@ class _CreateProfileState extends State<CreateProfile> {
                                   ),
                                   suffixIconConstraints:
                                       BoxConstraints(maxHeight: 15 * a),
-                                  hintStyle: SafeGoogleFont(
+                                  hintStyle: safeGoogleFont(
                                     'Poppins',
                                     fontSize: 12 * b,
                                     fontWeight: FontWeight.w300,
@@ -450,7 +450,7 @@ class _CreateProfileState extends State<CreateProfile> {
                             margin: EdgeInsets.fromLTRB(0 * a, 0 * a, 0 * a, 3 * a),
                             child: Text(
                               'Birthday',
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 16 * b,
                                 fontWeight: FontWeight.w300,
@@ -466,7 +466,7 @@ class _CreateProfileState extends State<CreateProfile> {
                             },
                             child: TextFormField(
                               enabled: false,
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 12 * b,
                                 fontWeight: FontWeight.w300,
@@ -483,7 +483,7 @@ class _CreateProfileState extends State<CreateProfile> {
                                   ),
                                   suffixIconConstraints:
                                       BoxConstraints(maxHeight: 15 * a),
-                                  hintStyle: SafeGoogleFont(
+                                  hintStyle: safeGoogleFont(
                                     'Poppins',
                                     fontSize: 12 * b,
                                     fontWeight: FontWeight.w300,
@@ -502,7 +502,7 @@ class _CreateProfileState extends State<CreateProfile> {
                       const SizedBox(height: 24),
                       Text(
                         'Your gender and language cannot be changed after filling.',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 12 * b,
                           fontWeight: FontWeight.w300,
@@ -545,7 +545,7 @@ class _CreateProfileState extends State<CreateProfile> {
                           child: Center(
                             child: Text(
                               'Save',
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Inter',
                                 fontSize: 16 * b,
                                 fontWeight: FontWeight.w700,

@@ -113,9 +113,7 @@ class MomentsProvider with ChangeNotifier {
 
     final apiResponse = await _momentsRepo.likePost(storageService.getString(Constants.id),postId);
 
-    CommonModel responseModel;
     if (apiResponse.statusCode == 200) {
-      responseModel = commonModelFromJson(apiResponse.body);
         if(all==true){
         getAllMoments();
       }else if(following==true){
@@ -169,9 +167,7 @@ class MomentsProvider with ChangeNotifier {
     notifyListeners();
     final apiResponse = await _momentsRepo.makeComment(postId: postId,id: storageService.getString(Constants.id),comment: comment);
 
-    CommonModel responseModel;
     if (apiResponse.statusCode == 200) {
-      responseModel = commonModelFromJson(apiResponse.body);
       if(all==true){
         getAllMoments();
       }else if(following==true){
@@ -195,9 +191,7 @@ class MomentsProvider with ChangeNotifier {
     notifyListeners();
     final apiResponse = await _momentsRepo.deleteComment(id: storageService.getString(Constants.id),commentId: commentId);
 
-    CommonModel responseModel;
     if (apiResponse.statusCode == 200) {
-      responseModel = commonModelFromJson(apiResponse.body);
       if(all==true){
         getAllMoments();
       }else if(following==true){

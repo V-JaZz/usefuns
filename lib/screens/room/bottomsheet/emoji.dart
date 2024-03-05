@@ -23,14 +23,9 @@ class _EmojiBottomSheetState extends State<EmojiBottomSheet>  with TickerProvide
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-  @override
   Widget build(BuildContext context) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
-    double b = a * 0.97;
     return Container(
       width: Get.width,
       padding: EdgeInsets.symmetric(vertical: 24 * a),
@@ -102,7 +97,7 @@ class _EmojiBottomSheetState extends State<EmojiBottomSheet>  with TickerProvide
                   child: Center(
                     child: Text(
                       'SVIP',
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                         'Roboto',
                         fontSize: 12 * b,
                         fontWeight: FontWeight.w400,

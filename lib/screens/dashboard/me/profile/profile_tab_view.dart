@@ -35,7 +35,7 @@ class _ProfileTabViewState extends State<ProfileTabView> {
               alignment: Alignment.bottomLeft,
               child: Text(
                 '   About me',
-                style: SafeGoogleFont(
+                style: safeGoogleFont(
                     color: const Color.fromRGBO(0, 0, 0, 1),
                     'Poppins',
                     fontSize: 12 * a,
@@ -53,7 +53,7 @@ class _ProfileTabViewState extends State<ProfileTabView> {
                 children: [
                   Text(
                     '    Bio  :  ',
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                         color: const Color.fromRGBO(0, 0, 0, 1),
                         'Poppins',
                         fontSize: 13 * a,
@@ -63,7 +63,7 @@ class _ProfileTabViewState extends State<ProfileTabView> {
                   Expanded(
                     child: Text(
                       '${userData.bio}',
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                           color: Colors.black87,
                           'Poppins',
                           fontSize: 12 * a,
@@ -81,7 +81,7 @@ class _ProfileTabViewState extends State<ProfileTabView> {
                 children: [
                   Text(
                     'Top Supporters',
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                         color: const Color.fromRGBO(0, 0, 0, 1),
                         'Poppins',
                         fontSize: 12 * a,
@@ -92,7 +92,7 @@ class _ProfileTabViewState extends State<ProfileTabView> {
                     children: [
                       Text(
                         'More',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                             color: const Color.fromRGBO(0, 0, 0, 1),
                             'Poppins',
                             fontSize: 12 * a,
@@ -112,8 +112,8 @@ class _ProfileTabViewState extends State<ProfileTabView> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10, left: 16),
+            const Padding(
+              padding: EdgeInsets.only(top: 10, left: 16),
               child: Align(
                   alignment: Alignment.bottomLeft,
                   child: Row(
@@ -138,7 +138,7 @@ class _ProfileTabViewState extends State<ProfileTabView> {
                     children: [
                       Text(
                         'Go',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                             color: const Color.fromRGBO(0, 0, 0, 1),
                             'Poppins',
                             fontSize: 12 * a,
@@ -147,7 +147,7 @@ class _ProfileTabViewState extends State<ProfileTabView> {
                       ),
                       IconButton(
                           onPressed: () {
-                            Get.to(() => RankingPage());
+                            Get.to(() => const RankingPage());
                           },
                           icon: const Icon(
                             Icons.arrow_forward_ios_rounded,
@@ -165,7 +165,7 @@ class _ProfileTabViewState extends State<ProfileTabView> {
                 children: [
                   Text(
                     'My CLub',
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                         color: const Color.fromRGBO(0, 0, 0, 1),
                         'Poppins',
                         fontSize: 12 * a,
@@ -176,7 +176,7 @@ class _ProfileTabViewState extends State<ProfileTabView> {
                     children: [
                       Text(
                         'More',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                             color: const Color.fromRGBO(0, 0, 0, 1),
                             'Poppins',
                             fontSize: 12 * a,

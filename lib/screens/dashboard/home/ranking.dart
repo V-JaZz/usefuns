@@ -90,7 +90,7 @@ class _RankingState extends State<Ranking> with TickerProviderStateMixin {
                 dividerColor: Colors.transparent,
                 labelColor: const Color(0xff000000),
                 unselectedLabelColor: const Color(0x99000000),
-                labelStyle: SafeGoogleFont(
+                labelStyle: safeGoogleFont(
                   'Poppins',
                   fontSize: 12 * b,
                   fontWeight: FontWeight.w400,
@@ -98,7 +98,7 @@ class _RankingState extends State<Ranking> with TickerProviderStateMixin {
                   letterSpacing: 0.48 * a,
                   color: const Color(0xff000000),
                 ),
-                unselectedLabelStyle: SafeGoogleFont(
+                unselectedLabelStyle: safeGoogleFont(
                   'Poppins',
                   fontSize: 12 * b,
                   fontWeight: FontWeight.w400,
@@ -147,7 +147,7 @@ class _RankingState extends State<Ranking> with TickerProviderStateMixin {
               indicatorWeight: 1.3,
               labelColor: const Color(0xff000000),
               unselectedLabelColor: const Color(0x99000000),
-              labelStyle: SafeGoogleFont(
+              labelStyle: safeGoogleFont(
                 'Poppins',
                 fontSize: 16 * b,
                 fontWeight: FontWeight.w400,
@@ -155,7 +155,7 @@ class _RankingState extends State<Ranking> with TickerProviderStateMixin {
                 letterSpacing: 0.96 * a,
                 color: const Color(0xff000000),
               ),
-              unselectedLabelStyle: SafeGoogleFont(
+              unselectedLabelStyle: safeGoogleFont(
                 'Poppins',
                 fontSize: 16 * b,
                 fontWeight: FontWeight.w400,
@@ -193,7 +193,7 @@ class _RankingState extends State<Ranking> with TickerProviderStateMixin {
                         children: [
                           Text(
                             'Time Period: 18/05 00:00-24/05 23:59',
-                            style: SafeGoogleFont(
+                            style: safeGoogleFont(
                               'Poppins',
                               fontSize: 12 * b,
                               fontWeight: FontWeight.w400,
@@ -235,7 +235,7 @@ class _RankingState extends State<Ranking> with TickerProviderStateMixin {
                                     ),
                                     Text(
                                       giftsList[i]['name'],
-                                      style: SafeGoogleFont(
+                                      style: safeGoogleFont(
                                         'Poppins',
                                         fontSize: 12 * b,
                                         fontWeight: FontWeight.w400,
@@ -257,7 +257,7 @@ class _RankingState extends State<Ranking> with TickerProviderStateMixin {
                                         ),
                                         Text(
                                           giftsList[i]['points'],
-                                          style: SafeGoogleFont(
+                                          style: safeGoogleFont(
                                             'Poppins',
                                             fontSize: 9 * b,
                                             fontWeight: FontWeight.w400,
@@ -293,7 +293,7 @@ class _RankingState extends State<Ranking> with TickerProviderStateMixin {
                                             0 * a, 0 * a, 11 * a, 0 * a),
                                         child: Text(
                                           '${i + 1}',
-                                          style: SafeGoogleFont(
+                                          style: safeGoogleFont(
                                             'Poppins',
                                             fontSize: 16 * b,
                                             fontWeight: FontWeight.w400,
@@ -313,7 +313,7 @@ class _RankingState extends State<Ranking> with TickerProviderStateMixin {
                                   ),
                                   title: Text(
                                     giftsList[i]['name'],
-                                    style: SafeGoogleFont(
+                                    style: safeGoogleFont(
                                       'Poppins',
                                       fontSize: 12 * b,
                                       fontWeight: FontWeight.w400,
@@ -336,7 +336,7 @@ class _RankingState extends State<Ranking> with TickerProviderStateMixin {
                                       ),
                                       Text(
                                         giftsList[i]['points'],
-                                        style: SafeGoogleFont(
+                                        style: safeGoogleFont(
                                           'Poppins',
                                           fontSize: 9 * b,
                                           fontWeight: FontWeight.w400,
@@ -369,7 +369,7 @@ class _RankingState extends State<Ranking> with TickerProviderStateMixin {
                         children: [
                           Text(
                             'Time Period: 18/05 00:00-24/05 23:59',
-                            style: SafeGoogleFont(
+                            style: safeGoogleFont(
                               'Poppins',
                               fontSize: 12 * b,
                               fontWeight: FontWeight.w400,
@@ -411,7 +411,7 @@ class _RankingState extends State<Ranking> with TickerProviderStateMixin {
                                     ),
                                     Text(
                                       giftsList[i]['name'],
-                                      style: SafeGoogleFont(
+                                      style: safeGoogleFont(
                                         'Poppins',
                                         fontSize: 12 * b,
                                         fontWeight: FontWeight.w400,
@@ -433,7 +433,7 @@ class _RankingState extends State<Ranking> with TickerProviderStateMixin {
                                         ),
                                         Text(
                                           giftsList[i]['points'],
-                                          style: SafeGoogleFont(
+                                          style: safeGoogleFont(
                                             'Poppins',
                                             fontSize: 9 * b,
                                             fontWeight: FontWeight.w400,
@@ -469,7 +469,7 @@ class _RankingState extends State<Ranking> with TickerProviderStateMixin {
                                             0 * a, 0 * a, 11 * a, 0 * a),
                                         child: Text(
                                           '${i + 1}',
-                                          style: SafeGoogleFont(
+                                          style: safeGoogleFont(
                                             'Poppins',
                                             fontSize: 16 * b,
                                             fontWeight: FontWeight.w400,
@@ -489,7 +489,7 @@ class _RankingState extends State<Ranking> with TickerProviderStateMixin {
                                   ),
                                   title: Text(
                                     giftsList[i]['name'],
-                                    style: SafeGoogleFont(
+                                    style: safeGoogleFont(
                                       'Poppins',
                                       fontSize: 12 * b,
                                       fontWeight: FontWeight.w400,
@@ -512,7 +512,7 @@ class _RankingState extends State<Ranking> with TickerProviderStateMixin {
                                       ),
                                       Text(
                                         giftsList[i]['points'],
-                                        style: SafeGoogleFont(
+                                        style: safeGoogleFont(
                                           'Poppins',
                                           fontSize: 9 * b,
                                           fontWeight: FontWeight.w400,
@@ -545,7 +545,7 @@ class _RankingState extends State<Ranking> with TickerProviderStateMixin {
                         children: [
                           Text(
                             'Time Period: 18/05 00:00-24/05 23:59',
-                            style: SafeGoogleFont(
+                            style: safeGoogleFont(
                               'Poppins',
                               fontSize: 12 * b,
                               fontWeight: FontWeight.w400,
@@ -587,7 +587,7 @@ class _RankingState extends State<Ranking> with TickerProviderStateMixin {
                                     ),
                                     Text(
                                       giftsList[i]['name'],
-                                      style: SafeGoogleFont(
+                                      style: safeGoogleFont(
                                         'Poppins',
                                         fontSize: 12 * b,
                                         fontWeight: FontWeight.w400,
@@ -609,7 +609,7 @@ class _RankingState extends State<Ranking> with TickerProviderStateMixin {
                                         ),
                                         Text(
                                           giftsList[i]['points'],
-                                          style: SafeGoogleFont(
+                                          style: safeGoogleFont(
                                             'Poppins',
                                             fontSize: 9 * b,
                                             fontWeight: FontWeight.w400,
@@ -645,7 +645,7 @@ class _RankingState extends State<Ranking> with TickerProviderStateMixin {
                                             0 * a, 0 * a, 11 * a, 0 * a),
                                         child: Text(
                                           '${i + 1}',
-                                          style: SafeGoogleFont(
+                                          style: safeGoogleFont(
                                             'Poppins',
                                             fontSize: 16 * b,
                                             fontWeight: FontWeight.w400,
@@ -665,7 +665,7 @@ class _RankingState extends State<Ranking> with TickerProviderStateMixin {
                                   ),
                                   title: Text(
                                     giftsList[i]['name'],
-                                    style: SafeGoogleFont(
+                                    style: safeGoogleFont(
                                       'Poppins',
                                       fontSize: 12 * b,
                                       fontWeight: FontWeight.w400,
@@ -688,7 +688,7 @@ class _RankingState extends State<Ranking> with TickerProviderStateMixin {
                                       ),
                                       Text(
                                         giftsList[i]['points'],
-                                        style: SafeGoogleFont(
+                                        style: safeGoogleFont(
                                           'Poppins',
                                           fontSize: 9 * b,
                                           fontWeight: FontWeight.w400,

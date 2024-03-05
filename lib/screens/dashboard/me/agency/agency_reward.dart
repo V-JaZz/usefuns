@@ -14,13 +14,12 @@ class _AgencyRewardState extends State<AgencyReward> {
   Widget build(BuildContext context) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
-    double b = a * 0.97;
     return Scaffold(
       body: Column(children: [
         SizedBox(
           height: 36 * a,
         ),
-        red_cont(7668),
+        redCont(7668),
         SizedBox(
           height: 30 * a,
         ),
@@ -35,7 +34,7 @@ class _AgencyRewardState extends State<AgencyReward> {
         SizedBox(
           height: 36 * a,
         ),
-        red_cont(5643),
+        redCont(5643),
         SizedBox(
           height: 20 * a,
         ),
@@ -50,7 +49,7 @@ class _AgencyRewardState extends State<AgencyReward> {
         SizedBox(
           height: 36 * a,
         ),
-        red_cont(7878),
+        redCont(7878),
         SizedBox(
           height: 20 * a,
         ),
@@ -59,7 +58,7 @@ class _AgencyRewardState extends State<AgencyReward> {
     );
   }
 
-  Center red_cont(txt) {
+  Center redCont(txt) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
     double b = a * 0.97;
@@ -77,7 +76,7 @@ class _AgencyRewardState extends State<AgencyReward> {
             Center(
               child: Text(
                 'Sum of Gifting $txt',
-                style: SafeGoogleFont(
+                style: safeGoogleFont(
                   'Poppins',
                   fontSize: 12 * b,
                   fontWeight: FontWeight.w400,

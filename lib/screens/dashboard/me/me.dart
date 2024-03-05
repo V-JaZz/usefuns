@@ -9,7 +9,7 @@ import 'package:live_app/screens/dashboard/me/shop/shop.dart';
 import 'package:live_app/screens/dashboard/me/wallet/wallet.dart';
 import 'package:live_app/screens/dashboard/me/diamond_seller/diamond_seller.dart';
 import 'package:live_app/screens/dashboard/me/profile/user_profile.dart';
-import 'package:live_app/screens/dashboard/me/levelPriveleges.dart';
+import 'package:live_app/screens/dashboard/me/level_priveleges.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -184,7 +184,7 @@ class _MeState extends State<Me> {
                           Expanded(
                               child: Text('Me',
                                   textAlign: TextAlign.center,
-                                  style: SafeGoogleFont(
+                                  style: safeGoogleFont(
                                     'Poppins',
                                     fontSize: 20 * b,
                                     fontWeight: FontWeight.w400,
@@ -237,7 +237,7 @@ class _MeState extends State<Me> {
                                     Text(
                                       providerUserData.userData?.data?.name ?? 'null',
                                       textAlign: TextAlign.left,
-                                      style: SafeGoogleFont(
+                                      style: safeGoogleFont(
                                           color: Colors.black.withOpacity(0.7),
                                           'Poppins',
                                           fontSize: 16,
@@ -250,7 +250,7 @@ class _MeState extends State<Me> {
                                     Text(
                                       'View Or Edit Your Profile',
                                       textAlign: TextAlign.left,
-                                      style: SafeGoogleFont(
+                                      style: safeGoogleFont(
                                           color: const Color.fromRGBO(
                                               0, 0, 0, 0.6000000238418579),
                                           'Poppins',
@@ -274,7 +274,7 @@ class _MeState extends State<Me> {
                               Text(
                                 'ID: ${providerUserData.userData?.data?.userId}',
                                 textAlign: TextAlign.left,
-                                style: SafeGoogleFont(
+                                style: safeGoogleFont(
                                     color: const Color.fromRGBO(0, 0, 0, 1),
                                     'Poppins',
                                     fontSize: 10 * a,
@@ -459,7 +459,7 @@ class _MeState extends State<Me> {
                 ),
               Column(
                 children: [
-                  SizedBox(height: 15*a),
+                  SizedBox(height: 10*a),
                   for (Map m in list)
                     ListTile(
                       dense: true,
@@ -473,7 +473,7 @@ class _MeState extends State<Me> {
                       title: Text(
                         m['title'],
                         textAlign: TextAlign.left,
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 16 * b,
                           fontWeight: FontWeight.w400,

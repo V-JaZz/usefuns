@@ -111,7 +111,7 @@ class BottomMoreBottomSheet extends StatelessWidget {
               t,
               maxLines: 2,
               textAlign: TextAlign.center,
-              style: SafeGoogleFont('Poppins',
+              style: safeGoogleFont('Poppins',
                   fontSize: 12 * b,
                   fontWeight: FontWeight.w400,
                   height: 1 * b / a,

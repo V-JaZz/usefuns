@@ -11,7 +11,7 @@ class MyCustomScrollBehavior extends MaterialScrollBehavior {
       };
 }
 
-TextStyle SafeGoogleFont(
+TextStyle safeGoogleFont(
   String fontFamily, {
   TextStyle? textStyle,
   Color? color,

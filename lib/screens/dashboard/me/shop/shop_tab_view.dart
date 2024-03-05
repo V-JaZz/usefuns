@@ -130,7 +130,7 @@ class _ShopCommonViewState extends State<ShopCommonView> {
                 SizedBox(width: 3 * a),
                 if(item.priceAndvalidity!.isNotEmpty)Text(
                   '${item.priceAndvalidity?.first.price}/${item.priceAndvalidity?.first.validity} Days',
-                  style: SafeGoogleFont(
+                  style: safeGoogleFont(
                     'Poppins',
                     fontSize: 10 * b,
                     fontWeight: FontWeight.w400,
@@ -157,7 +157,7 @@ class _ShopCommonViewState extends State<ShopCommonView> {
               child: Center(
                 child: Text(
                   owned?'OWNED':'PREVIEW',
-                  style: SafeGoogleFont(
+                  style: safeGoogleFont(
                     'Poppins',
                     fontSize: 10 * b,
                     fontWeight: FontWeight.w400,
@@ -230,7 +230,7 @@ class _ItemBuyPreviewState extends State<ItemBuyPreview> {
               children: [
                 Text(
                   capitalizeText(widget.item.name!),
-                  style: SafeGoogleFont(
+                  style: safeGoogleFont(
                       'Poppins',
                       fontSize: 16 * b,
                       fontWeight: FontWeight.w600,
@@ -332,7 +332,7 @@ class _ItemBuyPreviewState extends State<ItemBuyPreview> {
                               )
                               : Text(
                             'Buy Now',
-                            style: SafeGoogleFont('Poppins',
+                            style: safeGoogleFont('Poppins',
                                 fontSize: 13 * a,
                                 fontWeight: FontWeight.w500,
                                 height: 1.5 * b / a,
@@ -351,7 +351,7 @@ class _ItemBuyPreviewState extends State<ItemBuyPreview> {
                     },
                     child: Text(
                       'Back',
-                      style: SafeGoogleFont('Poppins',
+                      style: safeGoogleFont('Poppins',
                           fontSize: 13 * a,
                           fontWeight: FontWeight.w500,
                           height: 1.5 * b / a,
@@ -399,7 +399,7 @@ class _ItemBuyPreviewState extends State<ItemBuyPreview> {
                     child: Text(
                       'Hii! welcome to my room.',
                       textAlign: TextAlign.center,
-                      style: SafeGoogleFont('Poppins',
+                      style: safeGoogleFont('Poppins',
                           fontSize: 9 * a,
                           fontWeight: FontWeight.w500,
                           letterSpacing: 0.48 * a,

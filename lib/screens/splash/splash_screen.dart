@@ -7,7 +7,6 @@ import 'package:live_app/screens/dashboard/bottom_navigation.dart';
 import 'package:live_app/utils/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:live_app/utils/utils_assets.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../data/model/response/app_version_config.dart';
 import '../auth/login_screen.dart';
@@ -64,9 +63,6 @@ class StartState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double baseWidth = 360;
-    double a = Get.width / baseWidth;
-    double b = a * 0.97;
 
     return Scaffold(
       body: SizedBox(
@@ -110,7 +106,7 @@ class StartState extends State<SplashScreen> {
                   children: [
                     Text(
                       'Update Available!',
-                      style: SafeGoogleFont('Poppins',
+                      style: safeGoogleFont('Poppins',
                           fontSize: 16 * b,
                           fontWeight: FontWeight.w600,
                           height: 1.5 * b / a,
@@ -148,7 +144,7 @@ class StartState extends State<SplashScreen> {
                             child: Center(
                               child: Text(
                                 'Update',
-                                style: SafeGoogleFont(
+                                style: safeGoogleFont(
                                     'Poppins',
                                     fontSize: 13 * a,
                                     fontWeight:
@@ -205,7 +201,7 @@ class StartState extends State<SplashScreen> {
                     Text(
                       e??'App Under Maintenance\nPlease try again later!',
                       textAlign: TextAlign.center,
-                      style: SafeGoogleFont('Poppins',
+                      style: safeGoogleFont('Poppins',
                           fontSize: 16 * b,
                           fontWeight: FontWeight.w600,
                           height: 1.5 * b / a,
@@ -244,7 +240,7 @@ class StartState extends State<SplashScreen> {
                             child: Center(
                               child: Text(
                                 'Retry',
-                                style: SafeGoogleFont(
+                                style: safeGoogleFont(
                                     'Poppins',
                                     fontSize: 13 * a,
                                     fontWeight:

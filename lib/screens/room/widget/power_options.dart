@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/provider/zego_room_provider.dart';
-import 'package:live_app/screens/dashboard/bottom_navigation.dart';
 import 'package:provider/provider.dart';
 
 void viewPowerDailog(){
@@ -10,7 +9,6 @@ void viewPowerDailog(){
       builder: (context) {
         double baseWidth = 360;
         double a = Get.width / baseWidth;
-        double b = a * 0.97;
         return AlertDialog(
           backgroundColor:
           Colors.transparent,

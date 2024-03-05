@@ -51,7 +51,7 @@ class TopMore extends StatelessWidget {
                                 children: [
                                   Text(
                                     'Room Lock',
-                                    style: SafeGoogleFont('Poppins',
+                                    style: safeGoogleFont('Poppins',
                                         fontSize: 16 * b,
                                         fontWeight: FontWeight.w600,
                                         height: 1.5 * b / a,
@@ -63,7 +63,7 @@ class TopMore extends StatelessWidget {
                                     hasRoomLock
                                         ? 'Room already Locked!'
                                         : 'You haven\'t purchased Room Lock yet\n       Get it now under Lock section',
-                                    style: SafeGoogleFont('Poppins',
+                                    style: safeGoogleFont('Poppins',
                                         fontSize: 10 * b,
                                         fontWeight: FontWeight.w500,
                                         height: 1.5 * b / a,
@@ -79,7 +79,7 @@ class TopMore extends StatelessWidget {
                                           textAlign: TextAlign.center,
                                           controller: textEditingController,
                                           maxLength: 4,
-                                          style: SafeGoogleFont(
+                                          style: safeGoogleFont(
                                             'Poppins',
                                             fontSize: 15,
                                             fontWeight: FontWeight.w300,
@@ -155,7 +155,7 @@ class TopMore extends StatelessWidget {
                                                     ?'UNLOCK'
                                                     :'LOCK')
                                                   :'SHOP',
-                                              style: SafeGoogleFont(
+                                              style: safeGoogleFont(
                                                   'Poppins',
                                                   fontSize: 13 * a,
                                                   fontWeight:
@@ -177,7 +177,7 @@ class TopMore extends StatelessWidget {
                                       onTap: (){Get.back();},
                                       child: Text(
                                         'CANCEL',
-                                        style: SafeGoogleFont('Poppins',
+                                        style: safeGoogleFont('Poppins',
                                             fontSize: 13 * a,
                                             fontWeight: FontWeight.w500,
                                             height: 1.5 * b / a,
@@ -198,7 +198,7 @@ class TopMore extends StatelessWidget {
                     SizedBox(width: 12 * a),
                     Text(
                       'Lock',
-                      style: SafeGoogleFont('Poppins',
+                      style: safeGoogleFont('Poppins',
                           fontSize: 12 * b,
                           fontWeight: FontWeight.w500,
                           height: 1.5 * b / a,
@@ -226,7 +226,7 @@ class TopMore extends StatelessWidget {
                     SizedBox(width: 12 * a),
                     Text(
                       'Theme',
-                      style: SafeGoogleFont('Poppins',
+                      style: safeGoogleFont('Poppins',
                           fontSize: 12 * b,
                           fontWeight: FontWeight.w500,
                           height: 1.5 * b / a,
@@ -252,7 +252,7 @@ class TopMore extends StatelessWidget {
                     SizedBox(width: 12 * a),
                     Text(
                       'Report',
-                      style: SafeGoogleFont('Poppins',
+                      style: safeGoogleFont('Poppins',
                           fontSize: 12 * b,
                           fontWeight: FontWeight.w500,
                           height: 1.5 * b / a,
@@ -280,7 +280,7 @@ class TopMore extends StatelessWidget {
                     SizedBox(width: 12 * a),
                     Text(
                       'Share',
-                      style: SafeGoogleFont('Poppins',
+                      style: safeGoogleFont('Poppins',
                           fontSize: 12 * b,
                           fontWeight: FontWeight.w500,
                           height: 1.5 * b / a,
@@ -308,7 +308,7 @@ class TopMore extends StatelessWidget {
                     SizedBox(width: 12 * a),
                     Text(
                       'Admin',
-                      style: SafeGoogleFont('Poppins',
+                      style: safeGoogleFont('Poppins',
                           fontSize: 12 * b,
                           fontWeight: FontWeight.w500,
                           height: 1.5 * b / a,
@@ -339,7 +339,7 @@ class TopMore extends StatelessWidget {
                                 children: [
                                   Text(
                                     'Extra Seat',
-                                    style: SafeGoogleFont('Poppins',
+                                    style: safeGoogleFont('Poppins',
                                         fontSize: 16 * b,
                                         fontWeight: FontWeight.w600,
                                         height: 1.5 * b / a,
@@ -351,7 +351,7 @@ class TopMore extends StatelessWidget {
                                     hasExtraSeat
                                         ? 'Extra seats already added!'
                                         : 'You haven\'t purchased Extra Seat yet\n       Get it now under Extra Seat section',
-                                    style: SafeGoogleFont('Poppins',
+                                    style: safeGoogleFont('Poppins',
                                         fontSize: 10 * b,
                                         fontWeight: FontWeight.w500,
                                         height: 1.5 * b / a,
@@ -400,7 +400,7 @@ class TopMore extends StatelessWidget {
                                                   ?'REMOVE'
                                                   :'ADD')
                                                   :'SHOP',
-                                              style: SafeGoogleFont(
+                                              style: safeGoogleFont(
                                                   'Poppins',
                                                   fontSize: 13 * a,
                                                   fontWeight:
@@ -422,7 +422,7 @@ class TopMore extends StatelessWidget {
                                       onTap: (){Get.back();},
                                       child: Text(
                                         'CANCEL',
-                                        style: SafeGoogleFont('Poppins',
+                                        style: safeGoogleFont('Poppins',
                                             fontSize: 13 * a,
                                             fontWeight: FontWeight.w500,
                                             height: 1.5 * b / a,
@@ -444,7 +444,7 @@ class TopMore extends StatelessWidget {
                     SizedBox(width: 12 * a),
                     Text(
                       'Extra Seat',
-                      style: SafeGoogleFont('Poppins',
+                      style: safeGoogleFont('Poppins',
                           fontSize: 12 * b,
                           fontWeight: FontWeight.w500,
                           height: 1.5 * b / a,
@@ -463,7 +463,7 @@ class TopMore extends StatelessWidget {
               onTap: (){Get.back();},
               child: Text(
                 'Cancel',
-                style: SafeGoogleFont('Poppins',
+                style: safeGoogleFont('Poppins',
                     fontSize: 12 * b,
                     fontWeight: FontWeight.w500,
                     height: 1.5 * b / a,

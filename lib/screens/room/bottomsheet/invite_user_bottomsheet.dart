@@ -5,12 +5,9 @@ import 'package:live_app/provider/zego_room_provider.dart';
 import 'package:live_app/utils/common_widgets.dart';
 
 import 'package:live_app/utils/utils_assets.dart';
-import 'package:live_app/utils/zego_config.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:zego_express_engine/zego_express_engine.dart';
 
-import '../../../provider/user_data_provider.dart';
 
 class InviteUserBottomSheet extends StatefulWidget {
   final int seat;
@@ -41,7 +38,7 @@ class _InviteUserBottomSheetState extends State<InviteUserBottomSheet> {
           children: [
             Text(
               'Invite User',
-              style: SafeGoogleFont(
+              style: safeGoogleFont(
                 'Poppins',
                 fontSize: 18 * b,
                 fontWeight: FontWeight.w400,
@@ -194,7 +191,7 @@ class _InviteUserBottomSheetState extends State<InviteUserBottomSheet> {
                                               height: 50 * a,
                                               decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
-                                                image: user!.images!.isEmpty
+                                                image: user.images!.isEmpty
                                                     ? const DecorationImage(
                                                   fit: BoxFit.cover,
                                                   image: AssetImage('assets/profile.png'),
@@ -212,7 +209,7 @@ class _InviteUserBottomSheetState extends State<InviteUserBottomSheet> {
                                                 child: Text(
                                                   user.name!,
                                                   overflow: TextOverflow.ellipsis,
-                                                  style: SafeGoogleFont(
+                                                  style: safeGoogleFont(
                                                     'Poppins',
                                                     fontSize: 15 * b,
                                                     fontWeight: FontWeight.w400,
@@ -241,7 +238,7 @@ class _InviteUserBottomSheetState extends State<InviteUserBottomSheet> {
                                         alignment: Alignment.center,
                                         child: Text(
                                           reorderedUsers[index].id!.trim() == widget.ownerId.trim() ? 'Owner' : 'Admin',
-                                          style: SafeGoogleFont(
+                                          style: safeGoogleFont(
                                             'Poppins',
                                             fontSize: 11 * b,
                                             fontWeight: FontWeight.w400,

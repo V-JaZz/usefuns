@@ -49,7 +49,7 @@ class _ContributionState extends State<Contribution> {
               indicatorWeight: 0.7,
               labelColor: const Color(0xffFF9933),
               unselectedLabelColor: const Color(0x99000000),
-              labelStyle: SafeGoogleFont(
+              labelStyle: safeGoogleFont(
                 'Poppins',
                 fontSize: 14 * b,
                 fontWeight: FontWeight.w400,
@@ -57,7 +57,7 @@ class _ContributionState extends State<Contribution> {
                 letterSpacing: 0.96 * a,
                 color: const Color(0xff000000),
               ),
-              unselectedLabelStyle: SafeGoogleFont(
+              unselectedLabelStyle: safeGoogleFont(
                 'Poppins',
                 fontSize: 12 * b,
                 fontWeight: FontWeight.w400,
@@ -118,7 +118,7 @@ class _ContributionState extends State<Contribution> {
                             SizedBox(height: 20 * a),
                             if(list.isEmpty)
                               Center(child: Text('No Data!',
-                                  style: SafeGoogleFont(
+                                  style: safeGoogleFont(
                                     'Poppins',
                                     fontSize: 12 * b,
                                     fontWeight: FontWeight.w400,
@@ -209,7 +209,7 @@ class _ContributionState extends State<Contribution> {
                                                     ),
                                                     Text(
                                                       snapshot.data!.name!,
-                                                      style: SafeGoogleFont(
+                                                      style: safeGoogleFont(
                                                         'Poppins',
                                                         fontSize: 12 * b,
                                                         fontWeight: FontWeight.w400,
@@ -231,7 +231,7 @@ class _ContributionState extends State<Contribution> {
                                                         ),
                                                         Text(
                                                           formatNumber(diamondsSum),
-                                                          style: SafeGoogleFont(
+                                                          style: safeGoogleFont(
                                                             'Poppins',
                                                             fontSize: 9 * b,
                                                             fontWeight: FontWeight.w400,
@@ -315,7 +315,7 @@ class _ContributionState extends State<Contribution> {
                                                       0 * a, 0 * a, 11 * a, 0 * a),
                                                   child: Text(
                                                     '${i + 1}',
-                                                    style: SafeGoogleFont(
+                                                    style: safeGoogleFont(
                                                       'Poppins',
                                                       fontSize: 16 * b,
                                                       fontWeight: FontWeight.w400,
@@ -338,7 +338,7 @@ class _ContributionState extends State<Contribution> {
                                             ),
                                             title: Text(
                                               snapshot.data!.name!,
-                                              style: SafeGoogleFont(
+                                              style: safeGoogleFont(
                                                 'Poppins',
                                                 fontSize: 12 * b,
                                                 fontWeight: FontWeight.w400,
@@ -361,7 +361,7 @@ class _ContributionState extends State<Contribution> {
                                                 ),
                                                 Text(
                                                   formatNumber(diamondsSum),
-                                                  style: SafeGoogleFont(
+                                                  style: safeGoogleFont(
                                                     'Poppins',
                                                     fontSize: 9 * b,
                                                     fontWeight: FontWeight.w400,
@@ -426,7 +426,7 @@ class _ContributionState extends State<Contribution> {
                               SizedBox(height: 20 * a),
                               if(list.isEmpty)
                                 Center(child: Text('No Data!',
-                                    style: SafeGoogleFont(
+                                    style: safeGoogleFont(
                                       'Poppins',
                                       fontSize: 12 * b,
                                       fontWeight: FontWeight.w400,
@@ -517,7 +517,7 @@ class _ContributionState extends State<Contribution> {
                                                   ),
                                                   Text(
                                                     snapshot.data!.name!,
-                                                    style: SafeGoogleFont(
+                                                    style: safeGoogleFont(
                                                       'Poppins',
                                                       fontSize: 12 * b,
                                                       fontWeight: FontWeight.w400,
@@ -539,7 +539,7 @@ class _ContributionState extends State<Contribution> {
                                                       ),
                                                       Text(
                                                         formatNumber(diamondsSum),
-                                                        style: SafeGoogleFont(
+                                                        style: safeGoogleFont(
                                                           'Poppins',
                                                           fontSize: 9 * b,
                                                           fontWeight: FontWeight.w400,
@@ -623,7 +623,7 @@ class _ContributionState extends State<Contribution> {
                                                         0 * a, 0 * a, 11 * a, 0 * a),
                                                     child: Text(
                                                       '${i + 1}',
-                                                      style: SafeGoogleFont(
+                                                      style: safeGoogleFont(
                                                         'Poppins',
                                                         fontSize: 16 * b,
                                                         fontWeight: FontWeight.w400,
@@ -646,7 +646,7 @@ class _ContributionState extends State<Contribution> {
                                               ),
                                               title: Text(
                                                 snapshot.data!.name!,
-                                                style: SafeGoogleFont(
+                                                style: safeGoogleFont(
                                                   'Poppins',
                                                   fontSize: 12 * b,
                                                   fontWeight: FontWeight.w400,
@@ -669,7 +669,7 @@ class _ContributionState extends State<Contribution> {
                                                   ),
                                                   Text(
                                                     formatNumber(diamondsSum),
-                                                    style: SafeGoogleFont(
+                                                    style: safeGoogleFont(
                                                       'Poppins',
                                                       fontSize: 9 * b,
                                                       fontWeight: FontWeight.w400,

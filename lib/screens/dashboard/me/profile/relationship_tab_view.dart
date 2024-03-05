@@ -13,7 +13,6 @@ class _RelationshipTabViewState extends State<RelationshipTabView> {
   Widget build(BuildContext context) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
-    double b = a * 0.97;
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -27,9 +26,9 @@ class _RelationshipTabViewState extends State<RelationshipTabView> {
                       fontSize: 12 * a,
                       decoration: TextDecoration.none,
                       fontWeight: FontWeight.normal,
-                      color: Color(0xff000000)),
+                      color: const Color(0xff000000)),
                 ),
-                Icon(Icons.help_outline_rounded)
+                const Icon(Icons.help_outline_rounded)
               ],
             ),
             SizedBox(
@@ -38,12 +37,12 @@ class _RelationshipTabViewState extends State<RelationshipTabView> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircleAvatar(
+                const CircleAvatar(
                     backgroundImage: AssetImage('assets/dummy/b3.png')),
-                CircleAvatar(backgroundImage: AssetImage('assets/hearts.png',),backgroundColor: Colors.white,),
+                const CircleAvatar(backgroundImage: AssetImage('assets/hearts.png',),backgroundColor: Colors.white,),
                 CircleAvatar(
-                  backgroundImage: AssetImage('assets/heart.png'),
-                  backgroundColor: Color(0xffD9D9D9).withOpacity(0.4),
+                  backgroundImage: const AssetImage('assets/heart.png'),
+                  backgroundColor: const Color(0xffD9D9D9).withOpacity(0.4),
                 ),
               ],
             ),

@@ -3,10 +3,9 @@ import 'package:get/get.dart';
 import 'package:live_app/provider/gifts_provider.dart';
 import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/provider/zego_room_provider.dart';
-import 'package:live_app/screens/dashboard/me/levelPriveleges.dart';
+import 'package:live_app/screens/dashboard/me/level_priveleges.dart';
 import 'package:live_app/utils/common_widgets.dart';
 import 'package:live_app/utils/utils_assets.dart';
-import 'package:live_app/utils/zego_config.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../data/model/body/zego_stream_model.dart';
@@ -144,14 +143,14 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                                   labelColor: Colors.white,
                                   dividerColor: Colors.transparent,
                                   unselectedLabelColor: const Color(0xCCFFFFFF),
-                                  labelStyle: SafeGoogleFont(
+                                  labelStyle: safeGoogleFont(
                                     'Poppins',
                                     fontSize: 12 * b,
                                     fontWeight: FontWeight.w400,
                                     height: 1.5 * b / a,
                                     letterSpacing: 0.96 * a,
                                   ),
-                                  unselectedLabelStyle: SafeGoogleFont(
+                                  unselectedLabelStyle: safeGoogleFont(
                                     'Poppins',
                                     fontSize: 12 * b,
                                     fontWeight: FontWeight.w300,
@@ -179,7 +178,7 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                                 .data!
                                 .diamonds
                                 .toString(),
-                            style: SafeGoogleFont(
+                            style: safeGoogleFont(
                               'Roboto',
                               fontSize: 12 * b,
                               fontWeight: FontWeight.w400,
@@ -238,7 +237,7 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                                 children: [
                                   Text(
                                     'To :  ',
-                                      style: SafeGoogleFont(
+                                      style: safeGoogleFont(
                                         'DM Sans',
                                         fontSize: 12 * b,
                                         fontWeight: FontWeight.w400,
@@ -252,7 +251,7 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                                       _selectedStream.length==1
                                           ? '${_selectedStream.first.name} '
                                           : '${_selectedStream.length} selected ',
-                                      style: SafeGoogleFont(
+                                      style: safeGoogleFont(
                                         'DM Sans',
                                         fontSize: 12 * b,
                                         fontWeight: FontWeight.w400,
@@ -326,7 +325,7 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                                         padding: EdgeInsets.zero,
                                         alignment: AlignmentDirectional.centerEnd,
                                         // isExpanded: true,
-                                        style: SafeGoogleFont(
+                                        style: safeGoogleFont(
                                           'DM Sans',
                                           fontSize: 12 * b,
                                           fontWeight: FontWeight.w700,
@@ -381,7 +380,7 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                                         child: Text(
                                           'SEND',
                                           textAlign: TextAlign.center,
-                                          style: SafeGoogleFont(
+                                          style: safeGoogleFont(
                                             'DM Sans',
                                             fontSize: 12 * b,
                                             fontWeight: FontWeight.w700,
@@ -469,7 +468,7 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
               maxLines: 1,
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
-              style: SafeGoogleFont(
+              style: safeGoogleFont(
                 'Roboto',
                 fontSize: 11 * b,
                 fontWeight: FontWeight.w400,
@@ -487,7 +486,7 @@ class _SendGiftsBottomSheetState extends State<SendGiftsBottomSheet> {
                 Text(
                   '${gift.coin ?? 0}',
                   textAlign: TextAlign.center,
-                  style: SafeGoogleFont(
+                  style: safeGoogleFont(
                     'Roboto',
                     fontSize: 11 * b,
                     fontWeight: FontWeight.w400,

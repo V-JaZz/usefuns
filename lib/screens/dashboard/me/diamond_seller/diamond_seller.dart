@@ -52,7 +52,7 @@ class _DiamondSellerState extends State<DiamondSeller> {
                     indicatorWeight: 1.3,
                     labelColor: const Color(0xff000000),
                     unselectedLabelColor: const Color(0x99000000),
-                    labelStyle: SafeGoogleFont(
+                    labelStyle: safeGoogleFont(
                       'Poppins',
                       fontSize: 15 * b,
                       fontWeight: FontWeight.w400,
@@ -60,7 +60,7 @@ class _DiamondSellerState extends State<DiamondSeller> {
                       letterSpacing: 0.96 * a,
                       color: const Color(0xff000000),
                     ),
-                    unselectedLabelStyle: SafeGoogleFont(
+                    unselectedLabelStyle: safeGoogleFont(
                       'Poppins',
                       fontSize: 14 * b,
                       fontWeight: FontWeight.w400,
@@ -132,7 +132,7 @@ class _DiamondSellerState extends State<DiamondSeller> {
               Text(
                 'Name: $name',
                 textAlign: TextAlign.left,
-                style: SafeGoogleFont(
+                style: safeGoogleFont(
                     color: Colors.black.withOpacity(0.6),
                     'Poppins',
                     fontSize: 15,
@@ -143,7 +143,7 @@ class _DiamondSellerState extends State<DiamondSeller> {
               Text(
                 'Mobile: $number',
                 textAlign: TextAlign.left,
-                style: SafeGoogleFont(
+                style: safeGoogleFont(
                     color: Colors.black.withOpacity(0.6),
                     'Poppins',
                     fontSize: 14,

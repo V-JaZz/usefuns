@@ -64,7 +64,7 @@ class _ShopState extends State<Shop> {
                     .data!
                     .diamonds
                     .toString(),
-                style: SafeGoogleFont(
+                style: safeGoogleFont(
                   'Roboto',
                   fontSize: 16 * b,
                   fontWeight: FontWeight.w400,

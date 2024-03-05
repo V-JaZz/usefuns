@@ -24,7 +24,7 @@ class _ClubPageState extends State<ClubPage> {
         leading: IconButton(onPressed: (){Get.back();}, icon: const Icon(Icons.arrow_back_ios,color: Colors.white,),),
         title: Text(
           'Usefuns',
-          style: SafeGoogleFont(
+          style: safeGoogleFont(
             'Poppins',
             fontSize: 20 * b,
             fontWeight: FontWeight.w400,

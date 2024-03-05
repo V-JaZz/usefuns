@@ -58,7 +58,6 @@ class _RankingState extends State<RankingPage> {
   Widget build(BuildContext context) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
-    double b = a * 0.97;
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 67,

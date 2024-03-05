@@ -39,7 +39,7 @@ class _FeedBackState extends State<FeedBack> {
               alignment: Alignment.bottomLeft,
               child: Text(
                 'Problem Description',
-                style: SafeGoogleFont(
+                style: safeGoogleFont(
                   'Poppins',
                   fontSize: 16 * b,
                   fontWeight: FontWeight.w400,
@@ -58,7 +58,7 @@ class _FeedBackState extends State<FeedBack> {
               alignment: Alignment.bottomLeft,
               child: Text(
                 'Attachment',
-                style: SafeGoogleFont(
+                style: safeGoogleFont(
                   'Poppins',
                   fontSize: 16 * b,
                   fontWeight: FontWeight.w400,
@@ -86,7 +86,7 @@ class _FeedBackState extends State<FeedBack> {
               alignment: Alignment.bottomLeft,
               child: Text(
                 'How to contact you',
-                style: SafeGoogleFont(
+                style: safeGoogleFont(
                   'Poppins',
                   fontSize: 16 * b,
                   fontWeight: FontWeight.w400,
@@ -105,7 +105,7 @@ class _FeedBackState extends State<FeedBack> {
                     const Icon(Icons.circle_outlined),
                     Text(
                       'Whatsapp',
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                         'Poppins',
                         fontSize: 14 * b,
                         fontWeight: FontWeight.w400,
@@ -119,7 +119,7 @@ class _FeedBackState extends State<FeedBack> {
                     const Icon(Icons.circle_outlined),
                     Text(
                       'Email',
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                         'Poppins',
                         fontSize: 14 * b,
                         fontWeight: FontWeight.w400,
@@ -133,7 +133,7 @@ class _FeedBackState extends State<FeedBack> {
                     const Icon(Icons.circle_outlined),
                     Text(
                       'Phone Number',
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                         'Poppins',
                         fontSize: 14 * b,
                         fontWeight: FontWeight.w400,
@@ -175,7 +175,7 @@ class _FeedBackState extends State<FeedBack> {
         child: Center(
           child: Text(
             txt,
-            style: SafeGoogleFont(
+            style: safeGoogleFont(
               'Roboto',
               fontSize: 12 * b,
               fontWeight: FontWeight.w400,

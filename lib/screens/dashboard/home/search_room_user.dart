@@ -101,7 +101,7 @@ class _SearchRoomUserState extends State<SearchRoomUser> {
             child: TextFormField(
               focusNode: focusNode,
               controller: textEditingController,
-              style: SafeGoogleFont(
+              style: safeGoogleFont(
                 'Poppins',
                 fontSize: 15 * b,
                 fontWeight: FontWeight.w300,
@@ -154,7 +154,7 @@ class _SearchRoomUserState extends State<SearchRoomUser> {
                 labelColor: const Color(0xff000000),
                 dividerColor: Colors.transparent,
                 unselectedLabelColor: const Color(0x99000000),
-                labelStyle: SafeGoogleFont(
+                labelStyle: safeGoogleFont(
                   'Poppins',
                   fontSize: 16 * b,
                   fontWeight: FontWeight.w400,
@@ -162,7 +162,7 @@ class _SearchRoomUserState extends State<SearchRoomUser> {
                   letterSpacing: 0.96 * a,
                   color: const Color(0xff000000),
                 ),
-                unselectedLabelStyle: SafeGoogleFont(
+                unselectedLabelStyle: safeGoogleFont(
                   'Poppins',
                   fontSize: 16 * b,
                   fontWeight: FontWeight.w400,
@@ -226,7 +226,7 @@ class _SearchRoomUserState extends State<SearchRoomUser> {
                         ),
                         Text(
                           'No Data',
-                          style: SafeGoogleFont(
+                          style: safeGoogleFont(
                             'Poppins',
                             fontSize: 16 * b,
                             fontWeight: FontWeight.w400,
@@ -285,7 +285,7 @@ class _SearchRoomUserState extends State<SearchRoomUser> {
                         ),
                         Text(
                           'No Data',
-                          style: SafeGoogleFont(
+                          style: safeGoogleFont(
                             'Poppins',
                             fontSize: 16 * b,
                             fontWeight: FontWeight.w400,
@@ -328,7 +328,7 @@ class _SearchRoomUserState extends State<SearchRoomUser> {
                                                 follow = false;
                                               });
                                             }else{
-                                              showCustomSnackBar('error unfollowing user!', context, isToaster: true);
+                                              showCustomSnackBar('error unfollowing user!', Get.context!, isToaster: true);
                                             }
                                           }else{
                                             final res = await up.followUser(userId: id);
@@ -337,7 +337,7 @@ class _SearchRoomUserState extends State<SearchRoomUser> {
                                                 follow = true;
                                               });
                                             }else{
-                                              showCustomSnackBar('error following user!', context, isToaster: true);
+                                              showCustomSnackBar('error following user!', Get.context!, isToaster: true);
                                             }
                                           }
                                         },
@@ -363,7 +363,7 @@ class _SearchRoomUserState extends State<SearchRoomUser> {
                                                   : Text(
                                                 follow? 'Unfollow': 'Follow',
                                                 textAlign: TextAlign.left,
-                                                style: SafeGoogleFont(
+                                                style: safeGoogleFont(
                                                     color: follow?Colors.black:Colors.white,
                                                     'Poppins',
                                                     fontSize: 12 * a,

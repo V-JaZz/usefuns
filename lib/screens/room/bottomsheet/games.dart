@@ -111,7 +111,7 @@ class GamesBottomSheet extends StatelessWidget {
             children: [
               Text(
                 'PLAY WITH ANYONE',
-                style: SafeGoogleFont(
+                style: safeGoogleFont(
                   'Poppins',
                   fontSize: 16 * b,
                   fontWeight: FontWeight.w400,
@@ -154,7 +154,7 @@ class GamesBottomSheet extends StatelessWidget {
                           Text(
                             gamesList[index]["name"],
                             textAlign: TextAlign.center,
-                            style: SafeGoogleFont(
+                            style: safeGoogleFont(
                               'Poppins',
                               fontSize: 14 * b,
                               fontWeight: FontWeight.w400,
@@ -230,7 +230,7 @@ class GamesBottomSheet extends StatelessWidget {
                     },
                     child: Text(
                       'Reset',
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                         'Poppins',
                         fontSize: 16 * b,
                         fontWeight: FontWeight.w400,
@@ -250,7 +250,7 @@ class GamesBottomSheet extends StatelessWidget {
                     },
                     child: Text(
                       value.zegoRoom!.viewCalculator?'Hide Calculator':'View Calculator',
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                         'Poppins',
                         fontSize: 14 * b,
                         fontWeight: FontWeight.w400,

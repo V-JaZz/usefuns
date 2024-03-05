@@ -55,7 +55,7 @@ class SeatOptions extends StatelessWidget {
                     ),
                     Text(
                       isLocked ? 'UnLock' : 'Lock',
-                      style: SafeGoogleFont('Poppins',
+                      style: safeGoogleFont('Poppins',
                           fontSize: 12 * b,
                           fontWeight: FontWeight.w400,
                           height: 1.5 * b / a,
@@ -81,7 +81,7 @@ class SeatOptions extends StatelessWidget {
                     ),
                     Text(
                       isAllUnLocked ? 'Lock All' : 'UnLock All',
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                           'Poppins',
                           fontSize: 12 * b,
                           fontWeight: FontWeight.w400,
@@ -105,7 +105,7 @@ class SeatOptions extends StatelessWidget {
                       ),
                       Text(
                         'On mic',
-                        style: SafeGoogleFont('Poppins',
+                        style: safeGoogleFont('Poppins',
                             fontSize: 12 * b,
                             fontWeight: FontWeight.w400,
                             height: 1.5 * b / a,
@@ -128,7 +128,7 @@ class SeatOptions extends StatelessWidget {
                     ),
                     Text(
                       'Invite',
-                      style: SafeGoogleFont('Poppins',
+                      style: safeGoogleFont('Poppins',
                           fontSize: 12 * b,
                           fontWeight: FontWeight.w400,
                           height: 1.5 * b / a,
@@ -169,7 +169,7 @@ class MyProfileSeatBottomSheet extends StatelessWidget {
                 SizedBox(height: 54 * a),
                 Text(
                   value.userData?.data?.name??'',
-                  style: SafeGoogleFont(
+                  style: safeGoogleFont(
                     'Poppins',
                     fontSize: 17 * b,
                     fontWeight: FontWeight.w400,
@@ -196,7 +196,7 @@ class MyProfileSeatBottomSheet extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: 6 *a , vertical: 2*a),
                       child: Text(
                         'Admin',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 14 * b,
                           fontWeight: FontWeight.w400,
@@ -216,7 +216,7 @@ class MyProfileSeatBottomSheet extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: 6 *a , vertical: 2*a),
                       child: Text(
                         'Owner',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 14 * b,
                           fontWeight: FontWeight.w400,
@@ -236,7 +236,7 @@ class MyProfileSeatBottomSheet extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: 6 *a , vertical: 2*a),
                       child: Text(
                         'Member',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 14 * b,
                           fontWeight: FontWeight.w400,
@@ -289,7 +289,7 @@ class MyProfileSeatBottomSheet extends StatelessWidget {
                   children: [
                     Text(
                       ' Usefuns Id - ${value.userData?.data?.userId??''}  ',
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                         'Poppins',
                         fontSize: 10 * b,
                         fontWeight: FontWeight.w400,
@@ -300,7 +300,7 @@ class MyProfileSeatBottomSheet extends StatelessWidget {
                     Image.asset('assets/people.png'),
                     Text(
                       ' ${value.userData?.data?.followers?.length??''} - Followers',
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                         'Poppins',
                         fontSize: 10 * b,
                         fontWeight: FontWeight.w400,
@@ -318,7 +318,7 @@ class MyProfileSeatBottomSheet extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                       'Poppins',
                       fontSize: 12 * b,
                       fontWeight: FontWeight.w400,
@@ -349,7 +349,7 @@ class MyProfileSeatBottomSheet extends StatelessWidget {
                                 Text(
                                   'Profile',
                                   textAlign: TextAlign.left,
-                                  style: SafeGoogleFont(
+                                  style: safeGoogleFont(
                                       color: const Color.fromRGBO(0, 0, 0, 1),
                                       'Poppins',
                                       fontSize: 12 * a,
@@ -375,7 +375,7 @@ class MyProfileSeatBottomSheet extends StatelessWidget {
                                 Text(
                                   'Leave the seat',
                                   textAlign: TextAlign.left,
-                                  style: SafeGoogleFont(
+                                  style: safeGoogleFont(
                                       color: const Color.fromRGBO(0, 0, 0, 1),
                                       'Poppins',
                                       fontSize: 12 * a,
@@ -459,7 +459,7 @@ class _OthersProfileSeatBottomSheetState extends State<OthersProfileSeatBottomSh
                     SizedBox(height: 45 * a),
                     Text(
                       user?.name??'',
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                         'Poppins',
                         fontSize: 20 * b,
                         fontWeight: FontWeight.w400,
@@ -486,7 +486,7 @@ class _OthersProfileSeatBottomSheetState extends State<OthersProfileSeatBottomSh
                             padding: EdgeInsets.symmetric(horizontal: 6 *a , vertical: 2*a),
                             child: Text(
                               'Admin',
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 14 * b,
                                 fontWeight: FontWeight.w400,
@@ -506,7 +506,7 @@ class _OthersProfileSeatBottomSheetState extends State<OthersProfileSeatBottomSh
                             padding: EdgeInsets.symmetric(horizontal: 6 *a , vertical: 2*a),
                             child: Text(
                               'Owner',
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 14 * b,
                                 fontWeight: FontWeight.w400,
@@ -526,7 +526,7 @@ class _OthersProfileSeatBottomSheetState extends State<OthersProfileSeatBottomSh
                             padding: EdgeInsets.symmetric(horizontal: 6 *a , vertical: 2*a),
                             child: Text(
                               'Member',
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 14 * b,
                                 fontWeight: FontWeight.w400,
@@ -578,7 +578,7 @@ class _OthersProfileSeatBottomSheetState extends State<OthersProfileSeatBottomSh
                       children: [
                         Text(
                           ' Usefuns Id - ${user.userId}  ',
-                          style: SafeGoogleFont(
+                          style: safeGoogleFont(
                             'Poppins',
                             fontSize: 14 * b,
                             fontWeight: FontWeight.w400,
@@ -589,7 +589,7 @@ class _OthersProfileSeatBottomSheetState extends State<OthersProfileSeatBottomSh
                         Image.asset('assets/people.png'),
                         Text(
                           '  ${user.followers?.length}- Followers',
-                          style: SafeGoogleFont(
+                          style: safeGoogleFont(
                             'Poppins',
                             fontSize: 14 * b,
                             fontWeight: FontWeight.w400,
@@ -744,7 +744,7 @@ class _OthersProfileSeatBottomSheetState extends State<OthersProfileSeatBottomSh
                                             : Text(
                                           follow?'Unfollow':'Follow',
                                           textAlign: TextAlign.left,
-                                          style: SafeGoogleFont(
+                                          style: safeGoogleFont(
                                               color: const Color.fromRGBO(0, 0, 0, 1),
                                               'Poppins',
                                               fontSize: 12 * a,
@@ -775,7 +775,7 @@ class _OthersProfileSeatBottomSheetState extends State<OthersProfileSeatBottomSh
                                 child: Text(
                                   'Send Gifts',
                                   textAlign: TextAlign.left,
-                                  style: SafeGoogleFont(
+                                  style: safeGoogleFont(
                                       color:
                                       const Color.fromRGBO(250, 248, 248, 1),
                                       'Poppins',
@@ -833,7 +833,7 @@ class _OthersProfileSeatBottomSheetState extends State<OthersProfileSeatBottomSh
             Text(
               text,
               textAlign: TextAlign.center,
-              style: SafeGoogleFont('Poppins',
+              style: safeGoogleFont('Poppins',
                   fontSize: 14 * b,
                   fontWeight: FontWeight.w400,
                   height: 1.5 * b / a,
@@ -893,7 +893,7 @@ class _AudienceBottomSheetState extends State<AudienceBottomSheet> {
                     SizedBox(height: 45 * a),
                     Text(
                       user.name??'',
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                         'Poppins',
                         fontSize: 20 * b,
                         fontWeight: FontWeight.w400,
@@ -920,7 +920,7 @@ class _AudienceBottomSheetState extends State<AudienceBottomSheet> {
                             padding: EdgeInsets.symmetric(horizontal: 6 *a , vertical: 2*a),
                             child: Text(
                               'Admin',
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 14 * b,
                                 fontWeight: FontWeight.w400,
@@ -940,7 +940,7 @@ class _AudienceBottomSheetState extends State<AudienceBottomSheet> {
                             padding: EdgeInsets.symmetric(horizontal: 6 *a , vertical: 2*a),
                             child: Text(
                               'Owner',
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 14 * b,
                                 fontWeight: FontWeight.w400,
@@ -960,7 +960,7 @@ class _AudienceBottomSheetState extends State<AudienceBottomSheet> {
                             padding: EdgeInsets.symmetric(horizontal: 6 *a , vertical: 2*a),
                             child: Text(
                               'Member',
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 14 * b,
                                 fontWeight: FontWeight.w400,
@@ -1012,7 +1012,7 @@ class _AudienceBottomSheetState extends State<AudienceBottomSheet> {
                       children: [
                         Text(
                           ' Usefuns Id - ${user.userId}  ',
-                          style: SafeGoogleFont(
+                          style: safeGoogleFont(
                             'Poppins',
                             fontSize: 14 * b,
                             fontWeight: FontWeight.w400,
@@ -1023,7 +1023,7 @@ class _AudienceBottomSheetState extends State<AudienceBottomSheet> {
                         Image.asset('assets/people.png'),
                         Text(
                           '  ${user.followers?.length}- Followers',
-                          style: SafeGoogleFont(
+                          style: safeGoogleFont(
                             'Poppins',
                             fontSize: 14 * b,
                             fontWeight: FontWeight.w400,
@@ -1154,7 +1154,7 @@ class _AudienceBottomSheetState extends State<AudienceBottomSheet> {
                                             : Text(
                                           follow?'Unfollow':'Follow',
                                           textAlign: TextAlign.left,
-                                          style: SafeGoogleFont(
+                                          style: safeGoogleFont(
                                               color: const Color.fromRGBO(0, 0, 0, 1),
                                               'Poppins',
                                               fontSize: 12 * a,
@@ -1185,7 +1185,7 @@ class _AudienceBottomSheetState extends State<AudienceBottomSheet> {
                                 child: Text(
                                   'Send Gifts',
                                   textAlign: TextAlign.left,
-                                  style: SafeGoogleFont(
+                                  style: safeGoogleFont(
                                       color:
                                       const Color.fromRGBO(250, 248, 248, 1),
                                       'Poppins',
@@ -1243,7 +1243,7 @@ class _AudienceBottomSheetState extends State<AudienceBottomSheet> {
             Text(
               text,
               textAlign: TextAlign.center,
-              style: SafeGoogleFont('Poppins',
+              style: safeGoogleFont('Poppins',
                   fontSize: 14 * b,
                   fontWeight: FontWeight.w400,
                   height: 1.5 * b / a,

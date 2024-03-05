@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/data/model/response/common_model.dart';
 import 'package:live_app/data/model/response/seller_record_model.dart';
-import 'package:live_app/provider/rooms_provider.dart';
 import 'package:live_app/utils/common_widgets.dart';
-import 'package:provider/provider.dart';
 import '../data/datasource/local/sharedpreferences/storage_service.dart';
 import '../data/model/response/agency_host_model.dart';
 import '../data/model/response/agency_login_model.dart';
@@ -161,7 +159,6 @@ class SellerAgencyProvider with ChangeNotifier {
     isHostLoaded = true;
     notifyListeners();
     AgencyHostModel? model;
-    HostData? data;
     if (apiResponse.statusCode == 200) {
       model = agencyHostModelFromJson(apiResponse.body);
       if(model.status == 1){

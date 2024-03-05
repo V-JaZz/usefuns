@@ -200,7 +200,7 @@ class MineItemDialog extends StatelessWidget {
             children: [
               Text(
                 capitalizeText(title),
-                style: SafeGoogleFont('Poppins',
+                style: safeGoogleFont('Poppins',
                     fontSize: 16 * b,
                     fontWeight: FontWeight.w600,
                     height: 1.5 * b / a,
@@ -242,7 +242,7 @@ class MineItemDialog extends StatelessWidget {
                     child: Center(
                       child: Text(
                         isSelected==false?'Apply':'Buy Now',
-                        style: SafeGoogleFont('Poppins',
+                        style: safeGoogleFont('Poppins',
                             fontSize: 13 * a,
                             fontWeight: FontWeight.w500,
                             height: 1.5 * b / a,
@@ -260,7 +260,7 @@ class MineItemDialog extends StatelessWidget {
                   },
                   child: Text(
                     'Back',
-                    style: SafeGoogleFont('Poppins',
+                    style: safeGoogleFont('Poppins',
                         fontSize: 13 * a,
                         fontWeight: FontWeight.w500,
                         height: 1.5 * b / a,
@@ -306,7 +306,7 @@ class MineItemDialog extends StatelessWidget {
                   child: Text(
                     'Hii! welcome to my room.',
                     textAlign: TextAlign.center,
-                    style: SafeGoogleFont('Poppins',
+                    style: safeGoogleFont('Poppins',
                         fontSize: 9 * a,
                         fontWeight: FontWeight.w500,
                         letterSpacing: 0.48 * a,

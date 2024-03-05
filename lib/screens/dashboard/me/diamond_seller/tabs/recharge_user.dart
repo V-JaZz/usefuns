@@ -156,7 +156,7 @@ class _RechargeUserTabViewState extends State<RechargeUserTabView> {
           Text(
             '${user.data?.name} (${user.data?.userId})',
             textAlign: TextAlign.left,
-            style: SafeGoogleFont(
+            style: safeGoogleFont(
                 color: Colors.black.withOpacity(0.7),
                 'Poppins',
                 fontSize: 14,

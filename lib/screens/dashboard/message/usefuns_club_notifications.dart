@@ -8,7 +8,6 @@ class UsefunsClubNotification extends StatelessWidget {
   Widget build(BuildContext context) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
-    double b = a * 0.97;
     return Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0x339E26BC),

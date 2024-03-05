@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:live_app/screens/dashboard/me/me.dart';
 import 'package:live_app/utils/utils_assets.dart';
 
 class Svip extends StatefulWidget {
@@ -23,7 +22,7 @@ class _SvipState extends State<Svip> {
         title: Text(
           'SVIP',
           textAlign: TextAlign.left,
-          style: SafeGoogleFont(
+          style: safeGoogleFont(
             color: Colors.black,
             'Poppins',
             fontSize: 14 * a,
@@ -81,7 +80,7 @@ class _SvipState extends State<Svip> {
                                 Text(
                                   '0/3000',
                                   textAlign: TextAlign.left,
-                                  style: SafeGoogleFont(
+                                  style: safeGoogleFont(
                                       color: const Color.fromRGBO(0, 0, 0, 1),
                                       'Poppins',
                                       fontSize: 12 * a,
@@ -106,7 +105,7 @@ class _SvipState extends State<Svip> {
                                 Text(
                                   '0/3000',
                                   textAlign: TextAlign.left,
-                                  style: SafeGoogleFont(
+                                  style: safeGoogleFont(
                                       color: const Color.fromRGBO(0, 0, 0, 1),
                                       'Poppins',
                                       fontSize: 12 * a,
@@ -142,7 +141,7 @@ class _SvipState extends State<Svip> {
                               child: Text(
                                 'Svip1',
                                 textAlign: TextAlign.left,
-                                style: SafeGoogleFont(
+                                style: safeGoogleFont(
                                     color:
                                         const Color.fromRGBO(255, 255, 255, 1),
                                     'Poppins',
@@ -172,7 +171,7 @@ class _SvipState extends State<Svip> {
                                 child: Text(
                                   'Svip2',
                                   textAlign: TextAlign.left,
-                                  style: SafeGoogleFont(
+                                  style: safeGoogleFont(
                                       color: const Color.fromRGBO(
                                           255, 255, 255, 1),
                                       'Poppins',
@@ -196,7 +195,7 @@ class _SvipState extends State<Svip> {
                                 Text(
                                   'Star',
                                   textAlign: TextAlign.left,
-                                  style: SafeGoogleFont(
+                                  style: safeGoogleFont(
                                       color: const Color.fromRGBO(0, 0, 0, 1),
                                       'Poppins',
                                       fontSize: 14 * a,
@@ -213,7 +212,7 @@ class _SvipState extends State<Svip> {
                             child: Text(
                               '3k',
                               textAlign: TextAlign.left,
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                   color: const Color.fromRGBO(0, 0, 0, 1),
                                   'Poppins',
                                   fontSize: 14 * a,
@@ -228,7 +227,7 @@ class _SvipState extends State<Svip> {
                             child: Text(
                               '11k',
                               textAlign: TextAlign.left,
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                   color: const Color.fromRGBO(0, 0, 0, 1),
                                   'Poppins',
                                   fontSize: 14 * a,
@@ -250,7 +249,7 @@ class _SvipState extends State<Svip> {
                             child: Text(
                               'After recharge',
                               textAlign: TextAlign.left,
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                   color: const Color.fromRGBO(0, 0, 0, 1),
                                   'Poppins',
                                   fontSize: 14 * a,
@@ -272,7 +271,7 @@ class _SvipState extends State<Svip> {
                           Text(
                             '3000 You get Svip1',
                             textAlign: TextAlign.left,
-                            style: SafeGoogleFont(
+                            style: safeGoogleFont(
                                 color: const Color.fromRGBO(0, 0, 0, 1),
                                 'Poppins',
                                 fontSize: 14 * a,
@@ -302,7 +301,7 @@ class _SvipState extends State<Svip> {
                           child: Text(
                             'Go to recharge',
                             textAlign: TextAlign.left,
-                            style: SafeGoogleFont(
+                            style: safeGoogleFont(
                                 color: Colors.white,
                                 'Poppins',
                                 fontSize: 14 * a,
@@ -335,11 +334,9 @@ class _SvipState extends State<Svip> {
                       // crossAxisAlignment: WrapCrossAlignment.end,
                       // runSpacing: 24 * a,
                       // spacing: 18 * a,
-                      children: List.generate(21, (index) => Container(
-                        child: Image.asset(
-                          'assets/svip_benefits_ic/${index+1}.png',
-                          width: Get.width * 0.27,
-                        ),
+                      children: List.generate(21, (index) => Image.asset(
+                        'assets/svip_benefits_ic/${index+1}.png',
+                        width: Get.width * 0.27,
                       ))
                     ),
                   ],
@@ -378,7 +375,7 @@ class _SvipState extends State<Svip> {
               Text(
                 txt,
                 textAlign: TextAlign.center,
-                style: SafeGoogleFont(
+                style: safeGoogleFont(
                     color: const Color.fromRGBO(255, 255, 255, 1),
                     'Poppins',
                     fontSize: 14 * a,
@@ -403,7 +400,7 @@ class _SvipState extends State<Svip> {
                 child: Center(
                   child: Text(
                     vip,
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                       'Roboto',
                       fontSize: 12 * b,
                       fontWeight: FontWeight.w400,

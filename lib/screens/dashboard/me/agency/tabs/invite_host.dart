@@ -76,7 +76,7 @@ class _InviteHostTabViewState extends State<InviteHostTabView> {
                       borderRadius: BorderRadius.circular(4 * a)),
                   child: Text(
                     'Invite host to join',
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                       'Poppins',
                       fontSize: 14 * b,
                       fontWeight: FontWeight.w500,
@@ -94,7 +94,7 @@ class _InviteHostTabViewState extends State<InviteHostTabView> {
                     children: [
                       Text(
                         'Agency: ${value.agent?.data?.name}',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 12 * b,
                           fontWeight: FontWeight.w400,
@@ -107,7 +107,7 @@ class _InviteHostTabViewState extends State<InviteHostTabView> {
                       ),
                       Text(
                         'Agency Code: ${value.agent?.data?.code}',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 12 * b,
                           fontWeight: FontWeight.w400,
@@ -153,7 +153,7 @@ class _InviteHostTabViewState extends State<InviteHostTabView> {
                               controller: userIdController,
                               textAlign: TextAlign.left,
                               keyboardType: TextInputType.number,
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 14 * b,
                                 fontWeight: FontWeight.w500,
@@ -194,7 +194,7 @@ class _InviteHostTabViewState extends State<InviteHostTabView> {
                             borderRadius: BorderRadius.circular(4 * a)),
                         child: Text(
                           user == null ? 'Confirm' : 'Update',
-                          style: SafeGoogleFont(
+                          style: safeGoogleFont(
                             'Poppins',
                             fontSize: 12 * b,
                             fontWeight: FontWeight.w500,
@@ -268,7 +268,7 @@ class _InviteHostTabViewState extends State<InviteHostTabView> {
                               borderRadius: BorderRadius.circular(4 * a)),
                           child: Text(
                             value.inviteRequestLoading?'Sending..':'Submit',
-                            style: SafeGoogleFont(
+                            style: safeGoogleFont(
                               'Poppins',
                               fontSize: 14 * b,
                               fontWeight: FontWeight.w500,
@@ -314,7 +314,7 @@ class _InviteHostTabViewState extends State<InviteHostTabView> {
           Text(
             '${user.data?.name} (${user.data?.userId})',
             textAlign: TextAlign.left,
-            style: SafeGoogleFont(
+            style: safeGoogleFont(
                 color: Colors.black.withOpacity(0.7),
                 'Poppins',
                 fontSize: 14,
@@ -335,7 +335,7 @@ class _InviteHostTabViewState extends State<InviteHostTabView> {
       alignment: ali,
       child: Text(
         '$text\n',
-        style: SafeGoogleFont(
+        style: safeGoogleFont(
           'Poppins',
           fontSize: 14 * b,
           fontWeight: FontWeight.w500,
@@ -352,7 +352,7 @@ class _InviteHostTabViewState extends State<InviteHostTabView> {
     double b = a * 0.97;
     return Text(
       '$txt\n',
-      style: SafeGoogleFont(
+      style: safeGoogleFont(
         'Poppins',
         fontSize: 12 * b,
         fontWeight: FontWeight.w400,

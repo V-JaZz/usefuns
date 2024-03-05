@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class MyFeedBack extends StatefulWidget {
   const MyFeedBack({super.key});
@@ -11,9 +10,6 @@ class MyFeedBack extends StatefulWidget {
 class _MyFeedBackState extends State<MyFeedBack> {
   @override
   Widget build(BuildContext context) {
-    double baseWidth = 360;
-    double a = Get.width / baseWidth;
-    double b = a * 0.97;
     return Scaffold(
       appBar: AppBar(),
       body: Padding(

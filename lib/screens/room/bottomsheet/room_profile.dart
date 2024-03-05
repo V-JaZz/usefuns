@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:live_app/provider/zego_room_provider.dart';
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
-import '../../../provider/user_data_provider.dart';
 import '../../../utils/helper.dart';
 import '../widget/room_settings.dart';
 
@@ -35,7 +34,7 @@ class _RoomProfileBottomSheetState extends State<RoomProfileBottomSheet> {
               height: 24 * a,
               child: Text(
                 'Room Profile',
-                style: SafeGoogleFont(
+                style: safeGoogleFont(
                   'Poppins',
                   fontSize: 16 * b,
                   fontWeight: FontWeight.w400,
@@ -96,7 +95,7 @@ class _RoomProfileBottomSheetState extends State<RoomProfileBottomSheet> {
                           color: const Color(0x99000000), size: 16 * a),
                       Text(
                         'Settings',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 9 * b,
                           fontWeight: FontWeight.w400,
@@ -115,7 +114,7 @@ class _RoomProfileBottomSheetState extends State<RoomProfileBottomSheet> {
             ),
             Text(
               value.room!.name!,
-              style: SafeGoogleFont(
+              style: safeGoogleFont(
                 'Lato',
                 fontSize: 12 * b,
                 fontWeight: FontWeight.w400,
@@ -147,7 +146,7 @@ class _RoomProfileBottomSheetState extends State<RoomProfileBottomSheet> {
                         ),
                         Text(
                           value.room!.totalDiamonds.toString(),
-                          style: SafeGoogleFont(
+                          style: safeGoogleFont(
                             'Poppins',
                             fontSize: 9 * b,
                             fontWeight: FontWeight.w400,
@@ -160,7 +159,7 @@ class _RoomProfileBottomSheetState extends State<RoomProfileBottomSheet> {
                     ),
                     Text(
                       'Total Diamond',
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                         'Poppins',
                         fontSize: 9 * b,
                         fontWeight: FontWeight.w400,
@@ -198,7 +197,7 @@ class _RoomProfileBottomSheetState extends State<RoomProfileBottomSheet> {
                         ),
                         Text(
                           value.activeCount.toString(),
-                          style: SafeGoogleFont(
+                          style: safeGoogleFont(
                             'Poppins',
                             fontSize: 9 * b,
                             fontWeight: FontWeight.w400,
@@ -211,7 +210,7 @@ class _RoomProfileBottomSheetState extends State<RoomProfileBottomSheet> {
                     ),
                     Text(
                       'Members',
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                         'Poppins',
                         fontSize: 9 * b,
                         fontWeight: FontWeight.w400,
@@ -234,7 +233,7 @@ class _RoomProfileBottomSheetState extends State<RoomProfileBottomSheet> {
                 children: [
                   Text(
                     'Language',
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                       'Poppins',
                       fontSize: 9 * b,
                       fontWeight: FontWeight.w300,
@@ -248,7 +247,7 @@ class _RoomProfileBottomSheetState extends State<RoomProfileBottomSheet> {
                   ),
                   Text(
                     value.room?.language??'English',
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                       'Poppins',
                       fontSize: 12 * b,
                       fontWeight: FontWeight.w400,
@@ -262,7 +261,7 @@ class _RoomProfileBottomSheetState extends State<RoomProfileBottomSheet> {
                   ),
                   Text(
                     'Country',
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                       'Poppins',
                       fontSize: 9 * b,
                       fontWeight: FontWeight.w300,
@@ -276,7 +275,7 @@ class _RoomProfileBottomSheetState extends State<RoomProfileBottomSheet> {
                   ),
                   Text(
                     getCountryNameFromCode(value.room?.countryCode??'IN'),
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                       'Poppins',
                       fontSize: 12 * b,
                       fontWeight: FontWeight.w400,
@@ -290,7 +289,7 @@ class _RoomProfileBottomSheetState extends State<RoomProfileBottomSheet> {
                   ),
                   Text(
                     'Announcement',
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                       'Poppins',
                       fontSize: 9 * b,
                       fontWeight: FontWeight.w300,
@@ -304,7 +303,7 @@ class _RoomProfileBottomSheetState extends State<RoomProfileBottomSheet> {
                   ),
                   Text(
                     (value.room?.announcement??'')==''?'Welcome to my room!':value.room!.announcement!,
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                       'Poppins',
                       fontSize: 12 * b,
                       fontWeight: FontWeight.w400,

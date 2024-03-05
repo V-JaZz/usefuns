@@ -48,7 +48,7 @@ class _ActiveUsersBottomSheetState extends State<ActiveUsersBottomSheet> {
                 height: 24 * a,
                 child: Text(
                   'Active Users',
-                  style: SafeGoogleFont(
+                  style: safeGoogleFont(
                     'Poppins',
                     fontSize: 16 * b,
                     fontWeight: FontWeight.w400,
@@ -124,7 +124,7 @@ class _ActiveUsersBottomSheetState extends State<ActiveUsersBottomSheet> {
                                       3 * a, 0 * a, 6 * a, 2 * a),
                                   child: Text(
                                     user.name.toString(),
-                                    style: SafeGoogleFont(
+                                    style: safeGoogleFont(
                                       'Poppins',
                                       fontSize: 15 * b,
                                       fontWeight: FontWeight.w400,
@@ -173,7 +173,7 @@ class _ActiveUsersBottomSheetState extends State<ActiveUsersBottomSheet> {
                                   widget.ownerId.trim()
                                   ? 'Owner'
                                   : 'Admin',
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 11 * b,
                                 fontWeight: FontWeight.w400,
@@ -207,7 +207,7 @@ class _ActiveUsersBottomSheetState extends State<ActiveUsersBottomSheet> {
                             alignment: Alignment.center,
                             child: Text(
                               'On Seat',
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 11 * b,
                                 fontWeight:

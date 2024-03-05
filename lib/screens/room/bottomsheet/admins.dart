@@ -36,7 +36,7 @@ class _AdminsBottomSheetState extends State<AdminsBottomSheet> {
                 height: 24 * a,
                 child: Text(
                   'Room Admins',
-                  style: SafeGoogleFont(
+                  style: safeGoogleFont(
                     'Poppins',
                     fontSize: 16 * b,
                     fontWeight: FontWeight.w400,
@@ -171,7 +171,7 @@ class _AdminsBottomSheetState extends State<AdminsBottomSheet> {
                                                   3 * a, 0 * a, 6 * a, 2 * a),
                                               child: Text(
                                                 user.name.toString(),
-                                                style: SafeGoogleFont(
+                                                style: safeGoogleFont(
                                                   'Poppins',
                                                   fontSize: 15 * b,
                                                   fontWeight: FontWeight.w400,

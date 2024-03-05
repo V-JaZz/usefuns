@@ -54,7 +54,7 @@ class _RoomSettingsState extends State<RoomSettings> {
             title: 'Cropper',
           ),
           WebUiSettings(
-            context: context,
+            context: Get.context!,
           ),
         ],
       ).then((croppedImage) {
@@ -64,7 +64,7 @@ class _RoomSettingsState extends State<RoomSettings> {
       });
 
     } on Exception catch (e) {
-      return const Text('Adding Failed');
+      return Text('Adding Failed!, $e');
     }
   }
   imagePicker() {
@@ -184,7 +184,7 @@ class _RoomSettingsState extends State<RoomSettings> {
           elevation: 1,
           title: Text('Room Settings',
               textAlign: TextAlign.center,
-              style: SafeGoogleFont(
+              style: safeGoogleFont(
                 'Poppins',
                 fontSize: 20 * b,
                 fontWeight: FontWeight.w400,
@@ -209,7 +209,7 @@ class _RoomSettingsState extends State<RoomSettings> {
                         Text(
                           m['title'],
                           textAlign: TextAlign.left,
-                          style: SafeGoogleFont(
+                          style: safeGoogleFont(
                             'Poppins',
                             fontSize: 14 * b,
                             fontWeight: FontWeight.w400,
@@ -230,7 +230,7 @@ class _RoomSettingsState extends State<RoomSettings> {
                             children: [
                               Text(
                                 value.room!.name!,
-                                style: SafeGoogleFont(
+                                style: safeGoogleFont(
                                   'Poppins',
                                   fontSize: 12 * b,
                                   fontWeight: FontWeight.w400,
@@ -314,7 +314,6 @@ class _RoomSettingsState extends State<RoomSettings> {
         builder: (context) {
           double baseWidth = 290;
           double a = Get.width / baseWidth;
-          double b = a * 0.97;
           return Scaffold(
             backgroundColor: Colors.transparent,
             body: Align(
@@ -405,7 +404,6 @@ class _RoomSettingsState extends State<RoomSettings> {
         builder: (context) {
           double baseWidth = 290;
           double a = Get.width / baseWidth;
-          double b = a * 0.97;
           return Scaffold(
             backgroundColor: Colors.transparent,
             body: Align(
@@ -503,7 +501,7 @@ class JoinedHistory extends StatelessWidget {
         elevation: 1,
         title: Text('Joined History',
             textAlign: TextAlign.center,
-            style: SafeGoogleFont(
+            style: safeGoogleFont(
               'Poppins',
               fontSize: 20 * b,
               fontWeight: FontWeight.w400,
@@ -529,7 +527,7 @@ class JoinedHistory extends StatelessWidget {
             ),
             Text(
               'No Data!',
-              style: SafeGoogleFont(
+              style: safeGoogleFont(
                 'Poppins',
                 fontSize: 16 * b,
                 fontWeight: FontWeight.w400,
@@ -564,7 +562,7 @@ class BlockedList extends StatelessWidget {
         elevation: 1,
         title: Text('Blocked List',
             textAlign: TextAlign.center,
-            style: SafeGoogleFont(
+            style: safeGoogleFont(
               'Poppins',
               fontSize: 20 * b,
               fontWeight: FontWeight.w400,
@@ -589,7 +587,7 @@ class BlockedList extends StatelessWidget {
             ),
             Text(
               'No Data!',
-              style: SafeGoogleFont(
+              style: safeGoogleFont(
                 'Poppins',
                 fontSize: 16 * b,
                 fontWeight: FontWeight.w400,
@@ -623,7 +621,7 @@ class KickHistory extends StatelessWidget {
         elevation: 1,
         title: Text('Kick History',
             textAlign: TextAlign.center,
-            style: SafeGoogleFont(
+            style: safeGoogleFont(
               'Poppins',
               fontSize: 20 * b,
               fontWeight: FontWeight.w400,
@@ -648,7 +646,7 @@ class KickHistory extends StatelessWidget {
             ),
             Text(
               'No Data!',
-              style: SafeGoogleFont(
+              style: safeGoogleFont(
                 'Poppins',
                 fontSize: 16 * b,
                 fontWeight: FontWeight.w400,

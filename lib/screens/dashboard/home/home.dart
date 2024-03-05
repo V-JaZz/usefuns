@@ -4,7 +4,6 @@ import 'package:live_app/screens/dashboard/home/tabs/mine_tab_view.dart';
 import 'package:live_app/screens/dashboard/home/tabs/new_tab_view.dart';
 import 'package:live_app/screens/dashboard/home/tabs/popular_tab_view.dart';
 import 'package:live_app/utils/utils_assets.dart';
-import '../../../utils/common_widgets.dart';
 import 'search_room_user.dart';
 
 class Home extends StatelessWidget {
@@ -45,7 +44,7 @@ class Home extends StatelessWidget {
                   dividerColor: Colors.transparent,
                   labelColor: const Color(0xff000000),
                   unselectedLabelColor: const Color(0x99000000),
-                  labelStyle: SafeGoogleFont(
+                  labelStyle: safeGoogleFont(
                     'Poppins',
                     fontSize: 21 * b,
                     fontWeight: FontWeight.w400,
@@ -53,7 +52,7 @@ class Home extends StatelessWidget {
                     letterSpacing: 0.96 * a,
                     color: const Color(0xff000000),
                   ),
-                  unselectedLabelStyle: SafeGoogleFont(
+                  unselectedLabelStyle: safeGoogleFont(
                     'Poppins',
                     fontSize: 18 * b,
                     fontWeight: FontWeight.w400,

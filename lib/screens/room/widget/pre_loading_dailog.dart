@@ -14,7 +14,6 @@ import '../../../provider/user_data_provider.dart';
 import '../../../provider/zego_room_provider.dart';
 import '../../../utils/helper.dart';
 import '../../../utils/utils_assets.dart';
-import '../../../utils/zego_config.dart';
 
 class RoomPreLoadingDialog extends StatefulWidget {
   final Room room;
@@ -79,7 +78,7 @@ class _RoomPreLoadingDialogState extends State<RoomPreLoadingDialog> {
                       child: TextFormField(
                         textAlign: TextAlign.center,
                         controller: textEditingController,
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 15,
                           fontWeight: FontWeight.w300,

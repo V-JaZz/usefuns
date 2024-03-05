@@ -89,7 +89,7 @@ class _MineTabViewState extends State<MineTabView> {
                       ),
                       title: Text(
                         'Create My Room',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 16 * b,
                           fontWeight: FontWeight.w400,
@@ -100,7 +100,7 @@ class _MineTabViewState extends State<MineTabView> {
                       ),
                       subtitle: Text(
                         'Start Your live Journey on Use funs',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 12 * b,
                           fontWeight: FontWeight.w400,
@@ -119,7 +119,7 @@ class _MineTabViewState extends State<MineTabView> {
                         child: Center(
                           child: Text(
                             '+',
-                            style: SafeGoogleFont(
+                            style: safeGoogleFont(
                               'Poppins',
                               fontSize: 12 * b,
                               fontWeight: FontWeight.w400,
@@ -160,7 +160,7 @@ class _MineTabViewState extends State<MineTabView> {
                       ),
                       title: Text(
                         room.name!,
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 16 * b,
                           fontWeight: FontWeight.w400,
@@ -171,7 +171,7 @@ class _MineTabViewState extends State<MineTabView> {
                       ),
                       subtitle: Text(
                         'Join room',
-                        style: SafeGoogleFont(
+                        style: safeGoogleFont(
                           'Poppins',
                           fontSize: 12 * b,
                           fontWeight: FontWeight.w400,
@@ -199,7 +199,7 @@ class _MineTabViewState extends State<MineTabView> {
                         indicatorWeight: 1.3,
                         labelColor: const Color(0xff000000),
                         unselectedLabelColor: const Color(0x99000000),
-                        labelStyle: SafeGoogleFont(
+                        labelStyle: safeGoogleFont(
                           'Poppins',
                           fontSize: 16 * b,
                           fontWeight: FontWeight.w400,
@@ -207,7 +207,7 @@ class _MineTabViewState extends State<MineTabView> {
                           letterSpacing: 0.96 * a,
                           color: const Color(0xff000000),
                         ),
-                        unselectedLabelStyle: SafeGoogleFont(
+                        unselectedLabelStyle: safeGoogleFont(
                           'Poppins',
                           fontSize: 16 * b,
                           fontWeight: FontWeight.w400,

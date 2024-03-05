@@ -45,7 +45,7 @@ class _BubblesState extends State<Bubbles> {
             child: Center(
               child: Text(
                 'Active',
-                style: SafeGoogleFont(
+                style: safeGoogleFont(
                   'Poppins',
                   fontSize: 22 * b,
                   fontWeight: FontWeight.w400,
@@ -67,17 +67,17 @@ class _BubblesState extends State<Bubbles> {
                       crossAxisCount: 2,
                     ),
                     children: [
-                      images_column('assets/aristro.png', 'Aristocracy Ba..',
+                      imagesColumn('assets/aristro.png', 'Aristocracy Ba..',
                           'Aristocracy badge on\n      the room list'),
-                      images_column('assets/home.png', 'Aristocracy Ro',
+                      imagesColumn('assets/home.png', 'Aristocracy Ro',
                           'Aristocracy badge on\n      the room list'),
-                      images_column('assets/visc1.png', 'Aristocracy Gifts.',
+                      imagesColumn('assets/visc1.png', 'Aristocracy Gifts.',
                           'Exclusive Gifts only \n    Sended by aristocracy'),
-                      images_column('assets/visc2.png', 'Aristocracy Ro',
+                      imagesColumn('assets/visc2.png', 'Aristocracy Ro',
                           'Aristocracy badge on\n      the room list'),
-                      images_column('assets/visc3.png', 'Aristocracy Ro',
+                      imagesColumn('assets/visc3.png', 'Aristocracy Ro',
                           'Aristocracy badge on\n      the room list'),
-                      images_column('assets/visc4.png', 'Aristocracy Ro',
+                      imagesColumn('assets/visc4.png', 'Aristocracy Ro',
                           'Aristocracy badge on\n      the room list'),
                     ],
                   ),
@@ -110,7 +110,7 @@ class _BubblesState extends State<Bubbles> {
     );
   }
 
-  Column images_column(img, text1, text2) {
+  Column imagesColumn(img, text1, text2) {
     return Column(
       children: [
         Image.asset(

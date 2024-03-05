@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/provider/rooms_provider.dart';
-import 'package:live_app/provider/user_data_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../data/model/response/agency_host_model.dart';
@@ -19,7 +18,6 @@ class _HostDataTabViewState extends State<HostDataTabView> {
   Widget build(BuildContext context) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
-    double b = a * 0.97;
 
     return Scaffold(
       body: Consumer<SellerAgencyProvider>(

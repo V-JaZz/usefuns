@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -14,7 +13,6 @@ class _SecurityPanelState extends State<SecurityPanel> {
   Widget build(BuildContext context) {
     double baseWidth = 360;
     double a = Get.width / baseWidth;
-    double b = a * 0.97;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
@@ -22,7 +20,7 @@ class _SecurityPanelState extends State<SecurityPanel> {
       ),
       body: Column(
         children: [
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text('Team member code'),
@@ -35,21 +33,21 @@ class _SecurityPanelState extends State<SecurityPanel> {
               right: 20 * a,
               top: 70 * a,
             ),
-            child: TextField(
+            child: const TextField(
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
               ),
             ),
           ),
-          const table(),
+          const CustomTable(),
         ],
       ),
     );
   }
 }
 
-class table extends StatelessWidget {
-  const table({
+class CustomTable extends StatelessWidget {
+  const CustomTable({
     super.key,
   });
 

@@ -237,7 +237,7 @@ class _TreasuresState extends State<Treasures> {
                 child: Center(
                   child: Text(
                     'Prize',
-                    style: SafeGoogleFont(
+                    style: safeGoogleFont(
                       'Poppins',
                       fontSize: 9 * b,
                       fontWeight: FontWeight.w400,
@@ -250,7 +250,7 @@ class _TreasuresState extends State<Treasures> {
               ),
               Text(
                 'Treasure Box',
-                style: SafeGoogleFont(
+                style: safeGoogleFont(
                   'Poppins',
                   fontSize: 18 * b,
                   fontWeight: FontWeight.w400,
@@ -356,7 +356,7 @@ class _TreasuresState extends State<Treasures> {
                           child: Center(
                             child: Text(
                               'Lv.${i + 1}',
-                              style: SafeGoogleFont(
+                              style: safeGoogleFont(
                                 'Poppins',
                                 fontSize: 9 * b,
                                 fontWeight: FontWeight.w400,
@@ -403,7 +403,7 @@ class _TreasuresState extends State<Treasures> {
           padding: EdgeInsets.symmetric(horizontal: 8 * a),
           child: Text(
             'Send gifts to open the treasure box',
-            style: SafeGoogleFont(
+            style: safeGoogleFont(
               'Poppins',
               fontSize: 12 * b,
               fontWeight: FontWeight.w400,
@@ -417,7 +417,7 @@ class _TreasuresState extends State<Treasures> {
           padding: EdgeInsets.all(8.0 * a),
           child: Text(
             'Prize',
-            style: SafeGoogleFont(
+            style: safeGoogleFont(
               'Poppins',
               fontSize: 12 * b,
               fontWeight: FontWeight.w400,
@@ -512,7 +512,7 @@ class _TreasuresState extends State<Treasures> {
                     Text(
                       name,
                       textAlign: TextAlign.center,
-                      style: SafeGoogleFont(
+                      style: safeGoogleFont(
                           color: const Color.fromRGBO(255, 255, 255, 1),
                           'Roboto',
                           fontSize: 16 * a,
@@ -535,7 +535,7 @@ class _TreasuresState extends State<Treasures> {
                         Text(
                           prize,
                           textAlign: TextAlign.left,
-                          style: SafeGoogleFont(
+                          style: safeGoogleFont(
                               color: const Color.fromRGBO(255, 255, 255, 1),
                               'Roboto',
                               fontSize: 16 * a,
@@ -602,7 +602,7 @@ class _TreasuresState extends State<Treasures> {
                 Text(
                   t1,
                   textAlign: TextAlign.left,
-                  style: SafeGoogleFont(
+                  style: safeGoogleFont(
                       color: const Color.fromRGBO(255, 255, 255, 1),
                       'Roboto',
                       fontSize: 16 * a,
@@ -632,7 +632,7 @@ class _TreasuresState extends State<Treasures> {
               Text(
                 t2,
                 textAlign: TextAlign.left,
-                style: SafeGoogleFont(
+                style: safeGoogleFont(
                     color: const Color.fromRGBO(255, 255, 255, 1),
                     'Roboto',
                     fontSize: 16 * a,
@@ -663,7 +663,7 @@ class _TreasuresState extends State<Treasures> {
                 Text(
                   t3,
                   textAlign: TextAlign.left,
-                  style: SafeGoogleFont(
+                  style: safeGoogleFont(
                       color: const Color.fromRGBO(255, 255, 255, 1),
                       'Roboto',
                       fontSize: 16 * a,

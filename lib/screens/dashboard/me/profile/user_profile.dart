@@ -12,7 +12,6 @@ import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 import '../../../../data/model/response/user_data_model.dart';
 import '../../../../provider/user_data_provider.dart';
-import 'honor.dart';
 import '../../../room/widget/pre_loading_dailog.dart';
 import '../moments_page.dart';
 import 'update_profile.dart';
@@ -92,7 +91,7 @@ class _UserProfileState extends State<UserProfile> {
                               Text(
                                 user.name!.contains('#icognito')?user.name!.split('#').first:user.name??'',
                                 textAlign: TextAlign.left,
-                                style: SafeGoogleFont(
+                                style: safeGoogleFont(
                                     color: const Color.fromRGBO(255, 255, 255, 1),
                                     'Poppins',
                                     fontSize: 16 * a,
@@ -119,7 +118,7 @@ class _UserProfileState extends State<UserProfile> {
                               Text(
                                 'ID: ${user.userId}',
                                 textAlign: TextAlign.left,
-                                style: SafeGoogleFont(
+                                style: safeGoogleFont(
                                     color: const Color.fromRGBO(255, 255, 255, 1),
                                     'Poppins',
                                     fontSize: 11 * a,
@@ -338,7 +337,7 @@ class _UserProfileState extends State<UserProfile> {
             Text(
               top,
               textAlign: TextAlign.left,
-              style: SafeGoogleFont(
+              style: safeGoogleFont(
                   color: const Color.fromRGBO(255, 255, 255, 1),
                   'Poppins',
                   fontSize: 12 * a,
@@ -351,7 +350,7 @@ class _UserProfileState extends State<UserProfile> {
             Text(
               below,
               textAlign: TextAlign.left,
-              style: SafeGoogleFont(
+              style: safeGoogleFont(
                   color: const Color.fromRGBO(255, 255, 255, 1),
                   'Poppins',
                   fontSize: 11 * a,
