@@ -1,7 +1,7 @@
 import 'package:contained_tab_bar_view/contained_tab_bar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'diamond_history.dart';
+import 'recharge_history.dart';
 import 'tabs/coins.dart';
 import 'tabs/beans.dart';
 import 'tabs/diamond.dart';
@@ -39,7 +39,7 @@ class _WalletState extends State<Wallet> {
             ),
               child: const Icon(Icons.history),
               onPressed: () {
-                Get.to(()=>const DiamondHistory());
+                Get.to(()=>const RechargeHistory());
           }),
           const SizedBox(width: 8)
         ],

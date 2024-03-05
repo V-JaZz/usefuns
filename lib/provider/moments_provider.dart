@@ -220,7 +220,6 @@ class MomentsProvider with ChangeNotifier {
         moments.add(m);
       }
     }
-    moments.toSet().toList();
     all ? allMoments = moments : followingMoments = moments;
     notifyListeners();
   }

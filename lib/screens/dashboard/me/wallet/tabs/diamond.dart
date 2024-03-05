@@ -1,8 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:live_app/provider/shop_wallet_provider.dart';
 import 'package:live_app/provider/user_data_provider.dart';
 import 'package:provider/provider.dart';
+
+import '../recharge_history.dart';
 
 class DiamondTabView extends StatefulWidget {
   const DiamondTabView({super.key});
@@ -59,6 +64,40 @@ class _DiamondTabViewState extends State<DiamondTabView> {
                           ],
                         ),
                       ),
+                      const Spacer(),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: GestureDetector(
+                          onTap: () {
+                            Get.to(()=>const DiamondsHistoryList());
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(3),
+                            margin: const EdgeInsets.only(right: 8, top: 8),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(3),
+                              color: Colors.white,
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                    Icons.access_time_rounded,
+                                    color: Colors.grey.shade700,
+                                  size: 18
+                                ),
+                                const SizedBox(width: 1),
+                                Text(
+                                  'History',
+                                  style: TextStyle(
+                                      color: Colors.grey.shade700,
+                                    fontSize: 12
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -119,4 +158,123 @@ class _DiamondTabViewState extends State<DiamondTabView> {
         text.toString(),
         style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 18),
       );
+}
+
+class DiamondsHistoryList extends StatefulWidget {
+  const DiamondsHistoryList({super.key});
+
+  @override
+  State<DiamondsHistoryList> createState() => _DiamondsHistoryListState();
+}
+
+class _DiamondsHistoryListState extends State<DiamondsHistoryList> {
+  String type = 'all';
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('History'),
+        actions: [
+          DropdownButton<String>(
+            value: type,
+            onChanged: (String? newValue) {
+              setState(() {
+                type = newValue as String;
+              });
+            },
+            items: <String>['all', 'Gift', 'Shop', 'Game', 'Treasure Box', 'Lucky Wheel', 'Beans To Diamonds']
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          )
+        ],
+      ),
+      body: Expanded(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: FutureBuilder(
+            future: Provider.of<ShopWalletProvider>(context).getDiamondHistory(type),
+            builder: (context, snapshot) {
+              if(snapshot.connectionState == ConnectionState.waiting){
+                return const Center(child: CircularProgressIndicator());
+              }else if(snapshot.data == null){
+                return const Center(child: Text('Error!'));
+              }else if(snapshot.data!.isEmpty){
+                return const Center(child: Text('No Data!'));
+              }else{
+                return ListView(
+                  padding: const EdgeInsets.only(top: 0),
+                  physics: const BouncingScrollPhysics(),
+                  children: List.generate(
+                      snapshot.data!.length,
+                          (i) {
+                        final details = snapshot.data![i];
+                        return Container(
+                          margin: const EdgeInsets.symmetric(vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                                color: const Color(0xffF3F4F6),
+                                width: 1),
+                          ),
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                children: [
+                                  boldText(
+                                      '${details.uses}',
+                                      const Color(0xff1D3A70),
+                                      18),
+                                  const SizedBox(height: 4),
+                                  regularText(
+                                      '${details.createdAt?.toLocal()}',
+                                      Colors.grey,
+                                      14),
+                                  const SizedBox(height: 4),
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.end,
+                                children: [
+                                  boldText(
+                                      '${details.type == 1 ? '-' : '+'} ₹${details.diamonds}',
+                                      details.type == 2
+                                          ? const Color(0xff00B428)
+                                          : const Color(0xffFB923C),
+                                      20),
+                                  Padding(
+                                    padding:
+                                    const EdgeInsets.only(top: 4),
+                                    child: regularText(
+                                        details.type == 2 ? 'credited':'debited',
+                                        details.type == 2
+                                            ? const Color(0xff00B428)
+                                            : const Color(0xffFB923C),
+                                        14),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        );
+                      }),
+                );
+              }
+            },
+          ),
+        ),
+      ),
+    );
+  }
 }

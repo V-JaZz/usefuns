@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:live_app/data/model/response/diamond_history_model.dart';
+import 'package:live_app/data/model/response/recharge_history_model.dart';
 import 'package:live_app/data/model/response/shop_items_model.dart';
 import 'package:live_app/data/model/response/user_data_model.dart';
 import 'package:live_app/provider/user_data_provider.dart';
@@ -27,7 +29,7 @@ class ShopWalletProvider with ChangeNotifier {
   }
 
   final storageService = StorageService();
-  final ShopWalletRepo _shopRepo = ShopWalletRepo();
+  final ShopWalletRepo _repo = ShopWalletRepo();
   bool isBuying = false;
   double? loadingShopProgress = 0.0;
   late Map<String , ShopItemsModel?> items = {
@@ -49,7 +51,6 @@ class ShopWalletProvider with ChangeNotifier {
   List<ProductDetails>? iapDiamondsList;
   bool iapAvailable = false;
   bool iapLoading = true;
-
 
   void _initializePurchaseStream() {
     final Stream<List<PurchaseDetails>> purchaseUpdated = _iap.purchaseStream;
@@ -93,13 +94,14 @@ class ShopWalletProvider with ChangeNotifier {
 
   void _listenToPurchaseUpdated(List<PurchaseDetails> purchaseDetailsList) {
     for (var purchaseDetails in purchaseDetailsList) {
+      final tId = DateTime.timestamp().millisecondsSinceEpoch.toString();
       switch(purchaseDetails.status){
         case PurchaseStatus.pending:
           shopDiamonds(
               int.parse(iapDiamondsList!.firstWhere((e) => e.id == purchaseDetails.productID).title.split(' ').first),
               iapDiamondsList!.firstWhere((e) => e.id == purchaseDetails.productID).rawPrice.toInt(),
               'Google Wallet',
-              '',
+              tId,
               'pending'
           );
           showCustomDialog(
@@ -113,7 +115,7 @@ class ShopWalletProvider with ChangeNotifier {
               int.parse(iapDiamondsList!.firstWhere((e) => e.id == purchaseDetails.productID).title.split(' ').first),
               iapDiamondsList!.firstWhere((e) => e.id == purchaseDetails.productID).rawPrice.toInt(),
               'Google Wallet',
-              '',
+              tId,
               'failed'
           );
           showCustomDialog(
@@ -128,7 +130,7 @@ class ShopWalletProvider with ChangeNotifier {
               int.parse(iapDiamondsList!.firstWhere((e) => e.id == purchaseDetails.productID).title.split(' ').first),
               iapDiamondsList!.firstWhere((e) => e.id == purchaseDetails.productID).rawPrice.toInt(),
             'Google Wallet',
-            '',
+              tId,
             'purchased'
           );
           showCustomDialog(
@@ -154,8 +156,6 @@ class ShopWalletProvider with ChangeNotifier {
     await _iap.buyConsumable(purchaseParam: purchaseParam);
   }
 
-
-
   Future<void> getAll() async {
     await Future.delayed(const Duration(milliseconds: 500));
     await getCategory('frame');
@@ -177,7 +177,7 @@ class ShopWalletProvider with ChangeNotifier {
       loadingShopProgress = loadingShopProgress! + 0.125;
       notifyListeners();
     }
-    final apiResponse = await _shopRepo.get(key);
+    final apiResponse = await _repo.getItems(key);
     if (apiResponse.statusCode == 200) {
       ShopItemsModel responseModel = shopItemsModelFromJson(apiResponse.body);
       if(responseModel.status == 1 && items[key]!=responseModel){
@@ -193,8 +193,8 @@ class ShopWalletProvider with ChangeNotifier {
     bool success = false;
     notifyListeners();
     DateTime validity = DateTime.now().add(Duration(days: days));
-    final apiResponse = await _shopRepo.shop(
-        userId: storageService.getString(Constants.id),
+    final apiResponse = await _repo.shop(
+        userId: storageService.getString(Constants.userId),
         item: UserItem(
             id: item.id,
             name: item.name,
@@ -225,8 +225,8 @@ class ShopWalletProvider with ChangeNotifier {
   }
 
   Future<void> luckyWheelReward(int diamonds) async {
-    final apiResponse = await _shopRepo.diamondSubmitFlow(
-        userId: storageService.getString(Constants.id),
+    final apiResponse = await _repo.diamondSubmitFlow(
+        userId: storageService.getString(Constants.userId),
         diamonds: diamonds,
         type: 2,
         uses: 'Lucky Wheel');
@@ -237,8 +237,8 @@ class ShopWalletProvider with ChangeNotifier {
   }
 
   Future<void> treasureBoxReward(int diamonds) async {
-    final apiResponse = await _shopRepo.diamondSubmitFlow(
-        userId: storageService.getString(Constants.id),
+    final apiResponse = await _repo.diamondSubmitFlow(
+        userId: storageService.getString(Constants.userId),
         diamonds: diamonds,
         type: 2,
         uses: 'Treasure Box');
@@ -249,7 +249,7 @@ class ShopWalletProvider with ChangeNotifier {
   }
 
   Future<void> shopDiamonds(int diamonds, int price, String method, String id, String status) async {
-    final apiResponse = await _shopRepo.shopDiamonds(
+    final apiResponse = await _repo.shopDiamonds(
         userId: storageService.getString(Constants.userId),
         diamonds: diamonds,
         price: price,
@@ -265,7 +265,7 @@ class ShopWalletProvider with ChangeNotifier {
 
   Future<List<DiamondValue>> getDiamondValueList() async {
     await Future.delayed(const Duration(milliseconds: 500));
-    final apiResponse = await _shopRepo.getDiamondValue();
+    final apiResponse = await _repo.getDiamondValue();
     if (apiResponse.statusCode == 200) {
       DiamondValueModel responseModel = diamondValueModelFromJson(apiResponse.body);
       if(responseModel.status == 1){
@@ -278,7 +278,7 @@ class ShopWalletProvider with ChangeNotifier {
   }
 
   Future<bool> spendUserDiamonds(int diamonds, String usedIn) async {
-    final apiResponse = await _shopRepo.diamondSubmitFlow(
+    final apiResponse = await _repo.diamondSubmitFlow(
         userId: storageService.getString(Constants.userId),
         diamonds: diamonds,
         uses: usedIn,
@@ -295,7 +295,7 @@ class ShopWalletProvider with ChangeNotifier {
   }
 
   Future<void> convertBeans(int diamonds,int beans) async {
-    final apiResponse = await _shopRepo.convertBeans(
+    final apiResponse = await _repo.convertBeans(
         userId: storageService.getString(Constants.userId),
         diamonds: diamonds,
         beans: beans);
@@ -310,4 +310,30 @@ class ShopWalletProvider with ChangeNotifier {
     }
   }
 
+  Future<List<DiamondHistory>> getDiamondHistory(String type) async {
+    DiamondHistoryModel diamondHistoryModel;
+    final apiResponse = await _repo.getDiamondHistory(
+        userId: storageService.getString(Constants.userId),
+        type: type
+    );
+    if (apiResponse.statusCode == 200) {
+      diamondHistoryModel = diamondHistoryModelFromJson(apiResponse.body);
+    }else{
+      diamondHistoryModel = DiamondHistoryModel(status: 0,data: []);
+    }
+    return diamondHistoryModel.data??[];
+  }
+
+  Future<List<RechargeDetail>> getRechargeHistory() async {
+    RechargeHistoryModel rechargeHistoryModel;
+    final apiResponse = await _repo.getRechargeHistory(
+        userId: storageService.getString(Constants.userId)
+    );
+    if (apiResponse.statusCode == 200) {
+      rechargeHistoryModel = rechargeHistoryModelFromJson(apiResponse.body);
+    }else{
+      rechargeHistoryModel = RechargeHistoryModel(status: 0,data: []);
+    }
+    return rechargeHistoryModel.data??[];
+  }
 }

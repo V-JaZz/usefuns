@@ -6,12 +6,12 @@ class ShopWalletRepo {
 
   final HttpApiClient _httpClient = HttpApiClient();
 
-  Future<http.Response> get(String type) async {
+  Future<http.Response> getItems(String type) async {
     try {
       http.Response response = await _httpClient.get('admin/$type/getall');
       return response;
     } catch (e) {
-      return get(type);
+      return getItems(type);
     }
   }
 
@@ -89,6 +89,33 @@ class ShopWalletRepo {
             "userId": userId,
             "diamonds": diamonds,
             "beans": beans
+          }
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<http.Response> getRechargeHistory(
+      {required String userId}) async {
+    try {
+      http.Response response = await _httpClient.get(
+          'user/wallet/transaction/$userId'
+      );
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<http.Response> getDiamondHistory(
+      {required String userId, required String type}) async {
+    try {
+      http.Response response = await _httpClient.post(
+          'user/diamond/transaction/$userId',
+          {
+            "uses": type
           }
       );
       return response;
