@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:live_app/data/model/response/diamond_value_model.dart';
 import 'package:live_app/provider/shop_wallet_provider.dart';
 import 'package:live_app/provider/user_data_provider.dart';
 import 'package:provider/provider.dart';
@@ -67,34 +68,26 @@ class _DiamondTabViewState extends State<DiamondTabView> {
                       const Spacer(),
                       Align(
                         alignment: Alignment.topRight,
-                        child: GestureDetector(
-                          onTap: () {
+                        child: TextButton(
+                          onPressed: () {
                             Get.to(()=>const DiamondsHistoryList());
                           },
-                          child: Container(
-                            padding: const EdgeInsets.all(3),
-                            margin: const EdgeInsets.only(right: 8, top: 8),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(3),
-                              color: Colors.white,
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                    Icons.access_time_rounded,
-                                    color: Colors.grey.shade700,
-                                  size: 18
+                          child: const Row(
+                            children: [
+                              Icon(
+                                  Icons.access_time_rounded,
+                                  color: Colors.white,
+                                size: 18
+                              ),
+                              SizedBox(width: 1),
+                              Text(
+                                'History',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                  fontSize: 12
                                 ),
-                                const SizedBox(width: 1),
-                                Text(
-                                  'History',
-                                  style: TextStyle(
-                                      color: Colors.grey.shade700,
-                                    fontSize: 12
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       )
@@ -103,23 +96,75 @@ class _DiamondTabViewState extends State<DiamondTabView> {
                 ),
               ),
             ),
-            !value.iapAvailable
-                ? const Text(' In-App-Purchase not available!')
-                : value.iapLoading || value.iapDiamondsList == null
-                ? const Center(child: CircularProgressIndicator(color: Colors.green))
-                : Column(
-                    children: [
-                      for(var product in value.iapDiamondsList!)
-                        diamondValueTile(product)
-                    ],
-                  )
+            ExpansionTile(
+              initiallyExpanded: false,
+              title: const Text('Google Wallet'),
+              leading: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Image.asset('assets/google_wallet_ic.png'),
+              ),
+              children: [
+                !value.iapAvailable
+                    ? const ListTile(title: Text('In-App-Purchase not available!'))
+                    : value.loading || value.iapDiamondsList == null
+                    ? const Center(child: CircularProgressIndicator(color: Colors.green))
+                    : Column(
+                      children: [
+                        for(var product in value.iapDiamondsList!)
+                          iapProductTile(product)
+                      ],
+                    )
+              ],
+            ),
+            ExpansionTile(
+              initiallyExpanded: false,
+              title: const Text('Phone Pe'),
+              leading: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Image.asset('assets/phone_pe_ic.png'),
+              ),
+              children: [
+                Provider.of<UserDataProvider>(context).userData?.data?.countryCode != 'IN'
+                    ? const ListTile(title: Text('Phone Pe not available in your country!'))
+                    : value.loading || value.apiDiamondsList == null
+                    ? Center(child: Row(
+                      children: [
+                        Text(value.loading.toString()),
+                        Text(value.apiDiamondsList?.length.toString()??''),
+                        const CircularProgressIndicator(color: Colors.green),
+                      ],
+                    ))
+                    : Column(
+                      children: [
+                        for(var product in value.apiDiamondsList!)
+                          phonePayProductTile(product)
+                      ],
+                )
+              ],
+            ),
+            ExpansionTile(
+              initiallyExpanded: false,
+              title: const Text('Diamond Seller'),
+              children: [
+                !value.iapAvailable
+                    ? const ListTile(title: Text(' In-App-Purchase not available!'))
+                    : value.loading || value.iapDiamondsList == null
+                    ? const Center(child: CircularProgressIndicator(color: Colors.green))
+                    : Column(
+                  children: [
+                    for(var product in value.iapDiamondsList!)
+                      iapProductTile(product)
+                  ],
+                )
+              ],
+            )
           ],
         ),
       ),
     );
   }
 
-  Padding diamondValueTile(ProductDetails dv) {
+  Padding iapProductTile(ProductDetails dv) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
       child: SizedBox(
@@ -127,7 +172,7 @@ class _DiamondTabViewState extends State<DiamondTabView> {
         child: ListTile(
           onTap: () {
             Provider.of<ShopWalletProvider>(context, listen: false)
-                .purchaseDiamonds(dv);
+                .inAppPurchaseDiamonds(dv);
           },
           leading: Image.asset(
             'assets/icons/ic_diamond.png',
@@ -154,6 +199,41 @@ class _DiamondTabViewState extends State<DiamondTabView> {
     );
   }
 
+  Padding phonePayProductTile(DiamondValue dv) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+      child: SizedBox(
+        width: double.infinity,
+        child: ListTile(
+          onTap: () {
+            // Provider.of<ShopWalletProvider>(context, listen: false)
+            //     .inAppPurchaseDiamonds(dv);
+          },
+          leading: Image.asset(
+            'assets/icons/ic_diamond.png',
+            height: 24,
+            fit: BoxFit.fitHeight,
+          ),
+          title: Text(dv.diamond.toString()),
+          trailing: Container(
+            height: 30,
+            width: 97,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.green),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(dv.price.toString()),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Text diamondsWidget(text) => Text(
         text.toString(),
         style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 18),
@@ -168,112 +248,119 @@ class DiamondsHistoryList extends StatefulWidget {
 }
 
 class _DiamondsHistoryListState extends State<DiamondsHistoryList> {
-  String type = 'all';
+  String type = 'All';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('History'),
-        actions: [
-          DropdownButton<String>(
-            value: type,
-            onChanged: (String? newValue) {
-              setState(() {
-                type = newValue as String;
-              });
-            },
-            items: <String>['all', 'Gift', 'Shop', 'Game', 'Treasure Box', 'Lucky Wheel', 'Beans To Diamonds']
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-          )
-        ],
+        title: const Text('Diamond History'),
       ),
-      body: Expanded(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: FutureBuilder(
-            future: Provider.of<ShopWalletProvider>(context).getDiamondHistory(type),
-            builder: (context, snapshot) {
-              if(snapshot.connectionState == ConnectionState.waiting){
-                return const Center(child: CircularProgressIndicator());
-              }else if(snapshot.data == null){
-                return const Center(child: Text('Error!'));
-              }else if(snapshot.data!.isEmpty){
-                return const Center(child: Text('No Data!'));
-              }else{
-                return ListView(
-                  padding: const EdgeInsets.only(top: 0),
-                  physics: const BouncingScrollPhysics(),
-                  children: List.generate(
-                      snapshot.data!.length,
-                          (i) {
-                        final details = snapshot.data![i];
-                        return Container(
-                          margin: const EdgeInsets.symmetric(vertical: 6),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 12),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                                color: const Color(0xffF3F4F6),
-                                width: 1),
-                          ),
-                          child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
-                                children: [
-                                  boldText(
-                                      '${details.uses}',
-                                      const Color(0xff1D3A70),
-                                      18),
-                                  const SizedBox(height: 4),
-                                  regularText(
-                                      '${details.createdAt?.toLocal()}',
-                                      Colors.grey,
-                                      14),
-                                  const SizedBox(height: 4),
-                                ],
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: DropdownButton<String>(
+              value: type,
+              underline: const SizedBox.shrink(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  type = newValue as String;
+                });
+              },
+              items: <String>['All', 'Gift', 'Shop', 'Game', 'Treasure Box', 'Lucky Wheel', 'Beans To Diamonds']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: FutureBuilder(
+                future: Provider.of<ShopWalletProvider>(context).getDiamondHistory(type),
+                builder: (context, snapshot) {
+                  if(snapshot.connectionState == ConnectionState.waiting){
+                    return const Center(child: CircularProgressIndicator());
+                  }else if(snapshot.data == null){
+                    return const Center(child: Text('Error!'));
+                  }else if(snapshot.data!.isEmpty){
+                    return const Center(child: Text('No Data!'));
+                  }else{
+                    return ListView(
+                      padding: const EdgeInsets.only(top: 0),
+                      physics: const BouncingScrollPhysics(),
+                      children: List.generate(
+                          snapshot.data!.length,
+                              (i) {
+                            final details = snapshot.data![i];
+                            return Container(
+                              margin: const EdgeInsets.symmetric(vertical: 6),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 12),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                    color: const Color(0xffF3F4F6),
+                                    width: 1),
                               ),
-                              Column(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.end,
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
                                 children: [
-                                  boldText(
-                                      '${details.type == 1 ? '-' : '+'} ₹${details.diamonds}',
-                                      details.type == 2
-                                          ? const Color(0xff00B428)
-                                          : const Color(0xffFB923C),
-                                      20),
-                                  Padding(
-                                    padding:
-                                    const EdgeInsets.only(top: 4),
-                                    child: regularText(
-                                        details.type == 2 ? 'credited':'debited',
-                                        details.type == 2
-                                            ? const Color(0xff00B428)
-                                            : const Color(0xffFB923C),
-                                        14),
+                                  Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: [
+                                      boldText(
+                                          '${details.uses}',
+                                          const Color(0xff1D3A70),
+                                          18),
+                                      const SizedBox(height: 4),
+                                      regularText(
+                                          '${details.createdAt?.toLocal()}',
+                                          Colors.grey,
+                                          14),
+                                      const SizedBox(height: 4),
+                                    ],
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.end,
+                                    children: [
+                                      boldText(
+                                          '${details.type == 1 ? '-' : '+'} ₹${details.diamonds}',
+                                          details.type == 2
+                                              ? const Color(0xff00B428)
+                                              : const Color(0xffFB923C),
+                                          20),
+                                      Padding(
+                                        padding:
+                                        const EdgeInsets.only(top: 4),
+                                        child: regularText(
+                                            details.type == 2 ? 'credited':'debited',
+                                            details.type == 2
+                                                ? const Color(0xff00B428)
+                                                : const Color(0xffFB923C),
+                                            14),
+                                      )
+                                    ],
                                   )
                                 ],
-                              )
-                            ],
-                          ),
-                        );
-                      }),
-                );
-              }
-            },
+                              ),
+                            );
+                          }),
+                    );
+                  }
+                },
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

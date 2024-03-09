@@ -44,13 +44,14 @@ class ShopWalletProvider with ChangeNotifier {
   };
 
 
-  //In-App-Purchase
+  // In-App-Purchase / Phone Pe
 
   final InAppPurchase _iap = InAppPurchase.instance;
   late StreamSubscription<List<PurchaseDetails>> _subscription;
   List<ProductDetails>? iapDiamondsList;
+  List<DiamondValue>? apiDiamondsList;
   bool iapAvailable = false;
-  bool iapLoading = true;
+  bool loading = true;
 
   void _initializePurchaseStream() {
     final Stream<List<PurchaseDetails>> purchaseUpdated = _iap.purchaseStream;
@@ -65,18 +66,17 @@ class ShopWalletProvider with ChangeNotifier {
   }
 
   Future<void> _initStoreInfo() async {
+    apiDiamondsList = await getDiamondValueList();
     iapAvailable = await _iap.isAvailable();
     if(iapAvailable){
       _fetchProductList();
     }
-    iapLoading = false;
+    loading = false;
     notifyListeners();
   }
 
   void _fetchProductList() async {
-
-    final diamondValue = await getDiamondValueList();
-    Set<String> ids = diamondValue.map((e) => e.id!).toSet();
+    Set<String> ids = apiDiamondsList!.map((e) => e.id!).toSet();
 
     final response = await _iap.queryProductDetails(ids);
     for (var element in response.notFoundIDs) {
@@ -146,7 +146,7 @@ class ShopWalletProvider with ChangeNotifier {
     }
   }
 
-  Future<void> purchaseDiamonds(ProductDetails productDetails) async {
+  Future<void> inAppPurchaseDiamonds(ProductDetails productDetails) async {
     PurchaseParam purchaseParam;
 
     purchaseParam = PurchaseParam(

@@ -9,7 +9,7 @@ import '../../../provider/user_data_provider.dart';
 import 'common/moments_tab_view.dart';
 
 class Moments extends StatefulWidget {
-  const Moments({Key? key}) : super(key: key);
+  const Moments({super.key});
 
   @override
   State<Moments> createState() => _MomentsState();
@@ -31,13 +31,14 @@ class _MomentsState extends State<Moments> with TickerProviderStateMixin {
       momentsProvider.getFollowingMoments();
     }
     tabController.addListener(() {
-      print('value1 ${tabController.index}');
-      index = tabController.index;
-      switch(tabController.index){
-        case 0 :
-          momentsProvider.getFollowingMoments();
-        case 1:
-          momentsProvider.getAllMoments();
+      if(tabController.index != index){
+        index = tabController.index;
+        switch(tabController.index){
+          case 0 :
+            momentsProvider.getFollowingMoments();
+          case 1:
+            momentsProvider.getAllMoments();
+        }
       }
     });
     super.initState();
@@ -68,6 +69,9 @@ class _MomentsState extends State<Moments> with TickerProviderStateMixin {
         elevation: 1,
         title: TabBar(
           controller: tabController,
+          onTap: (value) {
+
+          },
           indicatorColor: Colors.black,
           indicatorPadding: EdgeInsets.symmetric(horizontal: 6 * a),
           indicatorWeight: 1.3,

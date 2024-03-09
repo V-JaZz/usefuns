@@ -1,12 +1,10 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_fortune_wheel/flutter_fortune_wheel.dart';
 import 'package:get/get.dart';
 import 'package:live_app/provider/user_data_provider.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
-
 import '../../../provider/shop_wallet_provider.dart';
 import '../../../utils/common_widgets.dart';
 import '../../../utils/utils_assets.dart';

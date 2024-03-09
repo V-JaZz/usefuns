@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:live_app/screens/dashboard/me/wallet/wallet.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../../../data/datasource/local/sharedpreferences/storage_service.dart';
+import '../../../utils/common_widgets.dart';
 import '../../../utils/constants.dart';
 
 class JoyGames extends StatefulWidget {
@@ -29,15 +31,15 @@ class _JoyGamesState extends State<JoyGames> {
           var data = jsonDecode(message.message);
           //The user clicks the close button in the game lobby
           if (data['name'] == 'newTppClose') {
-            //todo
+            Get.back();
           }
-          //The user actively clicks the button to increase gold coins
+          //The user actively clicks the button to increase diamonds coins
           if (data['name'] == 'clickRecharge') {
-            //todo
+            Get.to(const Wallet());
           }
           //When the user places a bet, the balance is insufficient callback
           if (data['name'] == 'recharge') {
-            //todo
+            showInsufficientDialog(context,1000);
           }
           },
     )
