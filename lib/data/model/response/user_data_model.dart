@@ -39,6 +39,7 @@ class UserData {
   String? deviceType;
   List<dynamic>? kickedUser;
   int? diamonds;
+  int? totalPurchasedDiamonds;
   int? beans;
   int? coins;
   int? likes;
@@ -100,6 +101,7 @@ class UserData {
     this.deviceType,
     this.kickedUser,
     this.diamonds,
+    this.totalPurchasedDiamonds,
     this.beans,
     this.coins,
     this.likes,
@@ -162,6 +164,7 @@ class UserData {
     deviceType: json["device_type"],
     kickedUser: json["kickedUser"] == null ? [] : List<dynamic>.from(json["kickedUser"]!.map((x) => x)),
     diamonds: json["diamonds"],
+    totalPurchasedDiamonds: json["totalPurchasedDiamonds"],
     beans: json["beans"],
     coins: json["coins"],
     likes: json["likes"],
@@ -224,6 +227,7 @@ class UserData {
     "device_type": deviceType,
     "kickedUser": kickedUser == null ? [] : List<dynamic>.from(kickedUser!.map((x) => x)),
     "diamonds": diamonds,
+    "totalPurchasedDiamonds": totalPurchasedDiamonds,
     "beans": beans,
     "coins": coins,
     "likes": likes,

@@ -1,8 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/provider/zego_room_provider.dart';
 import 'package:live_app/screens/room/bottomsheet/manager.dart';
 import 'package:provider/provider.dart';
+import '../../../provider/user_data_provider.dart';
+import '../../../utils/common_widgets.dart';
 import '../../../utils/utils_assets.dart';
 
 class GamesBottomSheet extends StatelessWidget {
@@ -11,71 +14,95 @@ class GamesBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    final udp = Provider.of<UserDataProvider>(Get.context!,listen: false);
     LiveRoomBottomSheets bs = LiveRoomBottomSheets(context);
     final List<Map> gamesList = [
       {
         "image": 'assets/games/Sudan-15.png',
         "name": "Sudan",
         "rank": "516",
+        "isActive":true,
         "onTap" : (){
           Get.back();
-          bs.showJoyGamesBottomSheet(15);
-        }
-      },
-      {
-        "image": 'assets/games/Dragon Tiger-12.png',
-        "name": "Dragon Tiger",
-        "rank": "516",
-        "onTap" : (){
-          Get.back();
-          bs.showJoyGamesBottomSheet(12);
+          int recharge = udp.userData?.data?.totalPurchasedDiamonds??0;
+          if(recharge >= 3000) {
+            bs.showJoyGamesBottomSheet(15);
+          }else{
+            showCustomSnackBar('Recharge of total 3000 diamonds required!', context, isError: false);
+          }
         }
       },
       {
         "image": 'assets/games/Neon Wheel-17.png',
         "name": "Neon Wheel",
         "rank": "516",
+        "isActive":true,
+        "recharge":5000,
         "onTap" : (){
           Get.back();
-          bs.showJoyGamesBottomSheet(17);
+          int recharge = udp.userData?.data?.totalPurchasedDiamonds??0;
+          if(recharge >= 5000) {
+            bs.showJoyGamesBottomSheet(17);
+          }else{
+            showCustomSnackBar('Recharge of total 5000 diamonds required!', context, isError: false);
+          }
+        }
+      },
+      {
+        "image": 'assets/games/Dragon Tiger-12.png',
+        "name": "Dragon Tiger",
+        "rank": "516",
+        "isActive":true,
+        "recharge":10000,
+        "onTap" : (){
+          Get.back();
+          int recharge = udp.userData?.data?.totalPurchasedDiamonds??0;
+          if(recharge >= 10000) {
+            bs.showJoyGamesBottomSheet(12);
+          }else{
+            showCustomSnackBar('Recharge of total 10000 diamonds required!', context, isError: false);
+          }
         }
       },
       {
         "image": 'assets/games/Horse Race-13.png',
         "name": "Horse Race",
         "rank": "516",
-        "onTap" : (){
-          Get.back();
-          bs.showJoyGamesBottomSheet(13);
-        }
+        "isActive":false,
+        "recharge":12000,
+        "onTap" : (){}
       },
       {
         "image": 'assets/games/Happy Fruit-20.png',
         "name": "Happy Fruit",
         "rank": "412",
-        "onTap" : (){
-          Get.back();
-          bs.showJoyGamesBottomSheet(20);
-        }
+        "isActive":false,
+        "recharge":12000,
+        "onTap" : (){}
       },
       {
         "image": 'assets/games/777-1.png',
         "name": "777",
         "rank": "510",
+        "isActive":true,
+        "recharge":12000,
         "onTap" : (){
           Get.back();
-          bs.showJoyGamesBottomSheet(1);
+          int recharge = udp.userData?.data?.totalPurchasedDiamonds??0;
+          if(recharge >= 12000) {
+            bs.showJoyGamesBottomSheet(1);
+          }else{
+            showCustomSnackBar('Recharge of total 12000 diamonds required!', context, isError: false);
+          }
         }
       },
       {
         "image": 'assets/games/Roulette-10.png',
         "name": "Roulette",
         "rank": "440",
-        "onTap" : (){
-          Get.back();
-          bs.showJoyGamesBottomSheet(10);
-        }
+        "isActive":false,
+        "recharge":12000,
+        "onTap" : (){}
       },
       {
         "image": 'assets/wheel.gif',
@@ -138,17 +165,45 @@ class GamesBottomSheet extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(width: 6 * a),
-                          Container(
-                            height: 60,
-                            width: 60,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                  image: AssetImage(
-                                      gamesList[index]["image"],
+                          Stack(
+                            children: [
+                              Container(
+                                height: 60,
+                                width: 60,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage(
+                                          gamesList[index]["image"],
+                                      ),
+                                    fit: BoxFit.cover
+                                  )
+                                ),
+                              ),
+                              if(gamesList[index]["isActive"] == false)
+                                Positioned(
+                                top: 0,
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                child: Center(
+                                  child: Container(
+                                    width: double.infinity,
+                                    color: Colors.white,
+                                    height: 30,
+                                    alignment: Alignment.center,
+                                    child: FittedBox(
+                                      child: Text(
+                                        'Upcoming',
+                                        style: TextStyle(
+                                            color: Colors.grey.shade800,
+                                            fontWeight: FontWeight.w500
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                fit: BoxFit.cover
+                                ),
                               )
-                            ),
+                            ],
                           ),
                           SizedBox(width: 6 * a),
                           Text(

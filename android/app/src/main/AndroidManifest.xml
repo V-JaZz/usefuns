@@ -49,6 +49,7 @@
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="unspecified"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity android:name="com.phonepe.intent.sdk.PaymentActivity"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

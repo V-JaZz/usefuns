@@ -1144,6 +1144,12 @@ class _LiveRoomState extends State<LiveRoom> with TickerProviderStateMixin{
                   ],
                 ),
               ),
+              if(value.initLoading) GestureDetector(
+                onTap: (){},
+                child: Expanded(
+                  child: Container(color: Colors.transparent),
+                ),
+              ),
               if(value.foregroundSvgaController!=null)
                 Center(
                   child: Padding(

@@ -1,13 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:live_app/data/model/response/diamond_value_model.dart';
+import 'package:live_app/data/model/response/seller_model.dart';
 import 'package:live_app/provider/shop_wallet_provider.dart';
 import 'package:live_app/provider/user_data_provider.dart';
+import 'package:live_app/utils/common_widgets.dart';
 import 'package:provider/provider.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import '../recharge_history.dart';
 
 class DiamondTabView extends StatefulWidget {
@@ -116,44 +116,76 @@ class _DiamondTabViewState extends State<DiamondTabView> {
                     )
               ],
             ),
+            //todo test and add phone pe
+            // ExpansionTile(
+            //   initiallyExpanded: false,
+            //   title: Row(
+            //     children: [
+            //       const Text('Phone Pe'),
+            //       const SizedBox(width: 12),
+            //       Container(
+            //         decoration: BoxDecoration(
+            //           color: Colors.amber,
+            //           borderRadius: BorderRadius.circular(6)
+            //         ),
+            //         padding: const EdgeInsets.symmetric(horizontal: 6),
+            //         child: const Text('+3%',style: TextStyle(color: Colors.white)),
+            //       )
+            //     ],
+            //   ),
+            //   subtitle: value.result != null ? Text('${value.result}') : null,
+            //   leading: Padding(
+            //     padding: const EdgeInsets.all(12.0),
+            //     child: Image.asset('assets/phone_pe_ic.png'),
+            //   ),
+            //   children: [
+            //     Provider.of<UserDataProvider>(context).userData?.data?.countryCode != 'IN'
+            //         ? const ListTile(title: Text('Phone Pe not available in your country!'))
+            //         : value.loading || value.apiDiamondsList == null
+            //         ? Center(child: Row(
+            //           children: [
+            //             Text(value.loading.toString()),
+            //             Text(value.apiDiamondsList?.length.toString()??''),
+            //             const CircularProgressIndicator(color: Colors.green),
+            //           ],
+            //         ))
+            //         : Column(
+            //           children: [
+            //             for(var product in value.apiDiamondsList!)
+            //               phonePayProductTile(product)
+            //           ],
+            //     )
+            //   ],
+            // ),
             ExpansionTile(
               initiallyExpanded: false,
-              title: const Text('Phone Pe'),
+              title: Row(
+                children: [
+                  const Text('Diamond Seller'),
+                  const SizedBox(width: 12),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.amber,
+                        borderRadius: BorderRadius.circular(6)
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
+                    child: const Text('+5%',style: TextStyle(color: Colors.white)),
+                  )
+                ],
+              ),
               leading: Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Image.asset('assets/phone_pe_ic.png'),
+                child: Image.asset(
+                  'assets/profile.png'
+                ),
               ),
               children: [
-                Provider.of<UserDataProvider>(context).userData?.data?.countryCode != 'IN'
-                    ? const ListTile(title: Text('Phone Pe not available in your country!'))
-                    : value.loading || value.apiDiamondsList == null
-                    ? Center(child: Row(
-                      children: [
-                        Text(value.loading.toString()),
-                        Text(value.apiDiamondsList?.length.toString()??''),
-                        const CircularProgressIndicator(color: Colors.green),
-                      ],
-                    ))
-                    : Column(
-                      children: [
-                        for(var product in value.apiDiamondsList!)
-                          phonePayProductTile(product)
-                      ],
-                )
-              ],
-            ),
-            ExpansionTile(
-              initiallyExpanded: false,
-              title: const Text('Diamond Seller'),
-              children: [
-                !value.iapAvailable
-                    ? const ListTile(title: Text(' In-App-Purchase not available!'))
-                    : value.loading || value.iapDiamondsList == null
+                value.loading || value.sellersList == null
                     ? const Center(child: CircularProgressIndicator(color: Colors.green))
                     : Column(
                   children: [
-                    for(var product in value.iapDiamondsList!)
-                      iapProductTile(product)
+                    for(var seller in value.sellersList!)
+                      sellerTile(seller)
                   ],
                 )
               ],
@@ -205,10 +237,8 @@ class _DiamondTabViewState extends State<DiamondTabView> {
       child: SizedBox(
         width: double.infinity,
         child: ListTile(
-          onTap: () {
-            // Provider.of<ShopWalletProvider>(context, listen: false)
-            //     .inAppPurchaseDiamonds(dv);
-          },
+          onTap: Provider.of<ShopWalletProvider>(context, listen: false)
+              .startPhonePeTransaction,
           leading: Image.asset(
             'assets/icons/ic_diamond.png',
             height: 24,
@@ -234,10 +264,41 @@ class _DiamondTabViewState extends State<DiamondTabView> {
     );
   }
 
+  Padding sellerTile(SellerData sd) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
+      child: SizedBox(
+        width: double.infinity,
+        child: ListTile(
+          onTap: () {
+            redirectToWhatsApp(sd.mobile);
+          },
+          leading: Image.asset(
+            'assets/profile.png',
+            height: 30,
+            fit: BoxFit.fitHeight,
+          ),
+          title: Text(sd.sellerName.toString()),
+          trailing: Image.asset('assets/whatsapp_ic.png', height: 36)
+        ),
+      ),
+    );
+  }
+
   Text diamondsWidget(text) => Text(
         text.toString(),
         style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 18),
       );
+
+  void redirectToWhatsApp(int? phoneNumber) async {
+    String url = "https://wa.me/$phoneNumber/?text=${Uri.encodeFull('Hii! I want to make diamond transaction.')}";
+
+    if (phoneNumber!=null && await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    } else {
+      showCustomSnackBar('currently unable to connect!', Get.context!);
+    }
+  }
 }
 
 class DiamondsHistoryList extends StatefulWidget {

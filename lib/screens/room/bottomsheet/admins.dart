@@ -9,7 +9,7 @@ import '../../../provider/user_data_provider.dart';
 import '../../../utils/common_widgets.dart';
 
 class AdminsBottomSheet extends StatefulWidget {
-  const AdminsBottomSheet({Key? key}) : super(key: key);
+  const AdminsBottomSheet({super.key});
 
   @override
   State<AdminsBottomSheet> createState() => _AdminsBottomSheetState();

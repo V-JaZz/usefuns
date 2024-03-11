@@ -1,15 +1,18 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/screens/dashboard/me/shop/shop.dart';
 import 'package:live_app/screens/room/bottomsheet/joy_games.dart';
+import 'package:live_app/utils/common_widgets.dart';
 
 import 'package:live_app/utils/utils_assets.dart';
 import 'package:provider/provider.dart';
 
 
 class Games extends StatefulWidget {
-  const Games({Key? key}) : super(key: key);
+  const Games({super.key});
 
   @override
   State<Games> createState() => _GamesState();
@@ -20,12 +23,16 @@ class _GamesState extends State<Games> {
     {
       "image": 'assets/games/Teen Patti-16F.png',
       "name": "Teen Patti",
+      "isActive":true,
+      "recharge":12000,
       "id" : 16
 
     },
     {
       "image": 'assets/games/Greedy-2F.png',
       "name": "Greedy",
+      "isActive":false,
+      "recharge":12000,
       "id" : 2
     }
   ];
@@ -133,14 +140,47 @@ class _GamesState extends State<Games> {
                   gamesList.length,
                   (index) => InkWell(
                     onTap: () async {
-                      await Get.to(()=>JoyGames(gameId: gamesList[index]["id"],mini: 0));
-                      Provider.of<UserDataProvider>(Get.context!,listen: false).getUser(loading: false);
+                      if(gamesList[index]["isActive"]){
+                        final udp = Provider.of<UserDataProvider>(Get.context!,listen: false);
+                        int recharge = udp.userData?.data?.totalPurchasedDiamonds??0;
+                        if(recharge >= gamesList[index]["recharge"]) {
+                          await Get.to(()=>JoyGames(gameId: gamesList[index]["id"],mini: 0));
+                          udp.getUser(loading: false);
+                        }else{
+                          showCustomSnackBar('Recharge of total ${gamesList[index]["recharge"]} diamonds required!', context, isError: false);
+                        }
+                      }
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Image.asset(gamesList[index]["image"]),
+                        Stack(children: [
+                          Image.asset(gamesList[index]["image"]),
+                          if(!gamesList[index]["isActive"])
+                            Positioned(
+                            top: 0,
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            child: Center(
+                              child: Container(
+                                width: double.infinity,
+                                color: Colors.white,
+                                height: 30,
+                                alignment: Alignment.center,
+                                child: Text(
+                                  'Upcoming',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.grey.shade800,
+                                    fontWeight: FontWeight.w500
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        ]),
                         Text(
                           gamesList[index]["name"],
                           style: safeGoogleFont(

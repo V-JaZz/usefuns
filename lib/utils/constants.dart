@@ -1,7 +1,7 @@
 class Constants {
 
   static const String baseUrl = 'https://fun2fun.live/';
-  static const String appVersion = '1.0.13v';
+  static const String appVersion = '1.0.3v';
   static const String webUrl = 'https://usefuns.live/';
   static const String playStoreLaunchUrl = "https://play.google.com/store/apps/details?id=com.alkb.usefuns.live_app";
   static const String appealLink = 'https://forms.gle/mm7b9QdRiJjs7UsZA';

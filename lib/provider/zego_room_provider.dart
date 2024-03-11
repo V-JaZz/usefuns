@@ -61,6 +61,7 @@ class ZegoRoomProvider with ChangeNotifier {
     roomStreamList = [];
     chatBan = false;
     minimized = false;
+    initLoading = true;
     mediaPlayer = null;
     activeCount = 0;
     onSeat=false;
@@ -79,6 +80,8 @@ class ZegoRoomProvider with ChangeNotifier {
   //Variables
   bool isOwner = false;
   bool onSeat = false;
+
+  bool initLoading = true;
 
   bool isMicrophonePermissionGranted = false;
   ZegoRoomModel? zegoRoom;
@@ -286,6 +289,12 @@ class ZegoRoomProvider with ChangeNotifier {
           notifyListeners();
           log('🚩 🚪 Room user update, roomID: $roomID, updateType: $updateType userID: $userID userName: $userName');
         }
+      }
+      if(initLoading) {
+        Future.delayed(const Duration(milliseconds: 500),() {
+          initLoading = false;
+          notifyListeners();
+        });
       }
     };
 

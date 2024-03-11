@@ -24,6 +24,15 @@ class ShopWalletRepo {
     }
   }
 
+  Future<http.Response> getDiamondSellers() async {
+    try {
+      http.Response response = await _httpClient.get('admin/coinSeller/getall');
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<http.Response> shop(
       {required String userId,required Map<String, dynamic> item, required int price, required String type}) async {
     try {

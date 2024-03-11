@@ -1,13 +1,17 @@
 import 'dart:async';
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:live_app/data/model/response/diamond_history_model.dart';
 import 'package:live_app/data/model/response/recharge_history_model.dart';
+import 'package:live_app/data/model/response/seller_model.dart';
 import 'package:live_app/data/model/response/shop_items_model.dart';
 import 'package:live_app/data/model/response/user_data_model.dart';
 import 'package:live_app/provider/user_data_provider.dart';
 import 'package:live_app/utils/common_widgets.dart';
 import 'package:live_app/utils/constants.dart';
+import 'package:phonepe_payment_sdk/phonepe_payment_sdk.dart';
 import 'package:provider/provider.dart';
 import '../data/datasource/local/sharedpreferences/storage_service.dart';
 import '../data/model/response/common_model.dart';
@@ -19,6 +23,7 @@ class ShopWalletProvider with ChangeNotifier {
 
   ShopWalletProvider() {
     _initializePurchaseStream();
+    _initPhonePe();
     _initStoreInfo();
   }
 
@@ -44,14 +49,94 @@ class ShopWalletProvider with ChangeNotifier {
   };
 
 
-  // In-App-Purchase / Phone Pe
+  // In-App-Purchase
 
   final InAppPurchase _iap = InAppPurchase.instance;
   late StreamSubscription<List<PurchaseDetails>> _subscription;
   List<ProductDetails>? iapDiamondsList;
   List<DiamondValue>? apiDiamondsList;
+  List<SellerData>? sellersList;
   bool iapAvailable = false;
   bool loading = true;
+
+  // Phone Pe
+  String body = "";
+  String callback = "https://webhook.site/callback-url";
+  String checksum = "";
+  Map<String, String> headers = {};
+  List<String> environmentList = <String>['SANDBOX', 'PRODUCTION'];
+  bool enableLogs = true;
+  Object? result;
+  String environmentValue = 'SANDBOX';
+  String? appId;
+  String merchantId = "PGTESTPAYUAT";
+  String packageName = "com.phonepe.simulator";
+  String apiEndPoint = "/pg/v1/pay";
+  String saltIndex= '1';
+  String saltKey = '099eb0cd-02cf-4e2a-8aca-3e6c6aff0399';
+
+
+  void _initPhonePe(){
+    PhonePePaymentSdk.init(environmentValue, appId, merchantId, enableLogs)
+        .then((value) {
+      result = 'PhonePe SDK Initialized - $value';
+      notifyListeners();
+        })
+        .catchError((error) {
+      handleError(error);
+    });
+  }
+  void handleError(error) {
+      if (error is Exception) {
+        result = error.toString();
+      } else {
+        result = {"error": error};
+      }
+      notifyListeners();
+  }
+  void startPhonePeTransaction() async {
+    getChecksum();
+    try {
+      PhonePePaymentSdk.startTransaction(body, callback, checksum, packageName)
+          .then((response) {
+        if (response != null) {
+          String status = response['status'].toString();
+          String error = response['error'].toString();
+          print(response.toString());
+          if (status == 'SUCCESS') {
+            result = "Flow Completed - Status: Success!";
+          } else {
+            result =
+            "Flow Uncompleted - Status: $status and Error: $error";
+          }
+        } else {
+          result = "Flow Incomplete";
+        }
+        notifyListeners();
+          })
+          .catchError((error) {
+        handleError(error);
+        return;
+      });
+    } catch (error) {
+      handleError(error);
+    }
+  }
+  void getChecksum(){
+    final reqData = {
+      "merchantId": merchantId,
+      "merchantTransactionId": "MT7850590068188104",
+      "merchantUserId": "MUID123",
+      "amount": 10000,
+      "callbackUrl": callback,
+      "mobileNumber": "9999999999",
+      "paymentInstrument": {
+        "type": "PAY_PAGE"
+      }
+    };
+    body = 'ewogICJtZXJjaGFudElkIjogIk1FUkNIQU5UVUFUIiwKICAibWVyY2hhbnRUcmFuc2FjdGlvbklkIjogIk1UNzg1MDU5MDA2ODE4ODEwNCIsCiAgIm1lcmNoYW50VXNlcklkIjogIk1VSUQxMjMiLAogICJhbW91bnQiOiAxMDAwMCwKICAicmVkaXJlY3RVcmwiOiAiaHR0cHM6Ly93ZWJob29rLnNpdGUvcmVkaXJlY3QtdXJsIiwKICAicmVkaXJlY3RNb2RlIjogIlJFRElSRUNUIiwKICAiY2FsbGJhY2tVcmwiOiAiaHR0cHM6Ly93ZWJob29rLnNpdGUvY2FsbGJhY2stdXJsIiwKICAibW9iaWxlTnVtYmVyIjogIjk5OTk5OTk5OTkiLAogICJwYXltZW50SW5zdHJ1bWVudCI6IHsKICAgICJ0eXBlIjogIlBBWV9QQUdFIgogIH0KfQ==';
+    checksum = '${sha256.convert(utf8.encode(body + apiEndPoint + saltKey)).toString()} + ### + $saltIndex';
+  }
 
   void _initializePurchaseStream() {
     final Stream<List<PurchaseDetails>> purchaseUpdated = _iap.purchaseStream;
@@ -67,17 +152,17 @@ class ShopWalletProvider with ChangeNotifier {
 
   Future<void> _initStoreInfo() async {
     apiDiamondsList = await getDiamondValueList();
+    sellersList = await getDiamondSeller();
     iapAvailable = await _iap.isAvailable();
     if(iapAvailable){
-      _fetchProductList();
+      _fetchIapProductList();
     }
     loading = false;
     notifyListeners();
   }
 
-  void _fetchProductList() async {
+  void _fetchIapProductList() async {
     Set<String> ids = apiDiamondsList!.map((e) => e.id!).toSet();
-
     final response = await _iap.queryProductDetails(ids);
     for (var element in response.notFoundIDs) {
       print('Purchase $element not found');
@@ -154,6 +239,34 @@ class ShopWalletProvider with ChangeNotifier {
     );
 
     await _iap.buyConsumable(purchaseParam: purchaseParam);
+  }
+
+  Future<List<DiamondValue>> getDiamondValueList() async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    final apiResponse = await _repo.getDiamondValue();
+    if (apiResponse.statusCode == 200) {
+      DiamondValueModel responseModel = diamondValueModelFromJson(apiResponse.body);
+      if(responseModel.status == 1){
+        return responseModel.data??[];
+      }
+    } else {
+      showCustomSnackBar('Error Getting data!', Get.context!);
+    }
+    return [];
+  }
+
+  Future<List<SellerData>> getDiamondSeller() async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    final apiResponse = await _repo.getDiamondSellers();
+    if (apiResponse.statusCode == 200) {
+      SellerModel responseModel = sellerModelFromJson(apiResponse.body);
+      if(responseModel.status == 1){
+        return responseModel.data??[];
+      }
+    } else {
+      showCustomSnackBar('Error Getting data!', Get.context!);
+    }
+    return [];
   }
 
   Future<void> getAll() async {
@@ -261,20 +374,6 @@ class ShopWalletProvider with ChangeNotifier {
       Provider.of<UserDataProvider>(Get.context!,listen: false).getUser(loading: false);
       showCustomSnackBar('$diamonds diamonds added to your wallet!', Get.context!,isError: false,isToaster: true);
     }
-  }
-
-  Future<List<DiamondValue>> getDiamondValueList() async {
-    await Future.delayed(const Duration(milliseconds: 500));
-    final apiResponse = await _repo.getDiamondValue();
-    if (apiResponse.statusCode == 200) {
-      DiamondValueModel responseModel = diamondValueModelFromJson(apiResponse.body);
-      if(responseModel.status == 1){
-        return responseModel.data??[];
-      }
-    } else {
-      showCustomSnackBar('Error Getting data!', Get.context!);
-    }
-    return [];
   }
 
   Future<bool> spendUserDiamonds(int diamonds, String usedIn) async {
